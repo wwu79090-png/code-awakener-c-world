@@ -1,0 +1,28 @@
+{
+  "name": "code-awakener-c-world",
+  "version": "0.1.0",
+  "private": true,
+  "description": "A C language learning RPG with an embeddable teaching SDK and desktop shell.",
+  "main": "desktop/electron-main.cjs",
+  "scripts": {
+    "test": "node programming-rpg-c-basics.test.js",
+    "build": "node build-single-html.cjs",
+    "build:secure": "node scripts/build-secure-production.cjs",
+    "deploy:gh-pages": "node scripts/auto-deploy.js",
+    "deploy:gh-pages:wait": "node scripts/auto-deploy.js --wait",
+    "audit:static": "node scripts/static-quality-audit.cjs",
+    "audit:complexity": "node scripts/complexity-audit.cjs",
+    "audit:magic": "node scripts/magic-number-audit.cjs",
+    "audit:animation": "node scripts/animation-leak-audit.cjs",
+    "fuzz:save": "node scripts/fuzz-save-data.cjs",
+    "mobile:smoke": "node scripts/mobile-browser-smoke.cjs",
+    "desktop:dev": "electron desktop/electron-main.cjs",
+    "desktop:package": "node scripts/package-desktop.cjs"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.61.0",
+    "electron": "^31.0.0",
+    "javascript-obfuscator": "^5.4.3",
+    "terser": "^5.48.0"
+  }
+}
