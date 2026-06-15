@@ -1,5 +1,5 @@
 param(
-  [string]$Branch = "main",
+  [string]$Branch = "",
   [switch]$Create = $true,
   [switch]$Wait = $true
 )
@@ -20,6 +20,15 @@ if (-not $Repo) {
 if (-not $Repo) {
   Write-Error "未检测到仓库信息。请设置 GH_REPO 或确保 git remote origin 存在于 github 仓库。"
   exit 1
+}
+
+if (-not $Branch) {
+  try {
+    $Branch = (& git branch --show-current).Trim()
+    if (-not $Branch) { $Branch = "main" }
+  } catch {
+    $Branch = "main"
+  }
 }
 
 if (-not $env:GH_TOKEN -and -not $env:GITHUB_TOKEN) {

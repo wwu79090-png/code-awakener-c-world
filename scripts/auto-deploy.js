@@ -92,6 +92,24 @@ function getRepoFromArgs() {
   ).trim();
 }
 
+function getCurrentBranch() {
+  try {
+    return execLine('git branch --show-current');
+  } catch {
+    return '';
+  }
+}
+
+function branchExists(branch) {
+  if (!branch) return false;
+  try {
+    execLine(`git rev-parse --verify ${branch}`);
+    return true;
+  } catch {
+    return false;
+  }
+}
+
 function detectRepoFromRemote() {
   try {
     const remote = execLine('git remote get-url origin');
@@ -183,6 +201,9 @@ function ensureRemote(ownerRepo) {
 }
 
 function getDefaultBranchFromRemote() {
+  const local = getCurrentBranch();
+  if (local) return local;
+
   const envBranch = process.env.GITHUB_REF_NAME || process.env.GIT_BRANCH;
   if (envBranch) return envBranch;
 
@@ -193,6 +214,26 @@ function getDefaultBranchFromRemote() {
   } catch {}
 
   return 'main';
+}
+
+function ensureLocalBranch(targetBranch) {
+  const current = getCurrentBranch() || 'master';
+
+  if (branchExists(targetBranch)) return { branch: targetBranch, switched: false };
+
+  const createFlag = parseArg('create') === true;
+  if (createFlag) {
+    if (current === targetBranch) return { branch: targetBranch, switched: false };
+    try {
+      execInherit(`git checkout -b ${targetBranch}`);
+      return { branch: targetBranch, switched: true, origin: current };
+    } catch (err) {
+      throw new Error(`分支 ${targetBranch} 不存在且创建失败：${err.message}`);
+    }
+  }
+
+  console.log(`[deploy] 分支 ${targetBranch} 不存在，自动回退到当前分支 ${current}`);
+  return { branch: current, switched: false };
 }
 
 function push(branch, ownerRepo, token) {
@@ -264,6 +305,10 @@ async function main() {
 
   const repo = requireRepo(getRepoFromArgs() || detectRepoFromRemote());
   const branch = parseArg('branch', getDefaultBranchFromRemote());
+  const branchState = ensureLocalBranch(branch);
+  const branchName = branchState.branch;
+  const branchOrigin = branchState.origin;
+  const branchSwitched = branchState.switched === true;
 
   const token = (process.env.GH_TOKEN || process.env.GITHUB_TOKEN || '').trim();
   const useGh = hasCommand('gh');
@@ -285,20 +330,29 @@ async function main() {
     fs.writeFileSync(nojekyll, '');
   }
 
-  console.log(`[deploy] 推送分支：${branch}`);
-  push(branch, repo, token);
+  console.log(`[deploy] 推送分支：${branchName}`);
+  push(branchName, repo, token);
+
+  if (branchSwitched && branchOrigin) {
+    try {
+      execInherit(`git checkout ${branchOrigin}`);
+      console.log(`[deploy] 已切回原始分支：${branchOrigin}`);
+    } catch {
+      // 不影响主流程：仅恢复环境，忽略异常
+    }
+  }
 
   let triggered = false;
   if (useGh) {
     try {
-      triggered = dispatchWorkflowWithGh(repo, branch);
+      triggered = dispatchWorkflowWithGh(repo, branchName);
     } catch {
       triggered = false;
     }
   }
 
   if (!triggered) {
-    triggered = await dispatchWorkflowWithApi(repo, branch, token);
+    triggered = await dispatchWorkflowWithApi(repo, branchName, token);
   }
 
   if (triggered) {
