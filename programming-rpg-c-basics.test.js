@@ -398,6 +398,15 @@ assert(/id="memoryReadOverlay"/m.test(html), "knowledge shard pickup should incl
 assert(/function showMemoryReadEffect/m.test(html), "knowledge shard pickup should show code being read into memory");
 assert(/function createStoneCodePuzzle/m.test(html), "stone interaction should show a keyword-completion code puzzle");
 assert(/function completeStoneCodePuzzle/m.test(html), "stone code puzzle should complete before unlocking the gate");
+assert(/function repairFragmentProgressState/m.test(html), "fragment progress should repair duplicated or legacy save data");
+assert(/function getCourseFragmentProgressText/m.test(html), "fragment UI should use course fragment progress instead of raw inventory length");
+assert(/const alreadyCollected = gameState\.progress\.collectedFragmentKeys\.includes\(fragmentKey\)/m.test(html), "fragment collection should dedupe by unique fragment key, not keyword text");
+assert(/if \(!gameState\.codeInventory\.includes\(fragment\.keyword\)\) gameState\.codeInventory\.push\(fragment\.keyword\)/m.test(html), "fragment inventory should keep keyword strings unique");
+assert(/dom\.infoFragmentText\.textContent = `碎片: \$\{getCourseFragmentProgressText\(\)\}`/m.test(html), "side menu fragment count should never exceed the 14-course total");
+assert(/if \(interaction\?\.type === "lesson"\)[\s\S]*else tryFillStoneBlank\(this, interaction\.chapter\.id\)/m.test(html), "pressing E near a stone should try to fill the code blank directly");
+assert(/gate\.setActive\(true\)\.setVisible\(true\)\.setAlpha\(0\.34\)\.setTint\(0x64748b\)/m.test(html), "compile gates should remain visible as locked silhouettes before activation");
+assert(/const gateHintText = this\.add\.text[\s\S]*先修复石碑/m.test(html), "locked compile gates should show an explicit repair-stone hint");
+assert(/if \(nearGate && !isLearned\(chapter\.id\)\)[\s\S]*return \{ type: "locked", chapter \}/m.test(html), "standing at an inactive compile gate should produce locked feedback");
 assert(/function createNpcPatrol/m.test(html), "scene should include a small NPC patrol/life animation");
 assert(/function createAmbientCodeMotes/m.test(html), "world should include floating ambient code particles");
 assert(/function updateDayNightCycle/m.test(html), "scene should include slow day-night lighting changes");

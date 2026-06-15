@@ -11,7 +11,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; base-uri 'self'; object-src 'none'; frame-ancestors 'none'; script-src 'self' https://cdn.jsdelivr.net 'nonce-code-awakener-inline' 'sha256-kegxOf8Z28rONs9ZnpTCsa0R1fN9C8ieGjKNCvYzGJM='; style-src 'self' https://cdn.jsdelivr.net https://fonts.googleapis.com 'nonce-code-awakener-inline' 'sha256-3P6/5qpD3vcMLDww6EcCtHzTp0bSBVWmip0x4HUBSr8='; font-src 'self' https://cdn.jsdelivr.net https://fonts.gstatic.com data:; img-src 'self' data: blob:; media-src 'self' data: blob:; worker-src 'self' blob:; child-src 'self' blob:; connect-src 'self' https://cdn.jsdelivr.net;">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; base-uri 'self'; object-src 'none'; frame-ancestors 'none'; script-src 'self' https://cdn.jsdelivr.net 'nonce-code-awakener-inline' 'sha256-6xPI1bqBUSqbAVkaw4WjOznxYVLxKeHAo4YBOTbgpY4='; style-src 'self' https://cdn.jsdelivr.net https://fonts.googleapis.com 'nonce-code-awakener-inline' 'sha256-3P6/5qpD3vcMLDww6EcCtHzTp0bSBVWmip0x4HUBSr8='; font-src 'self' https://cdn.jsdelivr.net https://fonts.gstatic.com data:; img-src 'self' data: blob:; media-src 'self' data: blob:; worker-src 'self' blob:; child-src 'self' blob:; connect-src 'self' https://cdn.jsdelivr.net;">
   <title>编程学习 RPG：C 语言启航村</title>
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%23020617'/%3E%3Cpath d='M22 20 10 32l12 12M42 20l12 12-12 12' fill='none' stroke='%2300ff88' stroke-width='6' stroke-linecap='round' stroke-linejoin='round'/%3E%3Cpath d='m36 16-8 32' stroke='%2300ccff' stroke-width='5' stroke-linecap='round'/%3E%3C/svg%3E">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/firacode@6.2.0/distr/fira_code.css">
@@ -8280,7 +8280,7 @@ int main(void) {
       directSaveAs: "reduced-by-inline-resources"
     });
     const SECURITY_CONFIG = Object.freeze({
-      expectedScriptHash: "r04PQenevpfOlGsbDExuEP8Mryijxy5vofK2JQXE9Gk=",
+      expectedScriptHash: "WCytAPYGrwuMueTOLsV8ezyB9JlVb09x6XW8U/tLHe0=",
       selfCheckIntervalMs: 45000,
       tamperRefreshMs: 5000,
       devToolsRefreshMs: 2000,
@@ -11096,7 +11096,7 @@ int main(void) {
       codeAccuracy: 100,
       hintsLeft: 3,
       codeInventory: Array.isArray(savedProgress.codeInventory) ? savedProgress.codeInventory : [],
-      solvedStonePuzzles: [],
+      solvedStonePuzzles: Array.isArray(savedProgress.solvedStonePuzzles) ? savedProgress.solvedStonePuzzles : [],
       codeLog: [],
       totalSteps: 0,
       compileSuccessCount: 0,
@@ -12955,7 +12955,7 @@ int main(void) {
     }
 
     function updateInventoryGravityDistortion() {
-      const ratio = gameState.codeInventory.length / Math.max(1, chapters.length);
+      const ratio = getCourseFragmentProgressCount() / Math.max(1, chapters.length);
       document.body.style.setProperty("--inventory-gravity", ratio > 0.8 ? "1" : "0");
       return ratio;
     }
@@ -15224,7 +15224,7 @@ int main(void) {
       const mpMax = 3;
       const mp = Math.max(0, Math.min(mpMax, Number(gameState.hintsLeft) || 0));
       if (dom.infoTaskText) dom.infoTaskText.textContent = getInfoMenuTaskText();
-      if (dom.infoFragmentText) dom.infoFragmentText.textContent = `碎片: ${gameState.codeInventory.length}/${chapters.length}`;
+      if (dom.infoFragmentText) dom.infoFragmentText.textContent = `碎片: ${getCourseFragmentProgressText()}`;
       if (dom.infoHpText) dom.infoHpText.textContent = `${hp}/100`;
       if (dom.infoMpText) dom.infoMpText.textContent = `${mp}/${mpMax}`;
       if (dom.infoHpFill) dom.infoHpFill.style.width = `${hp}%`;
@@ -15353,7 +15353,7 @@ int main(void) {
         ["已解锁成就", `${gameState.achievements.length}/${achievementCatalog.length}`],
         ["已学习章节", `${gameState.progress.learned.length}/${totalChapters}`],
         ["已通关关卡", `${gameState.progress.cleared.length}/${totalChapters}`],
-        ["代码碎片", `${gameState.codeInventory.length}`],
+        ["代码碎片", getCourseFragmentProgressText()],
         ["当前外观", PLAYER_SKIN_PRESETS[gameState.settings.playerSkin]?.label || "霓虹蓝"]
       ];
       dom.characterProfileContent.innerHTML = stats.map(([label, value]) => (
@@ -15759,7 +15759,7 @@ int main(void) {
       if (!dom.debugOverlay || !document.body.classList.contains("debug-visible")) return;
       const player = gameState.scene?.player;
       const particles = countSceneParticles(gameState.scene);
-      const fragmentCount = gameState.codeInventory.length;
+      const fragmentCount = getCourseFragmentProgressCount();
       const questProgress = Object.values(gameState.progress.questStates || {})
         .map((state) => `${state.status}:${state.progress || 0}`)
         .join(",") || "none";
@@ -15957,8 +15957,11 @@ int main(void) {
 
     function saveProgress() {
       if (gameState) {
+        if (typeof repairFragmentProgressState === "function") repairFragmentProgressState();
         gameState.progress.codeInventory = clonePlainData(gameState.codeInventory || []);
-        gameState.progress.fragmentCount = Array.isArray(gameState.codeInventory) ? gameState.codeInventory.length : Number(gameState.progress.fragmentCount) || 0;
+        gameState.progress.fragmentCount = typeof getCourseFragmentProgressCount === "function"
+          ? getCourseFragmentProgressCount()
+          : Array.isArray(gameState.codeInventory) ? gameState.codeInventory.length : Number(gameState.progress.fragmentCount) || 0;
         gameState.progress.collectedFragments = clonePlainData(gameState.progress.collectedFragments || gameState.progress.collectedFragmentKeys || []);
         gameState.progress.solvedStonePuzzles = clonePlainData(gameState.solvedStonePuzzles || []);
         gameState.progress.codeLog = clonePlainData(gameState.codeLog || []);
@@ -16410,10 +16413,7 @@ int main(void) {
     const saveSlotManager = new SaveSlotManager(SAVE_SLOT_COUNT);
 
     function getCinematicFragmentCount() {
-      const inventoryCount = Array.isArray(gameState.codeInventory) ? gameState.codeInventory.length : 0;
-      const imprintCount = Array.isArray(gameState.progress?.collectedImprints) ? gameState.progress.collectedImprints.length : 0;
-      const watchedCount = Number(gameState.worldVariables?.code_fragments_collected) || 0;
-      return Math.max(inventoryCount, imprintCount, watchedCount);
+      return getCourseFragmentProgressCount();
     }
 
     function getCinematicEffectLevel(fragmentCount = getCinematicFragmentCount()) {
@@ -17490,7 +17490,7 @@ int main(void) {
         "[系统核心状态]",
         `> 运行时间：${minutes}分${seconds}秒`,
         `> 内存占用：${memory}MB`,
-        `> 碎片收集：${new Set(gameState.codeInventory || []).size}/${chapters.length}`,
+        `> 碎片收集：${getCourseFragmentProgressText()}`,
         `> 世界进度：世界一 - ${progress}%`,
         "> 游戏版本：v1.0.0",
         "> 开发者：杀戮"
@@ -17548,7 +17548,7 @@ int main(void) {
     function showRevivalMemoryStrip() {
       playScreenPowerFlash();
       const shards = gameState.codeInventory.slice(0, 6).map((item) => `<span class="revival-memory-chip">${escapeHtml(item)}</span>`).join("");
-      setRevivalContent(`<div class="revival-memory-strip"><span class="revival-memory-chip">导师NPC 微笑</span><span class="revival-memory-chip">碎片 ${gameState.codeInventory.length}/14</span><span class="revival-memory-chip">老程序员</span>${shards}</div>`, "revival-memory-strip");
+      setRevivalContent(`<div class="revival-memory-strip"><span class="revival-memory-chip">导师NPC 微笑</span><span class="revival-memory-chip">碎片 ${getCourseFragmentProgressText()}</span><span class="revival-memory-chip">老程序员</span>${shards}</div>`, "revival-memory-strip");
       trackedSetTimeout(() => setRevivalContent("return 0;"), 1850, "mentor-to-return-zero");
     }
 
@@ -17582,7 +17582,7 @@ int main(void) {
         player: gameState.progress.playerName || "Operator",
         completedAt: new Date().toLocaleString("zh-CN", { hour12: false }),
         exploration: calculateWorldExplorationPercentage(exploration),
-        fragments: new Set(gameState.codeInventory || []).size,
+        fragments: getCourseFragmentProgressCount(),
         quests: getClosedQuestCount(),
         questTotal,
         hidden: exploration.hiddenElementsFound,
@@ -17592,7 +17592,7 @@ int main(void) {
 
     function renderCompletionCertificate() {
       const stats = getCompletionCertificateStats();
-      const body = `╔══════════════════════════════════════════════════╗\n║   [代码觉醒者] - 通关证书                       ║\n║   ────────────────────────────────────────────── ║\n║   玩家：${stats.player}\n║   世界：世界一 - C语言\n║   通关时间：${stats.completedAt}\n║   探索度：${stats.exploration}%\n║   碎片收集：${stats.fragments}/14\n║   任务完成：${stats.quests}/${stats.questTotal}\n║   隐藏要素：${stats.hidden}/${stats.hiddenTotal}\n║   官方Q群：414374792\n║   ────────────────────────────────────────────── ║\n║   “你让这个世界重新有了颜色。”                ║\n║   —— 导师                                       ║\n╚══════════════════════════════════════════════════╝`;
+      const body = `╔══════════════════════════════════════════════════╗\n║   [代码觉醒者] - 通关证书                       ║\n║   ────────────────────────────────────────────── ║\n║   玩家：${stats.player}\n║   世界：世界一 - C语言\n║   通关时间：${stats.completedAt}\n║   探索度：${stats.exploration}%\n║   碎片收集：${stats.fragments}/${getCourseFragmentTotal()}\n║   任务完成：${stats.quests}/${stats.questTotal}\n║   隐藏要素：${stats.hidden}/${stats.hiddenTotal}\n║   官方Q群：414374792\n║   ────────────────────────────────────────────── ║\n║   “你让这个世界重新有了颜色。”                ║\n║   —— 导师                                       ║\n╚══════════════════════════════════════════════════╝`;
       dom.completionCertificateBody.textContent = body;
       dom.completionCertificateBonus.innerHTML = getCertificateBonusLines(stats).join("<br>");
       dom.completionCertificateOverlay?.classList.add("active");
@@ -17645,7 +17645,7 @@ int main(void) {
 
     function shareCompletionCertificate() {
       const stats = getCompletionCertificateStats();
-      const text = `🚀 我刚刚通关了《代码觉醒者》世界一！\n已完成C语言课程，探索度：${stats.exploration}%，收集碎片：${stats.fragments}/14。\n这是一款免费的编程教育游戏，永久开放，助力每一个有编程梦的人！\n官方Q群：414374792\n#代码觉醒者 #编程教育 #C语言`;
+      const text = `🚀 我刚刚通关了《代码觉醒者》世界一！\n已完成C语言课程，探索度：${stats.exploration}%，收集碎片：${stats.fragments}/${getCourseFragmentTotal()}。\n这是一款免费的编程教育游戏，永久开放，助力每一个有编程梦的人！\n官方Q群：414374792\n#代码觉醒者 #编程教育 #C语言`;
       navigator.clipboard?.writeText?.(text);
       showReward("分享文本已复制。");
       return text;
@@ -18101,6 +18101,7 @@ int main(void) {
       if (interaction.type === "terminalGuess") return "E 启动伪随机双向推演";
       if (interaction.type === "regionPortal") return interaction.portal?.unlocked ? `E 进入${interaction.portal.label}` : `完成前一区域后解锁：${interaction.portal.label}`;
       if (interaction.type === "locked") {
+        if (!isLearned(interaction.chapter.id)) return `E 查看（先完成 ${interaction.chapter.stoneLabel}）`;
         const previousIndex = Math.max(0, chapters.findIndex((chapter) => chapter.id === interaction.chapter.id) - 1);
         const previous = chapters[previousIndex];
         return `E 查看（需要先通过 ${previous.gateLabel}）`;
@@ -18633,8 +18634,8 @@ int main(void) {
     }
 
     function getCWorldProgress() {
-      const total = chapters.length;
-      const fragments = new Set(gameState.codeInventory || []).size;
+      const total = getCourseFragmentTotal();
+      const fragments = getCourseFragmentProgressCount();
       const questTotal = Object.keys(QUEST_DATA).length;
       const questClosed = getClosedQuestCount();
       const learned = new Set(gameState.progress.learned || []).size;
@@ -22790,6 +22791,68 @@ int main(void) {
       return adjustPuzzleDifficulty(chapterId, createProceduralStonePuzzle(chapterId, gameState.worldSeed));
     }
 
+    function getCourseFragmentTotal() {
+      return chapters.length;
+    }
+
+    function getMainCourseFragmentKey(chapterId) {
+      const spec = getStonePuzzleSpec(chapterId);
+      return `${chapterId}:${spec.answer}:0`;
+    }
+
+    function normalizeCodeInventoryList(inventory = []) {
+      const seen = new Set();
+      return (Array.isArray(inventory) ? inventory : [])
+        .map(getInventoryFragmentKey)
+        .filter((keyword) => keyword && keyword !== "[object Object]")
+        .filter((keyword) => {
+          if (seen.has(keyword)) return false;
+          seen.add(keyword);
+          return true;
+        });
+    }
+
+    function normalizeFragmentKeyList(keys = []) {
+      const seen = new Set();
+      return (Array.isArray(keys) ? keys : [])
+        .map((key) => String(key || "").trim())
+        .filter(Boolean)
+        .filter((key) => {
+          if (seen.has(key)) return false;
+          seen.add(key);
+          return true;
+        });
+    }
+
+    function hasCollectedCourseFragment(chapterId) {
+      const keys = gameState.progress.collectedFragmentKeys || [];
+      return keys.includes(getMainCourseFragmentKey(chapterId))
+        || gameState.solvedStonePuzzles?.includes?.(chapterId)
+        || gameState.progress.learned?.includes?.(chapterId)
+        || gameState.progress.cleared?.includes?.(chapterId);
+    }
+
+    function getCourseFragmentProgressCount() {
+      return chapters.filter((chapter) => hasCollectedCourseFragment(chapter.id)).length;
+    }
+
+    function getCourseFragmentProgressText() {
+      return `${getCourseFragmentProgressCount()}/${getCourseFragmentTotal()}`;
+    }
+
+    function repairFragmentProgressState() {
+      if (!gameState?.progress) return false;
+      gameState.codeInventory = normalizeCodeInventoryList(gameState.codeInventory || gameState.progress.codeInventory || []);
+      gameState.progress.codeInventory = clonePlainData(gameState.codeInventory);
+      gameState.progress.collectedFragmentKeys = normalizeFragmentKeyList(gameState.progress.collectedFragmentKeys || gameState.progress.collectedFragments || []);
+      gameState.progress.collectedFragments = clonePlainData(gameState.progress.collectedFragmentKeys);
+      gameState.progress.fragmentCount = getCourseFragmentProgressCount();
+      if (gameState.worldVariables) gameState.worldVariables.code_fragments_collected = gameState.progress.fragmentCount;
+      return true;
+    }
+
+    repairFragmentProgressState();
+
     function createInvisibleCapsuleHitZone(scene, x, y, width, height, onClick) {
       const zone = scene.add.zone(x, y, width, height).setOrigin(0.5);
       zone.setInteractive({ useHandCursor: true });
@@ -22927,19 +22990,21 @@ int main(void) {
         if (!Array.isArray(gameState.progress.collectedFragmentKeys)) gameState.progress.collectedFragmentKeys = [];
         if (!Array.isArray(gameState.progress.collectedFragments)) gameState.progress.collectedFragments = [];
         if (!gameState.progress.chapterFragmentGuideSeen || typeof gameState.progress.chapterFragmentGuideSeen !== "object") gameState.progress.chapterFragmentGuideSeen = {};
+        repairFragmentProgressState();
         fragment.collecting = true;
         if (fragment.body) fragment.body.enable = false;
-        const alreadyCollected = gameState.codeInventory.includes(fragment.keyword);
+        const fragmentKey = getFragmentKey(fragment);
+        const alreadyCollected = gameState.progress.collectedFragmentKeys.includes(fragmentKey);
         gameState.selectedKeyword = fragment.keyword;
         if (!alreadyCollected) {
           leaveCollectedFragmentImprint(scene, fragment);
-          const fragmentKey = getFragmentKey(fragment);
           if (!gameState.progress.collectedFragmentKeys.includes(fragmentKey)) gameState.progress.collectedFragmentKeys.push(fragmentKey);
-          gameState.codeInventory.push(fragment.keyword);
-          gameState.progress.fragmentCount = gameState.codeInventory.length;
+          if (!gameState.codeInventory.includes(fragment.keyword)) gameState.codeInventory.push(fragment.keyword);
+          gameState.codeInventory = normalizeCodeInventoryList(gameState.codeInventory);
+          gameState.progress.fragmentCount = getCourseFragmentProgressCount();
           gameState.progress.collectedFragments = clonePlainData(gameState.progress.collectedFragmentKeys);
           recentFragmentUnlocks.add(fragment.keyword);
-          gameState.worldVariables.code_fragments_collected = gameState.codeInventory.length;
+          gameState.worldVariables.code_fragments_collected = gameState.progress.fragmentCount;
           chapterManager.recordFragment(fragment.keyword);
           unlockCodeLogPage(fragment.keyword);
           renderFragmentCards();
@@ -22951,7 +23016,7 @@ int main(void) {
           triggerCinematicPickupBurst(scene, fragment);
           pulseMelodyLayer();
           audioManager.pickupSpark();
-          if (gameState.codeInventory.length === 1) playFirstFragmentRewardTone();
+          if (gameState.progress.fragmentCount === 1) playFirstFragmentRewardTone();
           playKeyItemPickupRitual(fragment.keyword);
           showMemoryReadEffect(`char token[] = "${fragment.keyword}";`);
           growMilestoneFlower(scene);
@@ -22963,8 +23028,8 @@ int main(void) {
           recordTelemetryEvent("fragment.collected", { keyword: fragment.keyword, chapterId: fragment.chapterId });
           flashFragmentCounter();
           playBasicFragmentsCompletePulse();
-          if (gameState.codeInventory.length === 5 || gameState.codeInventory.length === 10) {
-            playFragmentMilestoneTimeline(scene, gameState.codeInventory.length);
+          if (gameState.progress.fragmentCount === 5 || gameState.progress.fragmentCount === 10) {
+            playFragmentMilestoneTimeline(scene, gameState.progress.fragmentCount);
           }
           if (!gameState.progress.chapterFragmentGuideSeen[fragment.chapterId]) {
             gameState.progress.chapterFragmentGuideSeen[fragment.chapterId] = true;
@@ -22973,6 +23038,7 @@ int main(void) {
         } else {
           announceGameEvent(`已记录过 ${fragment.keyword} 碎片`);
         }
+        saveProgress();
         eventBus.emit("keyword:collected", { scene, keyword: fragment.keyword, alreadyCollected });
         playPickupBounceFlight(scene, fragment);
         updateInventoryGravityDistortion();
@@ -23752,10 +23818,15 @@ int main(void) {
 
     function resetChapterSceneObjects(scene) {
       Object.values(scene.chapterObjects || {}).forEach((objects) => {
-        objects.gate?.disableBody?.(true, true);
-        objects.gate?.setAlpha?.(0);
-        objects.gate?.clearTint?.();
+        if (objects.gate?.body) objects.gate.body.enable = false;
+        objects.gate?.setActive?.(true);
+        objects.gate?.setVisible?.(true);
+        objects.gate?.setAlpha?.(0.34);
+        objects.gate?.setTint?.(0x64748b);
         objects.gate?.setScale?.(1);
+        objects.gateHintText?.setText?.("先修复石碑");
+        objects.gateHintText?.setColor?.("#bfdbfe");
+        objects.gateHintText?.setAlpha?.(0.78);
         objects.stone?.clearTint?.();
         objects.stone?.setAlpha?.(0.85);
         objects.stone?.setScale?.(1);
@@ -23795,7 +23866,7 @@ int main(void) {
       if (!scene?.codeFragments) return 0;
       let visibleCount = 0;
       scene.codeFragments.forEach((fragment) => {
-        const collected = gameState.progress.collectedFragmentKeys.includes(getFragmentKey(fragment)) || gameState.codeInventory.includes(fragment.keyword);
+        const collected = gameState.progress.collectedFragmentKeys.includes(getFragmentKey(fragment));
         const unlocked = isChapterFragmentUnlocked(fragment.chapterId);
         const visible = unlocked && !collected;
         if (visible) visibleCount += 1;
@@ -23838,7 +23909,8 @@ int main(void) {
       const chapterId = chapters[getCurrentMainlineChapterIndex()]?.id || "hello";
       gameState.progress.collectedFragmentKeys = gameState.progress.collectedFragmentKeys.filter((key) => !key.startsWith(`${chapterId}:`));
       gameState.codeInventory = gameState.codeInventory.filter((keyword) => !(scene?.codeFragments || []).some((fragment) => fragment.chapterId === chapterId && fragment.keyword === keyword));
-      gameState.progress.fragmentCount = gameState.codeInventory.length;
+      gameState.codeInventory = normalizeCodeInventoryList(gameState.codeInventory);
+      gameState.progress.fragmentCount = getCourseFragmentProgressCount();
       gameState.progress.collectedFragments = clonePlainData(gameState.progress.collectedFragmentKeys);
       resetCodeKeywordFragments(scene);
       updateProgressHud();
@@ -24531,7 +24603,7 @@ int main(void) {
         return createGuidanceTargetData(task, state, target, guideType);
       }
       if (task.id === "collect_basic_fragments" || task.id === "collect_hidden_blocks") {
-        const fragment = scene.codeFragments?.find((item) => !gameState.codeInventory.includes(item.keyword));
+        const fragment = scene.codeFragments?.find((item) => !gameState.progress.collectedFragmentKeys.includes(getFragmentKey(item)));
         return createGuidanceTargetData(task, state, fragment, guideType);
       }
       if (task.id === "solve_for_sequence") return createGuidanceTargetData(task, state, scene.chapterObjects.loops?.stone, guideType);
@@ -25876,7 +25948,8 @@ int main(void) {
           gate.setDepth(5);
           gate.body.setSize(58, 84).setOffset(7, 8);
           gate.refreshBody();
-          gate.disableBody(true, true);
+          gate.body.enable = false;
+          gate.setActive(true).setVisible(true).setAlpha(0.34).setTint(0x64748b);
 
           const chapterNumberText = createChapterNumberMarker(this, chapter, position, index);
           const stoneLabelText = this.add.text(position.stone[0] - 42, position.stone[1] - 78, chapter.stoneLabel, {
@@ -25895,8 +25968,15 @@ int main(void) {
             stroke: "#111827",
             strokeThickness: 3
           }).setDepth(3);
+          const gateHintText = this.add.text(position.gate[0] - 62, position.gate[1] + 58, "先修复石碑", {
+            fontFamily: "Fira Code, monospace",
+            fontSize: "11px",
+            color: "#bfdbfe",
+            stroke: "#020617",
+            strokeThickness: 3
+          }).setDepth(6).setAlpha(0.78);
 
-          this.chapterObjects[chapter.id] = { stone, gate, scanline, stoneLabelText, gateLabelText, codePuzzle, chapterNumberText };
+          this.chapterObjects[chapter.id] = { stone, gate, scanline, stoneLabelText, gateLabelText, gateHintText, codePuzzle, chapterNumberText };
         });
       }
 
@@ -26017,14 +26097,14 @@ int main(void) {
           ], "happy", 0x166534, this.mossyDeveloperStone);
           if (interaction?.type === "locked") {
             triggerErrorGlitch();
+            showReward(!isLearned(interaction.chapter.id)
+              ? `先完成 ${interaction.chapter.stoneLabel}，编译之门才会亮起。`
+              : `需要先通过前置编译节点。`);
             showCompilerSpark(window.innerWidth * 0.5, window.innerHeight * 0.5);
           }
           if (interaction?.type === "lesson") {
             if (this.chapterObjects[interaction.chapter.id]?.codePuzzle?.completed) this.startLesson(interaction.chapter.id, true);
-            else {
-              triggerErrorGlitch();
-              showPrompt("先完成石碑上的 C 语言代码填空");
-            }
+            else tryFillStoneBlank(this, interaction.chapter.id);
           }
           if (interaction?.type === "challenge") openEditor(interaction.chapter.id);
         }
@@ -26209,8 +26289,12 @@ int main(void) {
             return unlocked ? { type: "lesson", chapter } : { type: "locked", chapter };
           }
 
+          if (nearGate && !isLearned(chapter.id)) {
+            return { type: "locked", chapter };
+          }
+
           if (nearGate && isLearned(chapter.id) && !isCleared(chapter.id)) {
-              return unlocked ? { type: "challenge", chapter } : { type: "locked", chapter };
+            return unlocked ? { type: "challenge", chapter } : { type: "locked", chapter };
           }
         }
         const npc = getNearestNpcInteraction(this);
@@ -26276,9 +26360,14 @@ int main(void) {
       }
 
       revealGate(chapterId, animated) {
-        const gate = this.chapterObjects[chapterId].gate;
+        const objects = this.chapterObjects[chapterId];
+        const gate = objects.gate;
         if (!gate || isCleared(chapterId)) return;
         gate.enableBody(false, gate.x, gate.y, true, true);
+        gate.clearTint?.();
+        objects.gateHintText?.setText?.("按 E 进入编译");
+        objects.gateHintText?.setColor?.("#86efac");
+        objects.gateHintText?.setAlpha?.(1);
         this.startGatePulse(gate);
         const ring = createBinaryRing(this, gate);
         if (ring && !this.binaryRings.includes(ring)) this.binaryRings.push(ring);
