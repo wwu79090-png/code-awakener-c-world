@@ -31,12 +31,15 @@ if (-not $Branch) {
   }
 }
 
-$argsList = @("deploy:gh-pages", "--", "--repo", $Repo, "--branch", $Branch)
+$argsList = @("scripts/auto-deploy.js", "--repo", $Repo, "--branch", $Branch)
 if ($Create) { $argsList += "--create" }
 if ($Wait) { $argsList += "--wait" }
 
 Write-Host "[quick-deploy] repo=$Repo branch=$Branch"
-& npm run @argsList
+
+# 直接调用 node 脚本，避免 PowerShell 执行策略导致的 npm.ps1 拦截。
+# 与 npm run 部署相比行为一致，但不依赖 npm.cmd/.ps1 的执行权。
+& node @argsList
 if ($LASTEXITCODE -ne 0) {
   Write-Error "发布失败，返回码: $LASTEXITCODE"
   exit $LASTEXITCODE

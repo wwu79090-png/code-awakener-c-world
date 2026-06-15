@@ -32,9 +32,9 @@ if "%3"=="create" set EXTRA=%EXTRA% --create
 if "%3"=="wait" set EXTRA=%EXTRA% --wait
 if "%4"=="wait" set EXTRA=%EXTRA% --wait
 
-call npm run deploy:gh-pages -- --repo %REPO% --branch %BRANCH% %EXTRA%
+rem 直接调用 node 脚本，避免 npm.ps1/PowerShell 执行策略问题。
+call node scripts/auto-deploy.js --repo %REPO% --branch %BRANCH% %EXTRA%
 if errorlevel 1 exit /b 1
 
 echo [deploy-auto] 一键部署已触发
 exit /b 0
-

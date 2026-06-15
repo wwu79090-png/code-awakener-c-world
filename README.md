@@ -26,6 +26,11 @@ $env:GH_TOKEN = "你的 PAT"            # 或 $env:GITHUB_TOKEN
 .\scripts\quick-deploy.ps1
 ```
 
+如果你不想碰 PowerShell 执行策略，直接用 CMD 脚本：
+```bat
+scripts\deploy-oneclick.bat 你的用户名/仓库名 main create wait
+```
+
 最简一行命令（PowerShell，适合直接复制）：
 ```powershell
 $env:GH_TOKEN="你的_PAT"; $env:GH_REPO="你的用户名/仓库名"; .\scripts\quick-deploy.ps1 -Branch main -Create -Wait
