@@ -30,7 +30,7 @@ function makeElement() {
 
 function loadGameScript() {
   const html = fs.readFileSync("programming-rpg-c-basics.html", "utf8");
-  const script = [...html.matchAll(/<script>([\s\S]*?)<\/script>/g)]
+  const script = [...html.matchAll(/<script(?![^>]*\bsrc=)[^>]*>([\s\S]*?)<\/script>/g)]
     .map((match) => match[1])
     .join("\n");
   const context = {
@@ -53,6 +53,12 @@ function loadGameScript() {
       cancelAnimationFrame() {},
       addEventListener() {},
       removeEventListener() {}
+    },
+    btoa(value) {
+      return Buffer.from(String(value), "binary").toString("base64");
+    },
+    atob(value) {
+      return Buffer.from(String(value), "base64").toString("binary");
     },
     performance: { now() { return 0; } },
     Phaser: {
@@ -85,7 +91,10 @@ globalThis.__gameApi = {
   validateFixedGameSaveJson: typeof validateFixedGameSaveJson === "function" ? validateFixedGameSaveJson : undefined,
   resolveStartupRouteFromSave: typeof resolveStartupRouteFromSave === "function" ? resolveStartupRouteFromSave : undefined,
   applyManualEditorKeyOperation: typeof applyManualEditorKeyOperation === "function" ? applyManualEditorKeyOperation : undefined,
-  destroyKnowledgeFragment: typeof destroyKnowledgeFragment === "function" ? destroyKnowledgeFragment : undefined
+  destroyKnowledgeFragment: typeof destroyKnowledgeFragment === "function" ? destroyKnowledgeFragment : undefined,
+  compressSavePayload: typeof compressSavePayload === "function" ? compressSavePayload : undefined,
+  decompressSavePayload: typeof decompressSavePayload === "function" ? decompressSavePayload : undefined,
+  escapeHtml: typeof escapeHtml === "function" ? escapeHtml : undefined
 };`, context);
   return context.__gameApi;
 }
@@ -97,7 +106,7 @@ function assert(condition, message) {
 const api = loadGameScript();
 const html = fs.readFileSync("programming-rpg-c-basics.html", "utf8");
 const cspContent = html.match(/Content-Security-Policy" content="([^"]+)"/)?.[1] || "";
-const rawStyleContent = html.match(/<style>([\s\S]*?)<\/style>/)?.[1] || "";
+const rawStyleContent = html.match(/<style[^>]*>([\s\S]*?)<\/style>/)?.[1] || "";
 const rawInlineScriptContent = [...html.matchAll(/<script([^>]*)>([\s\S]*?)<\/script>/g)]
   .find((match) => !/src=/.test(match[1]))?.[2] || "";
 function sha256Directive(source) {
@@ -123,6 +132,18 @@ const expectedIds = [
 assert(api.chapters.length === expectedIds.length, `expected ${expectedIds.length} chapters, got ${api.chapters.length}`);
 for (const id of expectedIds) {
   assert(api.chapterById[id], `missing chapter ${id}`);
+}
+
+assert(api.compressSavePayload, "save compressor should be exported for tests");
+assert(api.decompressSavePayload, "save decompressor should be exported for tests");
+assert(api.escapeHtml, "HTML escaper should be exported for tests");
+{
+  const unicodePayload = JSON.stringify({ title: "设置：中文", values: ["霓虹蓝", "知识碎片", "黑客绿"] });
+  const packed = api.compressSavePayload(unicodePayload);
+  assert(/^lz2:/.test(packed), "new save compression should use the unicode-safe lz2 codec");
+  assert(api.decompressSavePayload(packed) === unicodePayload, "lz2 save compression should round-trip Chinese text");
+  assert(api.escapeHtml(42) === "42", "escapeHtml should safely stringify non-string values");
+  assert(api.escapeHtml("<b>&</b>") === "&lt;b&gt;&amp;&lt;/b&gt;", "escapeHtml should still escape markup");
 }
 
 const samples = {
@@ -446,21 +467,33 @@ assert(/function spawnFractalNoiseShatter/m.test(html), "fractal-noise shatter e
 assert(/function updateScreenSpaceReflections/m.test(html), "screen-space reflection approximation should update");
 assert(/function updateDepthFogSystem/m.test(html), "depth and height fog should update by area");
 assert(/function updateVolumetricSdfShadows/m.test(html), "soft SDF shadow approximation should update");
-assert(/id="cinematicQualitySelect"/m.test(html), "visual settings should expose cinematic quality");
+assert(!/id="cinematicQualitySelect"/m.test(html), "visual settings should not expose the removed cinematic quality selector");
+assert(!/id="frameCapSelect"/m.test(html), "visual settings should not expose an FPS cap selector");
 assert(/id="lutStyleSelect"/m.test(html), "visual settings should expose LUT style selector");
 assert(/id="ssrToggle"/m.test(html) && /id="depthFogToggle"/m.test(html) && /id="proceduralGrassToggle"/m.test(html), "visual settings should expose SSR, fog, and grass toggles");
 assert(/function autoDegradeCinematicEffects/m.test(html), "renderer should auto-degrade effects under low FPS");
 assert(/fps\s*<\s*CINEMATIC_RENDER_BUDGET\.lowFpsThreshold[\s\S]*ssr/m.test(html), "auto degrade should disable SSR first below the FPS budget");
 assert(/开发注意事项[\s\S]*避免白屏/m.test(html), "HTML should document white-screen prevention and extension rules");
 assert(/SAFE_MODE_QUERY_PARAM\s*=\s*"safeMode"/m.test(html), "runtime should expose a URL safe-mode query parameter");
-assert(/ULTIMATE_QUALITY_PROFILES\s*=\s*Object\.freeze/m.test(html), "quality tiers should be centralized for low/medium/high/ultra rendering");
+assert(/ULTIMATE_QUALITY_PROFILES\s*=\s*Object\.freeze/m.test(html), "quality tiers should be centralized for low/medium/high rendering");
+assert(!/value="ultra"/m.test(html), "settings should not expose the removed ultra/cinematic quality option");
+assert(!/ultra:\s*\{/m.test(html), "render profiles should not keep a hidden ultra quality tier");
+assert(/function normalizeRenderQuality/m.test(html), "old ultra/cinematic save values should be normalized to high");
 assert(/class RenderSafetyManager/m.test(html), "render effects should be isolated by a safety manager");
 assert(/function safeRunEffect/m.test(html), "effects should run through a try-catch guard");
 assert(/function enterSafeMode/m.test(html), "runtime should be able to enter a stable safe mode");
-assert(/function chooseInitialQualityProfile/m.test(html), "quality profile should be auto-selected from device and FPS hints");
-assert(/fps\s*<\s*30[\s\S]*disableEffect/m.test(html), "effects should be disabled automatically when FPS drops below 30");
+assert(/function chooseInitialQualityProfile/m.test(html), "quality profile should choose a stable high default unless safe mode is required");
+assert(/fps\s*<\s*22[\s\S]*disableEffect/m.test(html), "effects should only be disabled automatically after severe FPS drops");
 assert(/console\.warn\(`\[FX:\$\{name\}\]/m.test(html), "failed effects should warn and auto-disable instead of crashing");
 assert(/function initializeGameSafely/m.test(html), "Phaser boot should be wrapped with a safe fallback");
+assert(/const SafeExecute\s*=\s*Object\.freeze/m.test(html), "runtime should expose a unified SafeExecute guard");
+assert(/class SafeBehaviour/m.test(html), "runtime should expose a SafeBehaviour cleanup base");
+assert(/function SafeLoadScene/m.test(html), "scene loading should go through SafeLoadScene");
+assert(/const ErrorLogManager\s*=\s*Object\.freeze/m.test(html), "error logs should be managed centrally");
+assert(/ErrorLogManager\.cleanup\(\)/m.test(html), "startup should prune old error logs");
+assert(/collectCodeKeyword[\s\S]*SafeExecute\.run/m.test(html), "fragment collection should be protected by SafeExecute");
+assert(/compileAndRunCProgram[\s\S]*SafeExecute\.runAsync/m.test(html), "compiler execution should be protected by SafeExecute");
+assert(/let codeGenesisCompletionInFlight\s*=\s*false/m.test(html), "code genesis completion should guard against duplicate handoff");
 assert(/safeRunEffect\("cinematicRenderPipeline"/m.test(html), "cinematic render pipeline should be guarded");
 assert(/safeRunEffect\("proceduralGrass"/m.test(html), "procedural grass should be guarded");
 assert(/safeRunEffect\("weatherDirector"/m.test(html), "weather director should be guarded");
@@ -494,26 +527,44 @@ assert(/const SAVE_SLOT_COUNT\s*=\s*3/m.test(html), "save system should expose t
 assert(/id="saveSlotGrid"/m.test(html), "settings save panel should render save slots");
 assert(/function showWorldLoreLoadingSequence/m.test(html), "startup should show a lore-driven animated loading sequence");
 assert(/registerOfflineServiceWorker\(\)/m.test(html), "offline service worker should be registered for repeat launches");
-assert(/id="variableWatchPanel"/m.test(html), "HUD should expose an IDE-style variable watcher");
-assert(/\.ide-status-bar/m.test(html), "HUD should use an IDE-style status bar");
-assert(/id="questTracker"/m.test(html), "HUD should include a task tracking sidebar");
-assert(/id="questList"/m.test(html), "quest tracker should render task entries");
-assert(/class="quest-tracker glass-panel dynamic-island is-collapsed"/m.test(html), "quest tracker should default to a dynamic-island pill");
-assert(/\.quest-tracker\.dynamic-island\s*\{[\s\S]*left:\s*50%[\s\S]*top:\s*62px[\s\S]*translateX\(-50%\)/m.test(html), "dynamic island quest UI should sit under the top prompt instead of blocking the playfield");
-assert(/function renderQuestIslandSummary/m.test(html), "dynamic island quest UI should render a compact one-line summary");
-assert(/classList\.toggle\("is-expanded"\)/m.test(html), "quest island should expand only on demand");
+assert(/id="infoMenuToggle"/m.test(html), "playfield should expose only a compact info menu toggle");
+assert(/id="keymapGlassBar"/m.test(html), "playfield should expose a transparent top keymap bar");
+assert(/class="keymap-glass-bar"/m.test(html), "keymap bar should use the non-blocking glass style");
+assert(/pointer-events:\s*none;[\s\S]*opacity:\s*0\.78/m.test(html), "keymap bar should not block the game view or pointer input");
+assert(/renderTopKeymap\(\)/m.test(html), "shortcut manager should render the top keymap from current bindings");
+assert(/flashTopKeymap\(event\)/m.test(html), "shortcut manager should animate key feedback when the player presses a mapped key");
+assert(/shortcutManager\.flashTopKeymap\(event\)/m.test(html), "global keydown should feed visual keymap feedback");
+assert(/id="infoSideMenu"/m.test(html), "persistent HUD data should live in the collapsible side info menu");
+assert(/id="infoTaskText"/m.test(html) && /id="infoFragmentText"/m.test(html), "side info menu should include task and fragment status");
+assert(/id="infoHpText"/m.test(html) && /id="infoMpText"/m.test(html), "side info menu should include HP and MP");
+assert(/id="infoEquipText"/m.test(html), "side info menu should explain equipped fragments");
+assert(/id="textSpeedSlider"/m.test(html), "side info menu should include text speed control");
+assert(/id="manualSaveButton"/m.test(html), "side info menu should include a manual save button");
+assert(/manualSaveButton\?\.addEventListener\("click"[\s\S]*saveGame\(\)[\s\S]*进度已手动保存/m.test(html), "manual save button should save the game and show island feedback");
+assert(/Number\(gameState\.codeAccuracy\)/m.test(html), "side info menu HP should read the actual codeAccuracy state");
+assert(/Number\(gameState\.hintsLeft\)/m.test(html), "side info menu MP should read the actual hintsLeft state");
+assert(!/Number\(gameState\.hp\)/m.test(html) && !/Number\(gameState\.mp\)/m.test(html), "side info menu should not read undefined hp/mp fields");
+assert(/Object\.values\(gameState\.equipped \|\| {}\)/m.test(html), "side info menu equipment text should read equipped skill cards");
+assert(/function getDialogTextDelay/m.test(html), "dialog typewriter speed should be driven by settings");
+assert(/function generateNpcPortraitDataUrl/m.test(html), "dialogue should generate high-resolution NPC portraits locally");
+assert(/canvas\.width\s*=\s*128[\s\S]*canvas\.height\s*=\s*128/m.test(html), "NPC portrait generator should draw at least 128x128 images");
+assert(/islandToastQueue/m.test(html) && /function renderNextIslandToast/m.test(html), "dynamic-island toasts should be queued");
+assert(/#hud \.hud-top[\s\S]*display:\s*none !important/m.test(html), "legacy persistent HUD should be hidden from the central canvas");
+assert(/#questTracker,[\s\S]*display:\s*none !important/m.test(html), "legacy quest tracker should be hidden as a persistent playfield widget");
+assert(/function updateInfoSideMenu/m.test(html), "side info menu should refresh from runtime state");
+assert(/function toggleInfoSideMenu/m.test(html), "side info menu should be collapsible");
 assert(/id="questRewardToast"/m.test(html), "task completion should show a reward popup");
-assert(/id="characterProfileButton"/m.test(html), "HP/MP meter should open a character profile menu");
+assert(/id="characterProfileButton"/m.test(html), "character profile entry may remain in DOM but must be hidden with legacy HUD");
 assert(/id="characterProfileOverlay"/m.test(html), "character profile should show player attributes and collection progress");
 assert(/function renderCharacterProfile/m.test(html), "character profile should render cards, achievements, fragments, and chapter counts");
 assert(/已解锁成就",\s*`\$\{gameState\.achievements\.length\}\/\$\{achievementCatalog\.length\}`/m.test(html), "character profile should use the achievement catalog total instead of an undefined variable");
 assert(!/\$\{achievements\.length\}/m.test(html), "pressing C should not crash on an undefined achievements variable");
-assert(/class="hud-quick-slots quick-card-island"/m.test(html), "quick card slots should use a dynamic-island layout");
+assert(/class="hud-quick-slots quick-card-island"/m.test(html), "quick card slot DOM may remain for logic but should be hidden by the no-persistent-HUD rule");
 assert(/function getSkillCardUsageDescription/m.test(html), "skill cards should explain their gameplay purpose in detail");
 assert(/class="card-effect"/m.test(html), "card album should show detailed card effects");
 assert(/Ctrl\+\$\{slot\.dataset\.slot\}/m.test(html), "quick card slot tooltips should explain editor keyboard usage");
-assert(/class="hud-chip ide-status-bar dynamic-island-hint"/m.test(html), "guide prompt should move to a top dynamic-island hint");
-assert(/#bottomHintBar\.dynamic-island-hint\s*\{[\s\S]*top:\s*14px[\s\S]*bottom:\s*auto/m.test(html), "guide prompt should be positioned at the top instead of the bottom");
+assert(/class="hud-chip ide-status-bar dynamic-island-hint"/m.test(html), "legacy guide prompt DOM can remain for shortcut text");
+assert(/#hud #bottomHintBar,[\s\S]*display:\s*none !important/m.test(html), "legacy guide prompt should not be a persistent playfield element");
 assert(/NPC_TYPES\s*=\s*Object\.freeze/m.test(html), "NPC system should define NPC types");
 assert(/TASK_TYPES\s*=\s*Object\.freeze/m.test(html), "task system should define task types");
 assert(/TASK_STATUS\s*=\s*Object\.freeze/m.test(html), "task system should define task statuses");
@@ -524,6 +575,7 @@ assert(/class QuestManager/m.test(html), "task system should have a QuestManager
 assert(/collect_basic_fragments/m.test(html), "new player task should collect three basic syntax fragments");
 assert(/function createCoreNpcs/m.test(html), "scene should create core NPCs on the map");
 assert(/function updateNpcQuestIndicators/m.test(html), "NPCs should show task-state indicators");
+assert(/const nameLabel = scene\.add\.text\(0, -63, data\.name \|\| "NPC"/m.test(html), "NPCs should render their names above their heads");
 assert(/function renderQuestTracker/m.test(html), "quest tracker UI should render current progress");
 assert(/function showQuestReward/m.test(html), "completed quests should show a reward window");
 assert(/questManager\.acceptTask\("collect_basic_fragments"/m.test(html), "new game should auto accept the beginner collect quest");
@@ -609,6 +661,8 @@ assert(/function createBreathingVegetation/m.test(html), "vegetation should brea
 assert(/function createFloatingDustMotes/m.test(html), "air should contain sparse floating dust or energy motes");
 assert(/function updateTemperatureShift/m.test(html), "world lighting should shift color temperature subtly");
 assert(/function createPathGuidePulse/m.test(html), "critical paths should use subtle intermittent guide lines");
+assert(/lastCodeRippleAt[\s\S]*<\s*900/m.test(html), "walking code ripples should be throttled and not spawn every frame");
+assert(/lastAddressStepAt[\s\S]*<\s*1200/m.test(html), "memory address footsteps should be sparse instead of flooding the ground");
 assert(/function playPickupBounceFlight/m.test(html), "pickup should squash, rebound, and fly toward the player");
 assert(/function triggerInteractionRipple/m.test(html), "pressing interact should create a ripple around the target");
 assert(/function flashHpDamage/m.test(html), "HP loss should flash red before smoothing");
@@ -620,6 +674,7 @@ assert(/function updateHudNumericRoll/m.test(html), "HUD values should roll nume
 assert(/custom-code-cursor/m.test(html), "UI should use a custom code-like cursor");
 assert(/function showCodePauseMenu/m.test(html), "pause menu should be presented as a code editor floating window");
 assert(/function drawPauseCodeRain/m.test(html), "pause overlay should keep a subtle binary wallpaper moving");
+assert(/if \(action === "cards"\) \{\s*this\.resumeGame\(\);\s*toggleCollectionOverlay\("cards", true\);\s*\}/m.test(html), "pause menu should reveal the skill card album immediately instead of hiding it behind ESC overlay");
 assert(/function playFragmentMilestoneTimeline/m.test(html), "fragment milestones should use timeline cutscenes");
 assert(/function playGateTransitionTimeline/m.test(html), "compile gate traversal should use a gate transition timeline");
 assert(/function lockTimelineInput/m.test(html), "timeline playback should block player input");
@@ -728,6 +783,18 @@ assert(/worldPacks\s*:\s*new\s+Map/m.test(html), "world registry should track wo
 assert(/VISUAL_REGRESSION_TARGETS\s*=\s*Object\.freeze/m.test(html), "visual regression targets should be documented in code");
 assert(/class PerformanceBudgetMonitor/m.test(html), "development mode should monitor FPS and particle budgets");
 assert(/id="performanceBudgetPanel"/m.test(html), "performance budget panel should exist");
+assert(/performanceMode:\s*"high"/m.test(html), "default performance mode should start at high without auto lowering");
+assert(/renderQuality:\s*"high"/m.test(html), "default render quality should start at high");
+assert(/cinematicQuality:\s*CINEMATIC_RENDER_MODES\.high/m.test(html), "default cinematic quality should start at high");
+assert(!/<option value="auto">自动检测<\/option>/m.test(html), "stable render-quality selector should not expose auto-detect");
+assert(!/<option value="auto">启动自动基准<\/option>/m.test(html), "performance selector should not expose startup benchmark mode");
+assert(/const STARTUP_BENCHMARK_MS = 0/m.test(html), "startup should not run a benchmark that can lower the user's FPS settings");
+assert(/function getAutoPerformanceModeId/m.test(html), "automatic performance mode should reuse a cached benchmark result");
+assert(/getPerformanceModeId\(\) === "low" \? "low" : "high"/m.test(html), "render-quality auto mode should prefer high quality by default");
+assert(/qualityRuntimeStatusLastAt/m.test(html), "runtime status text should be throttled to avoid settings-panel jitter");
+assert(/#qualityRuntimeStatus[\s\S]*min-width:\s*220px/m.test(html), "runtime status label should reserve stable width");
+assert(!/\["renderQuality",\s*"performanceMode",\s*"ssr"/m.test(html), "stable render-quality changes should not reset every runtime downgrade");
+assert(/renderQualitySelect\?\.addEventListener\("change",\s*\(event\) => updateSetting\("renderQuality", event\.target\.value\)\)/m.test(html), "stable render-quality changes should apply once through updateSetting");
 assert(/SERVICE_WORKER_SOURCE/m.test(html), "PWA offline support should define a service worker source");
 assert(/function registerOfflineServiceWorker/m.test(html), "PWA offline support should be registerable");
 assert(/BUILD_PIPELINE_MANIFEST/m.test(html), "single-file build pipeline should be documented by a manifest");
@@ -757,6 +824,8 @@ assert(/function announceGameEvent/m.test(html), "runtime should announce critic
 assert(/function visualAlertForMutedAudio/m.test(html), "muted mode should replace audio cues with visual feedback");
 assert(/UNDO_WINDOW_MS\s*=\s*3000/m.test(html), "destructive operations should support a 3 second undo window");
 assert(/function confirmActionWithUndo/m.test(html), "critical actions should have confirm and undo flow");
+assert(/id="bottomActionBar"/m.test(html), "confirm flows should use the bottom action bar");
+assert(!/window\.confirm/m.test(html), "confirm flows should not use blocking browser confirm dialogs");
 assert(/function getContextualInteractionHint/m.test(html), "interaction prompts should explain locked/ready states");
 assert(/function formatCompilerDiagnostic/m.test(html), "logic mistakes should get compiler-style diagnostics");
 assert(/warning:\s*unused variable/m.test(html), "compiler diagnostics should include C-style warning copy");
@@ -936,6 +1005,9 @@ assert(/id="guidanceToggle"/m.test(html), "settings should expose a task guidanc
 assert(/TASK_GUIDANCE_COLORS\s*=\s*Object\.freeze/m.test(html), "task guidance colors should be theme-aware");
 assert(/class TaskGuidanceSystem/m.test(html), "task guidance should be handled by a dedicated system");
 assert(/MAX_GUIDANCE_DOTS\s*=\s*20/m.test(html), "task guidance should cap light dots at 20");
+assert(/guidanceScreenArrow/m.test(html), "task guidance should include a screen-edge arrow when the target is off-screen");
+assert(/function getGuidanceTargetShortLabel/m.test(html), "task guidance arrow should label the precise current target");
+assert(/`▼ \$\{label\}`/m.test(html) && /`➜ \$\{label\}`/m.test(html), "task guidance should show direct arrows for on-screen and off-screen targets");
 assert(/function updateGuidanceTargetHighlight/m.test(html), "nearby task targets should receive a highlight pulse");
 assert(/function showQuestProgressToast/m.test(html), "quest progress should use a non-blocking toast");
 assert(/function updateLostDirectionAssist/m.test(html), "guidance should escalate when the player is lost");
@@ -1208,15 +1280,19 @@ assert(/function showSecurityMascotToast/m.test(html), "security layer should sh
 assert(/function runTamperSelfCheck/m.test(html), "security layer should verify the main script hash");
 assert(/function startTamperWorker/m.test(html), "security layer should periodically self-check through a worker tick");
 assert(/function startDevToolsWatcher/m.test(html), "security layer should detect DevTools for a lighthearted prompt");
+assert(/function isStrictSecurityMode/m.test(html), "security integrity refresh should be gated behind strict mode");
+assert(/if \(!isStrictSecurityMode\(\)\) return true;[\s\S]*function startTamperWorker/m.test(html), "normal player mode should not fail on integrity hash mismatches");
+assert(/if \(!isStrictSecurityMode\(\)\) return false;[\s\S]*const source = `setInterval/m.test(html), "normal player mode should not start the tamper worker");
+assert(/if \(isStrictSecurityMode\(\)\) runTamperSelfCheck\("startup"\)/m.test(html), "startup tamper check should only run in strict security mode");
 assert(/id="gameContextMenu"/m.test(html), "right-click should show a safe custom game context menu");
 assert(/function openGameContextMenu/m.test(html), "game should open a custom context menu instead of the browser menu");
 assert(/function handleContextMenuSecurity/m.test(html), "security layer should replace right-click source/inspect menu");
 assert(/addEventListener\("contextmenu",\s*handleContextMenuSecurity/m.test(html), "right-click context menu should be captured by security layer");
 assert(/handleContextMenuSecurity[\s\S]*event\.preventDefault\(\)/m.test(html), "right-click handler should prevent the browser context menu");
 assert(/input:\s*\{[\s\S]*mouse:\s*\{[\s\S]*preventDefault:\s*false/m.test(html), "Phaser should delegate right-click to the document security handler");
-assert(/devToolsRefreshMs:\s*2000/m.test(html), "DevTools detection should refresh after 2 seconds");
 assert(/function saveBeforeSecurityRefresh/m.test(html), "security refresh should save the game before reloading");
-assert(/showSecurityMascotToast\("devtools",\s*\{[\s\S]*refreshInMs:\s*SECURITY_CONFIG\.devToolsRefreshMs/m.test(html), "DevTools prompt should trigger the save-and-refresh flow");
+assert(!/showSecurityMascotToast\("devtools",\s*\{[\s\S]*refreshInMs:\s*SECURITY_CONFIG\.devToolsRefreshMs/m.test(html), "DevTools prompt should not auto-refresh normal players");
+assert(/showSecurityMascotToast\("devtools",\s*\{\s*stayMs:\s*7800\s*\}/m.test(html), "DevTools prompt should be a temporary non-blocking toast");
 assert(!/contextMenuRefreshMs/m.test(html), "right-click alone should not trigger the refresh flow");
 assert(!/查看网页源代码|检查元素|Inspect|View Source/.test(html), "custom right-click menu should not expose source or inspect labels");
 assert(/function installConsoleHardening/m.test(html), "production mode should silence console log while keeping errors");
@@ -1249,16 +1325,16 @@ assert(/id="browserShortcutWarning"/m.test(html), "UI should warn about dangerou
 assert(/id="bossModeOverlay"/m.test(html), "boss mode overlay should exist");
 assert(/shortcutManager\.getContextHint/m.test(html), "bottom hint bar should be driven by ShortcutManager");
 assert(/Ctrl\+Shift\+S/.test(html) && /Ctrl\+Shift\+R/.test(html), "safe Ctrl+Shift shortcut domain should be documented");
-assert(/body\[data-cinematic-quality="cinematic"\][\s\S]*#game canvas/m.test(html), "cinematic quality should visibly alter the canvas");
+assert(!/body\[data-cinematic-quality="cinematic"\]/m.test(html), "cinematic quality tier should be removed from the render pipeline");
 assert(/body\[data-cinematic-quality="low"\][\s\S]*#game canvas/m.test(html), "low quality should visibly reduce post-processing");
-assert(/--cinematic-bloom[\s\S]*0\.92/m.test(html), "cinematic quality should strongly increase bloom");
+assert(!/value="cinematic"/m.test(html), "settings should not include a cinematic option value");
 assert(/function shouldRunCinematicFrame/m.test(html), "cinematic effects should be frame-throttled for performance");
 assert(/updateSafeSceneFx[\s\S]*shouldRunCinematicFrame\(scene, "cinematicRenderPipeline"\)/m.test(html), "cinematic post-processing should not run every frame on low profiles");
 assert(/resetEffectDowngrades[\s\S]*quality downgrades reset/m.test(html), "manual quality changes should clear previous automatic downgrade state");
 assert(/body\[data-render-quality="low"\][\s\S]*#cinematicFxCanvas/m.test(html), "low render quality should visibly reduce expensive overlay work");
 assert(/const PERFORMANCE_DEGRADE_SEQUENCE\s*=\s*Object\.freeze\(\["ssao", "particles", "bloom"\]\)/m.test(html), "performance downgrade order should be SSAO -> particles -> Bloom");
 assert(/class RollingFpsDegrader/m.test(html), "performance system should monitor a rolling FPS window");
-assert(/averageWindowMs:\s*3000/m.test(html), "performance system should use a 3 second average FPS window");
+assert(/averageWindowMs:\s*5000/m.test(html) && /thresholdFps:\s*22/m.test(html), "performance protection should only trigger after sustained severe FPS drops");
 assert(/function suspendSceneForEditor/m.test(html), "editor mode should fully suspend gameplay simulation work");
 assert(/function isObjectInsideCameraView/m.test(html), "off-camera animation and particles should be culled");
 assert(/const CHAPTER_REGION_LAYOUT\s*=\s*Object\.freeze/m.test(html), "map should define isolated chapter regions");
