@@ -79,6 +79,8 @@ globalThis.__gameApi = {
   chapters,
   chapterById,
   inspectCBeforeRun,
+  inspectRunnableCBeforeRun: typeof inspectRunnableCBeforeRun === "function" ? inspectRunnableCBeforeRun : undefined,
+  isLenientChallengePass: typeof isLenientChallengePass === "function" ? isLenientChallengePass : undefined,
   simulateCOutput,
   autoInjectStdIoHeader,
   normalizeProgramOutput,
@@ -284,6 +286,21 @@ const missingInclude = `int main(void) {
   return 0;
 }`;
 assert(api.inspectCBeforeRun(missingInclude, api.chapterById.hello).includes("第1行"), "missing include should report line 1");
+const looseVariableSolution = `#include <stdio.h>
+int main(void) {
+  int score = 7;
+  printf("%d", score);
+  return 0;
+}`;
+assert(api.inspectRunnableCBeforeRun(looseVariableSolution, api.chapterById.variables) === "", "runtime judge should allow different variable names when C syntax is runnable");
+assert(api.isLenientChallengePass(looseVariableSolution, api.chapterById.variables, "7"), "runtime judge should pass approximate runnable C solutions");
+const syntaxBrokenSolution = `#include <stdio.h>
+int main(void) {
+  int score = 7
+  printf("%d", score);
+  return 0;
+}`;
+assert(api.inspectRunnableCBeforeRun(syntaxBrokenSolution, api.chapterById.variables).includes("缺少分号"), "runtime judge should still reject real syntax errors");
 
 const qualityMarkers = [
   "Press Start 2P",

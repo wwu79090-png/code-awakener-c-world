@@ -11,7 +11,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; base-uri 'self'; object-src 'none'; frame-ancestors 'none'; script-src 'self' https://cdn.jsdelivr.net 'nonce-code-awakener-inline' 'sha256-6xPI1bqBUSqbAVkaw4WjOznxYVLxKeHAo4YBOTbgpY4='; style-src 'self' https://cdn.jsdelivr.net https://fonts.googleapis.com 'nonce-code-awakener-inline' 'sha256-3P6/5qpD3vcMLDww6EcCtHzTp0bSBVWmip0x4HUBSr8='; font-src 'self' https://cdn.jsdelivr.net https://fonts.gstatic.com data:; img-src 'self' data: blob:; media-src 'self' data: blob:; worker-src 'self' blob:; child-src 'self' blob:; connect-src 'self' https://cdn.jsdelivr.net;">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; base-uri 'self'; object-src 'none'; frame-ancestors 'none'; script-src 'self' https://cdn.jsdelivr.net 'nonce-code-awakener-inline' 'sha256-6ajQiSK0OwaH58BM0C7D6qDWhcUXuzPYcyLRsQOv2RM='; style-src 'self' https://cdn.jsdelivr.net https://fonts.googleapis.com 'nonce-code-awakener-inline' 'sha256-3P6/5qpD3vcMLDww6EcCtHzTp0bSBVWmip0x4HUBSr8='; font-src 'self' https://cdn.jsdelivr.net https://fonts.gstatic.com data:; img-src 'self' data: blob:; media-src 'self' data: blob:; worker-src 'self' blob:; child-src 'self' blob:; connect-src 'self' https://cdn.jsdelivr.net;">
   <title>编程学习 RPG：C 语言启航村</title>
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%23020617'/%3E%3Cpath d='M22 20 10 32l12 12M42 20l12 12-12 12' fill='none' stroke='%2300ff88' stroke-width='6' stroke-linecap='round' stroke-linejoin='round'/%3E%3Cpath d='m36 16-8 32' stroke='%2300ccff' stroke-width='5' stroke-linecap='round'/%3E%3C/svg%3E">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/firacode@6.2.0/distr/fira_code.css">
@@ -8280,7 +8280,7 @@ int main(void) {
       directSaveAs: "reduced-by-inline-resources"
     });
     const SECURITY_CONFIG = Object.freeze({
-      expectedScriptHash: "WCytAPYGrwuMueTOLsV8ezyB9JlVb09x6XW8U/tLHe0=",
+      expectedScriptHash: "7mKxDWifUH6XIlNcgWRfIU01ms/acOo2dKg2WM2xR9g=",
       selfCheckIntervalMs: 45000,
       tamperRefreshMs: 5000,
       devToolsRefreshMs: 2000,
@@ -21087,12 +21087,14 @@ int main(void) {
       const result = await compileAndRunCProgram(cCode, chapter);
       if (!result.ok) return result;
       const comparison = compareProgramOutput(result.output, chapter.output);
-      if (!comparison.ok) return { ok: false, message: comparison.message, output: comparison.actual, mode: result.mode };
+      const lenientPass = !comparison.ok && isLenientChallengePass(cCode, chapter, result.output);
+      if (!comparison.ok && !lenientPass) return { ok: false, message: comparison.message, output: comparison.actual, mode: result.mode };
       const html = `<!doctype html><html><body><pre id="terminal"></pre></body></html>`;
       dom.sandbox.srcdoc = html;
       await new Promise((resolve) => window.setTimeout(resolve, 80));
-      dom.sandbox.contentDocument.getElementById("terminal").textContent = comparison.actual;
-      return { ok: true, output: comparison.actual, mode: result.mode };
+      const acceptedOutput = comparison.ok ? comparison.actual : (comparison.actual || result.output || chapter.output || "compiled");
+      dom.sandbox.contentDocument.getElementById("terminal").textContent = acceptedOutput;
+      return { ok: true, output: acceptedOutput, mode: result.mode, lenient: lenientPass };
     }
 
     function inspectCBeforeRun(cCode, chapter = chapterById.hello) {
@@ -21116,6 +21118,70 @@ int main(void) {
         "best-practices": inspectBestPracticeChallenge
       };
       return validators[chapter.validator](cCode, chapter);
+    }
+
+    function inspectRunnableCBeforeRun(cCode, chapter = chapterById.hello) {
+      const lines = String(cCode || "").split("\n");
+      const code = stripCComments(String(cCode || ""));
+      if (/\bclass\b|\bnamespace\b|\bcout\b/.test(code)) {
+        const line = findLine(lines, /\b(class|namespace|cout)\b/) || 1;
+        return `[第${line}行] 当前世界只运行 C 语言代码。\n导师评价：这类后续语言语法先留到新的语言世界。`;
+      }
+
+      const mainLine = findLine(lines, /\bint\s+main\s*\(\s*(void)?\s*\)/);
+      if (!mainLine) {
+        return `[第1行] 没找到 int main(void) 程序入口。\n导师评价：只要有 main 入口、语法能跑，本关会按宽松规则放行。`;
+      }
+
+      const bracesIssue = inspectBraceBalance(lines);
+      if (bracesIssue) return bracesIssue;
+
+      const quoteIssue = lines.findIndex((lineText) => hasUnclosedCString(lineText.replace(/\/\/.*$/, "")));
+      if (quoteIssue >= 0) {
+        return `[第${quoteIssue + 1}行] 字符串没有用英文引号闭合。\n导师评价：这是会导致编译失败的语法错误，需要先修好。`;
+      }
+
+      const semicolonIssue = lines.findIndex((lineText) => {
+        const trimmed = lineText.replace(/\/\/.*$/, "").trim();
+        if (!trimmed || trimmed.startsWith("#")) return false;
+        if (/^[{}]+$/.test(trimmed) || /[{}:]$/.test(trimmed)) return false;
+        if (/^(if|for|while|switch|else)\b/.test(trimmed)) return false;
+        return /^(int|char|float|double|FILE|printf|puts|fprintf|fclose|return|free|malloc|atoi|\w+\s*=)/.test(trimmed) && !/;\s*$/.test(trimmed);
+      });
+      if (semicolonIssue >= 0) {
+        return `[第${semicolonIssue + 1}行] 这行看起来缺少分号 ;。\n导师评价：宽松判定会放过思路差异，但真正的语法错误还是要修。`;
+      }
+
+      return "";
+    }
+
+    function hasUnclosedCString(lineText = "") {
+      let quote = "";
+      let escaped = false;
+      for (const char of String(lineText)) {
+        if (escaped) {
+          escaped = false;
+          continue;
+        }
+        if (char === "\\") {
+          escaped = true;
+          continue;
+        }
+        if ((char === '"' || char === "'") && !quote) {
+          quote = char;
+          continue;
+        }
+        if (char === quote) quote = "";
+      }
+      return Boolean(quote);
+    }
+
+    function isLenientChallengePass(cCode, chapter = chapterById.hello, output = "") {
+      if (inspectRunnableCBeforeRun(cCode, chapter)) return false;
+      const code = stripCComments(String(cCode || ""));
+      const hasExecutableIntent = /\b(printf|puts|return|if|for|while|malloc|free|fopen|fclose|fprintf|atoi|struct)\b|#define|=/.test(code);
+      const hasApproximateOutput = compareProgramOutput(output, chapter?.output || "").ok || Boolean(String(output || "").trim());
+      return hasExecutableIntent || hasApproximateOutput;
     }
 
     function inspectCommonCProgram(cCode) {
@@ -21597,7 +21663,7 @@ int main(void) {
     }
 
     function interpretSupportedCSubset(cCode, chapter) {
-      const issue = inspectCBeforeRun(cCode, chapter);
+      const issue = inspectRunnableCBeforeRun(cCode, chapter);
       if (issue) return { ok: false, message: issue, mode: C_EXECUTION_MODES.supportedSubset };
       return {
         ok: true,
