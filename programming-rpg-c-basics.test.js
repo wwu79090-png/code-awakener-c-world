@@ -91,6 +91,7 @@ globalThis.__gameApi = {
   validateFixedGameSaveJson: typeof validateFixedGameSaveJson === "function" ? validateFixedGameSaveJson : undefined,
   resolveStartupRouteFromSave: typeof resolveStartupRouteFromSave === "function" ? resolveStartupRouteFromSave : undefined,
   applyManualEditorKeyOperation: typeof applyManualEditorKeyOperation === "function" ? applyManualEditorKeyOperation : undefined,
+  manualEditorOperationFromBeforeInput: typeof manualEditorOperationFromBeforeInput === "function" ? manualEditorOperationFromBeforeInput : undefined,
   destroyKnowledgeFragment: typeof destroyKnowledgeFragment === "function" ? destroyKnowledgeFragment : undefined,
   compressSavePayload: typeof compressSavePayload === "function" ? compressSavePayload : undefined,
   decompressSavePayload: typeof decompressSavePayload === "function" ? decompressSavePayload : undefined,
@@ -1460,11 +1461,16 @@ assert(api.resolveStartupRouteFromSave, "startup route resolver should be export
   assert(corruptRoute.route === "create" && /损坏|格式/.test(corruptRoute.message), "corrupt fixed save should route to character creation with an error");
 }
 assert(/function applyManualEditorKeyOperation/m.test(html), "editor should expose a pure manual keyboard operation engine");
+assert(/function manualEditorOperationFromBeforeInput/m.test(html), "mobile soft keyboard beforeinput should be translated into manual editor operations");
+assert(/dom\.codeInput\.addEventListener\("beforeinput", handleMobileEditorBeforeInput\)/m.test(html), "editor beforeinput should use the mobile-safe manual input bridge");
+assert(/<textarea id="codeInput" inputmode="text" autocomplete="off" autocapitalize="none" autocorrect="off"/m.test(html), "code editor should expose mobile-friendly input attributes");
 assert(/function handleManualEditorInputKey/m.test(html), "editor keydown should be manually handled instead of relying on textarea default editing");
 assert(/function handleManualEditorPointerDown/m.test(html), "editor should manually place the cursor on pointer down");
 assert(/function handleManualEditorDoubleClick/m.test(html), "editor should manually select words on double click");
-assert(/beforeinput[\s\S]*preventDefault/m.test(html), "editor should suppress default browser text editing while active");
+assert(/if \(!touchPointer\) event\.preventDefault\(\)/m.test(html), "touch pointer down should not suppress the mobile soft keyboard");
+assert(/beforeinput[\s\S]*handleMobileEditorBeforeInput[\s\S]*preventDefault/m.test(html), "editor should suppress default browser text editing through the manual bridge while active");
 assert(api.applyManualEditorKeyOperation, "manual editor operation engine should be exported for tests");
+assert(api.manualEditorOperationFromBeforeInput, "mobile beforeinput operation bridge should be exported for tests");
 {
   const insert = api.applyManualEditorKeyOperation({ value: "ab", start: 1, end: 1 }, { key: "X" });
   assert(insert.value === "aXb" && insert.start === 2 && insert.end === 2, "manual editor should insert printable characters");
@@ -1484,7 +1490,15 @@ assert(api.applyManualEditorKeyOperation, "manual editor operation engine should
   assert(wordRight.start === 5 && wordRight.end === 5, "manual editor Ctrl+Right should move by word");
   const shiftRight = api.applyManualEditorKeyOperation({ value: "abc", start: 1, end: 1 }, { key: "ArrowRight", shiftKey: true });
   assert(shiftRight.start === 1 && shiftRight.end === 2, "manual editor Shift+Arrow should extend selection");
+  const mobileInsert = api.manualEditorOperationFromBeforeInput({ value: "pr", start: 2, end: 2 }, "insertText", "i");
+  assert(mobileInsert.value === "pri" && mobileInsert.start === 3, "mobile soft keyboard insertText should add code characters");
+  const mobileEnter = api.manualEditorOperationFromBeforeInput({ value: "    if (ok) {", start: 13, end: 13 }, "insertLineBreak");
+  assert(mobileEnter.value === "    if (ok) {\n        ", "mobile soft keyboard Enter should preserve indentation");
+  const mobileBackspace = api.manualEditorOperationFromBeforeInput({ value: "abc", start: 2, end: 2 }, "deleteContentBackward");
+  assert(mobileBackspace.value === "ac" && mobileBackspace.start === 1, "mobile soft keyboard Backspace should delete through manual editor logic");
 }
+assert(/for \(const chapter of chapters\)[\s\S]*const npc = getNearestNpcInteraction\(this\)/m.test(html), "chapter stones and gates should be checked before nearby NPCs");
+assert(/id: "guard"[\s\S]*x: 520,\s*y: 260/m.test(html), "compile guard should be moved away from the first stone interaction radius");
 assert(fs.existsSync("scripts/mobile-browser-smoke.cjs"), "mobile Chrome/WebKit smoke script should exist");
 assert(/mobile:smoke/.test(fs.readFileSync("package.json", "utf8")), "package scripts should expose mobile:smoke");
 

@@ -11,7 +11,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; base-uri 'self'; object-src 'none'; frame-ancestors 'none'; script-src 'self' https://cdn.jsdelivr.net 'nonce-code-awakener-inline' 'sha256-f7e+c6WEzHkjXotXvOpb75SqOmFcSlX8pqwjsMbZlRM='; style-src 'self' https://cdn.jsdelivr.net https://fonts.googleapis.com 'nonce-code-awakener-inline' 'sha256-3P6/5qpD3vcMLDww6EcCtHzTp0bSBVWmip0x4HUBSr8='; font-src 'self' https://cdn.jsdelivr.net https://fonts.gstatic.com data:; img-src 'self' data: blob:; media-src 'self' data: blob:; worker-src 'self' blob:; child-src 'self' blob:; connect-src 'self' https://cdn.jsdelivr.net;">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; base-uri 'self'; object-src 'none'; frame-ancestors 'none'; script-src 'self' https://cdn.jsdelivr.net 'nonce-code-awakener-inline' 'sha256-kegxOf8Z28rONs9ZnpTCsa0R1fN9C8ieGjKNCvYzGJM='; style-src 'self' https://cdn.jsdelivr.net https://fonts.googleapis.com 'nonce-code-awakener-inline' 'sha256-3P6/5qpD3vcMLDww6EcCtHzTp0bSBVWmip0x4HUBSr8='; font-src 'self' https://cdn.jsdelivr.net https://fonts.gstatic.com data:; img-src 'self' data: blob:; media-src 'self' data: blob:; worker-src 'self' blob:; child-src 'self' blob:; connect-src 'self' https://cdn.jsdelivr.net;">
   <title>编程学习 RPG：C 语言启航村</title>
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%23020617'/%3E%3Cpath d='M22 20 10 32l12 12M42 20l12 12-12 12' fill='none' stroke='%2300ff88' stroke-width='6' stroke-linecap='round' stroke-linejoin='round'/%3E%3Cpath d='m36 16-8 32' stroke='%2300ccff' stroke-width='5' stroke-linecap='round'/%3E%3C/svg%3E">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/firacode@6.2.0/distr/fira_code.css">
@@ -7594,7 +7594,7 @@ int main(void) {
               <div id="lineNumbers">1</div>
               <div class="code-layer">
                 <pre id="highlightLayer" aria-hidden="true"></pre>
-                <textarea id="codeInput" spellcheck="false"></textarea>
+                <textarea id="codeInput" inputmode="text" autocomplete="off" autocapitalize="none" autocorrect="off" spellcheck="false"></textarea>
                 <div id="autocompleteBox" class="autocomplete-box" role="listbox" aria-label="代码补全"></div>
               </div>
             </div>
@@ -7996,7 +7996,7 @@ int main(void) {
       { id: "mentor", type: NPC_TYPES.mentor, name: "老程序员", x: 245, y: 342, color: 0xa855f7, taskIds: ["collect_basic_fragments"], bubble: "先收集 int、return、printf。" },
       { id: "merchant", type: NPC_TYPES.merchant, name: "碎片商人", x: 650, y: 320, color: 0xfbbf24, taskIds: ["collect_hidden_blocks"], bubble: "碎片可以换外观。" },
       { id: "lost", type: NPC_TYPES.lost, name: "迷路变量", x: 1020, y: 470, color: 0x38bdf8, taskIds: [], bubble: "沿着蓝色光路走。" },
-      { id: "guard", type: NPC_TYPES.guard, name: "编译守卫", x: 430, y: 322, color: 0xff5f6d, taskIds: ["pass_compile_gate"], bubble: "编译未通过，你不能通过。" },
+      { id: "guard", type: NPC_TYPES.guard, name: "编译守卫", x: 520, y: 260, color: 0xff5f6d, taskIds: ["pass_compile_gate"], bubble: "编译未通过，你不能通过。" },
       { id: "easterEgg", type: NPC_TYPES.easterEgg, name: "角落注释", x: 116, y: 620, color: 0x94a3b8, taskIds: [], bubble: "笑话：bug 说它只是未定义行为。" },
       { id: "redScarfHermit", type: NPC_TYPES.redScarfHermit, name: "红围巾旅人", x: 2260, y: 1088, color: 0xe2e8f0, scarf: 0xef4444, taskIds: [], bubble: "嘿，你居然找到我了。这里什么都没有，只是想告诉你：你做得很好。" }
     ]);
@@ -8280,7 +8280,7 @@ int main(void) {
       directSaveAs: "reduced-by-inline-resources"
     });
     const SECURITY_CONFIG = Object.freeze({
-      expectedScriptHash: "mA2pl1dP7FQ1dZvtVM0ha410iS984bXkL99GIyYx5Oc=",
+      expectedScriptHash: "r04PQenevpfOlGsbDExuEP8Mryijxy5vofK2JQXE9Gk=",
       selfCheckIntervalMs: 45000,
       tamperRefreshMs: 5000,
       devToolsRefreshMs: 2000,
@@ -20216,6 +20216,34 @@ int main(void) {
       return true;
     }
 
+    function manualEditorOperationFromBeforeInput(state = {}, inputType = "", data = "", transferText = "") {
+      const type = String(inputType || "");
+      if (type === "insertText" || type === "insertCompositionText" || type === "insertReplacementText") {
+        return replaceManualEditorSelection(state, data || "");
+      }
+      if (type === "insertFromPaste") return replaceManualEditorSelection(state, transferText || data || "");
+      if (type === "insertLineBreak" || type === "insertParagraph") {
+        return applyManualEditorKeyOperation(state, { key: "Enter" });
+      }
+      if (type === "deleteContentBackward") return applyManualEditorKeyOperation(state, { key: "Backspace" });
+      if (type === "deleteContentForward") return applyManualEditorKeyOperation(state, { key: "Delete" });
+      if (type === "historyUndo") return { ...normalizeManualEditorState(state), command: "undo", handled: true };
+      if (type === "historyRedo") return { ...normalizeManualEditorState(state), command: "redo", handled: true };
+      return { ...normalizeManualEditorState(state), handled: false };
+    }
+
+    function handleMobileEditorBeforeInput(event) {
+      if (!gameState.editorOpen) return false;
+      event.preventDefault();
+      event.stopPropagation();
+      if (dom.codeInput.readOnly) return true;
+      const transferText = event.dataTransfer?.getData?.("text/plain") || "";
+      const result = manualEditorOperationFromBeforeInput(getManualEditorDomState(), event.inputType, event.data || "", transferText);
+      if (!result.handled) return true;
+      commitManualEditorOperation(result);
+      return true;
+    }
+
     function handleManualEditorInputKey(event, clipboardText = "") {
       if (!gameState.editorOpen || dom.codeInput.readOnly) return false;
       if ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === "v" && !clipboardText && navigator.clipboard?.readText) {
@@ -20231,6 +20259,10 @@ int main(void) {
       event.preventDefault();
       event.stopPropagation();
       return commitManualEditorOperation(result);
+    }
+
+    function isTouchPointerEvent(event) {
+      return event?.pointerType === "touch" || event?.type === "touchstart" || event?.sourceCapabilities?.firesTouchEvents;
     }
 
     function getEditorTextMetrics() {
@@ -20270,10 +20302,12 @@ int main(void) {
 
     function handleManualEditorPointerDown(event) {
       if (!gameState.editorOpen) return false;
-      event.preventDefault();
+      const touchPointer = isTouchPointerEvent(event);
+      if (!touchPointer) event.preventDefault();
       const index = getEditorPointerIndexFromEvent(event);
       manualEditorDragAnchor = index;
       setManualEditorSelection(index);
+      if (touchPointer) requestAnimationFrame(() => setManualEditorSelection(index));
       return true;
     }
 
@@ -26157,8 +26191,6 @@ int main(void) {
       }
 
       getInteraction() {
-        const npc = getNearestNpcInteraction(this);
-        if (npc) return { type: "npc", npc };
         if (this.playerRoomEntrance?.door && Phaser.Math.Distance.BetweenPoints(this.player, this.playerRoomEntrance.door) < 78) return { type: "roomEntrance" };
         if (this.oldComputerTerminal?.terminal && Phaser.Math.Distance.BetweenPoints(this.player, this.oldComputerTerminal.terminal) < 72) return { type: "oldComputer" };
         if (this.mossyDeveloperStone && Phaser.Math.Distance.BetweenPoints(this.player, this.mossyDeveloperStone) < 74) return { type: "mossyStone" };
@@ -26178,9 +26210,11 @@ int main(void) {
           }
 
           if (nearGate && isLearned(chapter.id) && !isCleared(chapter.id)) {
-            return unlocked ? { type: "challenge", chapter } : { type: "locked", chapter };
+              return unlocked ? { type: "challenge", chapter } : { type: "locked", chapter };
           }
         }
+        const npc = getNearestNpcInteraction(this);
+        if (npc) return { type: "npc", npc };
         return null;
       }
 
@@ -26470,9 +26504,7 @@ int main(void) {
       closeStartupAnnouncement();
     });
 
-    dom.codeInput.addEventListener("beforeinput", (event) => {
-      if (gameState.editorOpen) event.preventDefault();
-    });
+    dom.codeInput.addEventListener("beforeinput", handleMobileEditorBeforeInput);
     dom.codeInput.addEventListener("input", () => {
       pushEditorUndoSnapshot();
       editorHistory.lastValue = dom.codeInput.value;
