@@ -243,8 +243,18 @@ function push(branch, ownerRepo, token) {
     return;
   }
 
-  if (hasCommand('gh')) {
+  try {
+    execInherit(`git push -u origin ${branch}`);
+    return;
+  } catch {}
+
+  try {
     execInherit('git push');
+    return;
+  } catch {}
+
+  if (hasCommand('gh')) {
+    execInherit(`git push -u origin ${branch}`);
     return;
   }
 
@@ -314,9 +324,7 @@ async function main() {
   const useGh = hasCommand('gh');
 
   if (!token && !useGh) {
-    console.error('未检测到 GH_TOKEN/GITHUB_TOKEN 且未安装 gh CLI。');
-    console.log('请先设置 GH_TOKEN 环境变量，或安装并登录 gh CLI。');
-    process.exit(1);
+    console.log('未检测到 GH_TOKEN/GITHUB_TOKEN 与 gh CLI，当前将尝试直接使用 git 凭据推送。');
   }
 
   await ensureRepo(repo, token);

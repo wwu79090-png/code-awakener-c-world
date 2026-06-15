@@ -31,16 +31,6 @@ if (-not $Branch) {
   }
 }
 
-if (-not $env:GH_TOKEN -and -not $env:GITHUB_TOKEN) {
-  try {
-    $null = gh auth status 2>$null
-    if ($LASTEXITCODE -ne 0) { throw "no-gh" }
-  } catch {
-    Write-Error "未检测到 GH_TOKEN/GITHUB_TOKEN，且未检测到已登录的 gh CLI。请先设置 Token 或登录 gh CLI。"
-    exit 1
-  }
-}
-
 $argsList = @("deploy:gh-pages", "--", "--repo", $Repo, "--branch", $Branch)
 if ($Create) { $argsList += "--create" }
 if ($Wait) { $argsList += "--wait" }
