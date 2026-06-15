@@ -1527,5 +1527,17 @@ assert(/for \(const chapter of chapters\)[\s\S]*const npc = getNearestNpcInterac
 assert(/id: "guard"[\s\S]*x: 520,\s*y: 260/m.test(html), "compile guard should be moved away from the first stone interaction radius");
 assert(fs.existsSync("scripts/mobile-browser-smoke.cjs"), "mobile Chrome/WebKit smoke script should exist");
 assert(/mobile:smoke/.test(fs.readFileSync("package.json", "utf8")), "package scripts should expose mobile:smoke");
+assert(/class TutorialAnimationManager/m.test(html), "tutorial animations should be centrally queued by TutorialAnimationManager");
+assert(/TUTORIAL_ANIMATION_IDS\s*=\s*Object\.freeze\(\[[\s\S]*"T01_AWAKENING_PROMPT"[\s\S]*"T12_CHAPTER_UNLOCK_ROAD"/m.test(html), "tutorial system should define all 12 core animation ids");
+assert(/class TutorialNpcActionController/m.test(html), "tutorial animations should drive NPC action states");
+assert(/comeFromDistance|pointToTarget|shakeHead|celebrate/m.test(html), "NPC tutorial action state machine should include baked tutorial motions");
+assert(/function preloadTutorialAnimationResources/m.test(html), "tutorial animation resources should be preloaded before use");
+assert(/tutorialAnimationManager\.trigger/m.test(html), "gameplay events should trigger tutorial animations through the manager");
+assert(/tutorialAnimationManager\.handleEscSkip/m.test(html), "Esc should route through tutorial animation skip logic");
+assert(/id="tutorialAnimationToggle"/m.test(html), "settings should expose a tutorial animation toggle");
+assert(/tutorialAnimationsEnabled:\s*true/m.test(html), "tutorial animation setting should default on");
+assert(/tutorialAnimationManager\.reset/m.test(html), "tutorial animation manager should expose a reset interface");
+assert(/objectPoolManager\.acquire\("effect"/m.test(html), "tutorial animation effects should use pooled effect objects");
+assert(/强制教学动画建议完整体验/m.test(html), "skipping mandatory tutorial animations should show a friendly recommendation");
 
 console.log(`validated ${expectedIds.length} C tutorial chapters and quality systems`);

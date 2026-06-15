@@ -11,7 +11,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; base-uri 'self'; object-src 'none'; frame-ancestors 'none'; script-src 'self' https://cdn.jsdelivr.net 'nonce-code-awakener-inline' 'sha256-6ajQiSK0OwaH58BM0C7D6qDWhcUXuzPYcyLRsQOv2RM='; style-src 'self' https://cdn.jsdelivr.net https://fonts.googleapis.com 'nonce-code-awakener-inline' 'sha256-3P6/5qpD3vcMLDww6EcCtHzTp0bSBVWmip0x4HUBSr8='; font-src 'self' https://cdn.jsdelivr.net https://fonts.gstatic.com data:; img-src 'self' data: blob:; media-src 'self' data: blob:; worker-src 'self' blob:; child-src 'self' blob:; connect-src 'self' https://cdn.jsdelivr.net;">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; base-uri 'self'; object-src 'none'; frame-ancestors 'none'; script-src 'self' https://cdn.jsdelivr.net 'nonce-code-awakener-inline' 'sha256-Xm6sAW6U8vattoadK1r/hed/KbdpsJrGEAmELjq8mDE='; style-src 'self' https://cdn.jsdelivr.net https://fonts.googleapis.com 'nonce-code-awakener-inline' 'sha256-GjSvGxy4+UcVkX/2n29eFp0SFYt7DN76JP0Z8wcC6TQ='; font-src 'self' https://cdn.jsdelivr.net https://fonts.gstatic.com data:; img-src 'self' data: blob:; media-src 'self' data: blob:; worker-src 'self' blob:; child-src 'self' blob:; connect-src 'self' https://cdn.jsdelivr.net;">
   <title>编程学习 RPG：C 语言启航村</title>
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%23020617'/%3E%3Cpath d='M22 20 10 32l12 12M42 20l12 12-12 12' fill='none' stroke='%2300ff88' stroke-width='6' stroke-linecap='round' stroke-linejoin='round'/%3E%3Cpath d='m36 16-8 32' stroke='%2300ccff' stroke-width='5' stroke-linecap='round'/%3E%3C/svg%3E">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/firacode@6.2.0/distr/fira_code.css">
@@ -4103,6 +4103,96 @@
       border-radius: 14px;
     }
 
+    .tutorial-animation-layer {
+      position: fixed;
+      inset: 0;
+      z-index: 96;
+      pointer-events: none;
+      display: grid;
+      place-items: center;
+      background:
+        radial-gradient(circle at 50% 45%, rgba(56, 189, 248, 0.16), transparent 36%),
+        linear-gradient(180deg, rgba(2, 6, 23, 0.18), rgba(2, 6, 23, 0.58));
+      opacity: 0;
+      transform: translateY(-8px);
+      transition: opacity 180ms ease, transform 180ms ease;
+    }
+
+    .tutorial-animation-layer.active {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .tutorial-animation-card {
+      width: min(560px, calc(100vw - 32px));
+      border: 1px solid rgba(103, 232, 249, 0.42);
+      border-radius: 22px;
+      padding: 18px 20px;
+      color: #dffcf5;
+      background: rgba(2, 8, 23, 0.72);
+      box-shadow: 0 0 36px rgba(56, 189, 248, 0.22), inset 0 0 30px rgba(34, 197, 94, 0.08);
+      backdrop-filter: blur(18px);
+      font-family: "JetBrains Mono", "Fira Code", monospace;
+      overflow: hidden;
+    }
+
+    .tutorial-animation-card::before {
+      content: "";
+      display: block;
+      height: 2px;
+      margin: -4px -6px 14px;
+      background: linear-gradient(90deg, transparent, #22c55e, #38bdf8, #facc15, transparent);
+      animation: tutorialScan 1200ms linear infinite;
+    }
+
+    .tutorial-animation-card h3 {
+      margin: 0 0 8px;
+      color: #86efac;
+      font-size: 16px;
+      text-shadow: 0 0 12px rgba(134, 239, 172, 0.55);
+    }
+
+    .tutorial-animation-card p {
+      margin: 0;
+      line-height: 1.75;
+      font-size: 13px;
+      color: #e0f2fe;
+    }
+
+    .tutorial-animation-card small {
+      display: block;
+      margin-top: 12px;
+      color: #93c5fd;
+      opacity: 0.88;
+    }
+
+    .tutorial-animation-glyphs {
+      display: flex;
+      gap: 8px;
+      margin: 14px 0 2px;
+      flex-wrap: wrap;
+    }
+
+    .tutorial-animation-glyphs span {
+      border: 1px solid rgba(250, 204, 21, 0.38);
+      border-radius: 999px;
+      padding: 4px 8px;
+      background: rgba(15, 23, 42, 0.78);
+      color: #fde68a;
+      box-shadow: 0 0 14px rgba(250, 204, 21, 0.18);
+      animation: tutorialGlyphPulse 900ms ease-in-out infinite alternate;
+    }
+
+    @keyframes tutorialScan {
+      from { transform: translateX(-20%); opacity: 0.52; }
+      to { transform: translateX(20%); opacity: 1; }
+    }
+
+    @keyframes tutorialGlyphPulse {
+      from { transform: translateY(0); filter: brightness(0.8); }
+      to { transform: translateY(-3px); filter: brightness(1.35); }
+    }
+
     @media (max-width: 680px) {
       .bottom-action-bar {
         grid-template-columns: 1fr;
@@ -7042,6 +7132,7 @@
                 </select>
                 <span>即时</span>
               </label>
+              <label class="setting-check"><input id="tutorialAnimationToggle" type="checkbox"> 教程动画（首次触发）</label>
               <label class="setting-row">解锁特效
                 <select id="unlockEffectLevelSelect">
                   <option value="low">低</option>
@@ -8280,7 +8371,7 @@ int main(void) {
       directSaveAs: "reduced-by-inline-resources"
     });
     const SECURITY_CONFIG = Object.freeze({
-      expectedScriptHash: "7mKxDWifUH6XIlNcgWRfIU01ms/acOo2dKg2WM2xR9g=",
+      expectedScriptHash: "V2Iz2SMKekzwkTxSpqBW1aNe4Afzs74fMtegiK98JzM=",
       selfCheckIntervalMs: 45000,
       tamperRefreshMs: 5000,
       devToolsRefreshMs: 2000,
@@ -8366,6 +8457,34 @@ int main(void) {
       { id: "homeEnd", key: "Home/End", code: "LineEdge", label: "跳到行首 / 行尾", modes: ["full"] },
       { id: "close", key: "Esc", code: "Escape", label: "关闭引导 / 退出编辑器", modes: ["full", "simple"] }
     ]);
+    const TUTORIAL_ANIMATION_IDS = Object.freeze([
+      "T01_AWAKENING_PROMPT",
+      "T02_MENTOR_APPROACH",
+      "T03_FRAGMENT_MAGNET",
+      "T04_FRAGMENT_ROLE",
+      "T05_STONE_CODE_FILL",
+      "T06_EDITOR_OPEN",
+      "T07_COMPILE_SUCCESS",
+      "T08_COMPILE_FAILURE",
+      "T09_STONE_PULSE",
+      "T10_GATE_PERMISSION",
+      "T11_GATE_TRAVERSE",
+      "T12_CHAPTER_UNLOCK_ROAD"
+    ]);
+    const TUTORIAL_ANIMATION_DEFINITIONS = Object.freeze({
+      T01_AWAKENING_PROMPT: { title: "T01 // 终端苏醒", body: "黑底终端确认操作者身份，世界等待第一行 C 代码。", glyphs: ["$ ./world", "main()", "return 0"], duration: 1800, mandatory: true, lockInput: true, npcAction: "comeFromDistance" },
+      T02_MENTOR_APPROACH: { title: "T02 // 导师靠近", body: "导师从远处进入视野，指向第一块知识碎片与入口石碑。", glyphs: ["mentor", "point", "int"], duration: 1500, mandatory: true, lockInput: true, npcAction: "pointToTarget" },
+      T03_FRAGMENT_MAGNET: { title: "T03 // 碎片吸附", body: "知识碎片被数据磁场捕获，飞向操作者核心。", glyphs: ["fragment", "吸附", "+1"], duration: 1100, mandatory: false, lockInput: false, npcAction: "celebrate" },
+      T04_FRAGMENT_ROLE: { title: "T04 // 碎片作用", body: "碎片会解锁技能卡提示，并让石碑填空获得语义。", glyphs: ["card", "hint", "unlock"], duration: 1500, mandatory: true, lockInput: true, npcAction: "pointToTarget" },
+      T05_STONE_CODE_FILL: { title: "T05 // 石碑填空", body: "缺失关键字写入石碑，代码从绿色转为金色。", glyphs: ["____", "int", "OK"], duration: 1200, mandatory: true, lockInput: true, npcAction: "nod" },
+      T06_EDITOR_OPEN: { title: "T06 // IDE 接入", body: "编辑器以半透明投影打开，世界暂停等待代码运行。", glyphs: ["Ctrl+Enter", "Tab", "Esc"], duration: 1300, mandatory: false, lockInput: false, npcAction: "idle" },
+      T07_COMPILE_SUCCESS: { title: "T07 // 编译成功", body: "代码执行结果注入世界，错误裂缝被短暂缝合。", glyphs: ["Compilation", "complete", "PASS"], duration: 1500, mandatory: true, lockInput: true, npcAction: "celebrate" },
+      T08_COMPILE_FAILURE: { title: "T08 // 编译失败", body: "系统标出错误位置，导师只要求修语法，不惩罚思路差异。", glyphs: ["ERROR", "line", "fix"], duration: 1100, mandatory: false, lockInput: false, npcAction: "shakeHead" },
+      T09_STONE_PULSE: { title: "T09 // 石碑脉冲", body: "石碑确认知识点已被理解，光纹传向编译之门。", glyphs: ["stone", "pulse", "gate"], duration: 1200, mandatory: true, lockInput: true, npcAction: "pointToTarget" },
+      T10_GATE_PERMISSION: { title: "T10 // 权限验证", body: "编译之门逐项点亮需求碎片，等待玩家进入挑战。", glyphs: ["int", "return", "access"], duration: 1400, mandatory: false, lockInput: false, npcAction: "nod" },
+      T11_GATE_TRAVERSE: { title: "T11 // 穿过编译门", body: "门框收缩为二进制流，确认当前章节已编译。", glyphs: ["0101", "route", "open"], duration: 1600, mandatory: true, lockInput: true, npcAction: "celebrate" },
+      T12_CHAPTER_UNLOCK_ROAD: { title: "T12 // 代码铺路", body: "地面裂缝涌出金色代码，固化为通向下一关的数据总线。", glyphs: ["CORE ACCESS", "road()", "next"], duration: 2200, mandatory: true, lockInput: true, npcAction: "pointToTarget" }
+    });
     const ANIMATION_QUALITY = Object.freeze({
       full: "full",
       reduced: "reduced",
@@ -9699,6 +9818,216 @@ int main(void) {
 
     const objectPoolManager = new ObjectPoolManager();
 
+    class TutorialNpcActionController {
+      constructor() {
+        this.bakedStates = Object.freeze({
+          idle: { label: "待机", duration: 600 },
+          comeFromDistance: { label: "远处走来", duration: 1200 },
+          pointToTarget: { label: "指向目标", duration: 900 },
+          shakeHead: { label: "摇头提示", duration: 700 },
+          nod: { label: "点头确认", duration: 620 },
+          celebrate: { label: "轻微庆祝", duration: 760 }
+        });
+      }
+
+      play(action = "idle", target = null, context = {}) {
+        const state = this.bakedStates[action] || this.bakedStates.idle;
+        const sprite = target || context.npc?.container || context.scene?.mentorNpc || null;
+        if (sprite?.setData) sprite.setData("tutorialAction", action);
+        if (sprite?.setTint && action !== "idle") sprite.setTint(action === "shakeHead" ? 0xf87171 : 0x67e8f9);
+        if (context.scene?.tweens && sprite) {
+          const tweenConfig = action === "shakeHead"
+            ? { angle: { from: -5, to: 5 }, x: sprite.x + 5 }
+            : action === "comeFromDistance"
+              ? { x: sprite.x + 18, y: sprite.y - 2 }
+              : action === "pointToTarget"
+                ? { angle: { from: -3, to: 3 }, scale: { from: sprite.scale || 1, to: (sprite.scale || 1) * 1.04 } }
+                : { y: sprite.y - 4, scale: { from: sprite.scale || 1, to: (sprite.scale || 1) * 1.03 } };
+          context.scene.tweens.add({
+            targets: sprite,
+            ...tweenConfig,
+            duration: Math.min(760, state.duration),
+            yoyo: true,
+            ease: "Sine.easeInOut",
+            onComplete: () => {
+              sprite.clearTint?.();
+              sprite.setAngle?.(0);
+            }
+          });
+        }
+        return state;
+      }
+    }
+
+    const tutorialNpcActionController = new TutorialNpcActionController();
+
+    function preloadTutorialAnimationResources() {
+      gameState.tutorialAnimationResources = {
+        loaded: true,
+        palette: ["#22c55e", "#38bdf8", "#facc15"],
+        glyphAtlas: TUTORIAL_ANIMATION_IDS.slice()
+      };
+      return gameState.tutorialAnimationResources;
+    }
+
+    class TutorialAnimationManager {
+      constructor(definitions = TUTORIAL_ANIMATION_DEFINITIONS) {
+        this.definitions = definitions;
+        this.queue = [];
+        this.current = null;
+        this.playing = false;
+        this.timer = null;
+        this.resourcesReady = false;
+      }
+
+      ensureProgressStore() {
+        if (!gameState?.progress) return {};
+        if (!gameState.progress.tutorialAnimationsSeen || typeof gameState.progress.tutorialAnimationsSeen !== "object") {
+          gameState.progress.tutorialAnimationsSeen = {};
+        }
+        return gameState.progress.tutorialAnimationsSeen;
+      }
+
+      isEnabled() {
+        return gameState?.settings?.tutorialAnimationsEnabled !== false && gameState?.settings?.animationQuality !== ANIMATION_QUALITY.off;
+      }
+
+      hasSeen(id) {
+        return Boolean(this.ensureProgressStore()[id]);
+      }
+
+      trigger(id, context = {}) {
+        const definition = this.definitions[id];
+        if (!definition) return Promise.resolve(false);
+        if (!this.isEnabled() || (!context.force && this.hasSeen(id))) {
+          this.markSeen(id);
+          context.onComplete?.({ skipped: true, disabled: true, id });
+          return Promise.resolve(false);
+        }
+        return new Promise((resolve) => {
+          this.queue.push({ id, definition, context, resolve });
+          this.playNext();
+        });
+      }
+
+      playNext() {
+        if (this.playing || !this.queue.length) return false;
+        if (!this.resourcesReady) {
+          preloadTutorialAnimationResources();
+          this.resourcesReady = true;
+        }
+        const item = this.queue.shift();
+        this.current = item;
+        this.playing = true;
+        if (item.definition.lockInput) this.lockInput(true, item.context.scene);
+        tutorialNpcActionController.play(item.definition.npcAction, item.context.npc, item.context);
+        this.render(item);
+        const duration = this.getDuration(item.definition);
+        this.timer = trackedSetTimeout(() => this.finish(false), duration, `tutorial-animation:${item.id}`);
+        return true;
+      }
+
+      getDuration(definition) {
+        const base = Number(definition.duration) || 1200;
+        if (gameState.settings.animationQuality === ANIMATION_QUALITY.reduced) return Math.max(520, Math.round(base * 0.55));
+        if (performanceBudgetMonitor?.fps && performanceBudgetMonitor.fps < 30) return Math.max(420, Math.round(base * 0.45));
+        return base;
+      }
+
+      render(item) {
+        const layer = objectPoolManager.acquire("effect", () => document.createElement("section"));
+        layer.className = "tutorial-animation-layer";
+        layer.setAttribute("aria-live", "polite");
+        layer.innerHTML = `<article class="tutorial-animation-card">
+          <h3>${escapeHtml(item.definition.title)}</h3>
+          <p>${escapeHtml(item.definition.body)}</p>
+          <div class="tutorial-animation-glyphs">${(item.definition.glyphs || []).map((glyph) => `<span>${escapeHtml(glyph)}</span>`).join("")}</div>
+          <small>Esc 跳过 · ${item.definition.mandatory ? "强制教学动画建议完整体验" : "轻反馈动画"}</small>
+        </article>`;
+        document.body.appendChild(layer);
+        requestAnimationFrame(() => layer.classList.add("active"));
+        item.layer = layer;
+        audioManager.tone?.(item.definition.mandatory ? 520 : 760, 0.08, "triangle", 0.032);
+        if (gameState.settings.particles !== false) this.spawnPooledGlyphs(item);
+        return layer;
+      }
+
+      spawnPooledGlyphs(item) {
+        const shell = dom.gameShell || document.body;
+        (item.definition.glyphs || []).slice(0, 4).forEach((glyph, index) => {
+          const particle = objectPoolManager.acquire("effect", () => document.createElement("span"));
+          particle.className = "compiler-spark tutorial-glyph-spark";
+          particle.textContent = glyph;
+          particle.style.left = `${20 + index * 17}%`;
+          particle.style.top = `${28 + (index % 2) * 18}%`;
+          shell.appendChild(particle);
+          trackedSetTimeout(() => objectPoolManager.release("effect", particle), 900 + index * 80, `tutorial-glyph:${item.id}:${index}`);
+        });
+      }
+
+      lockInput(locked = true, scene = gameState.scene) {
+        gameState.tutorialAnimationLocked = locked;
+        if (scene) scene.playerFrozen = locked;
+        document.body.classList.toggle("is-paused", locked);
+      }
+
+      markSeen(id) {
+        const store = this.ensureProgressStore();
+        store[id] = true;
+        saveProgress?.();
+      }
+
+      finish(skipped = false) {
+        const item = this.current;
+        if (!item) return false;
+        if (this.timer) timerTracker.clear(this.timer);
+        this.timer = null;
+        item.layer?.classList?.remove("active");
+        trackedSetTimeout(() => objectPoolManager.release("effect", item.layer), 190, `tutorial-layer-release:${item.id}`);
+        this.markSeen(item.id);
+        if (item.definition.lockInput) this.lockInput(false, item.context.scene);
+        item.context.onComplete?.({ skipped, id: item.id });
+        item.resolve?.(!skipped);
+        this.current = null;
+        this.playing = false;
+        this.playNext();
+        return true;
+      }
+
+      skipActive(confirmed = false) {
+        if (!this.current) return false;
+        if (this.current.definition.mandatory && !confirmed) {
+          openBottomActionBar("强制教学动画建议完整体验，仍要跳过吗？", () => this.skipActive(true), {
+            confirmLabel: "跳过",
+            cancelLabel: "继续观看"
+          });
+          return true;
+        }
+        return this.finish(true);
+      }
+
+      handleEscSkip(event) {
+        if (!this.playing || !this.current || event.key !== "Escape") return false;
+        event.preventDefault();
+        event.stopPropagation();
+        return this.skipActive(false);
+      }
+
+      stop() {
+        this.queue = [];
+        return this.finish(true);
+      }
+
+      reset() {
+        this.stop();
+        if (gameState?.progress) gameState.progress.tutorialAnimationsSeen = {};
+        saveProgress?.();
+        return true;
+      }
+    }
+
+    const tutorialAnimationManager = new TutorialAnimationManager();
+
     function acquirePooledParticle(scene, key, factory) {
       const particle = particlePool.acquire(key, factory);
       scene?.tweens?.killTweensOf?.(particle);
@@ -10899,6 +11228,7 @@ int main(void) {
       performanceLogs: [],
       performanceBenchmark: null,
       editorGuideCompleted: false,
+      tutorialAnimationsSeen: {},
       editorUseStartedAt: 0,
       randomEventHistory: [],
       metaFinaleRebooted: false,
@@ -10944,6 +11274,7 @@ int main(void) {
         audioDirector: true
       },
       animationQuality: ANIMATION_QUALITY.full,
+      tutorialAnimationsEnabled: true,
       musicComplexity: "full",
       playerSkin: "neonBlue",
       uiProfile: "default",
@@ -13114,6 +13445,7 @@ int main(void) {
       editorGuideLayer: document.getElementById("editorGuideLayer"),
       editorGuideGrid: document.getElementById("editorGuideGrid"),
       editorGuideCloseButton: document.getElementById("editorGuideCloseButton"),
+      tutorialAnimationToggle: document.getElementById("tutorialAnimationToggle"),
       codeExplainPanel: document.getElementById("codeExplainPanel"),
       codeExplainBody: document.getElementById("codeExplainBody"),
       codeExplainToggleButton: document.getElementById("codeExplainToggleButton"),
@@ -16813,6 +17145,7 @@ int main(void) {
         dom.languageSelect.value = gameState.settings.language;
         dom.accessibilityModeSelect.value = gameState.settings.accessibilityProfile;
         dom.animationQualitySelect.value = gameState.settings.animationQuality || ANIMATION_QUALITY.full;
+        if (dom.tutorialAnimationToggle) dom.tutorialAnimationToggle.checked = gameState.settings.tutorialAnimationsEnabled !== false;
         dom.musicComplexitySelect.value = gameState.settings.musicComplexity || "full";
         if (dom.unlockEffectLevelSelect) dom.unlockEffectLevelSelect.value = gameState.settings.unlockEffectLevel || "medium";
       gameState.settings.renderQuality = normalizeRenderQuality(gameState.settings.renderQuality);
@@ -16882,6 +17215,9 @@ int main(void) {
       if (key === "editorGuideMode") {
         renderEditorGuide();
         if (value === EDITOR_GUIDE_MODES.off) closeEditorGuide(false);
+      }
+      if (key === "tutorialAnimationsEnabled" && value === false) {
+        tutorialAnimationManager.stop();
       }
       if (key === "musicComplexity" && value === "off") getProceduralMusicDirector()?.stop();
       if (key === "musicComplexity" && value !== "off") getProceduralMusicDirector()?.start(gameState.worldSeed);
@@ -18361,14 +18697,16 @@ int main(void) {
         questManager?.acceptTask?.("collect_basic_fragments");
         dom.questTracker?.classList.add("is-expanded");
         renderQuestTracker();
-        showDialog(OPENING_MENTOR_LINES, () => {
-          showPrompt("跟随地面引导线前往入口石碑，按 E 学习第一课。");
-          announceGameEvent("新手引导完成，请前往入口石碑。");
-          showQuestProgressToast(questManager?.getTask?.("collect_basic_fragments"));
-          trackedSetTimeout(askPlayerName, 640, "cross-layer-name-prompt");
+        tutorialAnimationManager.trigger("T02_MENTOR_APPROACH", { scene: gameState.scene }).then(() => {
+          showDialog(OPENING_MENTOR_LINES, () => {
+            showPrompt("跟随地面引导线前往入口石碑，按 E 学习第一课。");
+            announceGameEvent("新手引导完成，请前往入口石碑。");
+            showQuestProgressToast(questManager?.getTask?.("collect_basic_fragments"));
+            trackedSetTimeout(askPlayerName, 640, "cross-layer-name-prompt");
+          });
         });
       };
-      trackedSetTimeout(() => showOpeningNarrativeTerminal(startMentorDialogue), 720, "new-player-course-intro");
+      trackedSetTimeout(() => tutorialAnimationManager.trigger("T01_AWAKENING_PROMPT", { scene: gameState.scene }).then(() => showOpeningNarrativeTerminal(startMentorDialogue)), 720, "new-player-course-intro");
       return true;
     }
 
@@ -19620,6 +19958,12 @@ int main(void) {
       return true;
     }
 
+    function resetTutorialAnimations() {
+      tutorialAnimationManager.reset();
+      showReward("教程动画触发记录已重置。");
+      return true;
+    }
+
     function matchesEditorGuideItem(event, item) {
       if (item.code === "Arrow") return /^Arrow/.test(event.code || "");
       if (item.code === "LineEdge") return event.code === "Home" || event.code === "End";
@@ -19673,6 +20017,7 @@ int main(void) {
       audioManager.playBgm("puzzle");
       adaptiveSymphonicAudioDirector?.setVerticalLayer("teaching");
       selectFile("main.c");
+      tutorialAnimationManager.trigger("T06_EDITOR_OPEN", { scene: gameState.scene, chapterId });
       setOutput(`等待运行。当前任务：${chapterById[chapterId].title}。\n${getPersonalNoteHint(chapterId)}`, "info");
       ideExperienceManager?.enrichConsole?.(`当前挑战：${chapterById[chapterId].title}。导师正在观察你的代码节奏。`, "info");
       gameState.progress.editorUseStartedAt = Date.now();
@@ -21005,7 +21350,7 @@ int main(void) {
           if (gameState.scene?.player) spawnFractalNoiseShatter(gameState.scene, gameState.scene.player.x, gameState.scene.player.y - 24, 0xfacc15, { count: 18 });
           showBigPass();
           showNpcKnowledgePopup(chapter);
-          window.setTimeout(() => completeChallenge(), 700);
+          tutorialAnimationManager.trigger("T07_COMPILE_SUCCESS", { scene: gameState.scene, chapter }).then(() => completeChallenge());
         } else {
           gameState.codeAccuracy = Math.max(20, gameState.codeAccuracy - 14);
           recordCompileFailure();
@@ -21015,6 +21360,7 @@ int main(void) {
           audioManager.error();
           triggerMusicCompileError();
           triggerStoryCinematicBars("编译失败：错误不是惩罚，是世界给你的回声。", 1500);
+          tutorialAnimationManager.trigger("T08_COMPILE_FAILURE", { scene: gameState.scene, chapter });
           setOutput(result.message, "error");
         }
       } catch (error) {
@@ -21736,7 +22082,9 @@ int main(void) {
         registerCodexDiscovery("area", chapter.id, chapter.title);
         recordTelemetryEvent("chapter.completed", { chapterId: chapter.id });
         showLevelCompleteSystemLog(chapter);
-        if (!levelResult.allComplete && !isCWorldFullyComplete()) roadCompiler.play(chapter);
+        if (!levelResult.allComplete && !isCWorldFullyComplete()) {
+          tutorialAnimationManager.trigger("T12_CHAPTER_UNLOCK_ROAD", { scene: gameState.scene, chapter }).then(() => roadCompiler.play(chapter));
+        }
         playSyntaxTreeAscension(gameState.codeInventory);
         updateWorldExplorationData("c");
         if (levelResult.allComplete || isCWorldFullyComplete()) onCWorldComplete();
@@ -23083,6 +23431,8 @@ int main(void) {
           pulseMelodyLayer();
           audioManager.pickupSpark();
           if (gameState.progress.fragmentCount === 1) playFirstFragmentRewardTone();
+          if (gameState.progress.fragmentCount === 1) tutorialAnimationManager.trigger("T03_FRAGMENT_MAGNET", { scene, fragment });
+          if (gameState.progress.fragmentCount === 3) tutorialAnimationManager.trigger("T04_FRAGMENT_ROLE", { scene, fragment });
           playKeyItemPickupRitual(fragment.keyword);
           showMemoryReadEffect(`char token[] = "${fragment.keyword}";`);
           growMilestoneFlower(scene);
@@ -24390,6 +24740,8 @@ int main(void) {
       showTerminalBurst(">> Success! Code Compiled.");
       scheduleAnimationOnStrongBeat("stone-pulse", () => triggerMicroGlitch());
       spawnCodeParticles(scene, objects.stone.x, objects.stone.y - 68, [objects.codePuzzle.answer, "OK", "UNLOCK"]);
+      tutorialAnimationManager.trigger("T05_STONE_CODE_FILL", { scene, chapterId });
+      tutorialAnimationManager.trigger("T09_STONE_PULSE", { scene, chapterId });
     }
 
     function createNpcPatrol(scene) {
@@ -26049,7 +26401,7 @@ int main(void) {
       update() {
         try {
         this.frameTick = (this.frameTick || 0) + 1;
-        if (!this.player || inputManager.isEditorMode() || gameState.editorOpen || gameState.dialogOpen || this.playerFrozen) {
+        if (!this.player || inputManager.isEditorMode() || gameState.editorOpen || gameState.dialogOpen || gameState.tutorialAnimationLocked || this.playerFrozen) {
           transitionPlayerState(gameState.paused ? PLAYER_STATES.paused : PLAYER_STATES.interacting);
           if (this.player) this.player.setVelocity(0);
           this.updateLighting();
@@ -26438,6 +26790,7 @@ int main(void) {
         const ring = createBinaryRing(this, gate);
         if (ring && !this.binaryRings.includes(ring)) this.binaryRings.push(ring);
         animateDoorPermissionCheck(this, gate, ["int", "return"]);
+        tutorialAnimationManager.trigger("T10_GATE_PERMISSION", { scene: this, chapterId, gate });
         if (!animated) {
           gate.setAlpha(1);
           return;
@@ -26461,6 +26814,7 @@ int main(void) {
         const gate = this.chapterObjects[chapterId].gate;
         if (!gate || !gate.active) return;
         gate.setTint(0x3be477);
+        tutorialAnimationManager.trigger("T11_GATE_TRAVERSE", { scene: this, chapterId, gate });
         this.cameras.main.flash(180, 104, 255, 171);
         if (gameState.settings.shake) this.cameras.main.shake(190, 0.006);
         playGateTransitionTimeline(this, chapterId);
@@ -26597,6 +26951,7 @@ int main(void) {
 
     monitorFontLoadFallback();
     applySettings();
+    preloadTutorialAnimationResources();
     applyPerformanceMode(gameState.settings.performanceMode || "high", "启动配置", { runtimeOnly: true, silent: true });
     questManager?.refreshAll();
     const menuManager = new MenuManager();
@@ -26852,6 +27207,7 @@ int main(void) {
     dom.languageSelect.addEventListener("change", (event) => updateSetting("language", event.target.value));
     dom.accessibilityModeSelect.addEventListener("change", (event) => updateSetting("accessibilityProfile", event.target.value));
     dom.animationQualitySelect.addEventListener("change", (event) => updateSetting("animationQuality", event.target.value));
+    dom.tutorialAnimationToggle?.addEventListener("change", (event) => updateSetting("tutorialAnimationsEnabled", event.target.checked));
     dom.musicComplexitySelect.addEventListener("change", (event) => updateSetting("musicComplexity", event.target.value));
     dom.unlockEffectLevelSelect?.addEventListener("change", (event) => updateSetting("unlockEffectLevel", event.target.value));
     dom.renderQualitySelect?.addEventListener("change", (event) => updateSetting("renderQuality", event.target.value));
@@ -26980,6 +27336,12 @@ int main(void) {
       handleKonamiKey(event);
       shortcutManager.flashPressed(event);
       shortcutManager.flashTopKeymap(event);
+      if (tutorialAnimationManager.handleEscSkip(event)) return;
+      if (tutorialAnimationManager.playing && tutorialAnimationManager.current?.definition?.lockInput) {
+        event.preventDefault();
+        event.stopPropagation();
+        return;
+      }
       if (handleShortcutRemapKey(event)) return;
       if (dom.bossModeOverlay?.classList.contains("active")) {
         if (shortcutManager.matches(event, "bossMode")) {
