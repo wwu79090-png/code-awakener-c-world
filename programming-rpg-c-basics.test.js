@@ -114,6 +114,7 @@ function assert(condition, message) {
 
 const api = loadGameScript();
 const html = fs.readFileSync("programming-rpg-c-basics.html", "utf8");
+const initialBodyMarkup = html.match(/<body[\s\S]*?<script\b/)?.[0] || "";
 const cspContent = html.match(/Content-Security-Policy" content="([^"]+)"/)?.[1] || "";
 const rawStyleContent = html.match(/<style[^>]*>([\s\S]*?)<\/style>/)?.[1] || "";
 const rawInlineScriptContent = [...html.matchAll(/<script([^>]*)>([\s\S]*?)<\/script>/g)]
@@ -1110,15 +1111,39 @@ assert(/本项目永久免费对外开放/.test(html), "announcement should incl
 assert(/STARTUP_ANNOUNCEMENT_AUTO_HIDE_MS\s*=\s*3000/m.test(html), "announcement should auto-hide after 3 seconds");
 assert(/function showStartupAnnouncement/m.test(html), "announcement should be controlled by a startup function");
 assert(/id="announcementCloseButton"/m.test(html), "announcement should include a minimal close control");
-assert(/World Build v1\.0\.13/m.test(html) || /GAME_VERSION\s*=\s*"v1\.0\.13"/m.test(html), "game version should increment when shipping a new update");
+assert(/World Build v1\.0\.15/m.test(html) || /GAME_VERSION\s*=\s*"v1\.0\.15"/m.test(html), "game version should increment when shipping a new update");
 assert(/UPDATE_HISTORY\s*=\s*Object\.freeze\(\[[\s\S]*v1\.0\.1[\s\S]*零基础新手指引[\s\S]*v1\.0\.0[\s\S]*手机端适配/m.test(html), "update history should keep detailed previous release notes");
 assert(/id="updateHistoryList"/m.test(html) && /历史更新内容/m.test(html), "side menu should expose update history with detailed usage-visible notes");
-assert(/GAME_VERSION\s*=\s*"v1\.0\.13"/m.test(html), "game version should increment for the mobile settings and flicker cleanup release");
-assert(/UPDATE_ANNOUNCEMENT_PAGES\s*=\s*Object\.freeze\(\[\s*\{\s*title:\s*"> 消息 \/ 本次更新"[\s\S]*lines:\s*\[\s*"\/\/ 本次更新：手机版菜单新增“游戏设置”/m.test(html), "collapsed startup announcement should show the update summary first, not only author text");
+assert(/GAME_VERSION\s*=\s*"v1\.0\.15"/m.test(html), "game version should increment for the announcement, menu, and course-lock cleanup release");
+assert(/UPDATE_ANNOUNCEMENT_PAGES\s*=\s*Object\.freeze\(\[\s*\{\s*title:\s*"> 消息 \/ 本次更新"[\s\S]*公告删除详情\/收起按钮[\s\S]*100%后空格/m.test(html), "collapsed startup announcement should show the latest update summary first, not only author text");
+assert(/UPDATE_HISTORY\s*=\s*Object\.freeze\(\[[\s\S]*v1\.0\.15[\s\S]*公告按钮删减[\s\S]*100%重复触发修复[\s\S]*课程权限收口/m.test(html), "update history should record the v1.0.15 announcement, 100%, and course-lock fixes");
+assert(!/<option value="medium">中画质<\/option>/.test(html), "performance mode should not expose the flickering medium-quality option");
+assert(/if \(saved === "medium"\) return "high"/m.test(html) && /savedSettings\.performanceMode === "auto" \|\| savedSettings\.performanceMode === "medium"/m.test(html), "old medium performance-mode saves should migrate to high");
+assert(/#systemBootSkipButton\.announcement-close[\s\S]*width:\s*auto;[\s\S]*white-space:\s*nowrap;/m.test(html), "system boot skip button should use a pill style instead of the tiny announcement close circle");
+assert(!/id="announcementExpandButton"/m.test(html) && !/announcementExpandButton|toggleStartupAnnouncementExpanded|announcement-expand/m.test(html), "startup announcement should remove the detail/collapse button entirely");
+{
+  const announcementCloseBlock = rawStyleContent.match(/\.announcement-close\s*\{([\s\S]*?)\n\s*\}/)?.[1] || "";
+  assert(/top:\s*20px;/.test(announcementCloseBlock) && /right:\s*20px;/.test(announcementCloseBlock), "startup announcement close button should be anchored 20px from the top-right corner");
+  assert(!/startup-announcement-island\[data-expanded="false"\]/m.test(rawStyleContent) && !/startupAnnouncement\.setAttribute\("data-expanded"/m.test(html), "startup announcement should not keep a minimized/collapsed state after removing the shrink button");
+}
 assert(/UPDATE_HISTORY\s*=\s*Object\.freeze\(\[[\s\S]*v1\.0\.13[\s\S]*手机版设置入口[\s\S]*误开菜单[\s\S]*公告折叠状态/m.test(html), "update history should record the v1.0.13 mobile settings and announcement fix");
 assert(/UPDATE_HISTORY\s*=\s*Object\.freeze\(\[[\s\S]*v1\.0\.12[\s\S]*移除防白屏手动选项[\s\S]*CRT 雪花噪声 canvas 默认隐藏/m.test(html), "update history should record the v1.0.12 anti-white-screen option removal");
 assert(/UPDATE_HISTORY\s*=\s*Object\.freeze\(\[[\s\S]*v1\.0\.11[\s\S]*防白屏高档位白色噪点闪烁修复[\s\S]*CRT 噪声[\s\S]*每6帧[\s\S]*最多18个/m.test(html), "update history should record the v1.0.11 anti-white-noise release");
-assert(/UPDATE_ANNOUNCEMENT_PAGES\s*=\s*Object\.freeze\(\[[\s\S]*防白屏手动档位已移除[\s\S]*CRT 雪花噪声层保持关闭[\s\S]*电影颗粒预算保持为 0/m.test(html), "startup announcement should describe the current anti-white-noise and settings cleanup");
+assert(/UPDATE_ANNOUNCEMENT_PAGES\s*=\s*Object\.freeze\(\[[\s\S]*公告删除详情\/收起按钮[\s\S]*课程进度按真实学习进度锁定[\s\S]*自由模式编辑器通关前不再出现在菜单/m.test(html), "startup announcement should describe the current announcement, course lock, and free-mode cleanup");
+assert(/id="announcementCloseButton"[\s\S]*>×<\/button>/m.test(html), "announcement close button should be a compact icon, not wrapping text");
+assert(/function isCTutorialChapterUnlocked/m.test(html) && /course-lesson-item[\s\S]*locked[\s\S]*disabled aria-disabled/m.test(html), "course progress should lock future chapters until the player reaches them");
+assert(/function isCTutorialFullyCompleted/m.test(html) && /const unlocked = isCTutorialFullyCompleted\(\)/m.test(html), "free mode editor should only unlock after full course completion");
+assert(/function guardWorldEvolutionAdvance/m.test(html) && !/超越完美计数/.test(html), "world evolution completion should not repeatedly trigger post-100% spacebar effects");
+assert(!/data-menu-action="creation"|造物模式|新手二周目|演示一遍世界进化/m.test(initialBodyMarkup), "main menu should not expose creation, new-game-plus, or world-evolution demo entries");
+assert(!/<section id="freeModeEditorPanel"|id="freeModeCodeInput"|id="freeModeCompileButton"|id="debugStepButton"|id="tutorialFixSuggestionButton"/m.test(initialBodyMarkup), "free mode editor DOM should not be present in the player menu before full mainline completion");
+assert(/function ensureFreeModeEditorPanel/m.test(html) && /isCTutorialFullyCompleted\(\)[\s\S]*ensureFreeModeEditorPanel/s.test(html), "free mode editor should be dynamically created only after the full course is completed");
+assert(!/<select id="worldEvolutionThemeSelect"|id="worldEvolutionThemeSelect"|worldEvolutionThemeSelect\?\.addEventListener/m.test(initialBodyMarkup), "world/area theme controls should be absent from menu markup and automatic only");
+assert(/function syncQuestInteractableTargets/m.test(html) && /forceEnableQuestStoneInteractable/m.test(html) && /stone\.setInteractive/s.test(html), "active quest guidance should force the syntax stone to be interactable for touch/click input");
+assert(/function applyNpcQuestIndicator/m.test(html) && /action\.active[\s\S]*setColor\("#22c55e"\)[\s\S]*setActive\?\.?\(true\)/s.test(html), "NPC quest indicators should show a forced active green marker for matching in-progress task IDs");
+assert(/WORLD_EVOLUTION_ADVANCE_COOLDOWN_MS\s*=\s*5000/m.test(html) && /worldEvolutionAdvanceLockedUntil/m.test(html) && /function requestWorldEvolutionAdvance/m.test(html), "space-triggered world evolution should use a 5 second cooldown/state lock");
+assert(!/ALL_COURSES_UNLOCKED|UNLOCK_ALL_COURSES|全部解锁/m.test(html), "course progress should not contain a test-only all-unlocked macro in the player build");
+assert(/function resolveNarrativeBranchWeights/m.test(html) && /function applyImplicitNarrativeBranch/m.test(html), "quantum branches should be resolved implicitly from player behavior weights");
+assert(!/choiceOptions\.innerHTML[\s\S]*data-choice/m.test(html), "narrative branch choices should not be rendered as manual menu buttons");
 assert(/UPDATE_HISTORY\s*=\s*Object\.freeze\(\[[\s\S]*v1\.0\.10[\s\S]*防白屏高档位白色闪烁修复[\s\S]*camera\.flash[\s\S]*纯白背景/m.test(html), "update history should record the v1.0.10 anti-white-flash release");
 assert(/UPDATE_HISTORY\s*=\s*Object\.freeze\(\[[\s\S]*v1\.0\.9[\s\S]*官网课程路径对齐[\s\S]*develop\.fan[\s\S]*弹窗收起后显示具体折叠对象名称[\s\S]*手机软键盘/m.test(html), "update history should record the v1.0.9 course path and UI stability release");
 assert(/UPDATE_HISTORY\s*=\s*Object\.freeze\(\[[\s\S]*v1\.0\.8[\s\S]*性能保护降噪、透明引导[\s\S]*12秒滚动窗口[\s\S]*15秒无操作/m.test(html), "update history should record the v1.0.8 guidance and performance quieting release");
@@ -1668,13 +1693,13 @@ assert(/tutorialAnimationManager\.reset/m.test(html), "tutorial animation manage
 assert(/objectPoolManager\.acquire\("effect"/m.test(html), "tutorial animation effects should use pooled effect objects");
 assert(/强制教学动画建议完整体验/m.test(html), "skipping mandatory tutorial animations should show a friendly recommendation");
 assert(/id="worldAdvanceButton"[\s\S]*aria-hidden="true"/m.test(html), "legacy world evolution HUD button should be hidden from the main playfield");
-assert(/id="worldEvolutionMenuAdvanceButton"/m.test(html), "world evolution advance should move into the side menu as an explicit demo action");
+assert(!/id="worldEvolutionMenuAdvanceButton"/m.test(html) && !/演示一次世界进化/.test(html), "world evolution demo button should be removed from the side menu");
 assert(/id="infoWorldEvolutionText"/m.test(html), "info side menu should include world evolution completion data");
 assert(/worldEvolutionCompletion:\s*0/m.test(html), "world evolution completion should persist in the existing save progress");
 assert(/function advanceWorldEvolution/m.test(html), "compile/advance button should update world evolution state in the main project");
 assert(/function createWorldEvolutionLayer/m.test(html), "world evolution should render through the existing Phaser scene layer");
 assert(/function playWorldEvolutionMilestoneEffect/m.test(html), "world evolution should trigger milestone visual effects");
-assert(/bindFastTouchAction\(dom\.worldEvolutionMenuAdvanceButton[\s\S]{0,260}compileAndAdvanceWorld\(\)/m.test(html), "menu world-evolution demo button should be wired to the tutorial-aware compile logic");
+assert(!/bindFastTouchAction\(dom\.worldEvolutionMenuAdvanceButton/.test(html), "removed world-evolution demo button should not keep a click binding");
 assert(/\/\* ===== 头像系统 ===== \*\//m.test(html), "single-file structure should mark the avatar system section");
 assert(/function drawRandomPortraitExpression/m.test(html) && /eyebrowAngle/m.test(html) && /mouthStyle/m.test(html), "Canvas NPC portraits should randomize eyebrows and mouth expressions");
 assert(/WORLD_EVOLUTION_NARRATIVE_THRESHOLDS\s*=\s*Object\.freeze\(\[30,\s*60,\s*90\]\)/m.test(html), "world evolution should auto-trigger narrative at 30/60/90 percent");
@@ -1897,7 +1922,7 @@ assert(/bindFastTouchAction\(dom\.infoMenuToggle[\s\S]*toggleInfoSideMenu/m.test
 assert(/function isMobileControlTouchTarget/m.test(html) && /touchesStartedOnMobileControls/m.test(html), "side-menu touch gestures should ignore virtual joystick and mobile interact controls");
 assert(/dom\.mobileControls\?\.addEventListener\("touchstart"[\s\S]*stopPropagation/m.test(html), "mobile controls should stop touch bubbling so joystick plus E cannot open the menu");
 assert(/bindFastTouchAction\(dom\.mobileInteractButton,\s*triggerMobileInteractButton\)/m.test(html), "mobile E button should use fast touch handling instead of delayed click");
-assert(/bindFastTouchAction\(dom\.worldEvolutionMenuAdvanceButton[\s\S]*compileAndAdvanceWorld/m.test(html), "world evolution menu button should support touchstart and run the demo compiler");
+assert(!/bindFastTouchAction\(dom\.worldEvolutionMenuAdvanceButton[\s\S]*compileAndAdvanceWorld/m.test(html), "removed world evolution demo button should not keep a touch binding");
 assert(/function updateInfoMenuDragProgress/m.test(html) && /leftEdgeSwipe/m.test(html) && /touchmove[\s\S]*updateInfoMenuDragProgress/m.test(html), "side menu should support left-edge swipe open and drawer swipe close");
 assert(/function handleCanvasTouchCreation/m.test(html) && /touch\.clientX[\s\S]*touch\.clientY/m.test(html), "Canvas trajectory creation should map touch coordinates");
 assert(/function focusFreeModeEditorForMobile/m.test(html) && /scrollIntoView\(\{[\s\S]*block:\s*"center"/m.test(html), "mobile free-mode editor should scroll into view when focused");

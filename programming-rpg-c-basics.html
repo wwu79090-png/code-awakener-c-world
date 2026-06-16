@@ -11,7 +11,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; base-uri 'self'; object-src 'none'; frame-ancestors 'none'; script-src 'self' https://cdn.jsdelivr.net 'nonce-code-awakener-inline' 'sha256-TAQQh71VX8SJ+LqiJSLwFh2nJF7QzGL54TFWrnHsOuA='; style-src 'self' https://cdn.jsdelivr.net https://fonts.googleapis.com 'nonce-code-awakener-inline' 'sha256-bWjnDFITNd4s2beAeEL57slQf+CaoupB3vTOayWE1xg='; style-src-attr 'unsafe-inline'; font-src 'self' https://cdn.jsdelivr.net https://fonts.gstatic.com data:; img-src 'self' data: blob:; media-src 'self' data: blob:; worker-src 'self' blob:; child-src 'self' blob:; connect-src 'self' https://cdn.jsdelivr.net http://localhost:8000 http://127.0.0.1:8000;">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; base-uri 'self'; object-src 'none'; frame-ancestors 'none'; script-src 'self' https://cdn.jsdelivr.net 'nonce-code-awakener-inline' 'sha256-BM5RY2CDie+j2idpZG059WQLA7aAPU/wERx05swuPL4='; style-src 'self' https://cdn.jsdelivr.net https://fonts.googleapis.com 'nonce-code-awakener-inline' 'sha256-FqUOXMftslySn/KHpQS9FcURJrSTdhIRtQJkfe0FxaQ='; style-src-attr 'unsafe-inline'; font-src 'self' https://cdn.jsdelivr.net https://fonts.gstatic.com data:; img-src 'self' data: blob:; media-src 'self' data: blob:; worker-src 'self' blob:; child-src 'self' blob:; connect-src 'self' https://cdn.jsdelivr.net http://localhost:8000 http://127.0.0.1:8000;">
   <title>编程学习 RPG：C 语言启航村</title>
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%23020617'/%3E%3Cpath d='M22 20 10 32l12 12M42 20l12 12-12 12' fill='none' stroke='%2300ff88' stroke-width='6' stroke-linecap='round' stroke-linejoin='round'/%3E%3Cpath d='m36 16-8 32' stroke='%2300ccff' stroke-width='5' stroke-linecap='round'/%3E%3C/svg%3E">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/firacode@6.2.0/distr/fira_code.css">
@@ -3520,6 +3520,12 @@
       border-color: rgba(52, 211, 153, 0.28);
     }
 
+    .course-lesson-item.locked {
+      opacity: 0.45;
+      cursor: not-allowed;
+      filter: saturate(0.55);
+    }
+
     .free-mode-editor-panel {
       display: none;
       gap: 8px;
@@ -6778,7 +6784,7 @@
     }
 
     .startup-announcement-title {
-      margin: 0 58px 10px 0;
+      margin: 0 50px 10px 0;
       color: #86efac;
       font-size: 16px;
       line-height: 1.2;
@@ -6802,7 +6808,7 @@
 
     .startup-announcement-pager {
       display: grid;
-      grid-template-columns: auto auto 1fr auto;
+      grid-template-columns: auto auto auto;
       align-items: center;
       gap: 10px;
       margin-top: 12px;
@@ -6834,8 +6840,8 @@
 
     .announcement-close {
       position: absolute;
-      top: 10px;
-      right: 12px;
+      top: 20px;
+      right: 20px;
       display: grid;
       place-items: center;
       width: 34px;
@@ -6844,7 +6850,7 @@
       border-radius: 999px;
       background: rgba(3, 7, 18, 0.32);
       color: rgba(226, 232, 240, 0.78);
-      font: 700 12px/1 var(--font-code);
+      font: 900 18px/1 var(--font-code);
       text-shadow: 0 0 8px rgba(0, 204, 255, 0.35);
       cursor: var(--custom-code-cursor), pointer;
     }
@@ -6852,6 +6858,20 @@
     .announcement-close:hover {
       color: #ffffff;
       text-shadow: 0 0 12px rgba(0, 255, 136, 0.7);
+    }
+
+    #systemBootSkipButton.announcement-close {
+      width: auto;
+      min-width: 132px;
+      height: 36px;
+      padding: 0 14px;
+      white-space: nowrap;
+      writing-mode: horizontal-tb;
+      text-orientation: mixed;
+      border-radius: 999px;
+      right: 18px;
+      top: 18px;
+      font-size: 11px;
     }
 
     .announcement-dismiss-hint {
@@ -9524,7 +9544,7 @@
 
     .startup-announcement-island {
       width: min(520px, calc(100vw - 30px)) !important;
-      padding: 10px 46px 10px 14px !important;
+      padding: 10px 54px 10px 14px !important;
       border-radius: 22px !important;
       background:
         linear-gradient(135deg, rgba(125, 211, 252, 0.04), transparent 48%),
@@ -9533,40 +9553,19 @@
       -webkit-backdrop-filter: blur(10px) saturate(1.08) !important;
     }
 
-    .startup-announcement-island[data-expanded="false"] {
-      min-height: 42px;
-      max-height: 72px;
-      overflow: hidden;
-    }
-
-    .startup-announcement-island[data-expanded="false"] .startup-announcement-title {
-      margin-bottom: 2px;
-      font-size: 13px;
-    }
-
-    .startup-announcement-island[data-expanded="false"] .startup-announcement-body {
-      display: block;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      font-size: 12px;
-    }
-
-    .startup-announcement-island[data-expanded="false"] .startup-announcement-body p:not(:first-child),
-    .startup-announcement-island[data-expanded="false"] .startup-announcement-pager {
+    #crtNoiseCanvas {
       display: none !important;
+      opacity: 0 !important;
+      visibility: hidden !important;
     }
 
-    .announcement-expand {
-      min-height: 30px;
-      min-width: 68px;
-      border: 1px solid rgba(125, 211, 252, 0.3);
-      border-radius: 999px;
-      padding: 0 12px;
-      background: rgba(3, 7, 18, 0.34);
-      color: #dffbff;
-      font: 800 11px/1 var(--font-code);
-      justify-self: end;
+    #cinematicFxCanvas {
+      opacity: 0.42;
+      transition: opacity 240ms ease-out;
+    }
+
+    body[data-performance-mode="medium"] #cinematicFxCanvas {
+      opacity: 0.34;
     }
 
     .absolute-guide-tag {
@@ -9616,6 +9615,10 @@
       .security-mascot-toast {
         width: min(92vw, 560px);
         min-height: 42px;
+      }
+
+      .startup-announcement-island {
+        padding-right: 54px !important;
       }
 
       .pixel-button {
@@ -9840,7 +9843,7 @@
       <canvas id="menuFxCanvas" width="1280" height="720"></canvas>
       <div class="main-menu-card glass-panel">
         <h1 class="game-logo">CODE AWAKENER<br>C 语言启航村</h1>
-        <div class="version-label" id="versionLabel">World Build v1.0.13 · develop.fan C Basics</div>
+        <div class="version-label" id="versionLabel">World Build v1.0.15 · develop.fan C Basics</div>
         <label class="boot-command"><span>&gt;</span><input id="bootCommandInput" value="start_game.exe" autocomplete="off" spellcheck="false" aria-label="启动命令"></label>
         <label class="skin-picker">角色外观
           <select id="skinSelect" aria-label="选择主角外观">
@@ -9982,7 +9985,6 @@
               <label class="setting-row">性能模式
                 <select id="performanceModeSelect">
                   <option value="high">高画质</option>
-                  <option value="medium">中画质</option>
                   <option value="low">低画质</option>
                 </select>
                 <span>自适应</span>
@@ -10176,20 +10178,7 @@
           <p class="menu-help">保存你已经运行过的课程代码。点击条目可以重放对应的内存模型和执行轨迹。</p>
           <div id="codeHistoryList" class="code-history-list">// 学过的代码会出现在这里，可点击回放。</div>
         </section>
-        <section id="freeModeEditorPanel" class="info-menu-section free-mode-editor-panel" aria-label="自由模式代码编辑器">
-          <strong>自由模式编辑器</strong>
-          <p class="menu-help">完成度达到80%后开放。这里可以尝试自己的C代码；编译会尽量用图形方式解释运行过程和错误位置。</p>
-          <div id="freeModeLockedNote" class="free-mode-locked-note">// 完成度达到 80% 后解锁。你可以输入自己的 C 代码，系统会用同一套内存模型进行模拟。</div>
-          <div class="free-mode-editor-shell">
-            <pre id="freeModeHighlightLayer" class="free-mode-highlight" aria-hidden="true"></pre>
-            <textarea id="freeModeCodeInput" class="free-mode-code-input" inputmode="text" enterkeyhint="enter" autocomplete="off" autocapitalize="none" autocorrect="off" spellcheck="false" aria-label="自由模式 C 语言代码"></textarea>
-          </div>
-          <div class="info-menu-actions">
-            <button id="freeModeCompileButton" class="pixel-button secondary" type="button">自由编译</button>
-            <button id="debugStepButton" class="pixel-button secondary" type="button">单步执行</button>
-            <button id="tutorialFixSuggestionButton" class="pixel-button secondary" type="button">修正建议</button>
-          </div>
-        </section>
+        <div id="postCompletionToolsMount" hidden></div>
         <section class="info-menu-section">
           <strong>零基础代码辅助</strong>
           <p class="menu-help">前10个课程可以点击“填入当前代码”，先运行正确代码，再观察动画理解含义。</p>
@@ -10244,12 +10233,11 @@
         </section>
         <section class="info-menu-section">
           <strong>世界进化</strong>
-          <p class="menu-help">这是独立的世界进化演示，不是主线任务。想看视觉变化时，点下面的演示按钮即可。</p>
+          <p class="menu-help">这里仅展示世界修复状态。世界会随着主线课程编译自动推进，不需要手动演示。</p>
           <div class="info-menu-row"><span>完成度</span><span id="infoWorldEvolutionText">0%</span></div>
           <div class="info-menu-meter"><span id="infoWorldEvolutionFill"></span></div>
-          <div id="infoWorldEvolutionHint">// 这是演示功能。主线学习请靠近石碑按 E，再在编辑器里运行代码。</div>
+          <div id="infoWorldEvolutionHint">// 主线学习：靠近石碑按 E，再在编辑器里运行代码。</div>
           <div class="info-menu-actions world-evolution-actions">
-            <button id="worldEvolutionMenuAdvanceButton" class="pixel-button secondary" type="button">演示一次世界进化</button>
             <button id="fragmentStarChartButton" class="pixel-button secondary" type="button">打开碎片星盘</button>
           </div>
           <div id="fragmentStarChartPanel" class="world-evolution-panel" aria-label="碎片星盘">
@@ -10345,43 +10333,6 @@
           </label>
         </section>
         <section class="info-menu-section">
-          <strong>叙事 / 分支</strong>
-          <p class="menu-help">选择你回应世界的方式，会影响台词风格和少量碎片奖励，不会跳过课程。</p>
-          <div id="worldEvolutionBranchText">// 当前分支：善良</div>
-          <div class="info-menu-actions">
-            <button class="pixel-button secondary" type="button" data-world-choice="light">回应：点亮世界</button>
-            <button class="pixel-button secondary" type="button" data-world-choice="nature">回应：守护自然</button>
-            <button class="pixel-button secondary" type="button" data-world-choice="tech">回应：拥抱科技</button>
-          </div>
-        </section>
-        <section class="info-menu-section">
-          <strong>量子态分支</strong>
-          <p class="menu-help">查看不同世界倾向的表现：善良、混沌、机械。它是叙事观察分支，不会直接通关。</p>
-          <div class="info-menu-actions">
-            <button class="pixel-button secondary" type="button" data-quantum-branch="kind">善良</button>
-            <button class="pixel-button secondary" type="button" data-quantum-branch="chaos">混沌</button>
-            <button class="pixel-button secondary" type="button" data-quantum-branch="machine">机械</button>
-          </div>
-        </section>
-        <section class="info-menu-section">
-          <strong>区域 / 主题</strong>
-          <p class="menu-help">切换已解锁区域视角和菜单主题。未达到完成度门槛的区域不会被强行解锁。</p>
-          <div id="worldEvolutionRegionText">// 当前区域：破败村庄</div>
-          <div class="info-menu-actions">
-            <button class="pixel-button secondary" type="button" data-world-region-step="-1">← 上一区域</button>
-            <button class="pixel-button secondary" type="button" data-world-region-step="1">下一区域 →</button>
-          </div>
-          <label class="setting-row">UI主题
-            <select id="worldEvolutionThemeSelect" aria-label="世界进化UI主题">
-              <option value="deepStar">深邃星空</option>
-              <option value="amberGold">琥珀流金</option>
-              <option value="forestGreen">翠绿森林</option>
-            </select>
-          </label>
-          <label class="setting-check"><input id="worldEvolutionTimeFlowToggle" type="checkbox"> 时间流逝</label>
-          <button id="worldEvolutionTimePauseButton" class="pixel-button secondary" type="button">暂停日夜</button>
-        </section>
-        <section class="info-menu-section">
           <strong>世界之镜</strong>
           <p class="menu-help">显示模拟的其他觉醒者留言和全球进度，用来增加氛围；不会上传你的个人数据。</p>
           <div id="worldEvolutionMirrorText">// 正在等待其他觉醒者的回声。</div>
@@ -10401,8 +10352,6 @@
             <button id="worldEvolutionCopyShareButton" class="pixel-button secondary" type="button">复制文案</button>
             <button id="worldEvolutionScreenshotButton" class="pixel-button secondary" type="button">截图分享</button>
             <button id="worldEvolutionEndingButton" class="pixel-button secondary" type="button">查看结局</button>
-            <button id="worldEvolutionNewGamePlusButton" class="pixel-button secondary" type="button">新生（二周目）</button>
-            <button id="worldEvolutionCreationModeButton" class="pixel-button secondary" type="button">造物模式</button>
           </div>
         </section>
         <section class="info-menu-section">
@@ -10436,7 +10385,7 @@
           </div>
         </section>
       </aside>
-      <button id="worldAdvanceButton" class="world-evolution-button" type="button" aria-label="世界进化演示入口" aria-hidden="true" tabindex="-1">世界进化演示</button>
+      <button id="worldAdvanceButton" class="world-evolution-button" type="button" aria-label="世界进化内部按钮" aria-hidden="true" tabindex="-1" hidden disabled>世界已交给主线推进</button>
       <div aria-live="polite" id="worldEvolutionA11y" class="world-evolution-a11y"></div>
       <div id="guardianQteChip" class="guardian-qte-chip" aria-live="polite" aria-hidden="true">
         <div id="guardianQteText">世界守护者出现，快速点击稳定核心。</div>
@@ -10716,17 +10665,16 @@ int main(void) {
     </section>
 
     <aside id="startupAnnouncement" class="startup-announcement-island" role="status" aria-live="polite" aria-label="消息">
-      <button id="announcementCloseButton" class="announcement-close" type="button" aria-label="关闭公告">[ x ]</button>
+      <button id="announcementCloseButton" class="announcement-close" type="button" aria-label="关闭公告">×</button>
       <h2 id="startupAnnouncementTitle" class="startup-announcement-title">> 消息</h2>
       <div id="announcementPageBody" class="startup-announcement-body">
-        <p>// 本次更新：手机版菜单新增“游戏设置”，虚拟摇杆 + E 键不再误开菜单。</p>
+        <p>// 本次更新：公告只保留关闭、课程锁定、自由模式通关后显示。</p>
         <p class="announcement-dismiss-hint">- 点击任意处关闭</p>
       </div>
       <div class="startup-announcement-pager" aria-label="公告分页">
         <button id="announcementPrevButton" class="announcement-page-button" type="button">上一页</button>
         <span id="announcementPageIndicator" class="announcement-page-indicator">1/1</span>
         <button id="announcementNextButton" class="announcement-page-button" type="button">下一页</button>
-        <button id="announcementExpandButton" class="announcement-expand" type="button">详情</button>
       </div>
     </aside>
 
@@ -11193,36 +11141,35 @@ int main() {
     const SAVE_SIGNATURE_SALT = "c-world-local-integrity";
     const SAVE_CLEAR_CONFIRM_MS = 3000;
     const STARTUP_ANNOUNCEMENT_AUTO_HIDE_MS = 3000;
-    const GAME_VERSION = "v1.0.13";
+    const GAME_VERSION = "v1.0.15";
     const UPDATE_ANNOUNCEMENT_PAGES = Object.freeze([
       {
         title: "> 消息 / 本次更新",
         lines: [
-          "// 本次更新：手机版菜单新增“游戏设置”，虚拟摇杆 + E 键不再误开菜单。",
-          "// 公告折叠时会优先显示更新摘要，不再只显示作者信息。",
-          "// 公告关闭按钮和详情/收起按钮已分离，避免挤在一起误触。",
-          "// 防白屏手动档位已移除，高画质拉满不再启用白色雪花噪声。",
-          "// CRT 雪花噪声层保持关闭，电影颗粒预算保持为 0。",
+          "// 本次更新：公告删除详情/收起按钮，只保留关闭。",
+          "// 100%后空格和演示按钮不会再重复触发创世大爆炸。",
+          "// 课程进度按真实学习进度锁定，未学章节不可点击。",
+          "// 自由模式编辑器通关前不再出现在菜单里。",
+          "// 继续修复中/高画质后处理白点闪烁。",
           "// 作者：杀戮"
         ]
       },
       {
         title: "> 更新内容 / 稳定性",
         lines: [
-          "// 后处理 overlay 移除白色扫描线，保留低调色调和光效。",
-          "// 新增回归测试，禁止再次出现 renderQualitySelect 防白屏手动开关。",
-          "// 新增回归测试，禁止 CRT 噪声层显示或 film grain 重新产出白点。",
-          "// 新增移动端触控隔离：摇杆、E键、对话按钮不会触发侧滑菜单。"
+          "// 后处理管线改为整组稳定绘制：低频更新时保留上一帧，不再一帧清空一帧绘制。",
+          "// 中画质不再作为可选项出现，避免进入最容易闪烁的过渡档。",
+          "// 高画质继续保留光照、雾层和反射，但去掉会持续闪的白色噪点类层。",
+          "// 旧存档和自动检测产生的 medium 会被兜底转为 high。"
         ]
       },
       {
         title: "> 更新内容 / 学习体验",
         lines: [
-          "// 游戏内信息菜单加入“游戏设置”入口，手机端不用再找 ESC 面板。",
-          "// 公告改为紧凑摘要，点击“详情”才展开，减少开屏遮挡。",
-          "// 关卡数据增加课程来源编号，任务说明会标注对应学习路径。",
-          "// 编辑器说明与错误提示继续保留导师口吻，帮助零基础玩家定位问题。",
-          "// 本版重点是把堆叠内容收束成清晰、稳定、可继续学习的路径。"
+          "// 收集碎片后，引导会显示“下一步已高亮”，而不是继续要求靠近同一碎片。",
+          "// 旧存档如果卡在 fragment 引导阶段，会自动回到跟随光带的下一步。",
+          "// 公告不再提供缩小/详情按钮，避免和关闭按钮重合。",
+          "// 本版重点是修复开屏公告、100%重复触发、课程锁定和自由模式暴露问题。"
         ]
       },
       {
@@ -11236,6 +11183,30 @@ int main() {
       }
     ]);
     const UPDATE_HISTORY = Object.freeze([
+      {
+        version: "v1.0.15",
+        date: "2026-06-16",
+        title: "公告按钮删减、100%重复触发修复与课程权限收口",
+        details: [
+          "开屏公告彻底删除详情/收起按钮，只保留关闭按钮，避免任何按钮重叠。",
+          "世界完成度达到100%后，空格键、长按和演示按钮只给出完成提示，不再重复播放创世大爆炸或累计隐藏计数。",
+          "课程进度菜单改为按真实学习进度解锁，未学章节显示锁定状态且无法点击跳转。",
+          "自由模式编辑器改为完整通关后才在菜单出现，通关前不再暴露输入框和按钮。",
+          "继续保留中画质移除、旧 medium 存档迁移和后处理整组稳定绘制，压低中/高画质闪烁风险。"
+        ]
+      },
+      {
+        version: "v1.0.14",
+        date: "2026-06-16",
+        title: "公告按钮分离、画质闪烁严修与碎片引导推进",
+        details: [
+          "公告详情/收起按钮固定在关闭按钮左侧，折叠态只隐藏分页，不再让两个按钮重叠。",
+          "设置中的性能模式移除中画质选项，旧存档 medium 会自动迁移为 high。",
+          "后处理管线改为整组稳定绘制，避免中/高画质隔帧清空造成白点闪烁。",
+          "CRT 噪声 canvas 在后置样式中也强制 display:none 和 opacity:0，防止被后续 CSS 覆盖。",
+          "知识碎片收集后绝对引导推进到“跟随光带/下一步”，旧存档卡在 fragment 阶段也会自动修正。"
+        ]
+      },
       {
         version: "v1.0.13",
         date: "2026-06-16",
@@ -11455,9 +11426,6 @@ int main() {
       "历史更新内容": { icon: "🗂️", purpose: "查看版本变化" },
       "存档槽": { icon: "💿", purpose: "手动保存和读取" },
       "语言 / 无障碍": { icon: "🌐", purpose: "调整显示语言" },
-      "叙事 / 分支": { icon: "💬", purpose: "选择回应世界" },
-      "量子态分支": { icon: "🌀", purpose: "观察叙事倾向" },
-      "区域 / 主题": { icon: "🗺️", purpose: "切换区域和主题" },
       "世界之镜": { icon: "🪞", purpose: "查看模拟社区回声" },
       "记忆图鉴": { icon: "📖", purpose: "阅读世界记忆" },
       "成就 / 分享": { icon: "🏆", purpose: "查看成就与分享" },
@@ -11493,8 +11461,8 @@ int main() {
         id: "world",
         icon: "🌍",
         title: "世界与角色",
-        desc: "世界演示、难度、头像、分支",
-        sections: ["世界进化", "难度选择", "主角外观", "叙事 / 分支", "量子态分支", "区域 / 主题", "世界之镜"]
+        desc: "世界状态、难度、头像",
+        sections: ["世界进化", "难度选择", "主角外观", "世界之镜"]
       },
       {
         id: "settings",
@@ -12050,7 +12018,7 @@ return 0;`;
       directSaveAs: "reduced-by-inline-resources"
     });
     const SECURITY_CONFIG = Object.freeze({
-      expectedScriptHash: "NMFUBZ2L2h3FB1vYpNp7VgRnfofB29gsAFl4RlMmMss=",
+      expectedScriptHash: "vndB3FLNBXrzf18RT9BMSIvKPuQJqJeyj4U6QKfJ+AY=",
       selfCheckIntervalMs: 45000,
       tamperRefreshMs: 5000,
       devToolsRefreshMs: 2000,
@@ -14213,6 +14181,7 @@ return 0;`;
 
     function getPerformanceModeId() {
       const saved = gameState?.settings?.performanceMode || "auto";
+      if (saved === "medium") return "high";
       if (saved === "auto") return getAutoPerformanceModeId();
       return PERFORMANCE_MODES[saved] ? saved : "high";
     }
@@ -14276,10 +14245,12 @@ return 0;`;
     function getAutoPerformanceModeId() {
       const benchmark = gameState?.progress?.performanceBenchmark;
       const selected = benchmark?.selected || gameState?.runtimePerformanceMode || "high";
+      if (selected === "medium") return "high";
       return PERFORMANCE_MODES[selected] ? selected : "high";
     }
 
-    function applyPerformanceMode(mode = "medium", reason = "manual", options = {}) {
+    function applyPerformanceMode(mode = "high", reason = "manual", options = {}) {
+      if (mode === "medium" || mode === "auto") mode = "high";
       const config = getPerformanceModeConfig(mode);
       const persistSettings = options.runtimeOnly !== true;
       gameState.runtimePerformanceMode = config.id;
@@ -14389,7 +14360,7 @@ return 0;`;
           const average = samples.reduce((sum, value) => sum + value, 0) / Math.max(1, samples.length);
           const memory = Number(globalThis.navigator?.deviceMemory) || 4;
           const cores = Number(globalThis.navigator?.hardwareConcurrency) || 4;
-          const selected = average >= 57 && memory >= 8 && cores >= 6 ? "high" : average >= 42 && memory >= 4 ? "medium" : "low";
+          const selected = average >= 42 && memory >= 4 ? "high" : "low";
           gameState.progress.performanceBenchmark = { completedAt: new Date().toISOString(), averageFps: Math.round(average), memory, cores, selected };
           gameState.runtimePerformanceMode = selected;
           if (gameState.settings.performanceMode === "auto") applyPerformanceMode(selected, "启动基准", { runtimeOnly: true, silent: true });
@@ -15126,7 +15097,7 @@ return 0;`;
     const savedEquipped = readStorage(STORAGE.equipped, { 1: null, 2: null, 3: null, 4: null });
     const savedAchievements = readStorage(STORAGE.achievements, []);
     const savedSettings = { ...defaultSettings, ...readStorage(STORAGE.settings, defaultSettings) };
-    if (savedSettings.performanceMode === "auto") savedSettings.performanceMode = "high";
+    if (savedSettings.performanceMode === "auto" || savedSettings.performanceMode === "medium") savedSettings.performanceMode = "high";
     if (savedSettings.renderQuality === "auto" || savedSettings.renderQuality === "medium") savedSettings.renderQuality = "high";
     if (savedSettings.cinematicQuality === CINEMATIC_RENDER_MODES.auto) savedSettings.cinematicQuality = CINEMATIC_RENDER_MODES.high;
 
@@ -15589,6 +15560,7 @@ return 0;`;
         renderQuestTracker();
         renderQuestLog();
         updateNpcQuestIndicators(gameState.scene);
+        syncQuestInteractableTargets(gameState.scene);
       }
     }
 
@@ -17365,7 +17337,6 @@ int main(void) {
     let editorVisualTimer = null;
     let clearSaveConfirmTimer = null;
     let startupAnnouncementTimer = null;
-    let startupAnnouncementExpanded = false;
     let islandToastTimer = null;
     const islandToastQueue = [];
     const COLLAPSIBLE_POPUP_SELECTORS = Object.freeze([
@@ -17486,6 +17457,7 @@ int main(void) {
       courseLessonList: document.getElementById("courseLessonList"),
       learningLogList: document.getElementById("learningLogList"),
       codeHistoryList: document.getElementById("codeHistoryList"),
+      postCompletionToolsMount: document.getElementById("postCompletionToolsMount"),
       freeModeEditorPanel: document.getElementById("freeModeEditorPanel"),
       freeModeLockedNote: document.getElementById("freeModeLockedNote"),
       freeModeHighlightLayer: document.getElementById("freeModeHighlightLayer"),
@@ -17524,7 +17496,6 @@ int main(void) {
       infoWorldEvolutionHint: document.getElementById("infoWorldEvolutionHint"),
       worldEvolutionDifficultyHint: document.getElementById("worldEvolutionDifficultyHint"),
       worldAdvanceButton: document.getElementById("worldAdvanceButton"),
-      worldEvolutionMenuAdvanceButton: document.getElementById("worldEvolutionMenuAdvanceButton"),
       codeBlockModePanel: document.getElementById("codeBlockModePanel"),
       codeBlockModeStatus: document.getElementById("codeBlockModeStatus"),
       codeBlockBank: document.getElementById("codeBlockBank"),
@@ -17551,8 +17522,6 @@ int main(void) {
       worldEvolutionCopyShareButton: document.getElementById("worldEvolutionCopyShareButton"),
       worldEvolutionScreenshotButton: document.getElementById("worldEvolutionScreenshotButton"),
       worldEvolutionEndingButton: document.getElementById("worldEvolutionEndingButton"),
-      worldEvolutionNewGamePlusButton: document.getElementById("worldEvolutionNewGamePlusButton"),
-      worldEvolutionCreationModeButton: document.getElementById("worldEvolutionCreationModeButton"),
       worldEvolutionRegionText: document.getElementById("worldEvolutionRegionText"),
       worldEvolutionThemeSelect: document.getElementById("worldEvolutionThemeSelect"),
       worldEvolutionTimeFlowToggle: document.getElementById("worldEvolutionTimeFlowToggle"),
@@ -17686,7 +17655,6 @@ int main(void) {
       announcementPageBody: document.getElementById("announcementPageBody"),
       announcementPrevButton: document.getElementById("announcementPrevButton"),
       announcementNextButton: document.getElementById("announcementNextButton"),
-      announcementExpandButton: document.getElementById("announcementExpandButton"),
       announcementPageIndicator: document.getElementById("announcementPageIndicator"),
       securityMascotToast: document.getElementById("securityMascotToast"),
       securityMascotTitle: document.getElementById("securityMascotTitle"),
@@ -18093,7 +18061,8 @@ int main(void) {
         setAbsoluteGuideStage("followPath", "做对了，跟着光带去下一处。");
         showAbsoluteGuideOperationFeedback("success", "运行成功");
       } else if (action === "fragmentCollected") {
-        setAbsoluteGuideStage("fragment", "碎片已收集，背包会记录它。");
+        const nextStage = chapters.some((chapter) => !hasCollectedCourseFragment(chapter.id)) ? "followPath" : "done";
+        setAbsoluteGuideStage(nextStage, "碎片已收集，下一步已经高亮。");
         showAbsoluteGuideOperationFeedback("success", "碎片收集");
       } else if (action === "wrongDirection") {
         setAbsoluteGuideStage(gameState.progress.absoluteGuideStage || "welcome", "方向偏了，回到蓝绿光点。", { save: false });
@@ -18126,6 +18095,10 @@ int main(void) {
     function getAbsoluteGuideTargetPoint(scene) {
       if (!scene?.chapterObjects) return null;
       const stage = gameState.progress.absoluteGuideStage || "welcome";
+      if (stage === "fragment") {
+        const fragment = scene.codeFragments?.find((item) => item?.visible !== false && !item.collecting && !gameState.progress.collectedFragmentKeys.includes(getFragmentKey(item)));
+        if (fragment) return fragment;
+      }
       const chapterId = gameState.activeChallengeId || chapters?.[gameState.progress.currentLevel || 0]?.id || FIRST_MAINLINE_CHAPTER_ID;
       const object = getChapterObjects(scene, chapterId);
       if (!object) return null;
@@ -18171,6 +18144,10 @@ int main(void) {
         return false;
       }
       if (!absoluteGuideRuntime.active) startAbsoluteGuide(false);
+      if (gameState.progress.absoluteGuideStage === "fragment") {
+        const hasPendingFragment = scene?.codeFragments?.some((item) => item?.visible !== false && !item.collecting && !gameState.progress.collectedFragmentKeys.includes(getFragmentKey(item)));
+        if (!hasPendingFragment) setAbsoluteGuideStage("followPath", "碎片已处理，跟着光带去下一处。", { save: false });
+      }
       updateAbsoluteGuideIdle();
       updateAbsoluteGuidePath(scene);
       return true;
@@ -20217,8 +20194,10 @@ ${item.code}
     function getTaskNextStepHint(task, state = {}) {
       if (!task) return "跟随地图上的金色箭头前进。";
       if (state.status === TASK_STATUS.available) {
+        if (task.id === "solve_for_sequence") return "前往地图中央偏右的「循环石碑」，靠近后按 E 进入编辑器。";
+        if (task.requirement?.clearedChapter) return "前往当前发光石碑，完成代码填空后通过编译之门。";
         const npc = NPC_DATA.find((item) => (item.taskIds || []).includes(task.id));
-        return npc ? `去找 ${npc.name} 接取任务，NPC 头顶会显示名字和任务符号。` : "寻找带绿色感叹号的 NPC。";
+        return npc ? `去找 ${npc.name} 接取任务，NPC 头顶会显示名字和任务符号。` : "跟随地面光带，前往当前发光石碑。";
       }
       if (state.status === TASK_STATUS.readyToSubmit) {
         const npc = NPC_DATA.find((item) => (item.taskIds || []).includes(task.id));
@@ -20616,6 +20595,27 @@ ${item.code}
       return snippets[index] || snippets[0];
     }
 
+    function isCTutorialChapterUnlocked(chapter) {
+      const snippets = flattenCTutorialSnippets();
+      const firstSnippet = chapter?.lessons?.flatMap?.((lesson) => lesson.snippets)?.[0];
+      if (!firstSnippet) return false;
+      const firstIndex = snippets.findIndex((snippet) => snippet.id === firstSnippet.id);
+      const currentIndex = Math.max(0, Number(gameState.progress.currentLesson) || 0);
+      const compiled = new Set(gameState.progress.compiledHistory || []);
+      return firstIndex <= currentIndex || compiled.has(firstSnippet.id);
+    }
+
+    function isCTutorialChapterCompleted(chapter) {
+      const compiled = new Set(gameState.progress.compiledHistory || []);
+      return Boolean(chapter?.lessons?.flatMap?.((lesson) => lesson.snippets)?.every((snippet) => compiled.has(snippet.id)));
+    }
+
+    function isCTutorialFullyCompleted() {
+      const snippets = flattenCTutorialSnippets();
+      const compiled = new Set(gameState.progress.compiledHistory || []);
+      return snippets.length > 0 && snippets.every((snippet) => compiled.has(snippet.id));
+    }
+
     function normalizeCTutorialState() {
       const snippets = flattenCTutorialSnippets();
       gameState.progress.currentLesson = Math.max(0, Math.min(snippets.length - 1, Number(gameState.progress.currentLesson) || 0));
@@ -20659,8 +20659,7 @@ ${item.code}
     function updateFriendlyRunButtonText() {
       const runLabel = isFriendlyMode() ? "▶ 运行我的代码" : "运行代码";
       if (dom.runButton) dom.runButton.textContent = runLabel;
-      if (dom.worldAdvanceButton && !dom.worldAdvanceButton.classList.contains("complete")) dom.worldAdvanceButton.textContent = "世界进化演示";
-      if (dom.worldEvolutionMenuAdvanceButton && !dom.worldEvolutionMenuAdvanceButton.disabled) dom.worldEvolutionMenuAdvanceButton.textContent = "演示一次世界进化";
+      if (dom.worldAdvanceButton && !dom.worldAdvanceButton.classList.contains("complete")) dom.worldAdvanceButton.textContent = "世界已交给主线推进";
       return runLabel;
     }
 
@@ -21447,8 +21446,8 @@ ${item.code}
     }
 
     function compileFreeModeCode(code = dom.freeModeCodeInput?.value || gameState.progress.freeModeCode || "") {
-      if ((Number(gameState.progress.worldEvolutionCompletion) || 0) < 80) {
-        showReward("自由模式需要完成度达到 80%。");
+      if (!isCTutorialFullyCompleted()) {
+        showReward("自由模式需要完整通关后才会开放。");
         return false;
       }
       const source = String(code || "");
@@ -21490,12 +21489,79 @@ ${item.code}
       return gameState.progress.currentDebugStep;
     }
 
+    function bindFreeModeEditorEvents() {
+      if (!dom.freeModeEditorPanel || dom.freeModeEditorPanel.dataset.bound === "true") return false;
+      dom.freeModeCodeInput?.addEventListener("input", (event) => {
+        gameState.progress.freeModeCode = event.target.value;
+        highlightFreeModeCode(event.target.value);
+        saveCTutorialLocalKeys();
+      });
+      dom.freeModeCodeInput?.addEventListener("focus", focusFreeModeEditorForMobile);
+      dom.freeModeCodeInput?.addEventListener("touchstart", focusFreeModeEditorForMobile, { passive: true });
+      dom.freeModeCompileButton?.addEventListener("click", () => compileFreeModeCode());
+      dom.debugStepButton?.addEventListener("click", () => stepDebugExecution());
+      dom.tutorialFixSuggestionButton?.addEventListener("click", () => applyTutorialFixSuggestion(dom.tutorialFixSuggestionButton?.dataset?.snippetId || getCurrentTutorialSnippet()?.id));
+      dom.freeModeEditorPanel.dataset.bound = "true";
+      return true;
+    }
+
+    function ensureFreeModeEditorPanel() {
+      if (!dom.postCompletionToolsMount) return null;
+      if (!dom.freeModeEditorPanel) {
+        dom.postCompletionToolsMount.hidden = false;
+        dom.postCompletionToolsMount.innerHTML = `
+          <section id="freeModeEditorPanel" class="info-menu-section free-mode-editor-panel unlocked" aria-label="自由模式代码编辑器">
+            <strong>自由模式编辑器</strong>
+            <p class="menu-help">完整通关后开放。这里可以尝试自己的C代码；编译会尽量用图形方式解释运行过程和错误位置。</p>
+            <div id="freeModeLockedNote" class="free-mode-locked-note">// 自由模式已解锁。你可以输入自己的 C 代码。</div>
+            <div class="free-mode-editor-shell">
+              <pre id="freeModeHighlightLayer" class="free-mode-highlight" aria-hidden="true"></pre>
+              <textarea id="freeModeCodeInput" class="free-mode-code-input" inputmode="text" enterkeyhint="enter" autocomplete="off" autocapitalize="none" autocorrect="off" spellcheck="false" aria-label="自由模式 C 语言代码"></textarea>
+            </div>
+            <div class="info-menu-actions">
+              <button id="freeModeCompileButton" class="pixel-button secondary" type="button">自由编译</button>
+              <button id="debugStepButton" class="pixel-button secondary" type="button">单步执行</button>
+              <button id="tutorialFixSuggestionButton" class="pixel-button secondary" type="button">修正建议</button>
+            </div>
+          </section>`;
+        dom.freeModeEditorPanel = document.getElementById("freeModeEditorPanel");
+        dom.freeModeLockedNote = document.getElementById("freeModeLockedNote");
+        dom.freeModeHighlightLayer = document.getElementById("freeModeHighlightLayer");
+        dom.freeModeCodeInput = document.getElementById("freeModeCodeInput");
+        dom.freeModeCompileButton = document.getElementById("freeModeCompileButton");
+        dom.debugStepButton = document.getElementById("debugStepButton");
+        dom.tutorialFixSuggestionButton = document.getElementById("tutorialFixSuggestionButton");
+      }
+      bindFreeModeEditorEvents();
+      if (dom.freeModeCodeInput && !dom.freeModeCodeInput.value) dom.freeModeCodeInput.value = gameState.progress.freeModeCode || "#include <stdio.h>\nint main(void) {\n  printf(\"free mode\");\n  return 0;\n}";
+      if (dom.freeModeLockedNote) dom.freeModeLockedNote.textContent = "// 自由模式已解锁。你可以输入自己的 C 代码。";
+      highlightFreeModeCode();
+      return dom.freeModeEditorPanel;
+    }
+
+    function removeFreeModeEditorPanel() {
+      dom.freeModeEditorPanel?.remove?.();
+      if (dom.postCompletionToolsMount) {
+        dom.postCompletionToolsMount.innerHTML = "";
+        dom.postCompletionToolsMount.hidden = true;
+      }
+      dom.freeModeEditorPanel = null;
+      dom.freeModeLockedNote = null;
+      dom.freeModeHighlightLayer = null;
+      dom.freeModeCodeInput = null;
+      dom.freeModeCompileButton = null;
+      dom.debugStepButton = null;
+      dom.tutorialFixSuggestionButton = null;
+      return true;
+    }
+
     function unlockFreeModeIfReady() {
-      const unlocked = (Number(gameState.progress.worldEvolutionCompletion) || 0) >= 80 || getTutorialProgressPercent() >= 80;
-      if (dom.freeModeEditorPanel) dom.freeModeEditorPanel.classList.toggle("unlocked", unlocked);
-      if (dom.freeModeLockedNote) dom.freeModeLockedNote.textContent = unlocked
-        ? "// 自由模式已解锁。你可以输入自己的 C 代码。"
-        : "// 完成度达到 80% 后解锁。你可以输入自己的 C 代码，系统会用同一套内存模型进行模拟。";
+      const unlocked = isCTutorialFullyCompleted();
+      if (!unlocked) {
+        if (dom.freeModeEditorPanel) removeFreeModeEditorPanel();
+        return false;
+      }
+      ensureFreeModeEditorPanel();
       return unlocked;
     }
 
@@ -21882,9 +21948,10 @@ ${item.code}
       if (dom.courseLessonList) {
         dom.courseLessonList.innerHTML = C_TUTORIAL_COURSE.map((chapter) => {
           const chapterSnippets = chapter.lessons.flatMap((lesson) => lesson.snippets);
-          const done = chapterSnippets.every((snippet) => gameState.progress.compiledHistory.includes(snippet.id));
+          const done = isCTutorialChapterCompleted(chapter);
           const active = chapterSnippets.some((snippet) => snippet.id === currentSnippet.id);
-          return `<button class="course-lesson-item ${done ? "done" : ""} ${active ? "current" : ""}" type="button" data-c-lesson="${escapeHtml(chapterSnippets[0]?.id || "")}">${done ? "✓" : active ? ">" : "·"} ${escapeHtml(chapter.title)}<br><small>${escapeHtml(chapter.completionRange.join("%-"))}% · ${chapterSnippets.length} 例</small></button>`;
+          const unlocked = done || active || isCTutorialChapterUnlocked(chapter);
+          return `<button class="course-lesson-item ${done ? "done" : ""} ${active ? "current" : ""} ${unlocked ? "" : "locked"}" type="button" data-c-lesson="${escapeHtml(chapterSnippets[0]?.id || "")}" ${unlocked ? "" : "disabled aria-disabled=\"true\""}>${done ? "✓" : active ? ">" : "🔒"} ${escapeHtml(chapter.title)}<br><small>${unlocked ? `${escapeHtml(chapter.completionRange.join("%-"))}% · ${chapterSnippets.length} 例` : "完成上一章后解锁"}</small></button>`;
         }).join("");
       }
       if (dom.learningLogList) {
@@ -21921,16 +21988,23 @@ ${item.code}
       const snippets = flattenCTutorialSnippets();
       const index = snippets.findIndex((snippet) => snippet.id === snippetId);
       if (index < 0) return false;
+      const snippet = snippets[index];
+      const chapter = C_TUTORIAL_COURSE.find((item) => item.id === snippet.chapterId);
+      if (chapter && !isCTutorialChapterUnlocked(chapter)) {
+        showReward("课程尚未解锁：请先完成上一章。");
+        return false;
+      }
       gameState.progress.currentLesson = index;
       renderCTutorialSideMenu();
       saveCTutorialLocalKeys();
       saveProgress();
-      showReward(`已切换课程：${snippets[index].title}`);
+      showReward(`已切换课程：${snippet.title}`);
       return true;
     }
 
     function compileAndAdvanceWorld(chargeMultiplier = 1) {
       if (gameState.noviceGuideActive) return handleNoviceGuideCompile();
+      if (!guardWorldEvolutionAdvance("button")) return false;
       const friendlySnippet = getCurrentTutorialSnippet?.();
       const tutorialResult = compileCurrentTutorialSnippet();
       growRewardGardenFlower(tutorialResult === false ? "另一种尝试" : "成功运行");
@@ -22380,7 +22454,7 @@ ${item.code}
       }
       if (event.code === "Space") {
         event.preventDefault();
-        advanceWorldEvolution();
+        requestWorldEvolutionAdvance("space");
         return true;
       }
       if (event.key?.toLowerCase?.() === "m") {
@@ -23136,7 +23210,45 @@ ${item.code}
       if (completion >= 60) return "// 代码路径已经固化，树木和光柱会随进度继续增强。";
       if (completion >= 35) return "// 生态层正在恢复，草地、极光和符文开始显形。";
       if (completion >= 10) return "// 世界核心已点火，地面裂纹开始减少。";
-      return "// 主线学习：靠近石碑按 E。这里的按钮只用于演示世界进化。";
+      return "// 主线学习：靠近石碑按 E。世界进化会随课程编译自动推进。";
+    }
+
+    function isWorldEvolutionComplete() {
+      return normalizeWorldEvolutionState() >= 100;
+    }
+
+    const WORLD_EVOLUTION_ADVANCE_COOLDOWN_MS = 5000;
+    let worldEvolutionCompleteNoticeAt = 0;
+    let worldEvolutionAdvanceLockedUntil = 0;
+    let worldEvolutionAdvanceInFlight = false;
+
+    function guardWorldEvolutionAdvance(source = "manual") {
+      if (!isWorldEvolutionComplete()) return true;
+      const now = performance.now();
+      if (now - worldEvolutionCompleteNoticeAt > 1600) {
+        showReward(source === "space"
+          ? "世界已经完成。空格键不会再重复触发终章动画。"
+          : "世界已经完成。请继续主线学习或在菜单查看结局。");
+        worldEvolutionCompleteNoticeAt = now;
+      }
+      updateWorldEvolutionUi();
+      return false;
+    }
+
+    function requestWorldEvolutionAdvance(source = "manual", chargeMultiplier = 1) {
+      const now = performance.now();
+      if (worldEvolutionAdvanceInFlight || now < worldEvolutionAdvanceLockedUntil) {
+        if (source === "space") showReward("创世协议冷却中，空格输入已忽略。");
+        return false;
+      }
+      if (!guardWorldEvolutionAdvance(source)) return false;
+      worldEvolutionAdvanceInFlight = true;
+      worldEvolutionAdvanceLockedUntil = now + WORLD_EVOLUTION_ADVANCE_COOLDOWN_MS;
+      const result = advanceWorldEvolution(chargeMultiplier);
+      trackedSetTimeout(() => {
+        worldEvolutionAdvanceInFlight = false;
+      }, WORLD_EVOLUTION_ADVANCE_COOLDOWN_MS, "world-evolution-advance-cooldown");
+      return result;
     }
 
     function updateWorldEvolutionUi() {
@@ -23168,13 +23280,11 @@ ${item.code}
       renderWorldEvolutionAchievements();
       if (dom.worldAdvanceButton) {
         dom.worldAdvanceButton.classList.toggle("complete", completion >= 100);
-        dom.worldAdvanceButton.textContent = completion >= 100 ? "世界已完成" : "世界进化演示";
+        dom.worldAdvanceButton.textContent = completion >= 100 ? "世界已完成" : "世界已交给主线推进";
+        dom.worldAdvanceButton.disabled = true;
+        dom.worldAdvanceButton.hidden = true;
+        dom.worldAdvanceButton.setAttribute?.("aria-disabled", "true");
         dom.worldAdvanceButton.title = `世界完成度 ${Math.round(completion)}% · 进化碎片 ${fragments}/20`;
-      }
-      if (dom.worldEvolutionMenuAdvanceButton) {
-        dom.worldEvolutionMenuAdvanceButton.disabled = completion >= 100;
-        dom.worldEvolutionMenuAdvanceButton.textContent = completion >= 100 ? "世界已完成" : "演示一次世界进化";
-        dom.worldEvolutionMenuAdvanceButton.title = `演示功能：完成度 ${Math.round(completion)}% · 进化碎片 ${fragments}/20`;
       }
       renderWorldEvolutionCodex();
       return completion;
@@ -23199,11 +23309,7 @@ ${item.code}
       const config = getWorldEvolutionDifficultyConfig();
       const previous = gameState.progress.worldEvolutionCompletion;
       if (previous >= 100) {
-        gameState.progress.worldEvolutionPostPerfectCompiles = (Number(gameState.progress.worldEvolutionPostPerfectCompiles) || 0) + 1;
-        showReward(`世界已经完成。超越完美计数 ${gameState.progress.worldEvolutionPostPerfectCompiles}/100。`);
-        playWorldEvolutionMilestoneEffect(gameState.scene, 100, { replay: true });
-        if (gameState.progress.worldEvolutionPostPerfectCompiles >= 100) showWorldEvolutionEnding();
-        saveProgress();
+        guardWorldEvolutionAdvance("manual");
         return false;
       }
       if (!spendWorldEvolutionMp(config.internalMpCost)) return false;
@@ -23555,22 +23661,47 @@ ${item.code}
       return true;
     }
 
-    function presentChoiceNode(nodeId) {
+    function resolveNarrativeBranchWeights(nodeId) {
+      const progress = gameState.progress || {};
+      const npcMemory = Object.values(progress.npcMemory || {});
+      const friendly = npcMemory.filter((item) => item?.tone === "friendly").length;
+      const curious = npcMemory.filter((item) => item?.tone === "curious").length;
+      const distant = npcMemory.filter((item) => item?.tone === "distant").length;
+      const killCount = (progress.defeatedCodeEnemies || []).length;
+      const favorability = friendly * 3 + (questManager?.getState("collect_basic_fragments").status === TASK_STATUS.closed ? 2 : 0);
+      const collected = getCourseFragmentProgressCount();
+      const fixedErrors = Object.values(progress.tutorialFixedErrors || {}).filter(Boolean).length;
+      const compiled = (progress.compiledHistory || []).length + (Number(progress.worldEvolutionCompileCount) || 0);
+      const refusals = Number(progress.refusedNpcRequests) || 0;
+      const weights = {
+        guardian: favorability + collected + Math.max(0, chapters.length - killCount),
+        decoder: fixedErrors * 3 + compiled + curious * 2,
+        traveler: refusals * 4 + distant * 3 + (progress.collectedImprints?.length || 0) + (progress.worldEvolutionRandomEventsSeen?.length || 0)
+      };
+      if (nodeId === "mentor_first" && progress.redScarfHermitFound) weights["impossible-npc"] = weights.decoder + 1;
+      return weights;
+    }
+
+    function applyImplicitNarrativeBranch(nodeId) {
       const node = CHOICE_NODES[nodeId];
-      if (!node || !dom.choiceOptions) return false;
+      if (!node) return false;
       if (hasNarrativeChoice(nodeId)) return false;
-      dom.choiceNodeTitle.textContent = node.title;
-      dom.choiceNodePrompt.textContent = node.prompt;
-      dom.choiceOptions.innerHTML = node.options.map((option, index) => {
-        const keyLabel = String.fromCharCode(65 + index);
-        return `<button class="choice-option" data-choice="${escapeHtml(option.id)}" type="button">[${keyLabel}] ${escapeHtml(option.label)}</button>`;
-      }).join("");
-      dom.narrativeChoiceOverlay?.classList.add("active");
-      dom.narrativeChoiceOverlay?.setAttribute("aria-hidden", "false");
-      dom.choiceOptions.querySelectorAll("[data-choice]").forEach((button) => {
-        button.addEventListener("click", () => chooseNarrativeOption(nodeId, button.dataset.choice));
-      });
-      return true;
+      const weights = resolveNarrativeBranchWeights(nodeId);
+      const option = [...node.options].sort((a, b) => (weights[b.id] || 0) - (weights[a.id] || 0))[0];
+      if (!option) return false;
+      const record = narrativeMemory.recordChoice(nodeId, option);
+      if (option.tone === "distant") recordNpcRefusal();
+      dom.narrativeChoiceOverlay?.classList.remove("active");
+      dom.narrativeChoiceOverlay?.setAttribute("aria-hidden", "true");
+      if (dom.choiceOptions) dom.choiceOptions.textContent = "";
+      showChoiceFeedbackIsland(`系统判定：${option.label}`);
+      rememberNpcInteraction("mentor", option.tone, option.label);
+      if (option.id === "impossible-npc") showSystemLogWindow(["> ...", "> 如果你这么说，那我也可能是玩家。"], { mode: "compact", autoCloseMs: 1800 });
+      return record;
+    }
+
+    function presentChoiceNode(nodeId) {
+      return applyImplicitNarrativeBranch(nodeId);
     }
 
     function showChoiceFeedbackIsland(label = "") {
@@ -24095,6 +24226,8 @@ ${item.code}
       beginRepair(enemyId) {
         const enemy = this.getActiveData().find((item) => item.id === enemyId && !item.defeated);
         if (!enemy) return false;
+        enemy.engagedAt = Date.now();
+        enemy.nextAttackAt = Date.now() + 15000;
         gameState.pendingEnemyRepairId = enemy.id;
         showReward(`${enemy.type === "logicGuard" ? "逻辑守卫" : "代码Bug"}需要修复：${enemy.repair}`);
         openEditor(enemy.repairChapterId || enemy.chapterId);
@@ -24108,8 +24241,8 @@ ${item.code}
           if (!scene?.player || Phaser.Math.Distance.Between(scene.player.x, scene.player.y, enemy.x, enemy.y) > 260) return;
           enemy.nextAttackAt = now + 12000;
           showCodeCombatLine(enemy.type === "logicGuard" ? "lock(player);" : "error_code();", window.innerWidth / 2, window.innerHeight * 0.42);
-          triggerErrorGlitch();
-          handleCompileFailurePenalty(enemy.repairChapterId || enemy.chapterId, { source: "enemy", enemyId: enemy.id });
+          triggerMicroGlitch();
+          showReward(`${enemy.type === "logicGuard" ? "逻辑守卫" : "代码Bug"}在附近：靠近后按 E 修复，不会直接扣生命。`);
         });
       }
 
@@ -25227,9 +25360,11 @@ ${item.code}
         }
         const frame = beginCinematicFxFrame(scene);
         if (!frame) return false;
-        if (shouldRunCinematicFrame(scene, "volumetricLight")) updateVolumetricSdfShadows(scene, frame);
-        if (shouldRunCinematicFrame(scene, "worldAtmosphere")) updateDepthFogSystem(scene, frame);
-        if (shouldRunCinematicFrame(scene, "cinematicRenderPipeline")) updateScreenSpaceReflections(scene, frame);
+        // 后处理必须整组重绘。之前中/高画质按不同间隔单独绘制并清空画布，
+        // 会造成一帧有雾层/反射、一帧没有的白点闪烁。
+        if (!renderSafetyManager?.isEffectDisabled?.("volumetricLight")) updateVolumetricSdfShadows(scene, frame);
+        updateDepthFogSystem(scene, frame);
+        updateScreenSpaceReflections(scene, frame);
         drawCinematicFilmGrain(scene, frame);
         return true;
       }
@@ -25279,6 +25414,7 @@ ${item.code}
       applyCodeGenesisHudAvatar();
       if (audioManager) audioManager.applyVolumes();
       if (dom.masterVolumeSlider) {
+        if (gameState.settings.performanceMode === "medium") gameState.settings.performanceMode = "high";
         dom.masterVolumeSlider.value = gameState.settings.masterVolume;
         dom.musicVolumeSlider.value = gameState.settings.musicVolume;
         dom.sfxVolumeSlider.value = gameState.settings.sfxVolume;
@@ -25351,6 +25487,7 @@ ${item.code}
 
     function updateSetting(key, value) {
       if (key === "renderQuality") value = normalizeRenderQuality(value);
+      if (key === "performanceMode" && value === "medium") value = "high";
       if ((key === "renderQuality" || key === "performanceMode") && value === "auto") value = "high";
       if (key === "cinematicQuality" && value === CINEMATIC_RENDER_MODES.auto) value = CINEMATIC_RENDER_MODES.high;
       gameState.settings[key] = value;
@@ -25547,18 +25684,7 @@ ${item.code}
       if (dom.announcementPageIndicator) dom.announcementPageIndicator.textContent = `${safeIndex + 1}/${pages.length}`;
       if (dom.announcementPrevButton) dom.announcementPrevButton.disabled = safeIndex <= 0;
       if (dom.announcementNextButton) dom.announcementNextButton.disabled = safeIndex >= pages.length - 1;
-      if (dom.announcementExpandButton) dom.announcementExpandButton.textContent = startupAnnouncementExpanded ? "收起" : "详情";
-      dom.startupAnnouncement?.setAttribute("data-expanded", startupAnnouncementExpanded ? "true" : "false");
       return page;
-    }
-
-    function toggleStartupAnnouncementExpanded(force = null) {
-      startupAnnouncementExpanded = typeof force === "boolean" ? force : !startupAnnouncementExpanded;
-      dom.startupAnnouncement?.setAttribute("data-expanded", startupAnnouncementExpanded ? "true" : "false");
-      if (dom.announcementExpandButton) dom.announcementExpandButton.textContent = startupAnnouncementExpanded ? "收起" : "详情";
-      if (startupAnnouncementTimer) timerTracker.clear(startupAnnouncementTimer);
-      startupAnnouncementTimer = trackedSetTimeout(closeStartupAnnouncement, startupAnnouncementExpanded ? STARTUP_ANNOUNCEMENT_AUTO_HIDE_MS + 4500 : STARTUP_ANNOUNCEMENT_AUTO_HIDE_MS, "startup-announcement-auto-hide-expanded");
-      return startupAnnouncementExpanded;
     }
 
     function changeStartupAnnouncementPage(delta = 1) {
@@ -25582,12 +25708,10 @@ ${item.code}
 
     function showStartupAnnouncement() {
       if (!dom.startupAnnouncement) return false;
-      startupAnnouncementExpanded = false;
       renderStartupAnnouncementPage(0);
-      dom.startupAnnouncement.setAttribute("data-expanded", "false");
       dom.startupAnnouncement.classList.remove("closing");
       dom.startupAnnouncement.classList.add("show");
-      announceGameEvent("消息：本次更新内容已显示，公告支持分页查看。");
+      announceGameEvent("消息：本次更新内容已显示。");
       startupAnnouncementTimer = trackedSetTimeout(closeStartupAnnouncement, STARTUP_ANNOUNCEMENT_AUTO_HIDE_MS, "startup-announcement-auto-hide");
       return true;
     }
@@ -27149,7 +27273,7 @@ ${item.code}
     function playNoviceGuideInterfaceTour() {
       const tour = [
         { target: "menu", title: "左上角菜单按钮", text: "这里可以查看你的学习进度、课程目录、碎片和设置。" },
-        { target: "compile", title: "编辑器运行按钮", text: "主线任务请在编辑器底部点击运行代码。世界进化演示已收进左侧菜单。" },
+        { target: "compile", title: "编辑器运行按钮", text: "主线任务请在编辑器底部点击运行代码。世界进化会随课程自动推进。" },
         { target: "dialog", title: "底部对话栏", text: "这里是代码解释区，导师会逐句告诉你每一行代码发生了什么。" },
         { target: "world", title: "中央游戏世界", text: "这里会动画展示代码执行过程，例如内存点亮、数据流动和输出结果。" }
       ];
@@ -27446,23 +27570,17 @@ ${item.code}
       const height = canvas.height || 180;
       const renderQuality = normalizeRenderQuality(gameState.settings.renderQuality || "high");
       const lowPower = renderSafetyManager?.safeMode || renderQuality === "low" || gameState.settings.animationQuality === ANIMATION_QUALITY.reduced;
-      const speckCount = lowPower ? 18 : 54;
       ctx.clearRect(0, 0, width, height);
       ctx.save();
       ctx.globalCompositeOperation = "source-over";
-      ctx.strokeStyle = "rgba(56, 189, 248, 0.045)";
+      // 稳定层只保留极淡扫描线。旧版随机白色噪点在中/高画质下会被误认为闪屏。
+      ctx.strokeStyle = lowPower ? "rgba(56, 189, 248, 0.018)" : "rgba(56, 189, 248, 0.028)";
       ctx.lineWidth = 1;
       for (let y = (performance.now() / 90) % 18; y < height; y += 18) {
         ctx.beginPath();
         ctx.moveTo(0, y);
         ctx.lineTo(width, y);
         ctx.stroke();
-      }
-      ctx.fillStyle = "rgba(125, 211, 252, 0.055)";
-      for (let i = 0; i < speckCount; i += 1) {
-        const x = Math.random() * width;
-        const y = Math.random() * height;
-        ctx.fillRect(x, y, 1, 1);
       }
       ctx.restore();
     }
@@ -28423,6 +28541,8 @@ ${item.code}
       openSettings(from = this.active) {
         this.previousPanel = from;
         this.active = "settings";
+        dismissExecutionVisualization("settings-open");
+        toggleInfoSideMenu(false);
         audioManager.settingsOpen();
         dom.settingsPanel.classList.add("active");
         document.body.classList.add("is-settings-open");
@@ -34107,6 +34227,61 @@ ${item.code}
       return puzzle;
     }
 
+    function cancelInteractionUiShielding() {
+      [dom.prompt, dom.bottomHintBar, dom.keymapGlassBar].forEach((element) => {
+        element?.style?.setProperty?.("pointer-events", "none", "important");
+      });
+      return true;
+    }
+
+    function forceEnableQuestStoneInteractable(scene, chapterId) {
+      const objects = scene?.chapterObjects?.[chapterId];
+      if (!objects?.stone) return false;
+      const stone = objects.stone;
+      stone.setActive?.(true);
+      stone.setVisible?.(true);
+      stone.setInteractive?.({ useHandCursor: true });
+      if (stone.input) stone.input.enabled = true;
+      if (!stone.questInteractBound) {
+        stone.on?.("pointerdown", () => {
+          cancelInteractionUiShielding();
+          if (gameState.menuOpen || gameState.dialogOpen || gameState.editorOpen) return;
+          if (typeof scene.isChapterUnlocked === "function" && !scene.isChapterUnlocked(chapterId)) {
+            showReward(`先完成上一座石碑，才能触碰 ${chapterById[chapterId]?.stoneLabel || "这座石碑"}。`);
+            return;
+          }
+          if (!isLearned(chapterId)) {
+            if (objects.codePuzzle?.completed) scene.startLesson?.(chapterId, true);
+            else tryFillStoneBlank(scene, chapterId);
+            return;
+          }
+          if (!isCleared(chapterId)) openEditor(chapterId);
+        });
+        stone.questInteractBound = true;
+      }
+      objects.codePuzzle?.blankHitZone?.setActive?.(true);
+      objects.codePuzzle?.blankHitZone?.setVisible?.(true);
+      objects.codePuzzle?.blankHitZone?.setInteractive?.({ useHandCursor: true });
+      if (objects.codePuzzle?.blankHitZone?.input) objects.codePuzzle.blankHitZone.input.enabled = true;
+      return true;
+    }
+
+    function syncQuestInteractableTargets(scene = gameState.scene) {
+      if (!scene?.chapterObjects) return false;
+      cancelInteractionUiShielding();
+      const visibleTasks = questManager?.getVisibleTasks?.() || [];
+      let synced = false;
+      visibleTasks.forEach((task) => {
+        const state = questManager.getState(task.id);
+        if (![TASK_STATUS.available, TASK_STATUS.inProgress, TASK_STATUS.readyToSubmit].includes(state.status)) return;
+        const chapterId = task.requirement?.clearedChapter || (task.id === "solve_for_sequence" ? "loops" : null);
+        if (chapterId) synced = forceEnableQuestStoneInteractable(scene, chapterId) || synced;
+      });
+      const targetChapter = chapters.find((chapter) => !isLearned(chapter.id)) || chapters.find((chapter) => isLearned(chapter.id) && !isCleared(chapter.id));
+      if (targetChapter) synced = forceEnableQuestStoneInteractable(scene, targetChapter.id) || synced;
+      return synced;
+    }
+
     function tryFillStoneBlank(scene, chapterId) {
       const objects = scene?.chapterObjects?.[chapterId];
       const spec = getStonePuzzleSpec(chapterId);
@@ -34452,6 +34627,7 @@ ${item.code}
         scene.chapterObjects[targetChapter.id]?.stone,
         "puzzle"
       ) : null;
+      syncQuestInteractableTargets(scene);
       scene.taskGuidanceSystem.update(getQuestGuidanceTargetData(scene) || fallbackTarget);
     }
 
@@ -35236,13 +35412,33 @@ ${item.code}
       return { ready, available, active };
     }
 
+    function applyNpcQuestIndicator(npc, action = getNpcQuestAction(npc?.data || {})) {
+      const marker = action.ready ? "?" : action.available ? "!" : action.active ? "◆" : "";
+      npc.icon?.setText(marker);
+      if (action.active) {
+        npc.icon?.setColor("#22c55e");
+        npc.icon?.setTint?.(0x22c55e);
+      } else {
+        npc.icon?.setColor(marker ? "#22c55e" : "#86efac");
+        npc.icon?.setTint?.(marker ? 0x22c55e : 0x86efac);
+      }
+      if (marker) {
+        npc.icon?.setActive?.(true);
+        npc.icon?.setVisible?.(true);
+        npc.icon?.setAlpha?.(1);
+      } else {
+        npc.icon?.setAlpha?.(0);
+        npc.icon?.setVisible?.(false);
+        npc.icon?.setActive?.(false);
+      }
+      npc.indicatorTaskId = action.ready || action.available || action.active || "";
+      return marker;
+    }
+
     function updateNpcQuestIndicators(scene) {
       scene?.coreNpcs?.forEach((npc) => {
         const action = getNpcQuestAction(npc.data);
-        const marker = action.ready ? "?" : action.available ? "!" : "";
-        npc.icon?.setText(marker);
-        npc.icon?.setColor(action.ready ? "#cbd5e1" : "#86efac");
-        npc.icon?.setAlpha(marker ? 1 : 0);
+        applyNpcQuestIndicator(npc, action);
       });
     }
 
@@ -36101,6 +36297,7 @@ ${item.code}
           if (isLearned(chapter.id)) this.markStoneLearned(chapter.id, false);
           if (isLearned(chapter.id) && !isCleared(chapter.id)) this.revealGate(chapter.id, false);
         });
+        syncQuestInteractableTargets(this);
         updateDataBusProgress(this);
         updateProgressHud();
           if (gameState.menuOpen || gameState.paused) this.scene.pause();
@@ -36824,10 +37021,6 @@ ${item.code}
       event.stopPropagation();
       changeStartupAnnouncementPage(1);
     });
-    dom.announcementExpandButton?.addEventListener("click", (event) => {
-      event.stopPropagation();
-      toggleStartupAnnouncementExpanded();
-    });
 
     dom.codeInput.addEventListener("beforeinput", handleMobileEditorBeforeInput);
     dom.codeInput.addEventListener("compositionstart", handleManualEditorCompositionStart);
@@ -37138,6 +37331,7 @@ ${item.code}
       showReward(saved ? "进度已手动保存。" : "保存失败，请稍后再试。");
     });
     bindFastTouchAction(dom.openGameSettingsButton, () => {
+      dismissExecutionVisualization("settings-button");
       toggleInfoSideMenu(false);
       if (typeof menuManager?.openSettings === "function") {
         menuManager.openSettings("game");
@@ -37180,9 +37374,6 @@ ${item.code}
     bindFastTouchAction(dom.worldAdvanceButton, () => {
       if (worldEvolutionIgnoreClick) return;
       compileAndAdvanceWorld(); // advanceWorldEvolution()
-    });
-    bindFastTouchAction(dom.worldEvolutionMenuAdvanceButton, () => {
-      compileAndAdvanceWorld();
     });
     dom.courseLessonList?.addEventListener("click", (event) => {
       const target = event.target.closest?.("[data-c-lesson]");
@@ -37247,25 +37438,10 @@ ${item.code}
       updateInfoSideMenu();
       showReward("世界进化语言已切换。");
     });
-    document.querySelectorAll("[data-world-choice]").forEach((button) => {
-      button.addEventListener("click", () => handleWorldEvolutionDialogueChoice(button.dataset.worldChoice));
-    });
-    document.querySelectorAll("[data-quantum-branch]").forEach((button) => {
-      button.addEventListener("click", () => switchWorldEvolutionQuantumBranch(button.dataset.quantumBranch));
-    });
     dom.worldEvolutionShareButton?.addEventListener("click", generateWorldEvolutionShareCard);
     dom.worldEvolutionCopyShareButton?.addEventListener("click", copyWorldEvolutionShareText);
     dom.worldEvolutionScreenshotButton?.addEventListener("click", captureWorldEvolutionScreenshot);
     dom.worldEvolutionEndingButton?.addEventListener("click", showWorldEvolutionEnding);
-    dom.worldEvolutionNewGamePlusButton?.addEventListener("click", beginWorldEvolutionNewGamePlus);
-    dom.worldEvolutionCreationModeButton?.addEventListener("click", () => toggleWorldEvolutionCreationMode());
-    document.querySelectorAll("[data-world-region-step]").forEach((button) => {
-      button.addEventListener("click", () => switchWorldEvolutionRegion(button.dataset.worldRegionStep));
-    });
-    dom.worldEvolutionThemeSelect?.addEventListener("change", (event) => {
-      applyWorldEvolutionUiTheme(event.target.value);
-      showReward(`UI主题已切换：${WORLD_EVOLUTION_UI_THEMES[event.target.value]?.label || "深邃星空"}`);
-    });
     dom.worldEvolutionTimeFlowToggle?.addEventListener("change", (event) => {
       updateSetting("worldEvolutionTimeFlowEnabled", event.target.checked);
       showReward(event.target.checked ? "时间流逝已开启。" : "时间流逝已关闭。");
