@@ -1492,12 +1492,24 @@ assert(api.resolveStartupRouteFromSave, "startup route resolver should be export
 assert(/function applyManualEditorKeyOperation/m.test(html), "editor should expose a pure manual keyboard operation engine");
 assert(/function manualEditorOperationFromBeforeInput/m.test(html), "mobile soft keyboard beforeinput should be translated into manual editor operations");
 assert(/dom\.codeInput\.addEventListener\("beforeinput", handleMobileEditorBeforeInput\)/m.test(html), "editor beforeinput should use the mobile-safe manual input bridge");
-assert(/<textarea id="codeInput" inputmode="text" autocomplete="off" autocapitalize="none" autocorrect="off"/m.test(html), "code editor should expose mobile-friendly input attributes");
+assert(/<textarea id="codeInput"[^>]*inputmode="text"[^>]*enterkeyhint="enter"[^>]*autocapitalize="none"[^>]*autocorrect="off"/m.test(html), "code editor should expose mobile-friendly input attributes");
+assert(/id="mobileEditorKeyboardButton"/m.test(html) && /function focusMobileEditorKeyboard/m.test(html), "mobile code editor should expose a touch-first keyboard focus affordance");
 assert(/function handleManualEditorInputKey/m.test(html), "editor keydown should be manually handled instead of relying on textarea default editing");
+assert(/function shouldDeferTextKeyToMobileBeforeInput/m.test(html), "mobile soft-keyboard keydown should be deferred to beforeinput to prevent duplicate characters");
+assert(/handleEditorCommandKey[\s\S]*shouldDeferTextKeyToMobileBeforeInput/m.test(html), "main editor should avoid double-processing mobile soft-keyboard keydown events");
+assert(/handleCodeGenesisTerminalKey[\s\S]*shouldDeferTextKeyToMobileBeforeInput/m.test(html), "code genesis should avoid cursor jumps from duplicated mobile keydown and beforeinput events");
+assert(/body\.mobile-input \.file-tree,[\s\S]*body\.mobile-input \.task-panel,[\s\S]*body\.mobile-input \.code-explain-panel/m.test(html), "mobile editor should collapse side panels for a single-column code-first layout");
+assert(/body\.mobile-input \.code-genesis-overlay\.active[\s\S]*grid-template-columns:\s*1fr/m.test(html), "mobile code genesis should use a single-column layout");
+assert(/body\.mobile-input\.is-editor-open \.mobile-controls/m.test(html), "mobile joystick should hide while the editor is open");
+assert(/navigator\.maxTouchPoints[\s\S]*return false;[\s\S]*requestPointerLock/m.test(html), "touch devices should not request pointer lock");
 assert(/function handleManualEditorPointerDown/m.test(html), "editor should manually place the cursor on pointer down");
 assert(/function handleManualEditorDoubleClick/m.test(html), "editor should manually select words on double click");
 assert(/if \(!touchPointer\) event\.preventDefault\(\)/m.test(html), "touch pointer down should not suppress the mobile soft keyboard");
 assert(/beforeinput[\s\S]*handleMobileEditorBeforeInput[\s\S]*preventDefault/m.test(html), "editor should suppress default browser text editing through the manual bridge while active");
+assert(/<textarea id="codeGenesisInput"[^>]*inputmode="text"[^>]*enterkeyhint="enter"[^>]*autocapitalize="none"[^>]*autocorrect="off"/m.test(html), "code genesis terminal should expose mobile-friendly input attributes");
+assert(/function handleCodeGenesisBeforeInput/m.test(html), "code genesis should translate mobile soft-keyboard input through the manual editor bridge");
+assert(/codeGenesisInput\?\.addEventListener\("beforeinput", handleCodeGenesisBeforeInput\)/m.test(html), "code genesis beforeinput should not be a bare preventDefault sink");
+assert(/function handleCodeGenesisNativeInputFallback/m.test(html), "code genesis should keep an input-event fallback for mobile browsers without reliable beforeinput");
 assert(api.applyManualEditorKeyOperation, "manual editor operation engine should be exported for tests");
 assert(api.manualEditorOperationFromBeforeInput, "mobile beforeinput operation bridge should be exported for tests");
 {

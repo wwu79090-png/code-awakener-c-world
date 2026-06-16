@@ -11,7 +11,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; base-uri 'self'; object-src 'none'; frame-ancestors 'none'; script-src 'self' https://cdn.jsdelivr.net 'nonce-code-awakener-inline' 'sha256-0HMDoZ0WmZd60HuDoYP/eV8reiaU4y35TBK8uaFie5o='; style-src 'self' https://cdn.jsdelivr.net https://fonts.googleapis.com 'nonce-code-awakener-inline' 'sha256-NAIax8V4owbYLybxZlJiOVkFoecRgdM9/XGIYYl8Z0k='; font-src 'self' https://cdn.jsdelivr.net https://fonts.gstatic.com data:; img-src 'self' data: blob:; media-src 'self' data: blob:; worker-src 'self' blob:; child-src 'self' blob:; connect-src 'self' https://cdn.jsdelivr.net;">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; base-uri 'self'; object-src 'none'; frame-ancestors 'none'; script-src 'self' https://cdn.jsdelivr.net 'nonce-code-awakener-inline' 'sha256-iujx/AM5Kya0TNTV2EMHckZV18mYsAX6nI3VvfxTd1M='; style-src 'self' https://cdn.jsdelivr.net https://fonts.googleapis.com 'nonce-code-awakener-inline' 'sha256-QkHjH3TEFUT/5iWTdOIm2lIbHOm7SxQ9/6W5TWq1ZBM='; font-src 'self' https://cdn.jsdelivr.net https://fonts.gstatic.com data:; img-src 'self' data: blob:; media-src 'self' data: blob:; worker-src 'self' blob:; child-src 'self' blob:; connect-src 'self' https://cdn.jsdelivr.net;">
   <title>编程学习 RPG：C 语言启航村</title>
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%23020617'/%3E%3Cpath d='M22 20 10 32l12 12M42 20l12 12-12 12' fill='none' stroke='%2300ff88' stroke-width='6' stroke-linecap='round' stroke-linejoin='round'/%3E%3Cpath d='m36 16-8 32' stroke='%2300ccff' stroke-width='5' stroke-linecap='round'/%3E%3C/svg%3E">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/firacode@6.2.0/distr/fira_code.css">
@@ -3749,6 +3749,36 @@
       color: #ffffff;
     }
 
+    .mobile-editor-keyboard-button {
+      position: absolute;
+      right: 12px;
+      bottom: 12px;
+      z-index: 6;
+      display: none;
+      min-width: 112px;
+      min-height: 48px;
+      padding: 0 14px;
+      border: 1px solid rgba(103, 232, 249, 0.5);
+      border-radius: 999px;
+      background: rgba(8, 20, 34, 0.82);
+      color: #dffbff;
+      font: 700 13px/1 var(--font-code);
+      box-shadow: 0 0 24px rgba(34, 211, 238, 0.22);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+    }
+
+    body.mobile-input.is-editor-open .mobile-editor-keyboard-button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+    }
+
+    body.mobile-input.is-editor-open #codeInput:focus + .mobile-editor-keyboard-button {
+      opacity: 0.58;
+    }
+
     .tok-keyword { color: var(--keyword); }
     .tok-string { color: var(--string); }
     .tok-property { color: var(--property); }
@@ -6485,6 +6515,11 @@
       display: block;
     }
 
+    body.mobile-input.is-editor-open .mobile-controls,
+    body.mobile-input:has(.code-genesis-overlay.active) .mobile-controls {
+      display: none;
+    }
+
     .virtual-joystick {
       position: absolute;
       left: 26px;
@@ -6629,19 +6664,143 @@
     }
 
     @media (max-width: 768px), (pointer: coarse) {
-      body.mobile-input .vscode-sidebar,
-      body.mobile-input .editor-sidebar {
+      body.mobile-input .file-tree,
+      body.mobile-input .task-panel,
+      body.mobile-input .code-explain-panel,
+      body.mobile-input .editor-pro-layer {
         display: none;
       }
 
-      body.mobile-input .line-number,
-      body.mobile-input .lineNumbers {
+      body.mobile-input #lineNumbers,
+      body.mobile-input .line-number {
         font-size: 10px;
       }
 
       body.mobile-input .vscode-window {
         width: calc(100vw - 18px);
-        height: calc(100vh - 18px);
+        height: calc(100dvh - 18px);
+        grid-template-rows: 42px minmax(0, 1fr) minmax(104px, 22dvh);
+        border-radius: 14px;
+      }
+
+      body.mobile-input .titlebar {
+        min-height: 42px;
+        gap: 6px;
+        padding: 0 8px;
+        font-size: 11px;
+      }
+
+      body.mobile-input .editor-font-inline {
+        display: none;
+      }
+
+      body.mobile-input .editor-main {
+        grid-template-columns: minmax(0, 1fr);
+      }
+
+      body.mobile-input .editor-center {
+        min-width: 0;
+      }
+
+      body.mobile-input .tabs {
+        min-height: 40px;
+      }
+
+      body.mobile-input .tab {
+        min-height: 40px;
+        align-items: center;
+      }
+
+      body.mobile-input .code-wrap {
+        grid-template-columns: 38px minmax(0, 1fr);
+        font-size: max(16px, var(--editor-font-size, 14px));
+        line-height: calc(max(16px, var(--editor-font-size, 14px)) + 8px);
+      }
+
+      body.mobile-input #highlightLayer,
+      body.mobile-input #codeInput {
+        padding: 12px 10px;
+        font-size: max(16px, var(--editor-font-size, 14px));
+        line-height: calc(max(16px, var(--editor-font-size, 14px)) + 8px);
+      }
+
+      body.mobile-input #lineNumbers {
+        padding-top: 12px;
+        padding-right: 4px;
+      }
+
+      body.mobile-input .editor-statusbar {
+        grid-template-columns: 1fr;
+        gap: 6px;
+        padding: 8px 10px;
+        overflow-y: auto;
+      }
+
+      body.mobile-input .editor-actions {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 8px;
+      }
+
+      body.mobile-input .editor-actions .pixel-button {
+        min-height: 48px;
+        padding-inline: 8px;
+      }
+
+      body.mobile-input .mobile-editor-keyboard-button {
+        right: 10px;
+        bottom: 10px;
+      }
+
+      body.mobile-input .code-genesis-overlay.active {
+        grid-template-columns: 1fr;
+        grid-template-rows: minmax(0, 1fr) 156px 58px;
+      }
+
+      body.mobile-input .code-genesis-terminal {
+        padding: 18px 14px 84px;
+        border-right: 0;
+        border-bottom: 1px solid rgba(0, 255, 136, 0.18);
+      }
+
+      body.mobile-input .code-genesis-output {
+        font-size: 13px;
+        line-height: 1.55;
+      }
+
+      body.mobile-input .code-genesis-input-row {
+        position: sticky;
+        bottom: 0;
+        min-height: 64px;
+        padding: 8px;
+        border: 1px solid rgba(34, 197, 94, 0.24);
+        border-radius: 12px;
+        background: rgba(0, 0, 0, 0.72);
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+      }
+
+      body.mobile-input .code-genesis-input {
+        min-height: 112px;
+        font-size: 16px;
+        line-height: 1.55;
+      }
+
+      body.mobile-input .code-genesis-preview {
+        min-height: 0;
+        padding: 12px;
+      }
+
+      body.mobile-input .genesis-avatar {
+        transform: scale(0.72);
+      }
+
+      body.mobile-input .code-genesis-status {
+        height: 58px;
+        padding: 0 10px;
+        gap: 8px;
+        overflow-x: auto;
+        font-size: 11px;
       }
     }
 
@@ -7107,7 +7266,7 @@
     <section id="codeGenesisOverlay" class="code-genesis-overlay" aria-label="代码创世终端" aria-hidden="true">
       <div id="codeGenesisTerminal" class="code-genesis-terminal">
         <pre id="codeGenesisOutput" class="code-genesis-output"></pre>
-        <label class="code-genesis-input-row"><span>&gt;</span><textarea id="codeGenesisInput" class="code-genesis-input" rows="4" autocomplete="off" spellcheck="false" aria-label="输入 C 语言创世代码"></textarea></label>
+        <label class="code-genesis-input-row"><span>&gt;</span><textarea id="codeGenesisInput" class="code-genesis-input" rows="4" inputmode="text" enterkeyhint="enter" autocomplete="off" autocapitalize="none" autocorrect="off" spellcheck="false" aria-label="输入 C 语言创世代码"></textarea></label>
       </div>
       <aside id="codeGenesisPreview" class="code-genesis-preview" aria-label="角色预览">
         <div class="genesis-pulse-ring"></div>
@@ -8019,7 +8178,8 @@ int main(void) {
               <div id="lineNumbers">1</div>
               <div class="code-layer">
                 <pre id="highlightLayer" aria-hidden="true"></pre>
-                <textarea id="codeInput" inputmode="text" autocomplete="off" autocapitalize="none" autocorrect="off" spellcheck="false"></textarea>
+                <textarea id="codeInput" inputmode="text" enterkeyhint="enter" autocomplete="off" autocapitalize="none" autocorrect="off" spellcheck="false" aria-label="输入 C 语言代码"></textarea>
+                <button id="mobileEditorKeyboardButton" class="mobile-editor-keyboard-button" type="button" aria-label="唤起手机键盘">⌨ 输入代码</button>
                 <div id="autocompleteBox" class="autocomplete-box" role="listbox" aria-label="代码补全"></div>
               </div>
             </div>
@@ -8297,17 +8457,17 @@ int main(void) {
         title: "> 消息 / 本次更新",
         lines: [
           "// 作者：杀戮",
-          "// 本次更新：Tab 已绑定为游戏功能菜单快捷键，探索时可直接打开/关闭左侧信息菜单。",
-          "// 顶部透明键位条已同步显示：Tab 功能菜单。",
-          "// 编辑器、输入框、对话与暂停菜单中不会抢占 Tab，避免影响写代码。"
+          "// 本次更新：全面加强手机端适配，重点修复手机软键盘无法输入编辑器代码的问题。",
+          "// 代码创世终端已接入 beforeinput 软键盘桥，输入时不再吞字或光标跳位。",
+          "// 移动端编辑器新增“输入代码”按钮，点击后可直接唤起手机键盘。"
         ]
       },
       {
-        title: "> 更新内容 / 世界进化",
+        title: "> 更新内容 / 手机布局",
         lines: [
-          "// 世界进化系统已接入天气演变、日夜循环、区域解锁、世界之镜、记忆图鉴与二周目。",
-          "// 所有一次性提示继续走顶部灵动岛，确认类操作使用底部动作条。",
-          "// 若更新内容较多，公告会分页展示，不再把所有说明堆在一页。"
+          "// 手机编辑器改为单列代码优先布局，隐藏侧栏、任务面板和解释面板，减少遮挡。",
+          "// 创角界面在手机上改为单列终端布局，输入区域固定在底部并保持 16px 字号防止 iOS 自动缩放。",
+          "// 手机端进入编辑器或创角时自动隐藏虚拟摇杆，并禁用 Pointer Lock 请求。"
         ]
       },
       {
@@ -8733,7 +8893,7 @@ int main(void) {
       directSaveAs: "reduced-by-inline-resources"
     });
     const SECURITY_CONFIG = Object.freeze({
-      expectedScriptHash: "nBKaO0PrQbvmk4DbvSallqk488MI2RV+VmzSqtYmNu8=",
+      expectedScriptHash: "ly5U6T43eUE/mCC1MxFrp24qJN31R3xUG7JBfAI5Cyg=",
       selfCheckIntervalMs: 45000,
       tamperRefreshMs: 5000,
       devToolsRefreshMs: 2000,
@@ -13851,6 +14011,7 @@ int main(void) {
       editorGuideLayer: document.getElementById("editorGuideLayer"),
       editorGuideGrid: document.getElementById("editorGuideGrid"),
       editorGuideCloseButton: document.getElementById("editorGuideCloseButton"),
+      mobileEditorKeyboardButton: document.getElementById("mobileEditorKeyboardButton"),
       tutorialAnimationToggle: document.getElementById("tutorialAnimationToggle"),
       codeExplainPanel: document.getElementById("codeExplainPanel"),
       codeExplainBody: document.getElementById("codeExplainBody"),
@@ -15225,6 +15386,7 @@ int main(void) {
     let codeGenesisDragAnchor = null;
     let codeGenesisSelectionAnchor = null;
     let codeGenesisCompletionInFlight = false;
+    let codeGenesisBeforeInputAt = 0;
 
     function resetCodeGenesisEditorHistory(value = dom.codeGenesisInput?.value || "") {
       codeGenesisEditorHistory.undo = [];
@@ -15314,6 +15476,26 @@ int main(void) {
       return true;
     }
 
+    function handleCodeGenesisBeforeInput(event) {
+      if (!dom.codeGenesisOverlay?.classList.contains("active")) return false;
+      event.preventDefault?.();
+      event.stopPropagation?.();
+      const transferText = event.dataTransfer?.getData?.("text/plain") || "";
+      const result = manualEditorOperationFromBeforeInput(getCodeGenesisEditorState(), event.inputType, event.data || "", transferText);
+      codeGenesisBeforeInputAt = performance.now();
+      if (!result.handled) return true;
+      playCodeGenesisTypeSound();
+      return commitCodeGenesisEditorOperation(result);
+    }
+
+    function handleCodeGenesisNativeInputFallback() {
+      if (!dom.codeGenesisOverlay?.classList.contains("active") || !dom.codeGenesisInput) return false;
+      if (performance.now() - codeGenesisBeforeInputAt < 80) return true;
+      codeGenesisEditorHistory.lastValue = dom.codeGenesisInput.value;
+      processCodeGenesisBufferedLines();
+      return true;
+    }
+
     function handleCodeGenesisReservedBrowserShortcut(event) {
       const reserved = (
         (event.ctrlKey && !event.shiftKey && ["KeyS", "KeyP"].includes(event.code)) ||
@@ -15332,6 +15514,7 @@ int main(void) {
     function handleCodeGenesisTerminalKey(event, clipboardText = "") {
       if (!dom.codeGenesisOverlay?.classList.contains("active")) return false;
       if (handleCodeGenesisReservedBrowserShortcut(event)) return true;
+      if (!clipboardText && shouldDeferTextKeyToMobileBeforeInput(event)) return false;
       const result = applyManualEditorKeyOperation(getCodeGenesisEditorState(), event, clipboardText);
       event.preventDefault?.();
       event.stopPropagation?.();
@@ -15363,7 +15546,11 @@ int main(void) {
 
     function setCodeGenesisSelection(start, end = start, anchor = start) {
       if (!dom.codeGenesisInput) return false;
-      dom.codeGenesisInput.focus();
+      try {
+        dom.codeGenesisInput.focus({ preventScroll: true });
+      } catch (error) {
+        dom.codeGenesisInput.focus();
+      }
       dom.codeGenesisInput.selectionStart = clampEditorIndex(dom.codeGenesisInput.value, Math.min(start, end));
       dom.codeGenesisInput.selectionEnd = clampEditorIndex(dom.codeGenesisInput.value, Math.max(start, end));
       codeGenesisSelectionAnchor = anchor;
@@ -15372,10 +15559,13 @@ int main(void) {
 
     function handleCodeGenesisPointerDown(event) {
       if (!dom.codeGenesisOverlay?.classList.contains("active")) return false;
-      event.preventDefault();
+      const touchPointer = isTouchPointerEvent(event);
+      if (!touchPointer) event.preventDefault();
       const index = getCodeGenesisPointerIndex(event);
       codeGenesisDragAnchor = index;
-      return setCodeGenesisSelection(index);
+      setCodeGenesisSelection(index);
+      if (touchPointer) requestAnimationFrame(() => setCodeGenesisSelection(index));
+      return true;
     }
 
     function handleCodeGenesisPointerMove(event) {
@@ -15745,6 +15935,7 @@ int main(void) {
 
     function requestGamePointerLock(event = null) {
       if (gameState.menuOpen || gameState.editorOpen || gameState.dialogOpen || gameState.paused) return false;
+      if (document.body.classList.contains("mobile-input") || (navigator.maxTouchPoints || 0) > 0) return false;
       const target = event?.target;
       if (isPointerLockUiTarget(target)) return false;
       if (target && target.id !== "game" && target.tagName !== "CANVAS" && !target.closest?.("#game")) return false;
@@ -22057,6 +22248,7 @@ int main(void) {
     }
 
     function handleEditorCommandKey(event) {
+      if (shouldDeferTextKeyToMobileBeforeInput(event)) return false;
       event.stopPropagation();
       const frame = frameScheduler?.frame || 0;
       if (editorInputBudget.frame !== frame) {
@@ -22238,6 +22430,26 @@ int main(void) {
       return true;
     }
 
+    function focusMobileEditorKeyboard(selectionIndex = null) {
+      if (!gameState.editorOpen || !dom.codeInput) return false;
+      try {
+        dom.codeInput.focus({ preventScroll: true });
+      } catch (error) {
+        dom.codeInput.focus?.();
+      }
+      if (selectionIndex != null) {
+        const index = clampEditorIndex(dom.codeInput.value, selectionIndex);
+        dom.codeInput.selectionStart = index;
+        dom.codeInput.selectionEnd = index;
+        manualEditorSelectionAnchor = index;
+      }
+      dom.codeInput.setAttribute("inputmode", "text");
+      dom.codeInput.setAttribute("enterkeyhint", "enter");
+      dom.codeInput.setAttribute("autocapitalize", "none");
+      dom.codeInput.setAttribute("autocorrect", "off");
+      return true;
+    }
+
     function handleManualEditorInputKey(event, clipboardText = "") {
       if (!gameState.editorOpen || dom.codeInput.readOnly) return false;
       if ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === "v" && !clipboardText && navigator.clipboard?.readText) {
@@ -22257,6 +22469,13 @@ int main(void) {
 
     function isTouchPointerEvent(event) {
       return event?.pointerType === "touch" || event?.type === "touchstart" || event?.sourceCapabilities?.firesTouchEvents;
+    }
+
+    function shouldDeferTextKeyToMobileBeforeInput(event) {
+      if (!document.body.classList.contains("mobile-input")) return false;
+      if (event.ctrlKey || event.metaKey || event.altKey) return false;
+      if (event.isComposing || event.key === "Process" || event.key === "Unidentified" || event.keyCode === 229) return true;
+      return typeof event.key === "string" && event.key.length === 1 && !event.code;
     }
 
     function getEditorTextMetrics() {
@@ -22300,8 +22519,12 @@ int main(void) {
       if (!touchPointer) event.preventDefault();
       const index = getEditorPointerIndexFromEvent(event);
       manualEditorDragAnchor = index;
+      if (touchPointer) focusMobileEditorKeyboard(index);
       setManualEditorSelection(index);
-      if (touchPointer) requestAnimationFrame(() => setManualEditorSelection(index));
+      if (touchPointer) requestAnimationFrame(() => {
+        focusMobileEditorKeyboard(index);
+        setManualEditorSelection(index);
+      });
       return true;
     }
 
@@ -29003,6 +29226,9 @@ int main(void) {
     });
     dom.codeInput.addEventListener("scroll", syncEditorScroll);
     dom.codeInput.addEventListener("pointerdown", handleManualEditorPointerDown);
+    dom.codeInput.addEventListener("touchstart", () => {
+      if (gameState.editorOpen) focusMobileEditorKeyboard();
+    }, { passive: true });
     dom.codeInput.addEventListener("pointermove", handleManualEditorPointerMove);
     dom.codeInput.addEventListener("mousemove", handleCodeExplanationHover);
     dom.codeInput.addEventListener("mouseleave", hideCodeHoverTooltip);
@@ -29030,6 +29256,10 @@ int main(void) {
       event.clipboardData?.setData("text/plain", result.clipboard || "");
       event.preventDefault();
       commitManualEditorOperation(result);
+    });
+    dom.mobileEditorKeyboardButton?.addEventListener("click", () => {
+      focusMobileEditorKeyboard(dom.codeInput?.selectionStart ?? dom.codeInput?.value?.length ?? 0);
+      queueEditorFlowMessage("手机键盘已接入：可以直接输入 C 代码。", true);
     });
 
     dom.fileItems.forEach((item) => {
@@ -29344,9 +29574,8 @@ int main(void) {
     dom.globalErrorRestartButton?.addEventListener("click", () => window.location?.reload?.());
     dom.globalErrorContinueButton?.addEventListener("click", closeGlobalErrorDialog);
     dom.globalErrorExportButton?.addEventListener("click", exportBrowserErrorLog);
-    dom.codeGenesisInput?.addEventListener("beforeinput", (event) => {
-      if (dom.codeGenesisOverlay?.classList.contains("active")) event.preventDefault();
-    });
+    dom.codeGenesisInput?.addEventListener("beforeinput", handleCodeGenesisBeforeInput);
+    dom.codeGenesisInput?.addEventListener("input", handleCodeGenesisNativeInputFallback);
     dom.codeGenesisInput?.addEventListener("keydown", handleCodeGenesisTerminalKey);
     dom.codeGenesisInput?.addEventListener("paste", (event) => {
       if (!dom.codeGenesisOverlay?.classList.contains("active")) return;

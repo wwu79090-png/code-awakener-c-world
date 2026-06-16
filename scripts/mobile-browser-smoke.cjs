@@ -63,9 +63,26 @@ async function exerciseCodeGenesis(page) {
   if (!active) return "code genesis not visible yet";
   const input = page.locator("#codeGenesisInput");
   await input.click();
+  async function softKeyboardLine(line) {
+    await input.evaluate((element, text) => {
+      for (const char of text) {
+        element.dispatchEvent(new InputEvent("beforeinput", {
+          inputType: "insertText",
+          data: char,
+          bubbles: true,
+          cancelable: true
+        }));
+      }
+      element.dispatchEvent(new InputEvent("beforeinput", {
+        inputType: "insertLineBreak",
+        data: null,
+        bubbles: true,
+        cancelable: true
+      }));
+    }, line);
+  }
   for (const line of ["int hp = 88;", 'char name[] = "smoke";', "int level = 1;", "return 0;"]) {
-    await input.pressSequentially(line, { delay: 3 });
-    await input.press("Enter");
+    await softKeyboardLine(line);
     await page.waitForTimeout(160);
   }
   await page.waitForTimeout(4200);
