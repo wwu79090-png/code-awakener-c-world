@@ -10,8 +10,8 @@
 <html lang="zh-CN">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; base-uri 'self'; object-src 'none'; frame-ancestors 'none'; script-src 'self' https://cdn.jsdelivr.net 'nonce-code-awakener-inline' 'sha256-90l50zRJeBi6/nw7mWwILnV53krz+p07Gc5YcDyD90w='; style-src 'self' https://cdn.jsdelivr.net https://fonts.googleapis.com 'nonce-code-awakener-inline' 'sha256-d9QCoa9okPQefJhOoaeY7eRx1AYeK/eVnOJDDsBYfZ0='; font-src 'self' https://cdn.jsdelivr.net https://fonts.gstatic.com data:; img-src 'self' data: blob:; media-src 'self' data: blob:; worker-src 'self' blob:; child-src 'self' blob:; connect-src 'self' https://cdn.jsdelivr.net;">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; base-uri 'self'; object-src 'none'; frame-ancestors 'none'; script-src 'self' https://cdn.jsdelivr.net 'nonce-code-awakener-inline' 'sha256-bY9gCRW2X2CkcoXiY7yCm5zxUY2eYrjpLfcG+kT24oA='; style-src 'self' https://cdn.jsdelivr.net https://fonts.googleapis.com 'nonce-code-awakener-inline' 'sha256-nfNDNeGvJYHZILTNZT9A3Pah9PdUxwfG5N66pOO5mtE='; font-src 'self' https://cdn.jsdelivr.net https://fonts.gstatic.com data:; img-src 'self' data: blob:; media-src 'self' data: blob:; worker-src 'self' blob:; child-src 'self' blob:; connect-src 'self' https://cdn.jsdelivr.net;">
   <title>编程学习 RPG：C 语言启航村</title>
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%23020617'/%3E%3Cpath d='M22 20 10 32l12 12M42 20l12 12-12 12' fill='none' stroke='%2300ff88' stroke-width='6' stroke-linecap='round' stroke-linejoin='round'/%3E%3Cpath d='m36 16-8 32' stroke='%2300ccff' stroke-width='5' stroke-linecap='round'/%3E%3C/svg%3E">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/firacode@6.2.0/distr/fira_code.css">
@@ -63,9 +63,10 @@
     html,
     body {
       margin: 0;
-      width: 100%;
-      height: 100%;
+      width: 100vw;
+      height: 100vh;
       overflow: hidden;
+      overscroll-behavior: none;
       background: #0d1117;
       color: var(--text);
       font-family: var(--font-code);
@@ -90,8 +91,8 @@
 
     #game-shell {
       position: relative;
-      width: min(100vw, 1280px);
-      height: min(100vh, 720px);
+      width: 100vw;
+      height: 100vh;
       background: #0b1020;
       box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
       overflow: hidden;
@@ -299,9 +300,17 @@
     #game {
       position: absolute;
       inset: 0;
+      width: 100%;
+      height: 100%;
     }
 
     #game canvas {
+      width: 100vw !important;
+      height: 100vh !important;
+      max-width: 100%;
+      max-height: 100%;
+      object-fit: contain;
+      touch-action: none;
       /* legacy baseline: filter: contrast(1.16) saturate(0.92) hue-rotate(215deg) */
       filter:
         contrast(var(--cinematic-lut-contrast))
@@ -2673,6 +2682,7 @@
       caret-color: #facc15;
       background: transparent;
       outline: none;
+      font-size: 16px;
     }
 
     .free-mode-code-input::selection {
@@ -4311,6 +4321,7 @@
     .output-info { color: #a5d6ff; }
 
     #rewardToast,
+    .dynamic-island-toast,
     #bigPass {
       position: absolute;
       left: 50%;
@@ -4320,7 +4331,8 @@
       text-align: center;
     }
 
-    #rewardToast {
+    #rewardToast,
+    .dynamic-island-toast {
       top: max(10px, env(safe-area-inset-top));
       width: min(560px, calc(100% - 36px));
       min-height: 40px;
@@ -4349,13 +4361,15 @@
       transform: translate(-50%, -18px);
     }
 
-    #rewardToast.show {
+    #rewardToast.show,
+    .dynamic-island-toast.show {
       display: flex;
       opacity: 1;
       transform: translate(-50%, 0);
     }
 
-    #rewardToast.closing {
+    #rewardToast.closing,
+    .dynamic-island-toast.closing {
       opacity: 0;
       transform: translate(-50%, -18px);
     }
@@ -4585,6 +4599,149 @@
 
       .bottom-action-buttons {
         justify-content: flex-end;
+      }
+    }
+
+    @media (max-width: 768px) {
+      button,
+      [role="button"],
+      .pixel-button,
+      .menu-option,
+      .settings-tab,
+      .choice-option,
+      .bottom-action-buttons .pixel-button,
+      .dialog-options .pixel-button {
+        min-width: 44px;
+        min-height: 44px;
+      }
+
+      .info-menu-toggle {
+        width: clamp(52px, 14vw, 60px);
+        height: clamp(52px, 14vw, 60px);
+        left: max(10px, env(safe-area-inset-left));
+        top: max(10px, env(safe-area-inset-top));
+        border-radius: 18px;
+        touch-action: manipulation;
+      }
+
+      .info-side-menu {
+        width: min(85vw, 340px);
+        top: max(70px, calc(env(safe-area-inset-top) + 70px));
+        left: max(10px, env(safe-area-inset-left));
+        max-height: calc(100vh - max(90px, calc(env(safe-area-inset-top) + 84px)));
+        border-radius: 24px;
+        transform: translateX(calc(-100% - 18px)) scale(0.98);
+        will-change: transform, opacity;
+        touch-action: pan-y;
+      }
+
+      .info-side-menu.dragging {
+        transition: none;
+        opacity: 1;
+        pointer-events: auto;
+      }
+
+      .info-side-menu.active {
+        transform: translateX(0) scale(1);
+      }
+
+      .world-evolution-button {
+        min-width: clamp(64px, 24vw, 118px);
+        min-height: clamp(64px, 18vw, 78px);
+        height: auto;
+        right: max(14px, env(safe-area-inset-right));
+        bottom: max(14px, env(safe-area-inset-bottom));
+        padding: 0 16px;
+        font-size: clamp(14px, 3.8vw, 18px);
+        touch-action: manipulation;
+      }
+
+      .dynamic-island-toast {
+        top: calc(env(safe-area-inset-top) + 8px);
+        width: 90vw;
+        max-width: 90vw;
+        height: auto;
+        min-height: 40px;
+        max-height: none;
+        padding: 12px 16px;
+        overflow-x: auto;
+        white-space: nowrap;
+        font-size: clamp(14px, 3.5vw, 18px);
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: none;
+      }
+
+      .dynamic-island-toast .island-toast-message {
+        overflow: visible;
+        text-overflow: clip;
+        white-space: nowrap;
+      }
+
+      #dialogOverlay {
+        align-items: flex-end;
+        justify-content: center;
+        padding: 0 0 env(safe-area-inset-bottom);
+      }
+
+      .dialog-box {
+        width: 100%;
+        max-height: 40vh;
+        overflow-y: auto;
+        grid-template-columns: 64px 1fr;
+        border-radius: 24px 24px 0 0;
+        padding: 12px 14px calc(12px + env(safe-area-inset-bottom));
+        font-size: clamp(14px, 3.5vw, 18px);
+        -webkit-overflow-scrolling: touch;
+      }
+
+      #dialogText {
+        font-size: clamp(14px, 3.5vw, 18px);
+        white-space: pre-wrap;
+        overflow-wrap: anywhere;
+      }
+
+      .dialog-options.visible {
+        flex-wrap: wrap;
+      }
+
+      .bottom-action-bar {
+        left: 0;
+        right: 0;
+        bottom: 0;
+        width: 100%;
+        min-height: 72px;
+        grid-template-columns: 1fr;
+        border-radius: 24px 24px 0 0;
+        padding: 14px 16px calc(14px + env(safe-area-inset-bottom));
+        transform: translateY(100%);
+      }
+
+      .bottom-action-bar.active {
+        transform: translateY(0);
+      }
+
+      .bottom-action-buttons {
+        display: flex;
+        flex-direction: row;
+        gap: 12px;
+      }
+
+      .bottom-action-buttons .pixel-button {
+        flex: 1;
+        min-height: 48px;
+      }
+
+      .bottom-action-buttons .pixel-button:active,
+      .world-evolution-button:active,
+      .info-menu-toggle:active {
+        filter: brightness(1.24);
+        transform: translateY(1px) scale(0.98);
+      }
+
+      .free-mode-code-input,
+      #codeInput,
+      #codeGenesisInput {
+        font-size: 16px;
       }
     }
 
@@ -8509,7 +8666,7 @@ int main(void) {
       </section>
     </div>
 
-    <div id="rewardToast" role="status" aria-live="polite"></div>
+    <div id="rewardToast" class="dynamic-island-toast" role="status" aria-live="polite"></div>
     <section id="bottomActionBar" class="bottom-action-bar" role="alertdialog" aria-live="polite" aria-hidden="true">
       <div id="bottomActionText" class="bottom-action-text">确认执行此操作？</div>
       <div class="bottom-action-buttons">
@@ -8754,23 +8911,23 @@ int main(void) {
         title: "> 消息 / 本次更新",
         lines: [
           "// 作者：杀戮",
-          "// 本次更新：加入完整C语言课程可视化教学引擎。",
-          "// 课程按8章50个代码片段组织，从Hello World一直覆盖到malloc/free。",
-          "// 每次编译会先执行当前知识点，绘制内存模型、代码轨迹、数据流和中文解释。"
+          "// 本次更新：全面强化手机端适配与触摸操作。",
+          "// 视口已锁定移动端安全模式，刘海屏会自动预留安全区。",
+          "// 编译、菜单、对话、动作条均支持touchstart优先响应，减少延迟和重复触发。"
         ]
       },
       {
-        title: "> 更新内容 / 教学反馈",
+        title: "> 更新内容 / 手机交互",
         lines: [
-          "// 变量会显示为发光容器，指针会显示为光束，循环会显示为轨道。",
-          "// 第5、10、18、25个片段内置常见错误，修复后获得双倍知识碎片。",
-          "// 左侧信息菜单新增课程目录、学习日志、代码历史、自由模式编辑器和单步调试。"
+          "// 左边缘右滑可打开信息菜单，菜单内左滑或点外部可关闭。",
+          "// Canvas支持触摸拖曳造物，自由模式编辑器聚焦时会自动滚动到键盘可见区域。",
+          "// 手机端灵动岛、对话栏、底部动作条已改为自适应尺寸，不遮挡主画面。"
         ]
       },
       {
         title: "> 项目信息",
         lines: [
-          "// 自由模式会在完成度达到80%后解锁，玩家可输入自己的C代码进行模拟编译。",
+          "// 移动设备粒子上限自动控制在150以内，低电量时会进入轻量省电渲染。",
           "// 官方Q群：414374792",
           "// 本项目永久免费对外开放，持续更新，助力每一个有编程梦的人。",
           "// 谢谢你的支持！"
@@ -9190,7 +9347,7 @@ int main(void) {
       directSaveAs: "reduced-by-inline-resources"
     });
     const SECURITY_CONFIG = Object.freeze({
-      expectedScriptHash: "h+BqC7jIA5sbBB35WJESWoSJPyJsmcEGOaUCU1Dw2AQ=",
+      expectedScriptHash: "dBFFQewS+bm8zWXVM/7lZBehfZW/ISVYbJ+OtUwTzJI=",
       selfCheckIntervalMs: 45000,
       tamperRefreshMs: 5000,
       devToolsRefreshMs: 2000,
@@ -9209,6 +9366,7 @@ int main(void) {
       warning: 420,
       reserveUi: 40
     });
+    const MOBILE_PARTICLE_LIMIT = 150;
     const OBJECT_POOL_SIZES = Object.freeze({
       particle: 100,
       uiCard: 20,
@@ -11325,13 +11483,20 @@ int main(void) {
       return PERFORMANCE_MODES[mode] || PERFORMANCE_MODES.high;
     }
 
+    function isMobileTouchViewport() {
+      const coarse = globalThis.matchMedia?.("(pointer: coarse)")?.matches;
+      const touch = "ontouchstart" in window || (globalThis.navigator?.maxTouchPoints || 0) > 0;
+      return Boolean(document.body?.classList?.contains("mobile-input") || ((window.innerWidth <= 768) && touch) || coarse);
+    }
+
     function getRuntimeParticleLimit(scene = gameState.scene) {
       const config = getPerformanceModeConfig();
       if (!gameState?.settings?.particles || config.particleScale <= 0) return 0;
-      if (config.id === "high") return PARTICLE_BUDGET.max;
+      const hardLimit = isMobileTouchViewport() ? MOBILE_PARTICLE_LIMIT : PARTICLE_BUDGET.max;
+      if (config.id === "high") return hardLimit;
       const moving = scene?.playerVelocity && Math.abs(scene.playerVelocity.x) + Math.abs(scene.playerVelocity.y) > 18;
-      const idleLimit = Math.min(PARTICLE_BUDGET.max, Math.max(config.envParticles, moving ? 200 : 500));
-      return moving ? Math.min(200, idleLimit) : idleLimit;
+      const idleLimit = Math.min(hardLimit, Math.max(config.envParticles, moving ? 200 : 500));
+      return moving ? Math.min(200, idleLimit, hardLimit) : idleLimit;
     }
 
     function getParticleLodForPoint(scene, x = scene?.player?.x || 0, y = scene?.player?.y || 0) {
@@ -14835,6 +15000,36 @@ int main(void) {
       return active;
     }
 
+    function applyMobilePowerSaveMode(enabled = true, reason = "battery") {
+      const active = Boolean(enabled && isMobileTouchViewport());
+      document.body.classList.toggle("mobile-power-save", active);
+      gameState.mobilePowerSaveActive = active;
+      const runtime = gameState.runtimeRenderDowngrade || (gameState.runtimeRenderDowngrade = {});
+      if (active) {
+        runtime.particleScale = Math.min(Number(runtime.particleScale) || 1, 0.45);
+        runtime.depthFogQuality = "simple";
+        if (gameState.settings) gameState.settings.musicVolume = 0;
+        audioManager?.stopMusic?.();
+        showReward("省电模式：已降低背景动画和音乐负载。");
+        console.warn("[mobile] power save mode enabled", reason);
+      }
+      return active;
+    }
+
+    function installMobileBatterySaver() {
+      if (!globalThis.navigator?.getBattery || !isMobileTouchViewport()) return false;
+      globalThis.navigator.getBattery().then((battery) => {
+        const update = () => {
+          const lowBattery = !battery.charging && Number(battery.level) <= 0.2;
+          applyMobilePowerSaveMode(lowBattery, `battery:${Math.round(Number(battery.level || 0) * 100)}%`);
+        };
+        update();
+        battery.addEventListener?.("levelchange", update);
+        battery.addEventListener?.("chargingchange", update);
+      }).catch(() => false);
+      return true;
+    }
+
     function applyMobileEditorLayout(force = detectMobileInputMode()) {
       document.body.classList.toggle("editor-mobile-compact", Boolean(force));
       if (force && gameState?.editorOpen) {
@@ -17340,6 +17535,21 @@ int main(void) {
       return escaped;
     }
 
+    function focusFreeModeEditorForMobile() {
+      if (!dom.freeModeCodeInput || !isMobileTouchViewport()) return false;
+      dom.freeModeCodeInput.setAttribute("inputmode", "text");
+      dom.freeModeCodeInput.setAttribute("enterkeyhint", "enter");
+      requestAnimationFrame(() => {
+        if (!dom.freeModeCodeInput?.scrollIntoView) return;
+        dom.freeModeCodeInput.scrollIntoView({
+          behavior: "smooth",
+          block: "center",
+          inline: "nearest"
+        });
+      });
+      return true;
+    }
+
     function renderCTutorialSideMenu() {
       if (!dom.courseLessonList && !dom.learningLogList && !dom.codeHistoryList) return false;
       normalizeCTutorialState();
@@ -17865,10 +18075,73 @@ int main(void) {
       let twoFingerStartX = 0;
       let twoFingerStartAt = 0;
       let longPressTimer = null;
+      let drawerGesture = null;
+      let lastCanvasTouchCreationAt = 0;
+      let drawerDragStyle = null;
+
+      function setInfoMenuDragStyle(cssText = "") {
+        if (!drawerDragStyle) {
+          drawerDragStyle = document.createElement("style");
+          drawerDragStyle.setAttribute("nonce", "code-awakener-inline");
+          document.head.appendChild(drawerDragStyle);
+        }
+        drawerDragStyle.textContent = cssText;
+      }
+
+      function updateInfoMenuDragProgress(deltaX = 0, mode = "leftEdgeSwipe") {
+        if (!dom.infoSideMenu) return 0;
+        const width = Math.max(1, dom.infoSideMenu.getBoundingClientRect().width || 320);
+        const progress = mode === "leftEdgeSwipe"
+          ? Math.max(0, Math.min(1, deltaX / width))
+          : Math.max(0, Math.min(1, 1 + deltaX / width));
+        const offset = mode === "leftEdgeSwipe" ? (-width + width * progress) : (-width + width * progress);
+        dom.infoSideMenu.classList.add("dragging");
+        setInfoMenuDragStyle(`#infoSideMenu.info-side-menu.dragging{opacity:${Math.max(0.16, progress)} !important;transform:translateX(${offset}px) scale(${0.98 + progress * 0.02}) !important;}`);
+        return progress;
+      }
+
+      function finishInfoMenuDragProgress(progress = 0, mode = "leftEdgeSwipe") {
+        dom.infoSideMenu?.classList.remove("dragging");
+        setInfoMenuDragStyle("");
+        if (mode === "leftEdgeSwipe" && progress > 0.36) toggleInfoSideMenu(true);
+        if (mode === "menuCloseSwipe" && progress < 0.64) toggleInfoSideMenu(false);
+        return true;
+      }
+
+      function handleCanvasTouchCreation(event) {
+        if (!gameState.worldEvolutionCreationMode || !gameState.scene) return false;
+        const touch = event.touches?.[0] || event.changedTouches?.[0];
+        if (!touch || Date.now() - lastCanvasTouchCreationAt < 140) return false;
+        const canvas = document.querySelector("#game canvas");
+        const rect = canvas?.getBoundingClientRect?.();
+        if (!canvas || !rect || touch.clientX < rect.left || touch.clientX > rect.right || touch.clientY < rect.top || touch.clientY > rect.bottom) return false;
+        const localX = (touch.clientX - rect.left) * ((canvas.width || rect.width) / Math.max(1, rect.width));
+        const localY = (touch.clientY - rect.top) * ((canvas.height || rect.height) / Math.max(1, rect.height));
+        const camera = gameState.scene?.cameras?.main;
+        const worldPoint = camera?.getWorldPoint?.(localX, localY) || {
+          x: (camera?.scrollX || 0) + localX,
+          y: (camera?.scrollY || 0) + localY
+        };
+        lastCanvasTouchCreationAt = Date.now();
+        return handleWorldEvolutionWorldPointer(gameState.scene, { worldX: worldPoint.x, worldY: worldPoint.y });
+      }
+
       document.addEventListener("touchstart", (event) => {
+        const firstTouch = event.touches?.[0];
         if (event.touches.length === 2) {
           twoFingerStartX = (event.touches[0].clientX + event.touches[1].clientX) / 2;
           twoFingerStartAt = Date.now();
+        }
+        if (event.touches.length === 1 && firstTouch) {
+          const menuActive = dom.infoSideMenu?.classList.contains("active");
+          if (!menuActive && firstTouch.clientX <= 26) {
+            drawerGesture = { mode: "leftEdgeSwipe", startX: firstTouch.clientX, progress: 0 };
+            updateInfoMenuDragProgress(0, drawerGesture.mode);
+          } else if (menuActive && event.target?.closest?.("#infoSideMenu")) {
+            drawerGesture = { mode: "menuCloseSwipe", startX: firstTouch.clientX, progress: 1 };
+          } else if (menuActive && !event.target?.closest?.("#infoSideMenu,.info-menu-toggle")) {
+            toggleInfoSideMenu(false);
+          }
         }
         if (event.touches.length === 1 && event.target === dom.worldAdvanceButton) {
           longPressTimer = trackedSetTimeout(() => {
@@ -17877,10 +18150,25 @@ int main(void) {
           }, 650, "world-evolution-touch-longpress");
         }
       }, { passive: true });
+      document.addEventListener("touchmove", (event) => {
+        if (drawerGesture && event.touches.length === 1) {
+          const deltaX = event.touches[0].clientX - drawerGesture.startX;
+          drawerGesture.progress = updateInfoMenuDragProgress(deltaX, drawerGesture.mode);
+          event.preventDefault();
+          return;
+        }
+        if (event.target?.closest?.("#game")) {
+          handleCanvasTouchCreation(event);
+        }
+      }, { passive: false });
       document.addEventListener("touchend", (event) => {
         if (longPressTimer) {
           timerTracker.clear(longPressTimer);
           longPressTimer = null;
+        }
+        if (drawerGesture) {
+          finishInfoMenuDragProgress(drawerGesture.progress, drawerGesture.mode);
+          drawerGesture = null;
         }
         if (event.changedTouches.length >= 1 && twoFingerStartAt) {
           const endX = event.changedTouches[0].clientX;
@@ -31109,6 +31397,26 @@ int main(void) {
       return showQuestProgressToast(task);
     }
 
+    function bindFastTouchAction(element, handler, options = {}) {
+      if (!element || typeof handler !== "function") return false;
+      let lastTouchAt = 0;
+      const invoke = (event) => {
+        if (options.preventDefault !== false && !event?.target?.closest?.("input,textarea,select")) {
+          event.preventDefault?.();
+        }
+        handler(event);
+      };
+      element.addEventListener("touchstart", (event) => {
+        lastTouchAt = Date.now();
+        invoke(event);
+      }, { passive: false });
+      element.addEventListener("click", (event) => {
+        if (Date.now() - lastTouchAt < (options.ignoreClickMs || 460)) return;
+        handler(event);
+      });
+      return true;
+    }
+
     dom.variableWatchToggle?.addEventListener("click", () => toggleVariableWatch());
     dom.startupAnnouncement?.addEventListener("click", closeStartupAnnouncement);
     dom.announcementCloseButton?.addEventListener("click", (event) => {
@@ -31353,7 +31661,7 @@ int main(void) {
     });
     dom.clearFragmentsButton?.addEventListener("click", () => ClearAllFragments());
     dom.fullscreenButton?.addEventListener("click", toggleGameFullscreen);
-    dom.infoMenuToggle?.addEventListener("click", () => toggleInfoSideMenu());
+    bindFastTouchAction(dom.infoMenuToggle, () => toggleInfoSideMenu());
     dom.textSpeedSlider?.addEventListener("input", (event) => {
       const value = Math.max(0, Math.min(100, Number(event.target.value) || 0));
       gameState.settings.textSpeed = value;
@@ -31378,7 +31686,7 @@ int main(void) {
         trackedSetTimeout(() => { worldEvolutionIgnoreClick = false; }, 120, "world-evolution-click-reset");
       }
     });
-    dom.worldAdvanceButton?.addEventListener("click", () => {
+    bindFastTouchAction(dom.worldAdvanceButton, () => {
       if (worldEvolutionIgnoreClick) return;
       compileAndAdvanceWorld(); // advanceWorldEvolution()
     });
@@ -31395,6 +31703,8 @@ int main(void) {
       highlightFreeModeCode(event.target.value);
       saveCTutorialLocalKeys();
     });
+    dom.freeModeCodeInput?.addEventListener("focus", focusFreeModeEditorForMobile);
+    dom.freeModeCodeInput?.addEventListener("touchstart", focusFreeModeEditorForMobile, { passive: true });
     dom.freeModeCompileButton?.addEventListener("click", () => compileFreeModeCode());
     dom.debugStepButton?.addEventListener("click", () => stepDebugExecution());
     dom.tutorialFixSuggestionButton?.addEventListener("click", () => applyTutorialFixSuggestion(dom.tutorialFixSuggestionButton?.dataset?.snippetId || getCurrentTutorialSnippet()?.id));
@@ -31490,8 +31800,8 @@ int main(void) {
     });
     dom.confirmRefreshButton?.addEventListener("click", () => window.location?.reload?.());
     dom.cancelRefreshButton?.addEventListener("click", closeRefreshConfirm);
-    dom.bottomActionConfirm?.addEventListener("click", confirmPendingBottomAction);
-    dom.bottomActionCancel?.addEventListener("click", closeBottomActionBar);
+    bindFastTouchAction(dom.bottomActionConfirm, confirmPendingBottomAction);
+    bindFastTouchAction(dom.bottomActionCancel, closeBottomActionBar);
     dom.gameShell?.addEventListener("click", requestGamePointerLock);
     document.addEventListener("fullscreenchange", updateFullscreenStatus);
     document.addEventListener("pointerlockchange", handlePointerLockChange);
@@ -31506,7 +31816,7 @@ int main(void) {
     dom.systemBootOverlay?.addEventListener("click", (event) => {
       if (event.target === dom.systemBootOverlay) skipSystemBootLog();
     });
-    dom.audioStartButton?.addEventListener("click", initializeAudioFromGesture);
+    bindFastTouchAction(dom.audioStartButton, initializeAudioFromGesture);
     dom.globalErrorRestartButton?.addEventListener("click", () => window.location?.reload?.());
     dom.globalErrorContinueButton?.addEventListener("click", closeGlobalErrorDialog);
     dom.globalErrorExportButton?.addEventListener("click", exportBrowserErrorLog);
@@ -31698,6 +32008,7 @@ int main(void) {
     safeRunEffect("startupWorldEvolutionLocalKeys", () => loadWorldEvolutionLocalKeys());
     safeRunEffect("startupCTutorialLocalKeys", () => loadCTutorialLocalKeys());
     safeRunEffect("startupWorldEvolutionGestures", () => installWorldEvolutionTouchGestures());
+    safeRunEffect("startupMobileBatterySaver", () => installMobileBatterySaver());
     safeRunEffect("startupWorldEvolutionUi", () => updateWorldEvolutionUi());
     safeRunEffect("startupCTutorialUi", () => renderCTutorialSideMenu());
     safeRunEffect("startupWorldEvolutionMirror", () => renderWorldEvolutionMirror());
