@@ -11,7 +11,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; base-uri 'self'; object-src 'none'; frame-ancestors 'none'; script-src 'self' https://cdn.jsdelivr.net 'nonce-code-awakener-inline' 'sha256-D6sGKcWVLE2j7knQx8L184oV3Ei63c45kqc1XpE/lp4='; style-src 'self' https://cdn.jsdelivr.net https://fonts.googleapis.com 'nonce-code-awakener-inline' 'sha256-+QGGJCfrS99in9QZLrTO7LtYjXxz5t9/1DmSZXrdTjI='; font-src 'self' https://cdn.jsdelivr.net https://fonts.gstatic.com data:; img-src 'self' data: blob:; media-src 'self' data: blob:; worker-src 'self' blob:; child-src 'self' blob:; connect-src 'self' https://cdn.jsdelivr.net;">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; base-uri 'self'; object-src 'none'; frame-ancestors 'none'; script-src 'self' https://cdn.jsdelivr.net 'nonce-code-awakener-inline' 'sha256-61CZlNJ2FR+4E18rEfgBp+19C7vPkhwH13M+WqiIaPc='; style-src 'self' https://cdn.jsdelivr.net https://fonts.googleapis.com 'nonce-code-awakener-inline' 'sha256-m1j4SHsT49srE1EaALL9n9wtCc598D7he7Z/FxERGi0='; font-src 'self' https://cdn.jsdelivr.net https://fonts.gstatic.com data:; img-src 'self' data: blob:; media-src 'self' data: blob:; worker-src 'self' blob:; child-src 'self' blob:; connect-src 'self' https://cdn.jsdelivr.net http://localhost:8000 http://127.0.0.1:8000;">
   <title>编程学习 RPG：C 语言启航村</title>
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%23020617'/%3E%3Cpath d='M22 20 10 32l12 12M42 20l12 12-12 12' fill='none' stroke='%2300ff88' stroke-width='6' stroke-linecap='round' stroke-linejoin='round'/%3E%3Cpath d='m36 16-8 32' stroke='%2300ccff' stroke-width='5' stroke-linecap='round'/%3E%3C/svg%3E">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/firacode@6.2.0/distr/fira_code.css">
@@ -2483,6 +2483,50 @@
       font-size: 12px;
     }
 
+    .menu-section-heading {
+      display: grid;
+      grid-template-columns: 34px minmax(0, 1fr);
+      gap: 9px;
+      align-items: center;
+      margin-bottom: -2px;
+      color: inherit;
+    }
+
+    .menu-section-icon {
+      width: 34px;
+      height: 34px;
+      display: grid;
+      place-items: center;
+      border: 1px solid rgba(125, 211, 252, 0.34);
+      border-radius: 12px;
+      background:
+        radial-gradient(circle at 35% 25%, rgba(255, 255, 255, 0.18), transparent 30%),
+        linear-gradient(135deg, rgba(14, 165, 233, 0.18), rgba(2, 6, 23, 0.72));
+      box-shadow: 0 0 18px rgba(56, 189, 248, 0.14), inset 0 1px 0 rgba(255,255,255,0.08);
+      font-size: 18px;
+      line-height: 1;
+    }
+
+    .menu-section-copy {
+      min-width: 0;
+      display: grid;
+      gap: 1px;
+    }
+
+    .menu-section-title {
+      color: #fef3c7;
+      font-size: 12px;
+      line-height: 1.25;
+    }
+
+    .menu-section-purpose {
+      color: rgba(191, 219, 254, 0.78);
+      font-size: 10px;
+      line-height: 1.35;
+      font-weight: 600;
+      letter-spacing: 0;
+    }
+
     .menu-help {
       margin: -2px 0 0;
       padding: 7px 9px;
@@ -2636,6 +2680,124 @@
       padding-left: 16px;
       display: grid;
       gap: 4px;
+    }
+
+    .template-library {
+      display: grid;
+      gap: 6px;
+    }
+
+    .template-entry,
+    .programming-passport-panel {
+      padding: 8px 10px;
+      border: 1px solid rgba(125, 211, 252, 0.16);
+      border-radius: 14px;
+      color: #cbd5e1;
+      background: rgba(2, 6, 23, 0.28);
+    }
+
+    .template-entry {
+      text-align: left;
+      cursor: pointer;
+    }
+
+    .template-entry strong {
+      display: block;
+      color: #fef3c7;
+      margin-bottom: 3px;
+    }
+
+    .programming-passport-panel {
+      white-space: pre-line;
+      line-height: 1.6;
+    }
+
+    .import-progress-label {
+      display: inline-grid;
+      place-items: center;
+      min-height: 44px;
+      cursor: pointer;
+    }
+
+    .import-progress-label input {
+      display: none;
+    }
+
+    .first-code-ritual {
+      position: absolute;
+      inset: 0;
+      z-index: 92;
+      display: none;
+      place-items: center;
+      pointer-events: none;
+      background: radial-gradient(circle at 50% 48%, rgba(250, 204, 21, 0.2), rgba(2, 6, 23, 0.2) 40%, rgba(2, 6, 23, 0.52));
+      overflow: hidden;
+    }
+
+    .first-code-ritual.active {
+      display: grid;
+      animation: firstCodeRitualFade 5200ms ease forwards;
+    }
+
+    .first-code-message {
+      padding: 18px 24px;
+      border: 1px solid rgba(250, 204, 21, 0.72);
+      border-radius: 28px;
+      color: #fff7ed;
+      background: rgba(2, 6, 23, 0.72);
+      box-shadow: 0 0 48px rgba(250, 204, 21, 0.32);
+      font: 900 clamp(20px, 5vw, 42px)/1.25 var(--font-code);
+      text-align: center;
+      transform: translateY(12px);
+      animation: firstCodeMessagePop 900ms cubic-bezier(0.2, 0.9, 0.4, 1) forwards;
+    }
+
+    .little-c-dance {
+      position: absolute;
+      bottom: 18%;
+      width: 76px;
+      height: 96px;
+      border-radius: 28px 28px 18px 18px;
+      background: linear-gradient(180deg, #60a5fa, #2563eb);
+      box-shadow: 0 0 26px rgba(96, 165, 250, 0.42);
+      animation: littleCDance 580ms ease-in-out infinite alternate;
+    }
+
+    .little-c-dance::before {
+      content: ">_";
+      position: absolute;
+      left: 14px;
+      top: 22px;
+      color: #dbeafe;
+      font: 900 28px/1 var(--font-code);
+    }
+
+    .confetti-piece {
+      position: absolute;
+      width: 8px;
+      height: 14px;
+      border-radius: 2px;
+      background: var(--confetti-color, #facc15);
+      animation: confettiFall var(--confetti-duration, 4200ms) linear forwards;
+    }
+
+    @keyframes confettiFall {
+      from { transform: translateY(-12vh) rotate(0deg); opacity: 1; }
+      to { transform: translateY(112vh) rotate(720deg); opacity: 0; }
+    }
+
+    @keyframes littleCDance {
+      from { transform: translateX(-18px) rotate(-8deg) scale(1); }
+      to { transform: translateX(18px) rotate(8deg) scale(1.06); }
+    }
+
+    @keyframes firstCodeMessagePop {
+      to { transform: translateY(0); }
+    }
+
+    @keyframes firstCodeRitualFade {
+      0%, 82% { opacity: 1; }
+      100% { opacity: 0; }
     }
 
     .course-lesson-list,
@@ -3604,6 +3766,14 @@
       font-size: 11px;
     }
 
+    .mobile-dialog-advance {
+      display: none;
+      margin-top: 10px;
+      min-height: 44px;
+      padding: 0 18px;
+      border-radius: 999px;
+    }
+
     #dialogOverlay.active .dialog-box {
       opacity: 1;
       transform: translateY(0);
@@ -3629,6 +3799,17 @@
 
       #dialogText {
         font-size: 14px;
+      }
+
+      body.mobile-input .dialog-help {
+        font-size: clamp(12px, 3vw, 15px);
+      }
+
+      body.mobile-input .mobile-dialog-advance {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-width: 132px;
       }
     }
 
@@ -4857,6 +5038,37 @@
       font: 600 clamp(14px, 3vw, 17px)/1.7 var(--font-code);
     }
 
+    .novice-guide-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 14px;
+    }
+
+    .novice-guide-actions .pixel-button {
+      min-height: 44px;
+      border-radius: 999px;
+    }
+
+    .novice-guide-run,
+    .novice-guide-next,
+    .novice-guide-confirm-skip {
+      display: none;
+    }
+
+    .novice-guide-overlay[data-step="guidedCode"] .novice-guide-run,
+    .novice-guide-overlay[data-step="compileFeedback"] .novice-guide-run {
+      display: inline-flex;
+    }
+
+    .novice-guide-overlay[data-step="demoVideo"] .novice-guide-next {
+      display: inline-flex;
+    }
+
+    .novice-guide-overlay.confirming-skip .novice-guide-confirm-skip {
+      display: inline-flex;
+    }
+
     .novice-guide-skip {
       position: absolute;
       top: max(12px, env(safe-area-inset-top));
@@ -5014,22 +5226,21 @@
 
     .novice-guide-code-panel {
       position: absolute;
-      left: max(18px, env(safe-area-inset-left));
-      top: 12%;
-      width: min(520px, calc(100vw - 36px));
+      left: 50%;
+      top: max(82px, calc(env(safe-area-inset-top) + 70px));
+      width: min(760px, calc(100vw - 36px));
       display: none;
       gap: 10px;
       pointer-events: auto;
+      transform: translateX(-50%);
     }
 
-    .novice-guide-overlay[data-step="guidedCode"] .novice-guide-code-panel,
-    .novice-guide-overlay[data-step="compileFeedback"] .novice-guide-code-panel,
     .novice-guide-overlay[data-step="freeTry"] .novice-guide-code-panel {
       display: grid;
     }
 
     #noviceGuideCodeInput {
-      min-height: 190px;
+      min-height: clamp(190px, 28vh, 320px);
       padding: 14px;
       border: 1px solid rgba(125, 211, 252, 0.36);
       border-radius: 18px;
@@ -5061,8 +5272,8 @@
 
     .novice-guide-hand-cursor {
       position: absolute;
-      right: max(102px, calc(env(safe-area-inset-right) + 102px));
-      bottom: max(86px, calc(env(safe-area-inset-bottom) + 86px));
+      right: max(128px, calc(env(safe-area-inset-right) + 128px));
+      bottom: max(142px, calc(env(safe-area-inset-bottom) + 142px));
       display: none;
       font-size: 42px;
       filter: drop-shadow(0 0 12px rgba(250, 204, 21, 0.58));
@@ -7294,6 +7505,124 @@
       box-shadow: 0 0 22px rgba(250, 204, 21, 0.24);
     }
 
+    .mobile-fullscreen-prompt {
+      position: absolute;
+      inset: 0;
+      z-index: 118;
+      display: none;
+      place-items: center;
+      padding:
+        calc(18px + env(safe-area-inset-top))
+        max(16px, env(safe-area-inset-right))
+        calc(18px + env(safe-area-inset-bottom))
+        max(16px, env(safe-area-inset-left));
+      pointer-events: none;
+    }
+
+    .mobile-fullscreen-prompt.active {
+      display: grid;
+    }
+
+    .mobile-fullscreen-card {
+      width: min(92vw, 520px);
+      display: grid;
+      grid-template-columns: 76px 1fr;
+      gap: 14px;
+      align-items: center;
+      padding: 16px;
+      border: 1px solid rgba(125, 211, 252, 0.42);
+      border-radius: 28px;
+      background:
+        radial-gradient(circle at 20% 25%, rgba(56, 189, 248, 0.18), transparent 34%),
+        linear-gradient(135deg, rgba(2, 6, 23, 0.88), rgba(15, 23, 42, 0.72));
+      box-shadow:
+        0 24px 64px rgba(0, 0, 0, 0.46),
+        0 0 34px rgba(56, 189, 248, 0.18),
+        inset 0 1px 0 rgba(255, 255, 255, 0.12);
+      color: #dbeafe;
+      pointer-events: auto;
+      backdrop-filter: blur(20px) saturate(1.16);
+      -webkit-backdrop-filter: blur(20px) saturate(1.16);
+      opacity: 0;
+      transform: translateY(18px) scale(0.96);
+      transition:
+        opacity 260ms cubic-bezier(0.2, 0.9, 0.4, 1),
+        transform 260ms cubic-bezier(0.2, 0.9, 0.4, 1);
+    }
+
+    .mobile-fullscreen-prompt.active .mobile-fullscreen-card {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+
+    .mobile-landscape-phone {
+      width: 72px;
+      height: 48px;
+      border: 2px solid rgba(56, 189, 248, 0.72);
+      border-radius: 16px;
+      background:
+        linear-gradient(90deg, rgba(14, 165, 233, 0.14), rgba(34, 197, 94, 0.16)),
+        rgba(2, 6, 23, 0.72);
+      box-shadow: 0 0 24px rgba(56, 189, 248, 0.24);
+      position: relative;
+    }
+
+    .mobile-landscape-phone::after {
+      content: "";
+      position: absolute;
+      right: 6px;
+      top: 50%;
+      width: 4px;
+      height: 14px;
+      border-radius: 999px;
+      background: rgba(191, 219, 254, 0.76);
+      transform: translateY(-50%);
+    }
+
+    .mobile-fullscreen-copy {
+      display: grid;
+      gap: 8px;
+      min-width: 0;
+    }
+
+    .mobile-fullscreen-copy h2 {
+      margin: 0;
+      color: #e0f2fe;
+      font: 800 clamp(16px, 4vw, 22px) var(--font-code);
+      letter-spacing: 0;
+    }
+
+    .mobile-fullscreen-copy p {
+      margin: 0;
+      color: rgba(219, 234, 254, 0.82);
+      font-size: clamp(13px, 3.2vw, 15px);
+      line-height: 1.55;
+    }
+
+    .mobile-fullscreen-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 4px;
+    }
+
+    .mobile-fullscreen-actions .pixel-button {
+      min-height: 48px;
+      border-radius: 999px;
+      padding: 0 18px;
+    }
+
+    @media (orientation: portrait) and (pointer: coarse) {
+      body.mobile-input .mobile-landscape-phone {
+        animation: mobilePhoneRotateHint 1600ms ease-in-out infinite;
+      }
+    }
+
+    @keyframes mobilePhoneRotateHint {
+      0%, 100% { transform: rotate(0deg); }
+      45%, 70% { transform: rotate(90deg); }
+    }
+
     .error-recovery-toast {
       left: 50%;
       top: 86px;
@@ -7522,6 +7851,10 @@
         line-height: 1.55;
       }
 
+      body.mobile-input .code-genesis-helper .menu-actions {
+        grid-template-columns: 1fr;
+      }
+
       body.mobile-input .code-genesis-preview {
         min-height: 0;
         padding: 12px;
@@ -7615,6 +7948,46 @@
       overflow: auto;
       caret-color: #00ff88;
       tab-size: 4;
+    }
+
+    .code-genesis-helper {
+      margin-top: 14px;
+      padding: 14px;
+      border: 1px solid rgba(34, 197, 94, 0.26);
+      border-radius: 18px;
+      background:
+        radial-gradient(circle at 12% 0%, rgba(34, 197, 94, 0.14), transparent 34%),
+        rgba(2, 6, 23, 0.66);
+      box-shadow: 0 0 28px rgba(34, 197, 94, 0.08);
+      backdrop-filter: blur(14px);
+    }
+
+    .code-genesis-helper-title {
+      display: block;
+      margin-bottom: 8px;
+      color: #bbf7d0;
+      font: 900 13px/1.35 "JetBrains Mono", monospace;
+      letter-spacing: 0.06em;
+    }
+
+    .code-genesis-helper pre {
+      margin: 0;
+      white-space: pre-wrap;
+      color: #b7f7c8;
+      font: 12px/1.65 "JetBrains Mono", monospace;
+      text-shadow: none;
+    }
+
+    .code-genesis-helper .menu-actions {
+      margin-top: 10px;
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 8px;
+    }
+
+    .code-genesis-helper .pixel-button {
+      min-height: 44px;
+      padding-inline: 8px;
     }
 
     .code-genesis-preview {
@@ -8003,6 +8376,19 @@
       <div id="codeGenesisTerminal" class="code-genesis-terminal">
         <pre id="codeGenesisOutput" class="code-genesis-output"></pre>
         <label class="code-genesis-input-row"><span>&gt;</span><textarea id="codeGenesisInput" class="code-genesis-input" rows="4" inputmode="text" enterkeyhint="enter" autocomplete="off" autocapitalize="none" autocorrect="off" spellcheck="false" aria-label="输入 C 语言创世代码"></textarea></label>
+        <div class="code-genesis-helper" aria-label="零基础创角说明">
+          <strong class="code-genesis-helper-title">&gt; 零基础说明：先看注释，再点创建</strong>
+          <pre id="codeGenesisHelperText">// 代码里以 // 开头的内容是注释，只负责解释，不会被执行。
+// int hp = 88; 表示定义生命值，数字范围 1-100。
+// char name[] = "行者"; 表示定义你的名字。
+// int level = 1; 表示初始等级，先写 1 就可以。
+// return 0; 表示全部定义完成，正式进入世界。</pre>
+          <div class="menu-actions">
+            <button id="codeGenesisExampleButton" class="pixel-button secondary" type="button">填入示例</button>
+            <button id="codeGenesisExplainButton" class="pixel-button secondary" type="button">解释代码</button>
+            <button id="codeGenesisCreateButton" class="pixel-button" type="button">创建角色</button>
+          </div>
+        </div>
       </div>
       <aside id="codeGenesisPreview" class="code-genesis-preview" aria-label="角色预览">
         <div class="genesis-pulse-ring"></div>
@@ -8031,6 +8417,19 @@
       <div id="virtualJoystick" class="virtual-joystick" role="application" aria-label="虚拟摇杆"><span id="virtualJoystickKnob" class="virtual-joystick-knob"></span></div>
       <button id="mobileInteractButton" class="mobile-interact-button" type="button" aria-label="交互">E</button>
     </div>
+    <section id="mobileFullscreenPrompt" class="mobile-fullscreen-prompt" aria-live="polite" aria-hidden="true">
+      <div class="mobile-fullscreen-card">
+        <div class="mobile-landscape-phone" aria-hidden="true"></div>
+        <div class="mobile-fullscreen-copy">
+          <h2>建议横屏全屏游玩</h2>
+          <p>横放手机后进入全屏，编辑器、对话和战斗按钮都会按真正游戏比例排布。</p>
+          <div class="mobile-fullscreen-actions">
+            <button id="mobileFullscreenStartButton" class="pixel-button" type="button">横屏全屏</button>
+            <button id="mobileFullscreenLaterButton" class="pixel-button secondary" type="button">稍后再说</button>
+          </div>
+        </div>
+      </div>
+    </section>
     <div id="errorRecoveryToast" class="error-recovery-toast" role="status">游戏遇到小故障，正在自动修复…</div>
     <section id="globalErrorDialog" class="global-error-dialog" role="alertdialog" aria-live="assertive" aria-hidden="true">
       <div class="global-error-window">
@@ -8109,7 +8508,7 @@
       <canvas id="menuFxCanvas" width="1280" height="720"></canvas>
       <div class="main-menu-card glass-panel">
         <h1 class="game-logo">CODE AWAKENER<br>C 语言启航村</h1>
-        <div class="version-label" id="versionLabel">World Build v1.0.1 · develop.fan C Basics</div>
+        <div class="version-label" id="versionLabel">World Build v1.0.3 · develop.fan C Basics</div>
         <label class="boot-command"><span>&gt;</span><input id="bootCommandInput" value="start_game.exe" autocomplete="off" spellcheck="false" aria-label="启动命令"></label>
         <label class="skin-picker">角色外观
           <select id="skinSelect" aria-label="选择主角外观">
@@ -8447,6 +8846,41 @@
             <button id="freeModeCompileButton" class="pixel-button secondary" type="button">自由编译</button>
             <button id="debugStepButton" class="pixel-button secondary" type="button">单步执行</button>
             <button id="tutorialFixSuggestionButton" class="pixel-button secondary" type="button">修正建议</button>
+          </div>
+        </section>
+        <section class="info-menu-section">
+          <strong>零基础代码辅助</strong>
+          <p class="menu-help">前10个课程可以点击“填入当前代码”，先运行正确代码，再观察动画理解含义。</p>
+          <div class="info-menu-actions">
+            <button id="fillCurrentLessonButton" class="pixel-button secondary" type="button">填入当前代码</button>
+            <button id="knowledgeCardButton" class="pixel-button secondary" type="button">生成知识卡片</button>
+          </div>
+          <div id="codeTemplateLibrary" class="template-library" aria-label="代码模板库"></div>
+        </section>
+        <section class="info-menu-section">
+          <strong>执行观察</strong>
+          <p class="menu-help">调慢动画可以看清内存、变量和执行行；暂停后可用“下一步”逐行观察。</p>
+          <label class="setting-row">执行速度 <input id="executionSpeedSlider" type="range" min="0" max="100" step="1"> <span id="executionSpeedValue">50</span></label>
+          <div class="info-menu-actions">
+            <button id="executionPauseButton" class="pixel-button secondary" type="button">暂停/继续</button>
+            <button id="executionStepButton" class="pixel-button secondary" type="button">下一步</button>
+          </div>
+        </section>
+        <section class="info-menu-section">
+          <strong>我的编程护照</strong>
+          <p class="menu-help">自动记录第一次成功编译时间、已学知识点和成就徽章，可生成图片保存。</p>
+          <div id="programmingPassportPanel" class="programming-passport-panel">// 护照等待第一次编译。</div>
+          <div class="info-menu-actions">
+            <button id="saveProgrammingPassportButton" class="pixel-button secondary" type="button">保存护照图片</button>
+          </div>
+        </section>
+        <section class="info-menu-section">
+          <strong>学习报告 / 备份</strong>
+          <p class="menu-help">导出学习报告给自己或老师查看；导出JSON可备份进度，导入JSON可在其他设备继续。</p>
+          <div class="info-menu-actions">
+            <button id="learningReportPrintButton" class="pixel-button secondary" type="button">生成学习报告</button>
+            <button id="exportProgressButton" class="pixel-button secondary" type="button">导出进度JSON</button>
+            <label class="pixel-button secondary import-progress-label">导入进度JSON<input id="importProgressInput" type="file" accept="application/json,.json"></label>
           </div>
         </section>
         <section class="info-menu-section">
@@ -8958,7 +9392,8 @@ int main(void) {
         <div class="dialog-content">
           <div id="dialogSpeaker">基础导师</div>
           <div id="dialogText"></div>
-          <div class="dialog-help">按空格键跳过逐字显示 / 进入下一句</div>
+          <div class="dialog-help">电脑按空格键跳过逐字显示 / 手机点继续按钮进入下一句</div>
+          <button id="mobileDialogAdvanceButton" class="pixel-button mobile-dialog-advance" type="button">继续 / 跳过</button>
           <div id="dialogOptions" class="dialog-options">
             <button id="replayLessonButton" class="pixel-button" type="button">再听一遍</button>
             <button id="challengeNowButton" class="pixel-button" type="button">直接挑战</button>
@@ -9060,6 +9495,10 @@ int main(void) {
     </div>
 
     <div id="rewardToast" class="dynamic-island-toast" role="status" aria-live="polite"></div>
+    <section id="firstCodeRitual" class="first-code-ritual" aria-hidden="true">
+      <div class="first-code-message">你写下了人生第一行代码！</div>
+      <div class="little-c-dance" aria-hidden="true"></div>
+    </section>
     <section id="noviceGuideOverlay" class="novice-guide-overlay" data-step="interface" data-target="menu" aria-live="polite" aria-hidden="true">
       <button id="noviceGuideSkipButton" class="pixel-button secondary novice-guide-skip novice-guide-control" type="button">跳过指引</button>
       <div class="novice-guide-spotlight menu" aria-hidden="true"></div>
@@ -9092,6 +9531,11 @@ int main() {
         <p id="noviceGuideKicker" class="novice-guide-kicker">&gt; 零基础指引</p>
         <h2 id="noviceGuideTitle" class="novice-guide-title">界面认识</h2>
         <p id="noviceGuideText" class="novice-guide-text">这里可以查看你的学习进度。</p>
+        <div class="novice-guide-actions">
+          <button id="noviceGuideRunButton" class="pixel-button novice-guide-run novice-guide-control" type="button">运行这段代码</button>
+          <button id="noviceGuideNextButton" class="pixel-button secondary novice-guide-next novice-guide-control" type="button">下一步</button>
+          <button id="noviceGuideConfirmSkipButton" class="pixel-button secondary novice-guide-confirm-skip novice-guide-control" type="button">确认跳过</button>
+        </div>
       </article>
     </section>
     <section id="bottomActionBar" class="bottom-action-bar" role="alertdialog" aria-live="polite" aria-hidden="true">
@@ -9323,29 +9767,29 @@ int main() {
     const SAVE_SIGNATURE_SALT = "c-world-local-integrity";
     const SAVE_CLEAR_CONFIRM_MS = 3000;
     const STARTUP_ANNOUNCEMENT_AUTO_HIDE_MS = 3000;
-    const GAME_VERSION = "v1.0.1";
+    const GAME_VERSION = "v1.0.3";
     const UPDATE_ANNOUNCEMENT_PAGES = Object.freeze([
       {
         title: "> 消息 / 本次更新",
         lines: [
           "// 作者：杀戮",
-          "// 本次更新：新增零基础新手指引系统。",
-          "// 首次进入游戏会自动认识菜单、编译按钮、对话栏和中央执行世界。",
-          "// 引导会用动画演示第一个C程序，让没写过代码的玩家也能跟上。"
+          "// 本次更新：手机横屏全屏、创角说明、新手指引与语音体验优化。",
+          "// 手机进入游戏后会询问是否横屏全屏，比例更接近真正游戏。",
+          "// 对话新增手机继续/跳过按钮，不再依赖空格键。"
         ]
       },
       {
-        title: "> 更新内容 / 指引体验",
+        title: "> 更新内容 / 零基础与语音",
         lines: [
-          "// 新增Canvas模拟视频：输入 printf(\"Hello World!\")、点击编译、看到世界响应。",
-          "// 新增手把手代码区：逐行解释 #include、main、printf 和 return 0。",
-          "// 菜单中加入“重新观看指引”，后续可随时重放。"
+          "// 创角编辑器预填带注释的C代码，解释 hp/name/level/return 0。",
+          "// 新手指引会等角色创建并真正进入游戏后再出现。",
+          "// TTS可对接本地 ttsfm，默认使用 nova 女声风格；ttsfm不可用时不会播放浏览器机器人声。"
         ]
       },
       {
         title: "> 项目信息",
         lines: [
-          "// 指引流程支持手机触摸播放/暂停，软键盘弹出时会自动保持可见。",
+          "// 菜单历史更新会持续记录每个版本的详细内容。",
           "// 官方Q群：414374792",
           "// 本项目永久免费对外开放，持续更新，助力每一个有编程梦的人。",
           "// 谢谢你的支持！"
@@ -9353,6 +9797,31 @@ int main() {
       }
     ]);
     const UPDATE_HISTORY = Object.freeze([
+      {
+        version: "v1.0.3",
+        date: "2026-06-16",
+        title: "手机横屏全屏、触摸对话与创角指引修复",
+        details: [
+          "手机进入游戏世界后会弹出横屏全屏建议，可一键尝试进入全屏并锁定横向方向。",
+          "对话栏新增手机专用“继续 / 跳过”按钮，解决移动端没有空格键无法推进对话的问题。",
+          "新手指引会等待角色创建完成、主菜单和创角层关闭后再启动，避免未进游戏就弹出。",
+          "创角编辑器默认填入带 // 注释的C语言模板，并提供填入示例、解释代码、创建角色三个按钮。",
+          "信息菜单新增图标和一句话用途标签，难度、课程、碎片、HP/MP、存档等功能更容易一眼识别。",
+          "语音系统支持本地 ttsfm OpenAI兼容接口，默认女声风格；ttsfm不可用时不会播放浏览器机器人声，只保留文字提示。"
+        ]
+      },
+      {
+        version: "v1.0.2",
+        date: "2026-06-16",
+        title: "学习辅助、第一行代码仪式与编程护照",
+        details: [
+          "新增第一次成功编译仪式：彩带、轻快音效、小C跳舞与“你写下了人生第一行代码！”提示。",
+          "新增编程护照：记录首次编译时间、已学知识点、成就徽章，并支持生成图片保存。",
+          "新增每日一句、50句鼓励语、连续成功奖励和学习时长统计入口。",
+          "新增前10课一键填入、代码模板库、执行速度调节、暂停/继续、逐行执行和知识卡片生成。",
+          "新增学习报告、进度导出/导入，继续保持主画面无常驻HUD。"
+        ]
+      },
       {
         version: "v1.0.1",
         date: "2026-06-16",
@@ -9388,6 +9857,89 @@ int main() {
           "加入世界选择、公告、官方Q群信息和GitHub Pages部署流程。"
         ]
       }
+    ]);
+    const INFO_MENU_SECTION_ICON_MAP = Object.freeze({
+      "难度选择": { icon: "🎚️", purpose: "选择学习节奏" },
+      "课程进度": { icon: "📚", purpose: "查看C语言路线" },
+      "学习日志": { icon: "📝", purpose: "回看最近反馈" },
+      "代码历史": { icon: "💾", purpose: "重放学过代码" },
+      "自由模式编辑器": { icon: "⌨️", purpose: "尝试自己的C代码" },
+      "零基础代码辅助": { icon: "🧩", purpose: "填入示例先运行" },
+      "执行观察": { icon: "🔍", purpose: "暂停和逐行看动画" },
+      "我的编程护照": { icon: "🪪", purpose: "保存学习身份卡" },
+      "学习报告 / 备份": { icon: "📦", purpose: "导出报告和进度" },
+      "世界进化": { icon: "🌍", purpose: "观察世界修复" },
+      "任务提示": { icon: "🧭", purpose: "确认下一步目标" },
+      "知识碎片": { icon: "💎", purpose: "查看收集与用途" },
+      "HP / MP": { icon: "❤️", purpose: "查看生命与能量" },
+      "成长 / 惩罚": { icon: "⭐", purpose: "查看等级和失败代价" },
+      "装配碎片说明": { icon: "🛠️", purpose: "理解当前装备效果" },
+      "主角外观": { icon: "🧑", purpose: "更换头像和配色" },
+      "📜 编年史": { icon: "📜", purpose: "回看旅程记录" },
+      "历史更新内容": { icon: "🗂️", purpose: "查看版本变化" },
+      "存档槽": { icon: "💿", purpose: "手动保存和读取" },
+      "语言 / 无障碍": { icon: "🌐", purpose: "调整显示语言" },
+      "叙事 / 分支": { icon: "💬", purpose: "选择回应世界" },
+      "量子态分支": { icon: "🌀", purpose: "观察叙事倾向" },
+      "区域 / 主题": { icon: "🗺️", purpose: "切换区域和主题" },
+      "世界之镜": { icon: "🪞", purpose: "查看模拟社区回声" },
+      "记忆图鉴": { icon: "📖", purpose: "阅读世界记忆" },
+      "成就 / 分享": { icon: "🏆", purpose: "查看成就与分享" },
+      "隐私互动": { icon: "🔒", purpose: "管理麦克风和摄像头" },
+      "文本速度": { icon: "⏱️", purpose: "调整逐字显示速度" },
+      "学习辅助": { icon: "🧠", purpose: "保存、重看和求助" }
+    });
+    const DAILY_CODING_QUOTES = Object.freeze([
+      "编程是思考的体操。",
+      "先让代码跑起来，再让它跑得漂亮。",
+      "每一个分号，都是和计算机达成的一次约定。",
+      "变量像盒子，先命名，再装入意义。",
+      "错误不是失败，是程序在告诉你下一步。",
+      "今天理解一行代码，明天就能创造一个世界。",
+      "循环让重复变得优雅。",
+      "函数让想法拥有名字。",
+      "数组像书架，索引帮你找到每一格。",
+      "指针很强大，先慢慢理解地址。",
+      "写注释不是给机器看，是给未来的自己看。",
+      "优秀的程序员不是不犯错，而是会调试。",
+      "能解释给别人听，才是真的理解。",
+      "代码越清晰，世界越稳定。",
+      "从 Hello World 开始，一切都不算晚。",
+      "编译通过，是思考被世界接纳的声音。",
+      "今天的 bug，是明天的经验值。",
+      "先写小程序，再造大系统。",
+      "不要怕慢，怕的是不知道下一步。",
+      "把复杂拆小，程序就会变简单。",
+      "每一次运行，都是一次实验。",
+      "语法是规则，逻辑是灵魂。",
+      "学习编程，就是学习如何描述世界。",
+      "耐心是最稳定的开发环境。",
+      "你写的每一行代码，都在训练思维。",
+      "让变量名说人话，代码就更容易懂。",
+      "别急着复制，先问问它为什么这样写。",
+      "编译器很严格，但它从不嘲笑你。",
+      "调试是一种侦探游戏。",
+      "今天打开编辑器，就是一次进步。",
+      "代码不是魔法，但能创造魔法般的结果。"
+    ]);
+    const ENCOURAGEMENT_QUOTES = Object.freeze([
+      "你比昨天更厉害了！", "这一行写得很稳。", "继续，思路已经亮起来了。", "小C看见你在进步。", "错误被修复时，世界也会更亮。",
+      "你正在建立程序员的直觉。", "别怕慢，理解比速度重要。", "这次尝试很有价值。", "你已经能和编译器对话了。", "再运行一次，答案会更清楚。",
+      "写代码就是把想法排成队。", "你正在把混乱变成秩序。", "每次编译都是一次训练。", "小C为你点亮了一盏灯。", "你已经迈过最难的第一步。",
+      "这段代码开始有生命了。", "好问题比好答案更珍贵。", "你正在学会定位问题。", "今天的努力会在之后回报你。", "你已经不是旁观者了，你在创造。",
+      "变量名越清楚，脑子越轻松。", "逻辑正在成形。", "你修复的不只是代码，也是理解。", "保持好奇，程序会回应你。", "这是一次很棒的实验。",
+      "先小步运行，再大胆扩展。", "你能看懂的代码越来越多了。", "别担心，小C会陪你调试。", "这一轮思考很扎实。", "你正在靠近下一个知识点。",
+      "编程就是把问题拆到可以解决。", "你的第一行代码已经在发光。", "继续观察内存变化。", "你正在学会让电脑听懂你。", "这次运行值得记录。",
+      "别急，bug也在教你东西。", "你已经收集到新的经验。", "小C跳了一下，因为你成功了。", "这段逻辑比刚才更清楚。", "每一个括号都有它的位置。",
+      "你正在训练精确表达。", "这是成为创作者的过程。", "完成一个小目标也值得庆祝。", "你已经能读懂更多符号了。", "世界因为你的代码稳定了一点。",
+      "继续写，下一次会更顺。", "你的耐心正在升级。", "一行一行来，程序就会完整。", "今天的你已经进入状态。", "这不是死记硬背，这是创造。"
+    ]);
+    const CODE_TEMPLATE_LIBRARY = Object.freeze([
+      { id: "printf", label: "输出模板", code: "printf(\"Hello C!\\n\");", note: "用于把文字输出到屏幕。" },
+      { id: "for", label: "for循环模板", code: "for (int i = 0; i < 5; i++) {\\n    printf(\"%d\\n\", i);\\n}", note: "适合重复执行固定次数。" },
+      { id: "if", label: "if判断模板", code: "if (score >= 60) {\\n    printf(\"pass\\n\");\\n} else {\\n    printf(\"try again\\n\");\\n}", note: "让电脑根据条件做选择。" },
+      { id: "function", label: "函数模板", code: "int add(int a, int b) {\\n    return a + b;\\n}", note: "把一段逻辑命名并复用。" },
+      { id: "array", label: "数组模板", code: "int nums[3] = {1, 2, 3};\\nprintf(\"%d\\n\", nums[0]);", note: "保存一组同类型数据。" }
     ]);
     const CLEAR_SAVE_IDLE_TEXT = "清除后会删除学习进度、卡牌、成就和设置，刷新后回到第一次进入游戏。";
     const UNDO_WINDOW_MS = 3000;
@@ -9659,6 +10211,50 @@ int main() {
     const KONAMI_SEQUENCE = Object.freeze(["ArrowUp", "ArrowUp", "ArrowDown", "ArrowDown", "ArrowLeft", "ArrowRight", "ArrowLeft", "ArrowRight", "KeyB", "KeyA"]);
     const CODE_GENESIS_ACTS = Object.freeze(["awakening", "life", "soul", "foundation", "descent", "handoff"]);
     const CODE_GENESIS_REQUIRED_FIELDS = Object.freeze(["hp", "name", "level"]);
+    const CODE_GENESIS_BEGINNER_TEMPLATE = `// 第1步：给自己生命值。// 后面的文字是注释，电脑不会执行，只是给你看的提醒。
+int hp = 88; // hp 是生命值，范围 1-100；越高头像光越亮。
+
+// 第2步：给自己取名字。双引号里的文字可以改成你的名字。
+char name[] = "行者"; // name 是你的名字，导师以后会这样称呼你。
+
+// 第3步：设置初始等级。零基础先写 1 就可以。
+int level = 1; // level 是等级，先从 1 级开始学习。
+
+// 第4步：告诉系统“我定义完了，可以进入世界”。
+return 0; // return 0 表示程序正常结束，并正式创建角色。`;
+    const TTSFM_CONFIG = Object.freeze({
+      endpoint: "http://localhost:8000/v1/audio/speech",
+      model: "tts-1",
+      voice: "nova",
+      fallbackVoice: "shimmer",
+      responseFormat: "mp3",
+      timeoutMs: 4200
+    });
+    const TTSFM_VOICE_PRESETS = Object.freeze({
+      zh: "nova",
+      "zh-CN": "nova",
+      "zh-TW": "shimmer",
+      "zh-HK": "shimmer",
+      en: "nova",
+      "en-US": "nova",
+      ja: "shimmer",
+      "ja-JP": "shimmer",
+      ko: "nova",
+      "ko-KR": "nova"
+    });
+    const EDGE_TTS_MODULE_URL = "https://edge-tts.com/_astro/edge-tts.CRIlRyMu.js";
+    const EDGE_TTS_FEMALE_VOICES = Object.freeze({
+      "zh-CN": "zh-CN-XiaoxiaoNeural",
+      "zh": "zh-CN-XiaoxiaoNeural",
+      "zh-TW": "zh-TW-HsiaoYuNeural",
+      "zh-HK": "zh-HK-HiuMaanNeural",
+      "en-US": "en-US-AriaNeural",
+      "en": "en-US-AriaNeural",
+      "ja-JP": "ja-JP-NanamiNeural",
+      "ja": "ja-JP-NanamiNeural",
+      "ko-KR": "ko-KR-SunHiNeural",
+      "ko": "ko-KR-SunHiNeural"
+    });
     const BAD_ENDING_RULES = Object.freeze({
       compileFailuresRequired: 5,
       npcRefusalsRequired: 1
@@ -9802,7 +10398,7 @@ int main() {
       directSaveAs: "reduced-by-inline-resources"
     });
     const SECURITY_CONFIG = Object.freeze({
-      expectedScriptHash: "bsDnDYFzJRUhSsy9iJbtOQ+sICDt7wePaeaKJQrt85s=",
+      expectedScriptHash: "qg7K2fjnW4p5MV9gvVcLgi7UxxXPUUJzablvhIPswBg=",
       selfCheckIntervalMs: 45000,
       tamperRefreshMs: 5000,
       devToolsRefreshMs: 2000,
@@ -12629,6 +13225,13 @@ int main() {
       compiledHistory: [],
       learningLog: [],
       freeModeCode: "",
+      firstCompileAt: "",
+      successfulCompileStreak: 0,
+      bestCompileStreak: 0,
+      knowledgeCardsGenerated: 0,
+      learningReportGeneratedAt: "",
+      reflectionDiary: [],
+      executionPaused: false,
       errorAttempts: {},
       tutorialFixedErrors: {},
       currentDebugPlan: null,
@@ -12741,6 +13344,8 @@ int main() {
       editorFontSize: 14,
       language: "zh-CN",
       worldEvolutionLanguage: "zh-CN",
+      ttsfmEndpoint: TTSFM_CONFIG.endpoint,
+      browserSpeechFallback: false,
       worldEvolutionTheme: "deepStar",
       worldEvolutionTimeFlowEnabled: true,
       worldEvolutionTimePaused: false,
@@ -12788,6 +13393,7 @@ int main() {
       editorGuideMode: EDITOR_GUIDE_MODES.full,
       anonymousTelemetryEnabled: false,
       telemetryEndpoint: TELEMETRY_ENDPOINT,
+      executionSpeed: 50,
       keyBindings: JSON.parse(JSON.stringify(DEFAULT_KEY_BINDINGS))
     };
 
@@ -12907,6 +13513,13 @@ int main() {
         compiledHistory: Array.isArray(savedProgress.compiledHistory) ? savedProgress.compiledHistory : [],
         learningLog: Array.isArray(savedProgress.learningLog) ? savedProgress.learningLog : [],
         freeModeCode: typeof savedProgress.freeModeCode === "string" ? savedProgress.freeModeCode : "",
+        firstCompileAt: savedProgress.firstCompileAt || "",
+        successfulCompileStreak: Number(savedProgress.successfulCompileStreak) || 0,
+        bestCompileStreak: Number(savedProgress.bestCompileStreak) || 0,
+        knowledgeCardsGenerated: Number(savedProgress.knowledgeCardsGenerated) || 0,
+        learningReportGeneratedAt: savedProgress.learningReportGeneratedAt || "",
+        reflectionDiary: Array.isArray(savedProgress.reflectionDiary) ? savedProgress.reflectionDiary : [],
+        executionPaused: Boolean(savedProgress.executionPaused),
         errorAttempts: savedProgress.errorAttempts && typeof savedProgress.errorAttempts === "object" ? savedProgress.errorAttempts : {},
         tutorialFixedErrors: savedProgress.tutorialFixedErrors && typeof savedProgress.tutorialFixedErrors === "object" ? savedProgress.tutorialFixedErrors : {},
         currentDebugPlan: savedProgress.currentDebugPlan || null,
@@ -14984,6 +15597,7 @@ int main(void) {
       dialogAvatarImage: document.getElementById("dialogAvatarImage"),
       dialogSpeaker: document.getElementById("dialogSpeaker"),
       dialogText: document.getElementById("dialogText"),
+      mobileDialogAdvanceButton: document.getElementById("mobileDialogAdvanceButton"),
       codeInput: document.getElementById("codeInput"),
       highlightLayer: document.getElementById("highlightLayer"),
       lineNumbers: document.getElementById("lineNumbers"),
@@ -15026,6 +15640,18 @@ int main(void) {
       freeModeCompileButton: document.getElementById("freeModeCompileButton"),
       debugStepButton: document.getElementById("debugStepButton"),
       tutorialFixSuggestionButton: document.getElementById("tutorialFixSuggestionButton"),
+      fillCurrentLessonButton: document.getElementById("fillCurrentLessonButton"),
+      knowledgeCardButton: document.getElementById("knowledgeCardButton"),
+      codeTemplateLibrary: document.getElementById("codeTemplateLibrary"),
+      executionSpeedSlider: document.getElementById("executionSpeedSlider"),
+      executionSpeedValue: document.getElementById("executionSpeedValue"),
+      executionPauseButton: document.getElementById("executionPauseButton"),
+      executionStepButton: document.getElementById("executionStepButton"),
+      programmingPassportPanel: document.getElementById("programmingPassportPanel"),
+      saveProgrammingPassportButton: document.getElementById("saveProgrammingPassportButton"),
+      learningReportPrintButton: document.getElementById("learningReportPrintButton"),
+      exportProgressButton: document.getElementById("exportProgressButton"),
+      importProgressInput: document.getElementById("importProgressInput"),
       infoWorldEvolutionText: document.getElementById("infoWorldEvolutionText"),
       infoWorldEvolutionFill: document.getElementById("infoWorldEvolutionFill"),
       infoWorldEvolutionHint: document.getElementById("infoWorldEvolutionHint"),
@@ -15219,6 +15845,10 @@ int main(void) {
       codeGenesisTerminal: document.getElementById("codeGenesisTerminal"),
       codeGenesisOutput: document.getElementById("codeGenesisOutput"),
       codeGenesisInput: document.getElementById("codeGenesisInput"),
+      codeGenesisHelperText: document.getElementById("codeGenesisHelperText"),
+      codeGenesisExampleButton: document.getElementById("codeGenesisExampleButton"),
+      codeGenesisExplainButton: document.getElementById("codeGenesisExplainButton"),
+      codeGenesisCreateButton: document.getElementById("codeGenesisCreateButton"),
       codeGenesisPreview: document.getElementById("codeGenesisPreview"),
       codeGenesisAvatar: document.getElementById("codeGenesisAvatar"),
       codeGenesisNameTag: document.getElementById("codeGenesisNameTag"),
@@ -15236,6 +15866,9 @@ int main(void) {
       virtualJoystick: document.getElementById("virtualJoystick"),
       virtualJoystickKnob: document.getElementById("virtualJoystickKnob"),
       mobileInteractButton: document.getElementById("mobileInteractButton"),
+      mobileFullscreenPrompt: document.getElementById("mobileFullscreenPrompt"),
+      mobileFullscreenStartButton: document.getElementById("mobileFullscreenStartButton"),
+      mobileFullscreenLaterButton: document.getElementById("mobileFullscreenLaterButton"),
       errorRecoveryToast: document.getElementById("errorRecoveryToast"),
       globalErrorDialog: document.getElementById("globalErrorDialog"),
       globalErrorTitle: document.getElementById("globalErrorTitle"),
@@ -15265,6 +15898,7 @@ int main(void) {
       prompt: document.getElementById("interactionPrompt"),
       progress: document.getElementById("progressChip"),
       reward: document.getElementById("rewardToast"),
+      firstCodeRitual: document.getElementById("firstCodeRitual"),
       noviceGuideOverlay: document.getElementById("noviceGuideOverlay"),
       noviceGuideSkipButton: document.getElementById("noviceGuideSkipButton"),
       noviceGuideKicker: document.getElementById("noviceGuideKicker"),
@@ -15274,6 +15908,9 @@ int main(void) {
       noviceGuideVideoPlayButton: document.getElementById("noviceGuideVideoPlayButton"),
       noviceGuideVideoProgress: document.getElementById("noviceGuideVideoProgress"),
       noviceGuideCodeInput: document.getElementById("noviceGuideCodeInput"),
+      noviceGuideRunButton: document.getElementById("noviceGuideRunButton"),
+      noviceGuideNextButton: document.getElementById("noviceGuideNextButton"),
+      noviceGuideConfirmSkipButton: document.getElementById("noviceGuideConfirmSkipButton"),
       bottomActionBar: document.getElementById("bottomActionBar"),
       bottomActionText: document.getElementById("bottomActionText"),
       bottomActionCancel: document.getElementById("bottomActionCancel"),
@@ -16134,6 +16771,14 @@ int main(void) {
       return true;
     }
 
+    function resetCodeGenesisVisualState() {
+      dom.codeGenesisAvatar?.classList.remove("has-life", "has-name", "has-level");
+      if (dom.codeGenesisNameTag) dom.codeGenesisNameTag.textContent = "";
+      setElementCssVar(dom.codeGenesisAvatar, "--genesis-fill", "0%");
+      updateCodeGenesisStatus(gameState.codeGenesisState);
+      return true;
+    }
+
     function updateCodeGenesisStatus(state = gameState.codeGenesisState) {
       if (!state) return false;
       if (dom.codeGenesisHpStatus) dom.codeGenesisHpStatus.textContent = `HP: ${state.hp ?? "--"}`;
@@ -16217,6 +16862,60 @@ int main(void) {
       if (field === "name") state.act = "foundation";
       if (field === "level") state.act = "descent";
       return state.act;
+    }
+
+    function fillCodeGenesisBeginnerTemplate(focus = true) {
+      if (!dom.codeGenesisInput) return false;
+      setCodeGenesisInputValue(CODE_GENESIS_BEGINNER_TEMPLATE, CODE_GENESIS_BEGINNER_TEMPLATE.length, CODE_GENESIS_BEGINNER_TEMPLATE.length);
+      resetCodeGenesisEditorHistory(CODE_GENESIS_BEGINNER_TEMPLATE);
+      if (focus) {
+        try {
+          dom.codeGenesisInput.focus({ preventScroll: true });
+        } catch (error) {
+          dom.codeGenesisInput.focus();
+        }
+      }
+      return true;
+    }
+
+    function explainCodeGenesisBeginnerTemplate() {
+      appendCodeGenesisOutput("");
+      appendCodeGenesisOutput("// 读法：你只需要改等号右边的值。");
+      appendCodeGenesisOutput("// int hp = 88; 代表“创建一个整数生命值 hp，并让它等于 88”。");
+      appendCodeGenesisOutput('// char name[] = "行者"; 代表“创建一个名字字符串”。');
+      appendCodeGenesisOutput("// int level = 1; 代表“从 1 级开始”。");
+      appendCodeGenesisOutput("// return 0; 代表“定义完成，程序正常结束”。");
+      showReward("创角提示：先看 // 注释，再点创建角色。");
+      return true;
+    }
+
+    function runCodeGenesisEditor() {
+      if (!dom.codeGenesisInput) return false;
+      if (codeGenesisCompletionInFlight) {
+        appendCodeGenesisOutput("[WARNING] 创世交接正在进行，请稍候。", "warning");
+        return false;
+      }
+      const source = dom.codeGenesisInput.value || CODE_GENESIS_BEGINNER_TEMPLATE;
+      gameState.codeGenesisState = createCodeGenesisInitialState();
+      dom.codeGenesisOutput && (dom.codeGenesisOutput.textContent = "");
+      resetCodeGenesisVisualState();
+      appendCodeGenesisOutput("/* 系统正在按顺序读取你的代码。// 注释会被自动跳过。 */");
+      const lines = String(source).split(/\r?\n/);
+      let sawReturn = false;
+      for (const line of lines) {
+        const executable = stripCodeGenesisComment(line).trim();
+        if (!executable) continue;
+        const result = submitCodeGenesisLine(line, { clearInput: false });
+        if (result?.kind === "return") {
+          sawReturn = true;
+          break;
+        }
+      }
+      if (!sawReturn && !gameState.codeGenesisState?.handoffStarted) {
+        appendCodeGenesisOutput("[ERROR] 还没有 return 0;。请保留最后一行，告诉系统角色定义完成。", "error");
+        audioManager?.error?.();
+      }
+      return sawReturn;
     }
 
     function submitCodeGenesisLine(line = dom.codeGenesisInput?.value || "") {
@@ -16407,18 +17106,13 @@ int main(void) {
       codeGenesisCompletionInFlight = false;
       gameState.codeGenesisState = createCodeGenesisInitialState();
       dom.codeGenesisOutput && (dom.codeGenesisOutput.textContent = "");
-      if (dom.codeGenesisInput) dom.codeGenesisInput.value = "";
-      resetCodeGenesisEditorHistory("");
-      dom.codeGenesisAvatar?.classList.remove("has-life", "has-name", "has-level");
-      setElementCssVar(dom.codeGenesisAvatar, "--genesis-fill", "0%");
+      fillCodeGenesisBeginnerTemplate(false);
+      resetCodeGenesisVisualState();
       dom.codeGenesisOverlay?.classList.add("active");
       dom.codeGenesisOverlay?.setAttribute?.("aria-hidden", "false");
       appendCodeGenesisOutput("/* ACT 1: 觉醒提示 */");
-      appendCodeGenesisOutput("黑暗中只有一个终端。用 C 定义你自己：");
-      appendCodeGenesisOutput("int hp = 88;");
-      appendCodeGenesisOutput('char name[] = "Operator";');
-      appendCodeGenesisOutput("int level = 1;");
-      appendCodeGenesisOutput("return 0;");
+      appendCodeGenesisOutput("黑暗中只有一个终端。你不用先会 C，先读编辑器里的 // 注释。");
+      appendCodeGenesisOutput("可以直接点“创建角色”，也可以把名字或 hp 数字改成自己喜欢的值。");
       if (startupMessage) appendCodeGenesisOutput(startupMessage, "error");
       updateCodeGenesisStatus(gameState.codeGenesisState);
       trackedSetTimeout(() => dom.codeGenesisInput?.focus?.(), 80, "code-genesis-focus");
@@ -17007,6 +17701,58 @@ int main(void) {
       const request = target?.requestFullscreen?.();
       if (!request) return showBrowserShortcutWarning("当前浏览器不支持游戏内全屏按钮。");
       return Promise.resolve(request).then(updateFullscreenStatus).catch(() => showBrowserShortcutWarning("浏览器暂时拒绝全屏请求，请点击游戏画面后再试。"));
+    }
+
+    function closeMobileFullscreenPrompt(remember = true) {
+      dom.mobileFullscreenPrompt?.classList.remove("active");
+      dom.mobileFullscreenPrompt?.setAttribute("aria-hidden", "true");
+      if (remember) sessionStorage.setItem("mobileFullscreenPromptSeen", "true");
+      return true;
+    }
+
+    function showMobileFullscreenPrompt(force = false) {
+      if (!dom.mobileFullscreenPrompt) return false;
+      if (!force) {
+        if (!isMobileTouchViewport()) return false;
+        if (sessionStorage.getItem("mobileFullscreenPromptSeen") === "true") return false;
+        if (gameState.editorOpen || gameState.dialogOpen || gameState.noviceGuideActive) return false;
+      }
+      dom.mobileFullscreenPrompt.classList.add("active");
+      dom.mobileFullscreenPrompt.setAttribute("aria-hidden", "false");
+      return true;
+    }
+
+    function maybePromptMobileFullscreen() {
+      if (menuManager?.active !== "game" || gameState.menuOpen || gameState.paused) return false;
+      return showMobileFullscreenPrompt(false);
+    }
+
+    async function requestMobileLandscapeFullscreen() {
+      const target = dom.gameShell || document.documentElement;
+      let fullscreenOk = Boolean(document.fullscreenElement);
+      if (!fullscreenOk && target?.requestFullscreen) {
+        try {
+          await target.requestFullscreen();
+          fullscreenOk = true;
+        } catch (error) {
+          console.warn("[mobile] fullscreen request rejected", error);
+        }
+      }
+      try {
+        await screen.orientation?.lock?.("landscape");
+      } catch (error) {
+        console.warn("[mobile] landscape orientation lock unavailable", error);
+      }
+      updateFullscreenStatus();
+      return fullscreenOk;
+    }
+
+    async function enterMobileFullscreenLandscape() {
+      sessionStorage.setItem("mobileFullscreenPromptSeen", "true");
+      const fullscreenOk = await requestMobileLandscapeFullscreen();
+      closeMobileFullscreenPrompt(false);
+      showReward(fullscreenOk ? "已尝试进入横屏全屏模式。" : "浏览器不支持自动全屏，请手动横放手机继续。");
+      return fullscreenOk;
     }
 
     let lastPointerLockExitAt = -Infinity;
@@ -17825,9 +18571,14 @@ int main(void) {
           `概念具象化：${C_VISUAL_ENTITY_MAP[snippet.entity || "variable"]?.label || snippet.concept}`
         ], () => {});
       }
-      plan.trace.slice(0, 8).forEach((_, index) => {
-        trackedSetTimeout(() => renderExecutionTrace(plan, index), Math.round((timing / 2) * index), `c-tutorial-trace-${index}`);
-      });
+      if (gameState.progress.executionPaused) {
+        showReward("执行观察处于暂停状态，点击“下一步”逐行查看。");
+      } else {
+        const adjustedTiming = timing * getExecutionSpeedMultiplier();
+        plan.trace.slice(0, 8).forEach((_, index) => {
+          trackedSetTimeout(() => renderExecutionTrace(plan, index), Math.round((adjustedTiming / 2) * index), `c-tutorial-trace-${index}`);
+        });
+      }
       if (plan.loops.length) showTerminalBurst?.("for (...) // 轨道开始旋转");
       if (plan.arrays.length) showTerminalBurst?.("array[] // 书架格子点亮");
       if (plan.pointers.length) showTerminalBurst?.("*ptr -> address");
@@ -17850,6 +18601,7 @@ int main(void) {
 
     function showTutorialErrorFeedback(snippet = getCurrentTutorialSnippet()) {
       const hard = getWorldEvolutionDifficultyId() === "hard";
+      gameState.progress.successfulCompileStreak = 0;
       triggerErrorGlitch?.();
       audioManager.tone?.(110, 0.18, "sawtooth", 0.05);
       showReward(`错误：${snippet.errorType}。这是一次调试机会。`);
@@ -17894,6 +18646,7 @@ int main(void) {
       gameState.progress.worldEvolutionFragments = Math.min(20, (Number(gameState.progress.worldEvolutionFragments) || 0) + gained);
       grantGrowthExperience?.(options.fixedError ? 20 : 10, "c-tutorial");
       addCTutorialLearningLog(`完成 ${snippet.chapterTitle} / ${snippet.title}，掌握：${snippet.concept}`);
+      handleSuccessfulCompileLearningAssist(snippet);
       unlockFreeModeIfReady();
       renderCTutorialSideMenu();
       saveCTutorialLocalKeys();
@@ -17965,6 +18718,7 @@ int main(void) {
       const snippet = { id: `free-${Date.now()}`, title: "自由模式代码", concept: "自由编译", code: source, explanation: "语法结构通过，正在用可视化内存模型模拟执行。" };
       playCodeExecutionVisualization(snippet);
       addCTutorialLearningLog("自由模式编译成功。");
+      handleSuccessfulCompileLearningAssist(snippet);
       saveCTutorialLocalKeys();
       saveProgress();
       showReward("自由模式编译通过。");
@@ -18016,6 +18770,352 @@ int main(void) {
       return true;
     }
 
+    function getTodayKey(date = new Date()) {
+      return date.toISOString().slice(0, 10);
+    }
+
+    function showDailyCodingQuote(force = false) {
+      const today = getTodayKey();
+      const key = "code-awakener-daily-quote-date";
+      if (!force && localStorage.getItem(key) === today) return false;
+      const index = [...today].reduce((sum, char) => sum + char.charCodeAt(0), 0) % DAILY_CODING_QUOTES.length;
+      localStorage.setItem(key, today);
+      showReward(`每日一句：${DAILY_CODING_QUOTES[index]}`);
+      return DAILY_CODING_QUOTES[index];
+    }
+
+    function getEncouragementQuote() {
+      const count = Number(gameState.progress.worldEvolutionCompileCount) || 0;
+      const lesson = Number(gameState.progress.currentLesson) || 0;
+      return ENCOURAGEMENT_QUOTES[(count + lesson) % ENCOURAGEMENT_QUOTES.length];
+    }
+
+    function getExecutionSpeedMultiplier() {
+      const value = Math.max(0, Math.min(100, Number(gameState.settings.executionSpeed ?? 50)));
+      return 1.65 - (value / 100) * 1.2;
+    }
+
+    function renderCodeTemplateLibrary() {
+      if (!dom.codeTemplateLibrary) return false;
+      dom.codeTemplateLibrary.innerHTML = CODE_TEMPLATE_LIBRARY.map((template) => `
+        <button class="template-entry" type="button" data-template-id="${escapeHtml(template.id)}">
+          <strong>${escapeHtml(template.label)}</strong>
+          <span>${escapeHtml(template.description)}</span>
+        </button>
+      `).join("");
+      return true;
+    }
+
+    function getEditorInsertionTarget() {
+      if (gameState.editorOpen && dom.codeInput) return dom.codeInput;
+      return dom.freeModeCodeInput || dom.codeInput || null;
+    }
+
+    function insertIntoEditorTarget(text = "") {
+      const target = getEditorInsertionTarget();
+      if (!target) return false;
+      const start = Number(target.selectionStart) || 0;
+      const end = Number(target.selectionEnd) || start;
+      const value = String(target.value || "");
+      target.value = `${value.slice(0, start)}${text}${value.slice(end)}`;
+      const caret = start + String(text).length;
+      try { target.setSelectionRange(caret, caret); } catch (error) {}
+      target.focus?.();
+      if (target === dom.freeModeCodeInput) {
+        gameState.progress.freeModeCode = target.value;
+        highlightFreeModeCode(target.value);
+        saveCTutorialLocalKeys();
+      } else {
+        scheduleEditorVisuals?.();
+      }
+      saveProgress();
+      return true;
+    }
+
+    function insertCodeTemplate(templateId = "") {
+      const template = CODE_TEMPLATE_LIBRARY.find((item) => item.id === templateId);
+      if (!template) return false;
+      const inserted = insertIntoEditorTarget(template.code);
+      if (inserted) showReward(`模板已插入：${template.label}`);
+      return inserted;
+    }
+
+    function fillCurrentLessonCode() {
+      const snippet = getCurrentTutorialSnippet();
+      if (!(snippet.order <= 10)) {
+        showReward("前10课之后建议自己试写；可以从模板库插入结构。");
+        return false;
+      }
+      const code = snippet.fixedCode || snippet.code || "";
+      if (dom.freeModeCodeInput) {
+        dom.freeModeCodeInput.value = code;
+        gameState.progress.freeModeCode = code;
+        highlightFreeModeCode(code);
+      }
+      if (gameState.editorOpen && dom.codeInput) {
+        dom.codeInput.value = code;
+        scheduleEditorVisuals?.();
+      }
+      saveCTutorialLocalKeys();
+      saveProgress();
+      showReward(`已填入 #${snippet.order} ${snippet.title}，先运行再观察动画。`);
+      return true;
+    }
+
+    function triggerFirstCodeRitual() {
+      if (!dom.firstCodeRitual) return false;
+      dom.firstCodeRitual.replaceChildren();
+      const message = document.createElement("div");
+      message.className = "first-code-message";
+      message.textContent = "你写下了人生第一行代码！";
+      const littleC = document.createElement("div");
+      littleC.className = "little-c-dance";
+      littleC.setAttribute("aria-hidden", "true");
+      dom.firstCodeRitual.append(message, littleC);
+      for (let index = 0; index < 80; index += 1) {
+        const piece = document.createElement("span");
+        piece.className = "confetti-piece";
+        piece.style.left = `${Math.random() * 100}%`;
+        piece.style.top = `${-8 - Math.random() * 28}%`;
+        piece.style.background = ["#facc15", "#38bdf8", "#22c55e", "#f472b6", "#a78bfa"][index % 5];
+        piece.style.animationDelay = `${Math.random() * 0.9}s`;
+        piece.style.animationDuration = `${2.6 + Math.random() * 1.8}s`;
+        dom.firstCodeRitual.appendChild(piece);
+      }
+      dom.firstCodeRitual.classList.remove("active");
+      void dom.firstCodeRitual.offsetWidth;
+      dom.firstCodeRitual.classList.add("active");
+      audioManager.tone?.(523, 0.16, "triangle", 0.055);
+      trackedSetTimeout(() => audioManager.tone?.(659, 0.16, "triangle", 0.05), 150, "first-code-note-2");
+      trackedSetTimeout(() => audioManager.tone?.(784, 0.28, "triangle", 0.045), 310, "first-code-note-3");
+      trackedSetTimeout(() => dom.firstCodeRitual?.classList.remove("active"), 5200, "first-code-ritual-close");
+      showReward("🎉 你写下了人生第一行代码！");
+      return true;
+    }
+
+    function handleSuccessfulCompileLearningAssist(snippet = getCurrentTutorialSnippet(), options = {}) {
+      normalizeCTutorialState();
+      const firstSuccess = !gameState.progress.firstCompileAt;
+      if (firstSuccess) {
+        gameState.progress.firstCompileAt = new Date().toISOString();
+        triggerFirstCodeRitual();
+        unlockWorldEvolutionAchievement?.("first_compile", true);
+      }
+      gameState.progress.successfulCompileStreak = (Number(gameState.progress.successfulCompileStreak) || 0) + 1;
+      gameState.progress.bestCompileStreak = Math.max(Number(gameState.progress.bestCompileStreak) || 0, gameState.progress.successfulCompileStreak);
+      if (gameState.progress.successfulCompileStreak === 3) {
+        gameState.progress.worldEvolutionFragments = Math.min(20, (Number(gameState.progress.worldEvolutionFragments) || 0) + 1);
+        showReward("三连击：连续成功3次，额外碎片 +1。");
+      } else if (gameState.progress.successfulCompileStreak === 5) {
+        gameState.progress.worldEvolutionFragments = Math.min(20, (Number(gameState.progress.worldEvolutionFragments) || 0) + 2);
+        showReward("天才程序员：连续成功5次，额外碎片 +2。");
+      } else if (!firstSuccess && !options.silent) {
+        showReward(`小C：${getEncouragementQuote()}`);
+      }
+      renderProgrammingPassport();
+      return true;
+    }
+
+    function renderProgrammingPassport() {
+      if (!dom.programmingPassportPanel) return false;
+      normalizeCTutorialState();
+      const learnedCount = new Set(gameState.progress.compiledHistory || []).size;
+      const achievementCount = (gameState.progress.worldEvolutionAchievements || []).length;
+      const firstCompile = gameState.progress.firstCompileAt
+        ? new Date(gameState.progress.firstCompileAt).toLocaleString("zh-CN", { hour12: false })
+        : "等待第一次成功编译";
+      const bestStreak = Number(gameState.progress.bestCompileStreak) || 0;
+      dom.programmingPassportPanel.innerHTML = `
+        <div><strong>玩家</strong><span>${escapeHtml(gameState.progress.playerName || gameState.progress.codeGenesisCharacter?.name || "行者")}</span></div>
+        <div><strong>首次编译</strong><span>${escapeHtml(firstCompile)}</span></div>
+        <div><strong>已学知识点</strong><span>${learnedCount}/${flattenCTutorialSnippets().length}</span></div>
+        <div><strong>成就徽章</strong><span>${achievementCount}</span></div>
+        <div><strong>最佳连击</strong><span>${bestStreak}</span></div>
+      `;
+      return true;
+    }
+
+    function drawPassportCard(ctx, width, height) {
+      const learnedCount = new Set(gameState.progress.compiledHistory || []).size;
+      const firstCompile = gameState.progress.firstCompileAt
+        ? new Date(gameState.progress.firstCompileAt).toLocaleString("zh-CN", { hour12: false })
+        : "尚未编译";
+      const gradient = ctx.createLinearGradient(0, 0, width, height);
+      gradient.addColorStop(0, "#020617");
+      gradient.addColorStop(0.58, "#0f172a");
+      gradient.addColorStop(1, "#172554");
+      ctx.fillStyle = gradient;
+      ctx.fillRect(0, 0, width, height);
+      ctx.strokeStyle = "#38bdf8";
+      ctx.lineWidth = 6;
+      ctx.strokeRect(24, 24, width - 48, height - 48);
+      ctx.fillStyle = "#67e8f9";
+      ctx.font = "800 42px JetBrains Mono, monospace";
+      ctx.fillText("代码觉醒者 · 编程护照", 58, 92);
+      ctx.fillStyle = "#f8fafc";
+      ctx.font = "24px JetBrains Mono, monospace";
+      [
+        `玩家：${gameState.progress.playerName || gameState.progress.codeGenesisCharacter?.name || "行者"}`,
+        `首次编译：${firstCompile}`,
+        `已学知识点：${learnedCount}/${flattenCTutorialSnippets().length}`,
+        `成就徽章：${(gameState.progress.worldEvolutionAchievements || []).length}`,
+        `最佳连续成功：${Number(gameState.progress.bestCompileStreak) || 0}`
+      ].forEach((line, index) => ctx.fillText(line, 68, 166 + index * 46));
+      ctx.fillStyle = "#facc15";
+      ctx.font = "700 22px JetBrains Mono, monospace";
+      ctx.fillText("愿你的每一行代码，都让世界更清晰。", 68, height - 72);
+    }
+
+    function saveCanvasPng(canvas, filename = "code-awakener.png") {
+      const link = document.createElement("a");
+      link.href = canvas.toDataURL("image/png");
+      link.download = filename;
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      return true;
+    }
+
+    function saveProgrammingPassportImage() {
+      const canvas = document.createElement("canvas");
+      canvas.width = 960;
+      canvas.height = 540;
+      const ctx = canvas.getContext("2d");
+      drawPassportCard(ctx, canvas.width, canvas.height);
+      saveCanvasPng(canvas, "code-awakener-programming-passport.png");
+      showReward("编程护照图片已生成。");
+      return true;
+    }
+
+    function generateKnowledgeCard(snippet = getCurrentTutorialSnippet()) {
+      const canvas = document.createElement("canvas");
+      canvas.width = 920;
+      canvas.height = 520;
+      const ctx = canvas.getContext("2d");
+      ctx.fillStyle = "#020617";
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      ctx.fillStyle = "rgba(56,189,248,0.16)";
+      ctx.fillRect(34, 34, canvas.width - 68, canvas.height - 68);
+      ctx.strokeStyle = "#facc15";
+      ctx.lineWidth = 4;
+      ctx.strokeRect(34, 34, canvas.width - 68, canvas.height - 68);
+      ctx.fillStyle = "#facc15";
+      ctx.font = "800 34px JetBrains Mono, monospace";
+      ctx.fillText(`知识卡片：${snippet.title}`, 62, 92);
+      ctx.fillStyle = "#dbeafe";
+      ctx.font = "22px JetBrains Mono, monospace";
+      ctx.fillText(`核心概念：${snippet.concept}`, 62, 142);
+      ctx.font = "18px JetBrains Mono, monospace";
+      wrapCanvasText(ctx, snippet.explanation || "观察代码如何改变内存和世界。", 62, 190, 780, 30);
+      ctx.fillStyle = "#86efac";
+      wrapCanvasText(ctx, (snippet.fixedCode || snippet.code || "").slice(0, 260), 62, 314, 780, 25);
+      gameState.progress.knowledgeCardsGenerated = (Number(gameState.progress.knowledgeCardsGenerated) || 0) + 1;
+      saveProgress();
+      saveCanvasPng(canvas, `code-awakener-card-${snippet.order}.png`);
+      showReward(`知识卡片已生成：${snippet.title}`);
+      return true;
+    }
+
+    function wrapCanvasText(ctx, text, x, y, maxWidth, lineHeight) {
+      const chars = String(text || "").replace(/\t/g, "  ").split("");
+      let line = "";
+      let cursorY = y;
+      chars.forEach((char) => {
+        const candidate = line + char;
+        if (ctx.measureText(candidate).width > maxWidth || char === "\n") {
+          ctx.fillText(line, x, cursorY);
+          line = char === "\n" ? "" : char;
+          cursorY += lineHeight;
+        } else {
+          line = candidate;
+        }
+      });
+      if (line) ctx.fillText(line, x, cursorY);
+      return cursorY;
+    }
+
+    function pauseExecutionVisualization() {
+      gameState.progress.executionPaused = !gameState.progress.executionPaused;
+      showReward(gameState.progress.executionPaused ? "执行观察已暂停，可点“下一步”。" : "执行观察已继续。");
+      saveProgress();
+      updateInfoSideMenu();
+      return gameState.progress.executionPaused;
+    }
+
+    function stepExecutionVisualization() {
+      if (!gameState.progress.executionPaused) gameState.progress.executionPaused = true;
+      return stepDebugExecution();
+    }
+
+    function generateLearningReport() {
+      const snippets = flattenCTutorialSnippets();
+      const learnedCount = new Set(gameState.progress.compiledHistory || []).size;
+      const html = `<!doctype html><meta charset="utf-8"><title>代码觉醒者学习报告</title><style>body{font-family:system-ui,\"Microsoft YaHei\",sans-serif;padding:32px;line-height:1.7;color:#0f172a}h1{color:#0369a1}.card{border:1px solid #bae6fd;border-radius:16px;padding:18px;margin:14px 0;background:#f8fafc}</style><h1>代码觉醒者学习报告</h1><div class="card"><strong>学习进度：</strong>${learnedCount}/${snippets.length}<br><strong>世界完成度：</strong>${Math.round(Number(gameState.progress.worldEvolutionCompletion) || 0)}%<br><strong>知识碎片：</strong>${Number(gameState.progress.worldEvolutionFragments) || 0}/20<br><strong>最佳连击：</strong>${Number(gameState.progress.bestCompileStreak) || 0}</div><div class="card"><strong>最近学习日志</strong><ul>${(gameState.progress.learningLog || []).slice(-10).map((entry) => `<li>${escapeHtml(entry.text || "")}</li>`).join("")}</ul></div>`;
+      gameState.progress.learningReportGeneratedAt = new Date().toISOString();
+      saveProgress();
+      const reportWindow = window.open("", "_blank", "noopener,noreferrer");
+      if (reportWindow?.document) {
+        reportWindow.document.write(html);
+        reportWindow.document.close();
+        reportWindow.focus?.();
+        reportWindow.print?.();
+      } else {
+        const blob = new Blob([html], { type: "text/html;charset=utf-8" });
+        const link = document.createElement("a");
+        link.href = URL.createObjectURL(blob);
+        link.download = "code-awakener-learning-report.html";
+        link.click();
+        URL.revokeObjectURL(link.href);
+      }
+      showReward("学习报告已生成。");
+      return true;
+    }
+
+    function exportLearningProgress() {
+      const payload = {
+        version: GAME_VERSION,
+        exportedAt: new Date().toISOString(),
+        progress: clonePlainData(gameState.progress),
+        achievements: clonePlainData(gameState.achievements),
+        settings: clonePlainData(gameState.settings)
+      };
+      const blob = new Blob([JSON.stringify(payload, null, 2)], { type: "application/json;charset=utf-8" });
+      const link = document.createElement("a");
+      link.href = URL.createObjectURL(blob);
+      link.download = `code-awakener-progress-${Date.now()}.json`;
+      link.click();
+      URL.revokeObjectURL(link.href);
+      showReward("学习进度JSON已导出。");
+      return payload;
+    }
+
+    function importLearningProgress(event) {
+      const file = event?.target?.files?.[0];
+      if (!file) return false;
+      const reader = new FileReader();
+      reader.onload = () => {
+        try {
+          const data = JSON.parse(String(reader.result || "{}"));
+          if (!data.progress || typeof data.progress !== "object") throw new Error("missing progress");
+          gameState.progress = repairSaveData(data.progress, defaultProgress);
+          if (data.settings && typeof data.settings === "object") {
+            gameState.settings = { ...gameState.settings, ...data.settings };
+            saveSettings();
+          }
+          saveProgress();
+          updateInfoSideMenu();
+          showReward("进度已导入，刷新后会完全恢复。");
+        } catch (error) {
+          reportSoftError(error, ERROR_LEVELS.recoverable, { source: "importLearningProgress" });
+          showReward("导入失败：请选择有效的进度JSON。");
+        } finally {
+          if (event?.target) event.target.value = "";
+        }
+      };
+      reader.readAsText(file, "utf-8");
+      return true;
+    }
+
     function renderCTutorialSideMenu() {
       if (!dom.courseLessonList && !dom.learningLogList && !dom.codeHistoryList) return false;
       normalizeCTutorialState();
@@ -18047,6 +19147,11 @@ int main(void) {
       unlockFreeModeIfReady();
       if (dom.freeModeCodeInput && !dom.freeModeCodeInput.value) dom.freeModeCodeInput.value = gameState.progress.freeModeCode || "#include <stdio.h>\nint main(void) {\n  printf(\"free mode\");\n  return 0;\n}";
       highlightFreeModeCode();
+      renderCodeTemplateLibrary();
+      renderProgrammingPassport();
+      if (dom.executionSpeedSlider) dom.executionSpeedSlider.value = gameState.settings.executionSpeed ?? 50;
+      if (dom.executionSpeedValue) dom.executionSpeedValue.textContent = gameState.settings.executionSpeed ?? 50;
+      if (dom.executionPauseButton) dom.executionPauseButton.textContent = gameState.progress.executionPaused ? "继续执行" : "暂停/继续";
       return true;
     }
 
@@ -18204,17 +19309,17 @@ int main(void) {
     }
 
     function speakWorldEvolutionNpc(text = "", npcId = "archivist") {
-      if (!("speechSynthesis" in window) || gameState.settings.masterVolume <= 0) return false;
+      if (gameState.settings.masterVolume <= 0) return false;
       try {
         const npc = WORLD_EVOLUTION_NPCS.find((item) => item.id === npcId) || WORLD_EVOLUTION_NPCS[0];
-        window.speechSynthesis.cancel();
-        const utterance = new SpeechSynthesisUtterance(String(text).slice(0, 120));
-        utterance.lang = (gameState.settings.worldEvolutionLanguage || "zh-CN") === "en" ? "en-US" : "zh-CN";
-        utterance.pitch = npc.voice;
-        utterance.rate = 0.92;
-        utterance.volume = Math.min(0.72, Math.max(0.08, gameState.settings.sfxVolume / 140));
-        window.speechSynthesis.speak(utterance);
-        return true;
+        const lang = (gameState.settings.worldEvolutionLanguage || "zh-CN") === "en" ? "en-US" : "zh-CN";
+        return speakGameText(text, {
+          lang,
+          profile: "npc",
+          maxLength: 120,
+          voice: pickTtsfmFemaleVoice(lang),
+          speed: Math.max(0.8, Math.min(1.2, 0.94 + (Number(npc.voice) - 1) * 0.12))
+        });
       } catch (error) {
         reportSoftError(error, ERROR_LEVELS.recoverable, { source: "world-evolution-speech" });
         return false;
@@ -19383,6 +20488,7 @@ int main(void) {
       renderWorldEvolutionCodex();
       renderUpdateHistoryList();
       renderCTutorialSideMenu();
+      decorateInfoMenuSectionIcons();
       return true;
     }
 
@@ -22791,20 +23897,165 @@ int main(void) {
       return NOVICE_GUIDE_HELLO_CODE;
     }
 
-    function speakNoviceGuideLine(text = "") {
+    function openNoviceGuideRealEditor() {
+      if (!dom.overlay || !dom.codeInput) return false;
+      loadChapterTask("hello");
+      files["main.c"] = NOVICE_GUIDE_HELLO_CODE;
+      gameState.editorOpen = true;
+      inputManager.setMode(INPUT_MODES.editor);
+      dom.overlay.classList.add("active");
+      dom.overlay.classList.remove("closing");
+      document.body.classList.add("is-editor-open");
+      audioManager.setEditorFocus(true);
+      selectFile("main.c");
+      dom.codeInput.value = NOVICE_GUIDE_HELLO_CODE;
+      files[currentFile] = NOVICE_GUIDE_HELLO_CODE;
+      resetEditorHistory(NOVICE_GUIDE_HELLO_CODE);
+      scheduleEditorVisuals();
+      updateCodeExplanationPanel(NOVICE_GUIDE_HELLO_CODE, inspectInstantSyntax(NOVICE_GUIDE_HELLO_CODE));
+      setOutput("新手教程：这是真正的代码编辑器。你可以先直接点“运行这段代码”，也可以改引号里的文字。", "info");
+      queueEditorFlowMessage("导师提示：先运行，再理解；注释 // 是给人看的说明。", true);
+      suspendSceneForEditor(gameState.scene);
+      trackedSetTimeout(() => {
+        try {
+          dom.codeInput.focus({ preventScroll: true });
+        } catch (error) {
+          dom.codeInput.focus();
+        }
+      }, 80, "novice-guide-real-editor-focus");
+      return true;
+    }
+
+    let preferredSpeechVoiceCache = null;
+    let ttsfmAudioElement = null;
+    let ttsfmUnavailableUntil = 0;
+
+    function getTtsfmEndpoint() {
+      try {
+        return localStorage.getItem("codeAwakenerTtsfmEndpoint") || gameState.settings?.ttsfmEndpoint || TTSFM_CONFIG.endpoint;
+      } catch (error) {
+        return TTSFM_CONFIG.endpoint;
+      }
+    }
+
+    function pickTtsfmFemaleVoice(lang = "zh-CN") {
+      const normalized = String(lang || "zh-CN");
+      return TTSFM_VOICE_PRESETS[normalized] || TTSFM_VOICE_PRESETS[normalized.slice(0, 2)] || TTSFM_CONFIG.voice;
+    }
+
+    async function speakWithTtsfmFemale(text = "", options = {}) {
+      const phrase = String(text || "").trim().slice(0, options.maxLength || 180);
+      if (!phrase || gameState.settings?.voiceEnabled === false || gameState.settings?.masterVolume <= 0) return false;
+      if (performance.now() < ttsfmUnavailableUntil) return false;
+      const endpoint = options.endpoint || getTtsfmEndpoint();
+      if (!/\/v1\/audio\/speech\/?$/.test(endpoint)) return false;
+      const controller = new AbortController();
+      const timeout = trackedSetTimeout(() => controller.abort(), options.timeoutMs || TTSFM_CONFIG.timeoutMs, "ttsfm-timeout");
+      try {
+        const response = await fetch(endpoint, {
+          // ttsfm exposes an OpenAI-compatible /v1/audio/speech endpoint.
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          signal: controller.signal,
+          body: JSON.stringify({
+            model: options.model || TTSFM_CONFIG.model,
+            input: phrase,
+            voice: options.voice || pickTtsfmFemaleVoice(options.lang || "zh-CN"),
+            response_format: options.responseFormat || TTSFM_CONFIG.responseFormat,
+            speed: options.speed || 1
+          })
+        });
+        timerTracker.clear(timeout);
+        if (!response.ok) throw new Error(`ttsfm ${response.status}`);
+        const audioBlob = await response.blob();
+        if (!audioBlob.size) throw new Error("ttsfm empty audio");
+        const url = URL.createObjectURL(audioBlob);
+        if (ttsfmAudioElement) {
+          ttsfmAudioElement.pause();
+          if (ttsfmAudioElement.dataset.url) URL.revokeObjectURL(ttsfmAudioElement.dataset.url);
+        }
+        ttsfmAudioElement = new Audio(url);
+        ttsfmAudioElement.dataset.url = url;
+        ttsfmAudioElement.volume = Math.min(0.78, Math.max(0.08, (gameState.settings.sfxVolume || 80) / 130));
+        ttsfmAudioElement.onended = () => URL.revokeObjectURL(url);
+        await ttsfmAudioElement.play();
+        return true;
+      } catch (error) {
+        timerTracker.clear(timeout);
+        ttsfmUnavailableUntil = performance.now() + 60000;
+        reportSoftError?.(error, ERROR_LEVELS.recoverable, { source: "ttsfm-speech", endpoint });
+        return false;
+      }
+    }
+
+    function pickPreferredSpeechVoice(lang = "zh-CN") {
+      if (!("speechSynthesis" in globalThis)) return null;
+      const voices = globalThis.speechSynthesis.getVoices?.() || [];
+      if (!voices.length) return null;
+      const target = String(lang || "zh-CN").toLowerCase();
+      const sameLanguage = voices.filter((voice) => String(voice.lang || "").toLowerCase().startsWith(target.slice(0, 2)));
+      const pool = sameLanguage.length ? sameLanguage : voices;
+      const softNames = /(xiaoxiao|xiaoyi|xiaobei|xiaoxuan|xiaozhen|xiaomo|yaoyao|huihui|yating|hanhan|meijia|mei-jia|ting-ting|female|girl|natural|neural|google)/i;
+      const scored = pool.map((voice) => {
+        const name = `${voice.name || ""} ${voice.voiceURI || ""}`;
+        let score = 0;
+        if (String(voice.lang || "").toLowerCase().startsWith(target)) score += 4;
+        if (softNames.test(name)) score += 5;
+        if (/microsoft|apple|google/i.test(name)) score += 1;
+        if (/male|yunxi|yunyang|kangkang/i.test(name)) score -= 2;
+        return { voice, score };
+      }).sort((a, b) => b.score - a.score);
+      preferredSpeechVoiceCache = scored[0]?.score > 0 ? scored[0].voice : null;
+      return preferredSpeechVoiceCache;
+    }
+
+    function applyPreferredSpeechVoice(utterance, lang = "zh-CN", profile = "mentor") {
+      if (!utterance) return false;
+      const voice = preferredSpeechVoiceCache || pickPreferredSpeechVoice(lang);
+      if (!voice) return false;
+      utterance.voice = voice;
+      utterance.lang = voice.lang || lang;
+      utterance.pitch = profile === "npc" ? 1.14 : 1.18;
+      utterance.rate = profile === "npc" ? 0.9 : 0.88;
+      return true;
+    }
+
+    function refreshPreferredSpeechVoiceCache() {
+      preferredSpeechVoiceCache = null;
+      return pickPreferredSpeechVoice(gameState.settings?.worldEvolutionLanguage || "zh-CN");
+    }
+
+    function speakWithBrowserFemale(text = "", lang = "zh-CN", profile = "mentor", maxLength = 160) {
       if (!globalThis.speechSynthesis || gameState.settings?.voiceEnabled === false) return false;
       try {
         globalThis.speechSynthesis.cancel();
-        const utterance = new SpeechSynthesisUtterance(String(text).slice(0, 160));
-        utterance.lang = "zh-CN";
-        utterance.pitch = 1.05;
-        utterance.rate = 0.96;
+        const utterance = new SpeechSynthesisUtterance(String(text).slice(0, maxLength));
+        if (!applyPreferredSpeechVoice(utterance, lang, profile)) return false;
+        utterance.volume = Math.min(0.72, Math.max(0.08, (gameState.settings.sfxVolume || 80) / 140));
         globalThis.speechSynthesis.speak(utterance);
         return true;
       } catch (error) {
-        reportSoftError?.(error, ERROR_LEVELS.recoverable, { source: "novice-guide-speech" });
+        reportSoftError?.(error, ERROR_LEVELS.recoverable, { source: "browser-female-speech" });
         return false;
       }
+    }
+
+    function shouldUseBrowserSpeechFallback(options = {}) {
+      return Boolean(options.allowBrowserSpeechFallback || gameState.settings?.browserSpeechFallback === true);
+    }
+
+    function speakGameText(text = "", options = {}) {
+      if (gameState.settings?.voiceEnabled === false) return false;
+      speakWithTtsfmFemale(text, options).then((ok) => {
+        if (!ok && shouldUseBrowserSpeechFallback(options)) {
+          speakWithBrowserFemale(text, options.lang || "zh-CN", options.profile || "mentor", options.maxLength || 160);
+        }
+      });
+      return true;
+    }
+
+    function speakNoviceGuideLine(text = "") {
+      return speakGameText(text, { lang: "zh-CN", profile: "mentor", maxLength: 160, voice: "nova" });
     }
 
     function showNoviceGuideDialogue(text = "") {
@@ -22951,6 +24202,7 @@ int main(void) {
       const step = NOVICE_GUIDE_STEPS[noviceGuideStepIndex] || NOVICE_GUIDE_STEPS[0];
       if (!dom.noviceGuideOverlay || !step) return false;
       dom.noviceGuideOverlay.classList.add("active");
+      dom.noviceGuideOverlay.classList.remove("confirming-skip");
       dom.noviceGuideOverlay.setAttribute("aria-hidden", "false");
       dom.noviceGuideOverlay.dataset.step = step.id;
       dom.noviceGuideOverlay.dataset.target = step.target;
@@ -22965,6 +24217,9 @@ int main(void) {
         drawNoviceGuideVideoFrame(0);
         startNoviceGuideVideoPlayback(true);
         scheduleNoviceGuide(() => advanceNoviceGuideStep(), 15500, "novice-video-next");
+      }
+      if (step.id === "guidedCode") {
+        openNoviceGuideRealEditor();
       }
       if (step.id === "freeTry") {
         scheduleNoviceGuide(() => completeNoviceGuide(false), 4600, "novice-free-try-complete");
@@ -23005,21 +24260,34 @@ int main(void) {
     }
 
     function confirmSkipNoviceGuide() {
-      openBottomActionBar("建议完整体验一次新手指引；它会教你什么是代码、编译和变量。确定跳过吗？", () => completeNoviceGuide(true), {
-        confirmLabel: "仍然跳过",
-        cancelLabel: "继续观看"
-      });
+      if (!gameState.noviceGuideActive) return false;
+      dom.noviceGuideOverlay?.classList.add("confirming-skip");
+      if (dom.noviceGuideTitle) dom.noviceGuideTitle.textContent = "确定跳过指引吗？";
+      if (dom.noviceGuideText) {
+        dom.noviceGuideText.textContent = "建议完整体验一次。它会用动画教你什么是代码、编译和变量；如果已经掌握，可以点“确认跳过”。";
+      }
+      showReward("跳过按钮已进入二次确认。");
       return true;
     }
 
+    function hasCompletedCodeGenesisCharacter() {
+      if (gameState.progress?.codeGenesisCharacter?.complete) return true;
+      try {
+        return Boolean(validateFixedGameSaveJson(readFixedGameSaveJson()).valid);
+      } catch (error) {
+        return false;
+      }
+    }
+
     function isStartupOverlayBlockingNoviceGuide() {
-      return [dom.systemBootOverlay, dom.mainMenuOverlay, dom.codeGenesisOverlay].some((element) => element?.classList?.contains("active"));
+      return [dom.systemBootOverlay, dom.mainMenu, dom.worldSelectOverlay, dom.codeGenesisOverlay, dom.pixelLoadingOverlay, dom.mobileFullscreenPrompt].some((element) => element?.classList?.contains("active"));
     }
 
     function maybeStartNoviceGuide(attempt = 0) {
       if (localStorage.getItem("noviceGuideCompleted") === "true") return false;
       if (gameState.noviceGuideActive) return false;
-      if (isStartupOverlayBlockingNoviceGuide() && attempt < 90) {
+      if (!hasCompletedCodeGenesisCharacter()) return false;
+      if ((menuManager?.active !== "game" || gameState.menuOpen || gameState.paused || isStartupOverlayBlockingNoviceGuide()) && attempt < 90) {
         scheduleNoviceGuide(() => maybeStartNoviceGuide(attempt + 1), 1000, "novice-guide-wait-startup");
         return true;
       }
@@ -23034,7 +24302,7 @@ int main(void) {
         showReward("先跟着指引看完当前步骤，再编译。");
         return true;
       }
-      const code = dom.noviceGuideCodeInput?.value || NOVICE_GUIDE_HELLO_CODE;
+      const code = dom.codeInput?.value || dom.noviceGuideCodeInput?.value || NOVICE_GUIDE_HELLO_CODE;
       gameState.progress.freeModeCode = code;
       if (dom.freeModeCodeInput) dom.freeModeCodeInput.value = code;
       highlightFreeModeCode(code);
@@ -24074,6 +25342,8 @@ int main(void) {
         updateContextualHint();
         showSpawnIntro();
         showNewPlayerCourseIntro();
+        trackedSetTimeout(() => maybePromptMobileFullscreen(), 520, "mobile-fullscreen-after-enter-world");
+        trackedSetTimeout(() => maybeStartNoviceGuide(0), 900, "novice-guide-after-enter-world");
       }
 
       openPauseMenu() {
@@ -24386,6 +25656,26 @@ int main(void) {
           <ul>${(entry.details || []).map((detail) => `<li>${escapeHtml(detail)}</li>`).join("")}</ul>
         </article>
       `).join("");
+      return true;
+    }
+
+    function decorateInfoMenuSectionIcons() {
+      const sections = dom.infoSideMenu?.querySelectorAll?.(".info-menu-section");
+      if (!sections?.length) return false;
+      sections.forEach((section) => {
+        const heading = section.querySelector(":scope > strong");
+        if (!heading || heading.classList.contains("menu-section-heading")) return;
+        const title = String(heading.textContent || "").trim();
+        const meta = INFO_MENU_SECTION_ICON_MAP[title] || { icon: "▣", purpose: "查看该功能的说明和操作" };
+        heading.classList.add("menu-section-heading");
+        heading.innerHTML = `
+          <span class="menu-section-icon" aria-hidden="true">${escapeHtml(meta.icon)}</span>
+          <span class="menu-section-copy">
+            <span class="menu-section-title">${escapeHtml(title)}</span>
+            <span class="menu-section-purpose">${escapeHtml(meta.purpose)}</span>
+          </span>`;
+        section.setAttribute("data-menu-purpose", meta.purpose);
+      });
       return true;
     }
 
@@ -32421,6 +33711,12 @@ int main(void) {
     });
     dom.clearFragmentsButton?.addEventListener("click", () => ClearAllFragments());
     dom.fullscreenButton?.addEventListener("click", toggleGameFullscreen);
+    bindFastTouchAction(dom.mobileDialogAdvanceButton, advanceDialog);
+    bindFastTouchAction(dom.mobileFullscreenStartButton, enterMobileFullscreenLandscape);
+    bindFastTouchAction(dom.mobileFullscreenLaterButton, () => {
+      closeMobileFullscreenPrompt(true);
+      showReward("已保持窗口模式。手机可随时在设置中进入全屏。");
+    });
     bindFastTouchAction(dom.infoMenuToggle, () => toggleInfoSideMenu());
     dom.textSpeedSlider?.addEventListener("input", (event) => {
       const value = Math.max(0, Math.min(100, Number(event.target.value) || 0));
@@ -32433,12 +33729,25 @@ int main(void) {
       const saved = saveGame();
       showReward(saved ? "进度已手动保存。" : "保存失败，请稍后再试。");
     });
+    bindFastTouchAction(dom.codeGenesisExampleButton, () => {
+      fillCodeGenesisBeginnerTemplate(true);
+      explainCodeGenesisBeginnerTemplate();
+    });
+    bindFastTouchAction(dom.codeGenesisExplainButton, explainCodeGenesisBeginnerTemplate);
+    bindFastTouchAction(dom.codeGenesisCreateButton, runCodeGenesisEditor);
     bindFastTouchAction(dom.replayNoviceGuideButton, () => startNoviceGuide({ replay: true }));
     bindFastTouchAction(dom.noviceGuideVideoPlayButton, toggleNoviceGuideVideoPlayback);
     bindFastTouchAction(dom.noviceGuideSkipButton, confirmSkipNoviceGuide);
+    bindFastTouchAction(dom.noviceGuideRunButton, handleNoviceGuideCompile);
+    bindFastTouchAction(dom.noviceGuideNextButton, advanceNoviceGuideStep);
+    bindFastTouchAction(dom.noviceGuideConfirmSkipButton, () => completeNoviceGuide(true));
     dom.noviceGuideCodeInput?.addEventListener("focus", () => {
       trackedSetTimeout(() => dom.noviceGuideCodeInput?.scrollIntoView?.({ block: "center", behavior: "smooth" }), 120, "novice-guide-mobile-focus");
     });
+    if ("speechSynthesis" in globalThis) {
+      globalThis.speechSynthesis.addEventListener?.("voiceschanged", refreshPreferredSpeechVoiceCache);
+      refreshPreferredSpeechVoiceCache();
+    }
     let worldEvolutionHoldStartedAt = 0;
     let worldEvolutionIgnoreClick = false;
     dom.worldAdvanceButton?.addEventListener("pointerdown", () => {
@@ -32474,6 +33783,25 @@ int main(void) {
     dom.freeModeCompileButton?.addEventListener("click", () => compileFreeModeCode());
     dom.debugStepButton?.addEventListener("click", () => stepDebugExecution());
     dom.tutorialFixSuggestionButton?.addEventListener("click", () => applyTutorialFixSuggestion(dom.tutorialFixSuggestionButton?.dataset?.snippetId || getCurrentTutorialSnippet()?.id));
+    dom.fillCurrentLessonButton?.addEventListener("click", fillCurrentLessonCode);
+    dom.knowledgeCardButton?.addEventListener("click", () => generateKnowledgeCard());
+    dom.codeTemplateLibrary?.addEventListener("click", (event) => {
+      const target = event.target?.closest?.("[data-template-id]");
+      if (target) insertCodeTemplate(target.dataset.templateId);
+    });
+    dom.executionSpeedSlider?.addEventListener("input", (event) => {
+      const value = Math.max(0, Math.min(100, Number(event.target.value) || 0));
+      gameState.settings.executionSpeed = value;
+      if (dom.executionSpeedValue) dom.executionSpeedValue.textContent = value;
+      saveSettings();
+      showReward(`执行速度已调整：${value}`);
+    });
+    dom.executionPauseButton?.addEventListener("click", pauseExecutionVisualization);
+    dom.executionStepButton?.addEventListener("click", stepExecutionVisualization);
+    dom.saveProgrammingPassportButton?.addEventListener("click", saveProgrammingPassportImage);
+    dom.learningReportPrintButton?.addEventListener("click", generateLearningReport);
+    dom.exportProgressButton?.addEventListener("click", exportLearningProgress);
+    dom.importProgressInput?.addEventListener("change", importLearningProgress);
     dom.fragmentStarChartButton?.addEventListener("click", () => openFragmentStarChart());
     document.querySelectorAll("[data-star-node]").forEach((button) => {
       button.addEventListener("click", () => lightFragmentStarNode(button.dataset.starNode));
@@ -32778,6 +34106,7 @@ int main(void) {
     safeRunEffect("startupWorldEvolutionUi", () => updateWorldEvolutionUi());
     safeRunEffect("startupNoviceGuide", () => maybeStartNoviceGuide());
     safeRunEffect("startupCTutorialUi", () => renderCTutorialSideMenu());
+    safeRunEffect("startupDailyCodingQuote", () => trackedSetTimeout(() => showDailyCodingQuote(), 1800, "daily-coding-quote"));
     safeRunEffect("startupWorldEvolutionMirror", () => renderWorldEvolutionMirror());
     safeRunEffect("startupWorldEvolutionCodex", () => renderWorldEvolutionCodex());
     safeRunEffect("startupWorldEvolutionTheme", () => applyWorldEvolutionUiTheme(gameState.settings.worldEvolutionTheme || "deepStar"));
