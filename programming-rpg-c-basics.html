@@ -11,7 +11,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; base-uri 'self'; object-src 'none'; frame-ancestors 'none'; script-src 'self' https://cdn.jsdelivr.net 'nonce-code-awakener-inline' 'sha256-iujx/AM5Kya0TNTV2EMHckZV18mYsAX6nI3VvfxTd1M='; style-src 'self' https://cdn.jsdelivr.net https://fonts.googleapis.com 'nonce-code-awakener-inline' 'sha256-QkHjH3TEFUT/5iWTdOIm2lIbHOm7SxQ9/6W5TWq1ZBM='; font-src 'self' https://cdn.jsdelivr.net https://fonts.gstatic.com data:; img-src 'self' data: blob:; media-src 'self' data: blob:; worker-src 'self' blob:; child-src 'self' blob:; connect-src 'self' https://cdn.jsdelivr.net;">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; base-uri 'self'; object-src 'none'; frame-ancestors 'none'; script-src 'self' https://cdn.jsdelivr.net 'nonce-code-awakener-inline' 'sha256-Zo6QL54JC+OaqfUmESK/Q9+VNYJiooi36qgJZOdkP0A='; style-src 'self' https://cdn.jsdelivr.net https://fonts.googleapis.com 'nonce-code-awakener-inline' 'sha256-QkHjH3TEFUT/5iWTdOIm2lIbHOm7SxQ9/6W5TWq1ZBM='; font-src 'self' https://cdn.jsdelivr.net https://fonts.gstatic.com data:; img-src 'self' data: blob:; media-src 'self' data: blob:; worker-src 'self' blob:; child-src 'self' blob:; connect-src 'self' https://cdn.jsdelivr.net;">
   <title>编程学习 RPG：C 语言启航村</title>
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%23020617'/%3E%3Cpath d='M22 20 10 32l12 12M42 20l12 12-12 12' fill='none' stroke='%2300ff88' stroke-width='6' stroke-linecap='round' stroke-linejoin='round'/%3E%3Cpath d='m36 16-8 32' stroke='%2300ccff' stroke-width='5' stroke-linecap='round'/%3E%3C/svg%3E">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/firacode@6.2.0/distr/fira_code.css">
@@ -8457,9 +8457,9 @@ int main(void) {
         title: "> 消息 / 本次更新",
         lines: [
           "// 作者：杀戮",
-          "// 本次更新：全面加强手机端适配，重点修复手机软键盘无法输入编辑器代码的问题。",
-          "// 代码创世终端已接入 beforeinput 软键盘桥，输入时不再吞字或光标跳位。",
-          "// 移动端编辑器新增“输入代码”按钮，点击后可直接唤起手机键盘。"
+          "// 本次更新：修复手机输入法在编辑器里“输入一个字自动变很多个”的问题。",
+          "// 输入法候选中间态现在只记录不写入，composition 结束后只提交一次正式字符。",
+          "// 关卡编辑器和代码创世终端都已加入同样的防重复输入保护。"
         ]
       },
       {
@@ -8893,7 +8893,7 @@ int main(void) {
       directSaveAs: "reduced-by-inline-resources"
     });
     const SECURITY_CONFIG = Object.freeze({
-      expectedScriptHash: "ly5U6T43eUE/mCC1MxFrp24qJN31R3xUG7JBfAI5Cyg=",
+      expectedScriptHash: "oswGDx/LEPWDnYQKfqIrEoG1kTLmuu4kn5p0inU/NlA=",
       selfCheckIntervalMs: 45000,
       tamperRefreshMs: 5000,
       devToolsRefreshMs: 2000,
@@ -15387,6 +15387,8 @@ int main(void) {
     let codeGenesisSelectionAnchor = null;
     let codeGenesisCompletionInFlight = false;
     let codeGenesisBeforeInputAt = 0;
+    let codeGenesisCompositionState = null;
+    let codeGenesisSuppressNextInsert = null;
 
     function resetCodeGenesisEditorHistory(value = dom.codeGenesisInput?.value || "") {
       codeGenesisEditorHistory.undo = [];
@@ -15480,12 +15482,41 @@ int main(void) {
       if (!dom.codeGenesisOverlay?.classList.contains("active")) return false;
       event.preventDefault?.();
       event.stopPropagation?.();
+      if (event.inputType === "insertCompositionText" || event.inputType === "deleteCompositionText") {
+        codeGenesisBeforeInputAt = performance.now();
+        codeGenesisCompositionState ||= getCodeGenesisEditorState();
+        return true;
+      }
+      if (event.inputType === "insertText" && codeGenesisSuppressNextInsert && performance.now() < codeGenesisSuppressNextInsert.until && event.data === codeGenesisSuppressNextInsert.text) {
+        codeGenesisBeforeInputAt = performance.now();
+        codeGenesisSuppressNextInsert = null;
+        return true;
+      }
+      codeGenesisSuppressNextInsert = null;
       const transferText = event.dataTransfer?.getData?.("text/plain") || "";
       const result = manualEditorOperationFromBeforeInput(getCodeGenesisEditorState(), event.inputType, event.data || "", transferText);
       codeGenesisBeforeInputAt = performance.now();
       if (!result.handled) return true;
       playCodeGenesisTypeSound();
       return commitCodeGenesisEditorOperation(result);
+    }
+
+    function handleCodeGenesisCompositionStart() {
+      if (!dom.codeGenesisOverlay?.classList.contains("active")) return false;
+      codeGenesisCompositionState = getCodeGenesisEditorState();
+      return true;
+    }
+
+    function handleCodeGenesisCompositionEnd(event) {
+      if (!dom.codeGenesisOverlay?.classList.contains("active")) return false;
+      const text = event?.data || "";
+      const state = codeGenesisCompositionState || getCodeGenesisEditorState();
+      codeGenesisCompositionState = null;
+      if (!text) return true;
+      playCodeGenesisTypeSound();
+      commitCodeGenesisEditorOperation(replaceManualEditorSelection(state, text));
+      codeGenesisSuppressNextInsert = { text, until: performance.now() + 160 };
+      return true;
     }
 
     function handleCodeGenesisNativeInputFallback() {
@@ -22372,6 +22403,8 @@ int main(void) {
 
     let manualEditorDragAnchor = null;
     let manualEditorSelectionAnchor = null;
+    let manualEditorCompositionState = null;
+    let manualEditorSuppressNextInsert = null;
 
     function getManualEditorDomState() {
       return {
@@ -22404,7 +22437,10 @@ int main(void) {
 
     function manualEditorOperationFromBeforeInput(state = {}, inputType = "", data = "", transferText = "") {
       const type = String(inputType || "");
-      if (type === "insertText" || type === "insertCompositionText" || type === "insertReplacementText") {
+      if (type === "insertCompositionText" || type === "deleteCompositionText") {
+        return { ...normalizeManualEditorState(state), handled: true, composing: true };
+      }
+      if (type === "insertText" || type === "insertReplacementText" || type === "insertFromComposition") {
         return replaceManualEditorSelection(state, data || "");
       }
       if (type === "insertFromPaste") return replaceManualEditorSelection(state, transferText || data || "");
@@ -22423,10 +22459,37 @@ int main(void) {
       event.preventDefault();
       event.stopPropagation();
       if (dom.codeInput.readOnly) return true;
+      if (event.inputType === "insertCompositionText" || event.inputType === "deleteCompositionText") {
+        manualEditorCompositionState ||= getManualEditorDomState();
+        return true;
+      }
+      if (event.inputType === "insertText" && manualEditorSuppressNextInsert && performance.now() < manualEditorSuppressNextInsert.until && event.data === manualEditorSuppressNextInsert.text) {
+        manualEditorSuppressNextInsert = null;
+        return true;
+      }
+      manualEditorSuppressNextInsert = null;
       const transferText = event.dataTransfer?.getData?.("text/plain") || "";
       const result = manualEditorOperationFromBeforeInput(getManualEditorDomState(), event.inputType, event.data || "", transferText);
       if (!result.handled) return true;
       commitManualEditorOperation(result);
+      return true;
+    }
+
+    function handleManualEditorCompositionStart() {
+      if (!gameState.editorOpen || !dom.codeInput) return false;
+      manualEditorCompositionState = getManualEditorDomState();
+      return true;
+    }
+
+    function handleManualEditorCompositionEnd(event) {
+      if (!gameState.editorOpen || dom.codeInput?.readOnly) return false;
+      const text = event?.data || "";
+      const state = manualEditorCompositionState || getManualEditorDomState();
+      manualEditorCompositionState = null;
+      if (!text) return true;
+      const result = replaceManualEditorSelection(state, text);
+      commitManualEditorOperation(result);
+      manualEditorSuppressNextInsert = { text, until: performance.now() + 160 };
       return true;
     }
 
@@ -29213,6 +29276,8 @@ int main(void) {
     });
 
     dom.codeInput.addEventListener("beforeinput", handleMobileEditorBeforeInput);
+    dom.codeInput.addEventListener("compositionstart", handleManualEditorCompositionStart);
+    dom.codeInput.addEventListener("compositionend", handleManualEditorCompositionEnd);
     dom.codeInput.addEventListener("input", () => {
       pushEditorUndoSnapshot();
       editorHistory.lastValue = dom.codeInput.value;
@@ -29575,6 +29640,8 @@ int main(void) {
     dom.globalErrorContinueButton?.addEventListener("click", closeGlobalErrorDialog);
     dom.globalErrorExportButton?.addEventListener("click", exportBrowserErrorLog);
     dom.codeGenesisInput?.addEventListener("beforeinput", handleCodeGenesisBeforeInput);
+    dom.codeGenesisInput?.addEventListener("compositionstart", handleCodeGenesisCompositionStart);
+    dom.codeGenesisInput?.addEventListener("compositionend", handleCodeGenesisCompositionEnd);
     dom.codeGenesisInput?.addEventListener("input", handleCodeGenesisNativeInputFallback);
     dom.codeGenesisInput?.addEventListener("keydown", handleCodeGenesisTerminalKey);
     dom.codeGenesisInput?.addEventListener("paste", (event) => {

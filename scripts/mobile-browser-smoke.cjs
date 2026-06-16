@@ -81,7 +81,26 @@ async function exerciseCodeGenesis(page) {
       }));
     }, line);
   }
-  for (const line of ["int hp = 88;", 'char name[] = "smoke";', "int level = 1;", "return 0;"]) {
+  await input.evaluate((element) => {
+    element.dispatchEvent(new CompositionEvent("compositionstart", { data: "", bubbles: true }));
+    for (const candidate of ["i", "in", "int"]) {
+      element.dispatchEvent(new InputEvent("beforeinput", {
+        inputType: "insertCompositionText",
+        data: candidate,
+        bubbles: true,
+        cancelable: true
+      }));
+    }
+    element.dispatchEvent(new CompositionEvent("compositionend", { data: "i", bubbles: true }));
+    element.dispatchEvent(new InputEvent("beforeinput", {
+      inputType: "insertText",
+      data: "i",
+      bubbles: true,
+      cancelable: true
+    }));
+  });
+  await softKeyboardLine("nt hp = 88;");
+  for (const line of ['char name[] = "smoke";', "int level = 1;", "return 0;"]) {
     await softKeyboardLine(line);
     await page.waitForTimeout(160);
   }

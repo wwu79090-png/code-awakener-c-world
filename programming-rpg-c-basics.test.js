@@ -1498,6 +1498,10 @@ assert(/function handleManualEditorInputKey/m.test(html), "editor keydown should
 assert(/function shouldDeferTextKeyToMobileBeforeInput/m.test(html), "mobile soft-keyboard keydown should be deferred to beforeinput to prevent duplicate characters");
 assert(/handleEditorCommandKey[\s\S]*shouldDeferTextKeyToMobileBeforeInput/m.test(html), "main editor should avoid double-processing mobile soft-keyboard keydown events");
 assert(/handleCodeGenesisTerminalKey[\s\S]*shouldDeferTextKeyToMobileBeforeInput/m.test(html), "code genesis should avoid cursor jumps from duplicated mobile keydown and beforeinput events");
+assert(/function handleManualEditorCompositionStart/m.test(html) && /function handleManualEditorCompositionEnd/m.test(html), "main editor should commit IME composition only once at compositionend");
+assert(/function handleCodeGenesisCompositionStart/m.test(html) && /function handleCodeGenesisCompositionEnd/m.test(html), "code genesis should commit IME composition only once at compositionend");
+assert(/codeInput\.addEventListener\("compositionstart", handleManualEditorCompositionStart\)/m.test(html), "main editor should listen for composition lifecycle events");
+assert(/codeGenesisInput\?\.addEventListener\("compositionend", handleCodeGenesisCompositionEnd\)/m.test(html), "code genesis should listen for composition lifecycle events");
 assert(/body\.mobile-input \.file-tree,[\s\S]*body\.mobile-input \.task-panel,[\s\S]*body\.mobile-input \.code-explain-panel/m.test(html), "mobile editor should collapse side panels for a single-column code-first layout");
 assert(/body\.mobile-input \.code-genesis-overlay\.active[\s\S]*grid-template-columns:\s*1fr/m.test(html), "mobile code genesis should use a single-column layout");
 assert(/body\.mobile-input\.is-editor-open \.mobile-controls/m.test(html), "mobile joystick should hide while the editor is open");
@@ -1533,6 +1537,8 @@ assert(api.manualEditorOperationFromBeforeInput, "mobile beforeinput operation b
   assert(shiftRight.start === 1 && shiftRight.end === 2, "manual editor Shift+Arrow should extend selection");
   const mobileInsert = api.manualEditorOperationFromBeforeInput({ value: "pr", start: 2, end: 2 }, "insertText", "i");
   assert(mobileInsert.value === "pri" && mobileInsert.start === 3, "mobile soft keyboard insertText should add code characters");
+  const composing = api.manualEditorOperationFromBeforeInput({ value: "i", start: 1, end: 1 }, "insertCompositionText", "in");
+  assert(composing.value === "i" && composing.start === 1 && composing.composing, "IME composition updates should not append provisional candidate text");
   const mobileEnter = api.manualEditorOperationFromBeforeInput({ value: "    if (ok) {", start: 13, end: 13 }, "insertLineBreak");
   assert(mobileEnter.value === "    if (ok) {\n        ", "mobile soft keyboard Enter should preserve indentation");
   const mobileBackspace = api.manualEditorOperationFromBeforeInput({ value: "abc", start: 2, end: 2 }, "deleteContentBackward");
