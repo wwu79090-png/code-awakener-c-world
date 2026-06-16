@@ -306,6 +306,21 @@ int main(void) {
   return 0;
 }`;
 assert(api.inspectRunnableCBeforeRun(syntaxBrokenSolution, api.chapterById.variables).includes("缺少分号"), "runtime judge should still reject real syntax errors");
+const chineseSemicolonSolution = `#include <stdio.h>
+int main(void) {
+  int score = 7；
+  printf("%d", score);
+  return 0;
+}`;
+const chineseSemicolonIssue = api.inspectRunnableCBeforeRun(chineseSemicolonSolution, api.chapterById.variables);
+assert(chineseSemicolonIssue.includes("第3行，第16列") && chineseSemicolonIssue.includes("中文符号“；”") && chineseSemicolonIssue.includes("英文半角分号"), "runtime judge should precisely explain Chinese semicolon syntax errors");
+const chineseIncludeIssue = api.inspectCBeforeRun(`#include ＜stdio.h＞
+int main(void) {
+  printf("Hello, C World!");
+  return 0;
+}`, api.chapterById.hello);
+assert(chineseIncludeIssue.includes("全角小于号") && chineseIncludeIssue.includes("修正示例"), "challenge inspector should explain full-width include delimiters before generic missing include errors");
+assert(/inspectInstantSyntax[\s\S]*inspectLocaleSyntaxIssue/m.test(html), "instant syntax check should use the detailed locale punctuation diagnostics");
 
 const qualityMarkers = [
   "Press Start 2P",
@@ -1067,12 +1082,13 @@ assert(/本项目永久免费对外开放/.test(html), "announcement should incl
 assert(/STARTUP_ANNOUNCEMENT_AUTO_HIDE_MS\s*=\s*3000/m.test(html), "announcement should auto-hide after 3 seconds");
 assert(/function showStartupAnnouncement/m.test(html), "announcement should be controlled by a startup function");
 assert(/id="announcementCloseButton"/m.test(html), "announcement should include a minimal close control");
-assert(/World Build v1\.0\.7/m.test(html) || /GAME_VERSION\s*=\s*"v1\.0\.7"/m.test(html), "game version should increment when shipping a new update");
+assert(/World Build v1\.0\.8/m.test(html) || /GAME_VERSION\s*=\s*"v1\.0\.8"/m.test(html), "game version should increment when shipping a new update");
 assert(/UPDATE_HISTORY\s*=\s*Object\.freeze\(\[[\s\S]*v1\.0\.1[\s\S]*零基础新手指引[\s\S]*v1\.0\.0[\s\S]*手机端适配/m.test(html), "update history should keep detailed previous release notes");
 assert(/id="updateHistoryList"/m.test(html) && /历史更新内容/m.test(html), "side menu should expose update history with detailed usage-visible notes");
-assert(/GAME_VERSION\s*=\s*"v1\.0\.7"/m.test(html), "game version should increment for the stable quality cleanup release");
+assert(/GAME_VERSION\s*=\s*"v1\.0\.8"/m.test(html), "game version should increment for the guidance and performance quieting release");
+assert(/UPDATE_HISTORY\s*=\s*Object\.freeze\(\[[\s\S]*v1\.0\.8[\s\S]*性能保护降噪、透明引导[\s\S]*12秒滚动窗口[\s\S]*15秒无操作/m.test(html), "update history should record the v1.0.8 guidance and performance quieting release");
 assert(/UPDATE_HISTORY\s*=\s*Object\.freeze\(\[[\s\S]*v1\.0\.7[\s\S]*稳定档位移除中档[\s\S]*renderQuality=medium/m.test(html), "update history should record the v1.0.7 stable quality cleanup");
-assert(/UPDATE_ANNOUNCEMENT_PAGES\s*=\s*Object\.freeze\(\[[\s\S]*稳定档位[\s\S]*只保留低\/高[\s\S]*中档/m.test(html), "startup announcement should describe the v1.0.7 stable quality change");
+assert(/UPDATE_ANNOUNCEMENT_PAGES\s*=\s*Object\.freeze\(\[[\s\S]*性能保护[\s\S]*持续严重掉帧[\s\S]*是否需要帮助[\s\S]*手机端右下角“点击开始”按钮已隐藏/m.test(html), "startup announcement should describe the v1.0.8 guidance and performance quieting release");
 assert(/UPDATE_HISTORY\s*=\s*Object\.freeze\(\[[\s\S]*v1\.0\.6[\s\S]*绝对引导系统[\s\S]*错误行标红/m.test(html), "update history should record the v1.0.6 absolute guide release");
 assert(/UPDATE_HISTORY\s*=\s*Object\.freeze\(\[[\s\S]*v1\.0\.5[\s\S]*新手教程热修复[\s\S]*不卡死[\s\S]*跳过可用/m.test(html), "update history should record the v1.0.5 novice guide hotfix");
 assert(/UPDATE_HISTORY\s*=\s*Object\.freeze\(\[[\s\S]*v1\.0\.3[\s\S]*手机横屏全屏[\s\S]*触摸对话/m.test(html), "update history should record the v1.0.3 mobile landscape release");
@@ -1397,7 +1413,7 @@ assert(/resetEffectDowngrades[\s\S]*quality downgrades reset/m.test(html), "manu
 assert(/body\[data-render-quality="low"\][\s\S]*#cinematicFxCanvas/m.test(html), "low render quality should visibly reduce expensive overlay work");
 assert(/const PERFORMANCE_DEGRADE_SEQUENCE\s*=\s*Object\.freeze\(\["ssao", "particles", "bloom"\]\)/m.test(html), "performance downgrade order should be SSAO -> particles -> Bloom");
 assert(/class RollingFpsDegrader/m.test(html), "performance system should monitor a rolling FPS window");
-assert(/averageWindowMs:\s*5000/m.test(html) && /thresholdFps:\s*22/m.test(html), "performance protection should only trigger after sustained severe FPS drops");
+assert(/averageWindowMs:\s*12000/m.test(html) && /thresholdFps:\s*18/m.test(html) && /actionCooldownMs:\s*30000/m.test(html), "performance protection should only trigger after long sustained severe FPS drops");
 assert(/function suspendSceneForEditor/m.test(html), "editor mode should fully suspend gameplay simulation work");
 assert(/function isObjectInsideCameraView/m.test(html), "off-camera animation and particles should be culled");
 assert(/const CHAPTER_REGION_LAYOUT\s*=\s*Object\.freeze/m.test(html), "map should define isolated chapter regions");
@@ -1425,12 +1441,14 @@ assert(/function recoverSaveFromBackup/m.test(html), "save corruption should rec
 assert(/function pruneOldSaveBackups/m.test(html), "settings should be able to clear old save backups");
 assert(/id="clearOldSavesButton"/m.test(html), "settings should expose a clear old saves button");
 assert(/id="mobileControls"/m.test(html) && /id="virtualJoystick"/m.test(html) && /id="mobileInteractButton"/m.test(html), "touch devices should have virtual joystick and interact button");
+assert(/body\.mobile-input\.is-settings-open \.mobile-controls[\s\S]*display:\s*none/m.test(html) && /document\.body\.classList\.add\("is-settings-open"\)/m.test(html), "mobile controls should hide while settings is open");
 assert(/function detectMobileInputMode/m.test(html), "mobile mode should be detected by width and touch capability");
 assert(/function applyMobileEditorLayout/m.test(html), "small screens should switch editor to compact layout");
 assert(/function installGameErrorBoundary/m.test(html), "game should install an outer error boundary");
 assert(/function attemptSceneAutoRepair/m.test(html), "error boundary should try to reload scene data");
 assert(/id="errorRecoveryToast"/m.test(html), "recoverable errors should show a pixel repair toast");
 assert(/id="audioStartButton"/m.test(html), "main menu should expose a click-to-start audio bootstrap button");
+assert(/@media \(max-width: 820px\), \(pointer: coarse\)[\s\S]*\.audio-start-button[\s\S]*display:\s*none !important/m.test(html), "mobile should hide the redundant click-to-start audio button");
 assert(/function initializeAudioFromGesture/m.test(html), "audio context should initialize from a user gesture");
 assert(/function playBootAudioCue/m.test(html), "startup audio cue should be generated without extra assets");
 assert(/function announceA11yEvent/m.test(html), "important events should be announced through an accessibility helper");
@@ -1443,6 +1461,16 @@ assert(/function recordTelemetryEvent/m.test(html), "optional telemetry should r
 assert(/function flushTelemetryQueue/m.test(html), "optional telemetry should be able to POST when enabled");
 assert(/function easeOvershoot/m.test(html), "UI transitions should include a physical overshoot easing helper");
 assert(/bezierFragmentArc/m.test(html), "fragment collection should use a bezier arc helper");
+assert(/Final Art Direction Pass/m.test(html) && /--ui-motion:\s*cubic-bezier\(0\.2,\s*0\.9,\s*0\.4,\s*1\)/m.test(html), "final polish should define a unified visual language and motion curve");
+assert(/\.info-side-menu::before[\s\S]*background-size:\s*56px 56px/m.test(html), "side menu should have a subtle circuit texture tying UI to the world");
+assert(/\.info-side-menu\s*\{[\s\S]*overflow-y:\s*auto[\s\S]*-webkit-overflow-scrolling:\s*touch/m.test(html), "mobile side menu should remain vertically scrollable after visual polish");
+assert(/function getUnifiedFeedbackTier/m.test(html) && /data-feedback-tier/m.test(html), "dynamic island feedback should use unified normal/important/epic tiers");
+assert(/document\.body\.classList\.toggle\("is-menu-open", next\)/m.test(html) && /document\.body\.classList\.add\("is-dialog-open"\)/m.test(html), "menu and dialog states should dim the playfield consistently");
+assert(/body\.mobile-input \.absolute-guide-chip:not\(\.primary\)[\s\S]*display:\s*none !important/m.test(html), "mobile absolute guide should keep only one transparent top hint visible");
+assert(/\.dynamic-island-toast,[\s\S]*\.bottom-action-bar,[\s\S]*\.save-toast[\s\S]*rgba\(3, 7, 18, 0\.42\)/m.test(html), "transient popups should use transparent glass instead of blocking panels");
+assert(/function ensurePopupCollapseControl/m.test(html) && /COLLAPSIBLE_POPUP_SELECTORS\s*=\s*Object\.freeze/m.test(html), "all major popup surfaces should get a shared collapse control");
+assert(/\.collapsible-glass-popup\.popup-collapsed[\s\S]*max-height:\s*42px/m.test(html), "collapsed popups should shrink into a transparent compact strip");
+assert(/safeRunEffect\("startupPopupCollapseControls"[\s\S]*refreshPopupCollapseControls/m.test(html), "popup collapse controls should be installed during startup");
 assert(/function queueEditorFlowMessage/m.test(html), "editor mode should suppress non-urgent popups");
 assert(/function playLayeredRewardSound/m.test(html), "reward audio should support layered pitch progression");
 assert(/function updateNpcGazeTracking/m.test(html), "NPCs should track the player nearby");
@@ -1671,6 +1699,7 @@ assert(/noviceGuideCompleted/m.test(html) && /localStorage\.setItem\("noviceGuid
 assert(/id="absoluteGuideLayer"/m.test(html), "absolute guide should include a non-blocking guidance layer");
 assert(/ABSOLUTE_GUIDE_STAGES\s*=\s*Object\.freeze/m.test(html), "absolute guide stages should be centralized");
 assert(/function startAbsoluteGuide/m.test(html) && /function updateAbsoluteGuide/m.test(html), "absolute guide should have explicit start and update functions");
+assert(/ABSOLUTE_GUIDE_IDLE_MS\s*=\s*15000/m.test(html) && /ABSOLUTE_GUIDE_HELP_COOLDOWN_MS\s*=\s*60000/m.test(html), "absolute guide idle help should wait longer and avoid frequent repeated prompts");
 assert(/function recordAbsoluteGuideCompileError/m.test(html) && /function highlightEditorErrorLine/m.test(html), "absolute guide should escalate compile errors and highlight the wrong line");
 assert(/fileName\.endsWith\("\.md"\)\)\s*return escapeHtml\(code\)/m.test(html), "README task notes should render as escaped plain text instead of leaking syntax-highlight markup");
 assert(/classList\.toggle\("readme-mode", fileName === "README\.md"\)/m.test(html), "switching to README should enable wrapped document mode");

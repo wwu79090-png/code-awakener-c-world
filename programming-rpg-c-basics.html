@@ -11,7 +11,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; base-uri 'self'; object-src 'none'; frame-ancestors 'none'; script-src 'self' https://cdn.jsdelivr.net 'nonce-code-awakener-inline' 'sha256-G00nL7EQ9yWgoFbPm4XodQnNDhq8GnzxqVbTVh+7F78='; style-src 'self' https://cdn.jsdelivr.net https://fonts.googleapis.com 'nonce-code-awakener-inline' 'sha256-5AG3yNXZyWd//gUrxhjhEnXw/C1iC9nf8JmChRf1vYg='; style-src-attr 'unsafe-inline'; font-src 'self' https://cdn.jsdelivr.net https://fonts.gstatic.com data:; img-src 'self' data: blob:; media-src 'self' data: blob:; worker-src 'self' blob:; child-src 'self' blob:; connect-src 'self' https://cdn.jsdelivr.net http://localhost:8000 http://127.0.0.1:8000;">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; base-uri 'self'; object-src 'none'; frame-ancestors 'none'; script-src 'self' https://cdn.jsdelivr.net 'nonce-code-awakener-inline' 'sha256-v8qNcbndJpPmj+YbMLlmxqtQpXBkme5as+TEFl5YUfM='; style-src 'self' https://cdn.jsdelivr.net https://fonts.googleapis.com 'nonce-code-awakener-inline' 'sha256-uZA6c3hD1nzLpbZHOfWAXLgRN3eaaZwAWtNurC99EBA='; style-src-attr 'unsafe-inline'; font-src 'self' https://cdn.jsdelivr.net https://fonts.gstatic.com data:; img-src 'self' data: blob:; media-src 'self' data: blob:; worker-src 'self' blob:; child-src 'self' blob:; connect-src 'self' https://cdn.jsdelivr.net http://localhost:8000 http://127.0.0.1:8000;">
   <title>编程学习 RPG：C 语言启航村</title>
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%23020617'/%3E%3Cpath d='M22 20 10 32l12 12M42 20l12 12-12 12' fill='none' stroke='%2300ff88' stroke-width='6' stroke-linecap='round' stroke-linejoin='round'/%3E%3Cpath d='m36 16-8 32' stroke='%2300ccff' stroke-width='5' stroke-linecap='round'/%3E%3C/svg%3E">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/firacode@6.2.0/distr/fira_code.css">
@@ -8139,6 +8139,13 @@
       pointer-events: none;
     }
 
+    @media (max-width: 820px), (pointer: coarse) {
+      .audio-start-button {
+        display: none !important;
+        pointer-events: none !important;
+      }
+    }
+
     body[data-world-evolution-theme="deepStar"] {
       --world-ui-accent: #38bdf8;
       --world-ui-accent-soft: rgba(56, 189, 248, 0.22);
@@ -8187,6 +8194,9 @@
     }
 
     body.mobile-input.is-editor-open .mobile-controls,
+    body.mobile-input.is-settings-open .mobile-controls,
+    body.mobile-input.menu-open .mobile-controls,
+    body.mobile-input.is-paused .mobile-controls,
     body.mobile-input:has(.code-genesis-overlay.active) .mobile-controls {
       display: none;
     }
@@ -9109,6 +9119,450 @@
       .editor-guide-grid {
         grid-template-columns: 1fr;
         max-height: 52vh;
+      }
+    }
+
+    /* Final Art Direction Pass
+       目标：不删功能、不改教学内容，只统一字体、色彩、动效和视觉层级，
+       让大量系统看起来属于同一个“星穹代码”世界。 */
+    :root {
+      --font-title: 'JetBrains Mono', 'Fira Code', ui-monospace, monospace;
+      --font-ui: 'JetBrains Mono', 'Fira Code', ui-monospace, monospace;
+      --font-editor: 'JetBrains Mono', 'Fira Code', Consolas, ui-monospace, monospace;
+      --ui-bg-deep: #050914;
+      --ui-bg-panel: rgba(8, 14, 26, 0.76);
+      --ui-bg-panel-strong: rgba(7, 12, 24, 0.9);
+      --ui-line-soft: rgba(125, 211, 252, 0.22);
+      --ui-line-strong: rgba(125, 211, 252, 0.48);
+      --ui-text-primary: #e6f3ff;
+      --ui-text-secondary: #9fb6c9;
+      --ui-text-muted: #72859a;
+      --ui-primary: #38bdf8;
+      --ui-primary-soft: rgba(56, 189, 248, 0.2);
+      --ui-accent: #f6c85f;
+      --ui-accent-soft: rgba(246, 200, 95, 0.18);
+      --ui-success: #5eead4;
+      --ui-danger: #fb7185;
+      --ui-purple: #8b5cf6;
+      --ui-radius-sm: 12px;
+      --ui-radius-md: 18px;
+      --ui-radius-lg: 24px;
+      --ui-motion: cubic-bezier(0.2, 0.9, 0.4, 1);
+      --ui-duration-fast: 160ms;
+      --ui-duration: 240ms;
+      --ui-duration-slow: 320ms;
+      --ui-shadow-soft: 0 18px 50px rgba(0, 0, 0, 0.34);
+      --ui-shadow-glow: 0 0 24px rgba(56, 189, 248, 0.16);
+    }
+
+    body {
+      color: var(--ui-text-primary);
+      font-family: var(--font-ui);
+      letter-spacing: 0;
+    }
+
+    .game-logo,
+    .info-menu-title,
+    .menu-title,
+    .world-card h3,
+    .startup-announcement-title,
+    .code-genesis-helper-title {
+      font-family: var(--font-title);
+      letter-spacing: 0;
+      color: var(--ui-text-primary);
+    }
+
+    #codeInput,
+    #highlightLayer,
+    #lineNumbers,
+    .code-genesis-input,
+    .code-genesis-output,
+    .code-view,
+    .code-block,
+    pre,
+    code {
+      font-family: var(--font-editor);
+      letter-spacing: 0;
+      line-height: 1.62;
+    }
+
+    .glass-panel,
+    .info-side-menu,
+    .dynamic-island-toast,
+    .startup-announcement-island,
+    .security-mascot-toast,
+    .bottom-action-bar,
+    .npc-head-island,
+    .choice-window.choice-island .choice-panel,
+    .vscode-window,
+    .code-genesis-terminal,
+    .code-genesis-preview,
+    .absolute-guide-chip,
+    .absolute-guide-help,
+    .pixel-loading-box,
+    .global-error-window {
+      border-color: var(--ui-line-soft) !important;
+      border-radius: var(--ui-radius-lg);
+      background:
+        linear-gradient(135deg, rgba(125, 211, 252, 0.035), transparent 42%),
+        linear-gradient(180deg, var(--ui-bg-panel), rgba(8, 13, 26, 0.58)) !important;
+      box-shadow: var(--ui-shadow-soft), var(--ui-shadow-glow);
+      backdrop-filter: blur(18px) saturate(1.12);
+    }
+
+    .info-side-menu {
+      overflow-x: hidden;
+      overflow-y: auto;
+      overscroll-behavior: contain;
+      -webkit-overflow-scrolling: touch;
+      touch-action: pan-y;
+      isolation: isolate;
+    }
+
+    .info-side-menu::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      z-index: -1;
+      pointer-events: none;
+      opacity: 0.18;
+      background:
+        linear-gradient(90deg, transparent 0 27px, rgba(125, 211, 252, 0.2) 28px, transparent 29px),
+        linear-gradient(0deg, transparent 0 27px, rgba(246, 200, 95, 0.12) 28px, transparent 29px);
+      background-size: 56px 56px;
+      mask-image: linear-gradient(180deg, rgba(0, 0, 0, 0.72), transparent 92%);
+    }
+
+    .info-menu-section,
+    .info-menu-group,
+    .fragment-card,
+    .skill-card,
+    .world-card,
+    .task-panel,
+    .code-explain-panel {
+      border-color: rgba(125, 211, 252, 0.18) !important;
+      border-radius: var(--ui-radius-md) !important;
+      background: rgba(7, 12, 24, 0.52) !important;
+      box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.018);
+    }
+
+    .pixel-button,
+    button,
+    select,
+    input[type="range"] {
+      transition:
+        transform var(--ui-duration-fast) var(--ui-motion),
+        border-color var(--ui-duration-fast) var(--ui-motion),
+        background var(--ui-duration-fast) var(--ui-motion),
+        box-shadow var(--ui-duration-fast) var(--ui-motion),
+        opacity var(--ui-duration-fast) var(--ui-motion);
+    }
+
+    .pixel-button {
+      border-color: rgba(125, 211, 252, 0.34) !important;
+      border-radius: var(--ui-radius-sm) !important;
+      color: var(--ui-text-primary);
+      background: linear-gradient(180deg, rgba(14, 28, 45, 0.72), rgba(6, 12, 24, 0.74)) !important;
+      box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.02);
+    }
+
+    .pixel-button:hover,
+    .pixel-button:focus-visible {
+      border-color: var(--ui-line-strong) !important;
+      transform: translateY(-1px);
+      box-shadow: 0 0 18px rgba(56, 189, 248, 0.16);
+    }
+
+    .pixel-button:active {
+      transform: translateY(1px) scale(0.99);
+      box-shadow: inset 0 0 18px rgba(0, 0, 0, 0.22);
+    }
+
+    .danger-button {
+      border-color: rgba(251, 113, 133, 0.38) !important;
+      color: #fecdd3 !important;
+    }
+
+    .dynamic-island-toast,
+    .startup-announcement-island,
+    .security-mascot-toast,
+    .save-toast,
+    .quest-progress-toast,
+    .choice-feedback-island {
+      border-radius: 999px !important;
+      min-height: 40px;
+      color: var(--ui-text-primary);
+      transition:
+        transform var(--ui-duration) var(--ui-motion),
+        opacity var(--ui-duration) var(--ui-motion),
+        box-shadow var(--ui-duration) var(--ui-motion);
+    }
+
+    .dynamic-island-toast,
+    .startup-announcement-island,
+    .security-mascot-toast,
+    .quest-progress-toast,
+    .choice-feedback-island,
+    .bottom-action-bar,
+    .save-toast {
+      background:
+        linear-gradient(135deg, rgba(125, 211, 252, 0.035), transparent 44%),
+        rgba(3, 7, 18, 0.42) !important;
+      backdrop-filter: blur(10px) saturate(1.08);
+      -webkit-backdrop-filter: blur(10px) saturate(1.08);
+    }
+
+    .dialog-box,
+    #dialog,
+    .npc-head-island,
+    .choice-window.choice-island .choice-panel {
+      background:
+        linear-gradient(135deg, rgba(125, 211, 252, 0.035), transparent 44%),
+        rgba(3, 7, 18, 0.48) !important;
+      backdrop-filter: blur(12px) saturate(1.08);
+      -webkit-backdrop-filter: blur(12px) saturate(1.08);
+    }
+
+    /* 通用弹窗折叠器：所有信息弹层都能一键收起成透明小条，避免遮挡视野。 */
+    .collapsible-glass-popup {
+      position: relative;
+      background:
+        linear-gradient(135deg, rgba(125, 211, 252, 0.03), transparent 44%),
+        rgba(3, 7, 18, 0.34) !important;
+    }
+
+    .popup-collapse-button {
+      position: absolute;
+      top: 6px;
+      right: 8px;
+      z-index: 8;
+      display: grid;
+      place-items: center;
+      width: 30px;
+      height: 30px;
+      border: 1px solid rgba(125, 211, 252, 0.26);
+      border-radius: 999px;
+      color: rgba(230, 243, 255, 0.86);
+      background: rgba(3, 7, 18, 0.34);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      cursor: pointer;
+      transition: transform var(--ui-duration-fast) var(--ui-motion), opacity var(--ui-duration-fast) var(--ui-motion), background var(--ui-duration-fast) var(--ui-motion);
+    }
+
+    .popup-collapse-button:hover,
+    .popup-collapse-button:focus-visible {
+      opacity: 1;
+      transform: translateY(-1px);
+      background: rgba(8, 20, 36, 0.62);
+    }
+
+    .collapsible-glass-popup.popup-collapsed {
+      max-height: 42px !important;
+      min-height: 36px !important;
+      overflow: hidden !important;
+      opacity: 0.58 !important;
+      transform: translateY(0) scale(0.985);
+      background: rgba(3, 7, 18, 0.22) !important;
+      box-shadow: 0 6px 18px rgba(0, 0, 0, 0.16) !important;
+    }
+
+    .collapsible-glass-popup.popup-collapsed > :not(.popup-collapse-button) {
+      opacity: 0 !important;
+      visibility: hidden !important;
+      pointer-events: none !important;
+    }
+
+    .collapsible-glass-popup.popup-collapsed::after {
+      content: "已折叠";
+      position: absolute;
+      left: 14px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: rgba(230, 243, 255, 0.66);
+      font: 700 12px/1 var(--font-code);
+      pointer-events: none;
+    }
+
+    .dynamic-island-toast[data-feedback-tier="normal"] {
+      box-shadow: 0 12px 36px rgba(0, 0, 0, 0.28), 0 0 16px rgba(56, 189, 248, 0.1);
+    }
+
+    .dynamic-island-toast[data-feedback-tier="important"] {
+      border-color: rgba(246, 200, 95, 0.48) !important;
+      box-shadow: 0 14px 42px rgba(0, 0, 0, 0.32), 0 0 22px rgba(246, 200, 95, 0.18);
+    }
+
+    .dynamic-island-toast[data-feedback-tier="epic"] {
+      border-color: rgba(94, 234, 212, 0.62) !important;
+      box-shadow: 0 18px 60px rgba(0, 0, 0, 0.36), 0 0 34px rgba(94, 234, 212, 0.24);
+    }
+
+    .island-toast-message,
+    .browser-shortcut-warning,
+    .absolute-guide-chip strong,
+    .info-menu-section,
+    .info-menu-group-summary,
+    .setting-row,
+    .dialog-text {
+      font-size: clamp(12px, 1.7vw, 14px);
+      line-height: 1.65;
+      color: var(--ui-text-primary);
+    }
+
+    .info-menu-intro,
+    .info-menu-group-desc,
+    .menu-help,
+    .setting-description,
+    .code-explain-tip,
+    .dialog-help {
+      color: var(--ui-text-secondary) !important;
+      line-height: 1.65;
+    }
+
+    #postProcessOverlay {
+      opacity: 0.58;
+      mix-blend-mode: screen;
+    }
+
+    #cinematicFxCanvas,
+    #crtNoiseCanvas {
+      opacity: 0.72;
+    }
+
+    body:not(.editor-open):not(.novice-guide-active):not(.cinematic-epic) #game canvas {
+      filter:
+        saturate(calc(var(--cinematic-lut-saturate) * 0.92))
+        contrast(0.96)
+        brightness(0.96);
+    }
+
+    body.is-menu-open #game canvas,
+    body.is-dialog-open #game canvas {
+      filter: saturate(0.86) contrast(0.9) brightness(0.82);
+    }
+
+    body.absolute-guide-active #game canvas {
+      filter: saturate(0.96) contrast(0.96) brightness(0.96);
+    }
+
+    .compiler-spark,
+    .editor-open-particle,
+    .fragment-guide-toast,
+    .quest-progress-toast {
+      filter: saturate(0.92);
+    }
+
+    /* 引导降噪：引导信息只做边缘辅助，不再盖住玩家视野。 */
+    .absolute-guide-stack {
+      top: max(8px, env(safe-area-inset-top));
+      left: max(86px, calc(env(safe-area-inset-left) + 86px));
+      right: max(12px, env(safe-area-inset-right));
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 6px;
+      max-width: none;
+      pointer-events: none;
+    }
+
+    .absolute-guide-chip {
+      min-height: 30px;
+      padding: 5px 10px;
+      border-radius: 999px !important;
+      background: rgba(3, 7, 18, 0.24) !important;
+      border-color: rgba(125, 211, 252, 0.22) !important;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.16) !important;
+      backdrop-filter: blur(8px) saturate(1.08);
+      -webkit-backdrop-filter: blur(8px) saturate(1.08);
+      opacity: 0.74;
+    }
+
+    .absolute-guide-chip.primary {
+      border-color: rgba(246, 200, 95, 0.34) !important;
+      opacity: 0.82;
+    }
+
+    .absolute-guide-tag {
+      margin-bottom: 1px;
+      font-size: 9px;
+      color: rgba(103, 232, 249, 0.86);
+    }
+
+    .absolute-guide-chip strong {
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      font: 800 clamp(11px, 1.1vw, 13px)/1.25 var(--font-code);
+    }
+
+    .absolute-guide-help {
+      left: auto;
+      right: max(16px, env(safe-area-inset-right));
+      bottom: max(92px, calc(env(safe-area-inset-bottom) + 92px));
+      width: min(340px, calc(100vw - 128px));
+      padding: 12px;
+      border-radius: 20px;
+      background: rgba(3, 7, 18, 0.42) !important;
+      border-color: rgba(246, 200, 95, 0.28) !important;
+      box-shadow: 0 12px 28px rgba(0, 0, 0, 0.22) !important;
+      backdrop-filter: blur(10px) saturate(1.1);
+      -webkit-backdrop-filter: blur(10px) saturate(1.1);
+    }
+
+    .absolute-guide-help.show {
+      opacity: 0.88;
+    }
+
+    .absolute-guide-help p {
+      font-size: 12px;
+      line-height: 1.45;
+    }
+
+    @media (max-width: 820px), (pointer: coarse) {
+      .info-side-menu {
+        width: min(85vw, 340px);
+        border-radius: 0 var(--ui-radius-lg) var(--ui-radius-lg) 0;
+      }
+
+      .dynamic-island-toast,
+      .startup-announcement-island,
+      .security-mascot-toast {
+        width: min(92vw, 560px);
+        min-height: 42px;
+      }
+
+      .pixel-button {
+        min-height: 44px;
+      }
+
+      body.mobile-input .absolute-guide-stack {
+        left: max(84px, calc(env(safe-area-inset-left) + 84px));
+        right: max(10px, env(safe-area-inset-right));
+        grid-template-columns: 1fr;
+      }
+
+      body.mobile-input .absolute-guide-chip:not(.primary) {
+        display: none !important;
+      }
+
+      body.mobile-input .absolute-guide-chip {
+        max-width: none;
+        min-height: 32px;
+        opacity: 0.68;
+      }
+
+      body.mobile-input .absolute-guide-chip.primary {
+        opacity: 0.78;
+      }
+
+      body.mobile-input .absolute-guide-help {
+        right: max(12px, env(safe-area-inset-right));
+        bottom: max(86px, calc(env(safe-area-inset-bottom) + 86px));
+        width: min(300px, calc(100vw - 118px));
+        opacity: 0;
+      }
+
+      body.mobile-input .absolute-guide-help.show {
+        opacity: 0.82;
       }
     }
 
@@ -10630,25 +11084,26 @@ int main() {
     const SAVE_SIGNATURE_SALT = "c-world-local-integrity";
     const SAVE_CLEAR_CONFIRM_MS = 3000;
     const STARTUP_ANNOUNCEMENT_AUTO_HIDE_MS = 3000;
-    const GAME_VERSION = "v1.0.7";
+    const GAME_VERSION = "v1.0.8";
     const UPDATE_ANNOUNCEMENT_PAGES = Object.freeze([
       {
         title: "> 消息 / 本次更新",
         lines: [
           "// 作者：杀戮",
-          "// 本次更新：防白屏“稳定档位”只保留低/高，移除会闪白的中档。",
-          "// 积木拼装已整理：点过的积木会从可选区消失，避免重复误点。",
-          "// 编辑器 README 说明改为纯文本文档模式，长内容自动换行。",
-          "// 手机端积木区改为横向滑动，界面更干净。"
+          "// 本次更新：性能保护改为保守触发，持续严重掉帧才会自动降级。",
+          "// “是否需要帮助”改为长时间无操作才出现，并增加冷却，避免频繁打扰。",
+          "// 手机端右下角“点击开始”按钮已隐藏，首次触摸仍会自动启用音频。",
+          "// 引导与弹窗改为更透明、更贴边，不再遮挡游戏视野。",
+          "// 编辑器错误会指出第几行第几列，并识别中文符号/全角符号。"
         ]
       },
       {
-        title: "> 更新内容 / 界面整理",
+        title: "> 更新内容 / 体验降噪",
         lines: [
-          "// 旧存档里如果保存了稳定中档，会自动迁移到高档。",
-          "// 积木教程默认隐藏右侧复杂说明，只保留当前操作。",
-          "// 右侧解析和任务说明仍保留，但在新手积木模式下先收起。",
-          "// 信息菜单继续按5个分组折叠，减少第一眼压力。"
+          "// 性能保护从短窗口检测改为12秒滚动窗口，低于18FPS才处理。",
+          "// 每次自动降级至少间隔30秒，防止连续弹提示。",
+          "// 绝对引导求助从3秒延长到15秒，并且点“不用”后长时间不再出现。",
+          "// 统一字体、色彩、动效和玻璃面板纹理，让功能界面更干净。"
         ]
       },
       {
@@ -10662,6 +11117,22 @@ int main() {
       }
     ]);
     const UPDATE_HISTORY = Object.freeze([
+      {
+        version: "v1.0.8",
+        date: "2026-06-16",
+        title: "性能保护降噪、透明引导与整体视觉层级打磨",
+        details: [
+          "性能保护改为12秒滚动窗口，只有平均帧率持续低于18FPS才自动降级。",
+          "每次自动降级至少间隔30秒，避免连续弹出性能提示影响游玩。",
+          "绝对引导“是否需要帮助”从3秒延长为15秒无操作，并加入60秒冷却。",
+          "玩家点击“不用”后会记录较长冷却，不会很快再次打扰。",
+          "手机版隐藏右下角“点击开始”音频按钮，首次触摸或点击仍会自动解锁音频。",
+          "新增最终视觉整合层：统一字体、调色盘、玻璃面板纹理和 UI 动效曲线。",
+          "绝对引导在手机端只保留一条半透明顶部提示，目标/反馈卡片不再常驻遮挡。",
+          "灵动岛、底部动作条、对话栏等弹层统一降低不透明度，减少对主画面的遮挡。",
+          "编辑器新增中文符号诊断：中文分号、中文括号、全角引号等会显示具体行列、错误点和修正示例。"
+        ]
+      },
       {
         version: "v1.0.7",
         date: "2026-06-16",
@@ -10685,7 +11156,7 @@ int main() {
           "编辑器打开后自动展开导师解析，并在控制台补充每一行代码的中文解释。",
           "编译失败会把具体错误行用红色底色标出，并显示不超过15字的可执行提示。",
           "连续两次写错后提示英文分号；继续写错后直接给示例代码，帮助零基础玩家脱困。",
-          "玩家停留超过3秒会出现“是否需要帮助”小卡片，确认后只强化当前一步，不弹大型说明。",
+          "玩家长时间停留会出现“是否需要帮助”小卡片，确认后只强化当前一步，不弹大型说明。",
           "左侧菜单按当前任务、新手学习、记录收藏、世界与角色、设置备份重新聚合，减少第一眼信息压力。"
         ]
       },
@@ -11396,7 +11867,7 @@ return 0;`;
       directSaveAs: "reduced-by-inline-resources"
     });
     const SECURITY_CONFIG = Object.freeze({
-      expectedScriptHash: "RnhT7bwAJDAB4Ms6lN6UmB7hdXSNXBYjDU2J2EYSIC8=",
+      expectedScriptHash: "5ccUZFYOJXZzodbkX/ppeiyQKCB23NPRR/2lZS1ZR08=",
       selfCheckIntervalMs: 45000,
       tamperRefreshMs: 5000,
       devToolsRefreshMs: 2000,
@@ -13518,7 +13989,8 @@ return 0;`;
         this.samples = this.samples.filter((sample) => now - sample.now <= this.config.averageWindowMs);
         const average = this.samples.reduce((sum, sample) => sum + sample.fps, 0) / Math.max(1, this.samples.length);
         this.renderStatus(average);
-        if (average < this.config.thresholdFps && now - this.lastActionAt > this.config.averageWindowMs) {
+        const cooldownMs = this.config.actionCooldownMs || this.config.averageWindowMs;
+        if (average < this.config.thresholdFps && now - this.lastActionAt > cooldownMs) {
           this.applyNextDowngrade(average, now);
         }
         if (average > this.config.recoveryFps && this.degradeIndex > 0) {
@@ -13534,19 +14006,19 @@ return 0;`;
         this.degradeIndex += 1;
         const runtime = gameState.runtimeRenderDowngrade || (gameState.runtimeRenderDowngrade = {});
         if (step === "ssao") {
-          renderSafetyManager?.disableEffect("ssao", `3s average FPS ${average.toFixed(1)}`);
+          renderSafetyManager?.disableEffect("ssao", `12s average FPS ${average.toFixed(1)}`);
           runtime.ssao = false;
         }
         if (step === "particles") {
           runtime.particleScale = Math.min(runtime.particleScale || 1, 0.52);
-          renderSafetyManager?.disableEffect("ambientParticles", `3s average FPS ${average.toFixed(1)}`);
+          renderSafetyManager?.disableEffect("ambientParticles", `12s average FPS ${average.toFixed(1)}`);
         }
         if (step === "bloom") {
           gameState.settings.effectSwitches.bloom = false;
           renderSafetyManager?.disableEffect("bloom", `3s average FPS ${average.toFixed(1)}`);
           applyGlobalPostProcessing();
         }
-        showBrowserShortcutWarning(`性能保护：过去3秒平均 ${Math.round(average)} FPS，已自动降低 ${step}。`);
+        showBrowserShortcutWarning(`性能保护：过去12秒平均 ${Math.round(average)} FPS，已自动降低 ${step}。`);
         console.warn(`[PERF] rolling downgrade ${step}`, { averageFps: average });
         return step;
       }
@@ -16181,8 +16653,9 @@ int main(void) {
 
     const PERFORMANCE_DEGRADE_SEQUENCE = Object.freeze(["ssao", "particles", "bloom"]);
     const ROLLING_FPS_DEGRADE_CONFIG = Object.freeze({
-      averageWindowMs: 5000,
-      thresholdFps: 22,
+      averageWindowMs: 12000,
+      thresholdFps: 18,
+      actionCooldownMs: 30000,
       recoveryFps: 56
     });
 
@@ -16577,6 +17050,24 @@ int main(void) {
     let startupAnnouncementTimer = null;
     let islandToastTimer = null;
     const islandToastQueue = [];
+    const COLLAPSIBLE_POPUP_SELECTORS = Object.freeze([
+      "#rewardToast",
+      "#startupAnnouncement",
+      "#securityMascotToast",
+      "#browserShortcutWarning",
+      "#questProgressToast",
+      "#choiceFeedbackIsland",
+      "#errorRecoveryToast",
+      "#saveToast",
+      "#absoluteGuideHelp",
+      "#bottomActionBar",
+      "#dialog",
+      "#npcCodeWindow",
+      ".choice-window.choice-island .choice-panel",
+      ".global-error-window",
+      ".system-log-window",
+      ".code-road-window"
+    ]);
     let autocompleteItems = [];
     let autocompleteIndex = 0;
     const recentFragmentUnlocks = new Set();
@@ -17115,7 +17606,10 @@ int main(void) {
     };
 
     const ABSOLUTE_GUIDE_FIRST_TEN_MS = 10 * 60 * 1000;
-    const ABSOLUTE_GUIDE_IDLE_MS = 3000;
+    const ABSOLUTE_GUIDE_IDLE_MS = 15000;
+    const ABSOLUTE_GUIDE_HELP_COOLDOWN_MS = 60000;
+    const ABSOLUTE_GUIDE_HELP_DISMISS_MS = 10 * 60 * 1000;
+    const ABSOLUTE_GUIDE_HELP_AUTO_HIDE_MS = 5000;
     const ABSOLUTE_GUIDE_STAGES = Object.freeze({
       welcome: {
         prompt: "先找到第一块石碑",
@@ -17275,14 +17769,15 @@ int main(void) {
 
     function showAbsoluteGuideHelp() {
       if (!absoluteGuideRuntime.active || !dom.absoluteGuideHelp) return false;
-      if (performance.now() - absoluteGuideRuntime.helpShownAt < 7000) return false;
+      if (performance.now() - absoluteGuideRuntime.helpShownAt < ABSOLUTE_GUIDE_HELP_COOLDOWN_MS) return false;
+      if (Date.now() - Number(gameState.progress.absoluteGuideHelpDismissedAt || 0) < ABSOLUTE_GUIDE_HELP_DISMISS_MS) return false;
       absoluteGuideRuntime.helpShownAt = performance.now();
       dom.absoluteGuideHelp.classList.add("show");
       dom.absoluteGuideHelp.setAttribute("aria-hidden", "false");
       trackedSetTimeout(() => {
         dom.absoluteGuideHelp?.classList.remove("show");
         dom.absoluteGuideHelp?.setAttribute("aria-hidden", "true");
-      }, 3000, "absolute-guide-help-auto-hide");
+      }, ABSOLUTE_GUIDE_HELP_AUTO_HIDE_MS, "absolute-guide-help-auto-hide");
       return true;
     }
 
@@ -22419,6 +22914,7 @@ ${item.code}
       dom.infoSideMenu?.classList.toggle("active", next);
       dom.infoSideMenu?.setAttribute("aria-hidden", String(!next));
       dom.infoMenuToggle?.setAttribute("aria-expanded", String(next));
+      document.body.classList.toggle("is-menu-open", next);
       if (next) {
         dismissExecutionVisualization("info-menu");
         updateInfoSideMenu();
@@ -25751,14 +26247,49 @@ ${item.code}
       updateContextualHint(text);
     }
 
+    function ensurePopupCollapseControl(element) {
+      if (!element || element.dataset.popupCollapseReady === "true") return false;
+      element.dataset.popupCollapseReady = "true";
+      element.classList.add("collapsible-glass-popup");
+      const button = document.createElement("button");
+      button.type = "button";
+      button.className = "popup-collapse-button";
+      button.textContent = "⌄";
+      button.setAttribute("aria-label", "折叠信息");
+      button.addEventListener("click", (event) => {
+        event.preventDefault();
+        event.stopPropagation();
+        const collapsed = element.classList.toggle("popup-collapsed");
+        button.textContent = collapsed ? "⌃" : "⌄";
+        button.setAttribute("aria-label", collapsed ? "展开信息" : "折叠信息");
+      });
+      element.appendChild(button);
+      return true;
+    }
+
+    function refreshPopupCollapseControls() {
+      COLLAPSIBLE_POPUP_SELECTORS.forEach((selector) => {
+        document.querySelectorAll(selector).forEach((element) => ensurePopupCollapseControl(element));
+      });
+      return true;
+    }
+
     function closeIslandToast() {
       if (islandToastTimer) window.clearTimeout(islandToastTimer);
       islandToastTimer = null;
       dom.reward?.classList.add("closing");
       trackedSetTimeout(() => {
         dom.reward?.classList.remove("show", "closing");
+        dom.reward?.removeAttribute("data-feedback-tier");
         renderNextIslandToast();
       }, 200, "island-toast-close");
+    }
+
+    function getUnifiedFeedbackTier(text = "") {
+      const value = String(text);
+      if (/通关|终章|世界.*完成|100%|创世者|史诗|结局|重构|等级提升/.test(value)) return "epic";
+      if (/成就|章节|关卡完成|任务更新|碎片|保存|成功|解锁|获得/.test(value)) return "important";
+      return "normal";
     }
 
     function renderNextIslandToast() {
@@ -25769,6 +26300,10 @@ ${item.code}
       const closeButton = dom.reward.querySelector(".island-toast-close");
       if (message) message.textContent = String(text);
       closeButton?.addEventListener("click", closeIslandToast, { once: true });
+      dom.reward.dataset.feedbackTier = getUnifiedFeedbackTier(text);
+      delete dom.reward.dataset.popupCollapseReady;
+      dom.reward.classList.remove("popup-collapsed");
+      ensurePopupCollapseControl(dom.reward);
       dom.reward.classList.remove("closing");
       dom.reward.classList.add("show");
       islandToastTimer = window.setTimeout(closeIslandToast, 2500);
@@ -27384,6 +27919,7 @@ ${item.code}
         this.active = "settings";
         audioManager.settingsOpen();
         dom.settingsPanel.classList.add("active");
+        document.body.classList.add("is-settings-open");
       }
 
       openCredits() {
@@ -27395,6 +27931,7 @@ ${item.code}
       backFromSubpanel() {
         dom.settingsPanel.classList.remove("active");
         dom.creditsOverlay.classList.remove("active");
+        document.body.classList.remove("is-settings-open");
         this.active = this.previousPanel || (gameState.menuOpen ? "main" : "pause");
       }
 
@@ -27770,6 +28307,7 @@ ${item.code}
       if (gameState.editorOpen) return;
       bootAudio();
       gameState.dialogOpen = true;
+      document.body.classList.add("is-dialog-open");
       dialogLines = lines;
       dialogIndex = 0;
       dialogComplete = onComplete;
@@ -27843,6 +28381,7 @@ ${item.code}
 
     function closeDialog() {
       gameState.dialogOpen = false;
+      document.body.classList.remove("is-dialog-open");
       dialogAwaitingChoice = false;
       window.clearInterval(typingTimer);
       dom.dialog.classList.remove("active");
@@ -28866,6 +29405,10 @@ ${item.code}
     function inspectInstantSyntax(code = "") {
       if (currentFile === "README.md") return null;
       const lines = String(code || "").split("\n");
+      const localeIssue = inspectLocaleSyntaxIssue(lines);
+      if (localeIssue) {
+        return { line: localeIssue.line, message: `第${localeIssue.column}列是${localeIssue.name}，请改成英文 ${localeIssue.ascii}` };
+      }
       const braceIssue = inspectBraceBalance(lines);
       if (braceIssue) {
         const line = extractLineNumber(braceIssue);
@@ -29665,6 +30208,8 @@ ${item.code}
     function inspectRunnableCBeforeRun(cCode, chapter = chapterById.hello) {
       const lines = String(cCode || "").split("\n");
       const code = stripCComments(String(cCode || ""));
+      const localeSyntaxIssue = inspectLocaleSyntaxIssue(lines);
+      if (localeSyntaxIssue) return formatLocaleSyntaxIssue(localeSyntaxIssue);
       if (/\bclass\b|\bnamespace\b|\bcout\b/.test(code)) {
         const line = findLine(lines, /\b(class|namespace|cout)\b/) || 1;
         return `[第${line}行] 当前世界只运行 C 语言代码。\n导师评价：这类后续语言语法先留到新的语言世界。`;
@@ -29695,6 +30240,99 @@ ${item.code}
       }
 
       return "";
+    }
+
+    const C_LOCALE_SYNTAX_SYMBOLS = Object.freeze({
+      "；": { ascii: ";", name: "中文分号 / 全角分号", reason: "语句结束必须使用英文半角分号 ;" },
+      "，": { ascii: ",", name: "中文逗号 / 全角逗号", reason: "参数之间必须使用英文半角逗号 ," },
+      "（": { ascii: "(", name: "中文左括号 / 全角左括号", reason: "函数调用和条件括号必须使用英文半角 (" },
+      "）": { ascii: ")", name: "中文右括号 / 全角右括号", reason: "函数调用和条件括号必须使用英文半角 )" },
+      "｛": { ascii: "{", name: "全角左花括号", reason: "代码块开始必须使用英文半角 {" },
+      "｝": { ascii: "}", name: "全角右花括号", reason: "代码块结束必须使用英文半角 }" },
+      "［": { ascii: "[", name: "全角左方括号", reason: "数组下标必须使用英文半角 [" },
+      "］": { ascii: "]", name: "全角右方括号", reason: "数组下标必须使用英文半角 ]" },
+      "＜": { ascii: "<", name: "全角小于号", reason: "#include 或比较符号必须使用英文半角 <" },
+      "＞": { ascii: ">", name: "全角大于号", reason: "#include 或比较符号必须使用英文半角 >" },
+      "＝": { ascii: "=", name: "全角等号", reason: "赋值必须使用英文半角 =" },
+      "＋": { ascii: "+", name: "全角加号", reason: "加法运算必须使用英文半角 +" },
+      "－": { ascii: "-", name: "全角减号", reason: "减法运算必须使用英文半角 -" },
+      "＊": { ascii: "*", name: "全角星号", reason: "乘法或指针符号必须使用英文半角 *" },
+      "／": { ascii: "/", name: "全角斜杠", reason: "除法或注释符号必须使用英文半角 /" },
+      "！": { ascii: "!", name: "全角感叹号", reason: "逻辑非必须使用英文半角 !" },
+      "＆": { ascii: "&", name: "全角与号", reason: "取地址或逻辑与必须使用英文半角 &" },
+      "｜": { ascii: "|", name: "全角竖线", reason: "逻辑或必须使用英文半角 |" },
+      "“": { ascii: "\"", name: "中文左双引号", reason: "字符串必须使用英文半角双引号 \"" },
+      "”": { ascii: "\"", name: "中文右双引号", reason: "字符串必须使用英文半角双引号 \"" },
+      "‘": { ascii: "'", name: "中文左单引号", reason: "字符常量必须使用英文半角单引号 '" },
+      "’": { ascii: "'", name: "中文右单引号", reason: "字符常量必须使用英文半角单引号 '" },
+      "：": { ascii: ":", name: "全角冒号", reason: "case 标签必须使用英文半角冒号 :" },
+      "　": { ascii: " ", name: "全角空格", reason: "缩进建议使用普通空格，避免隐藏字符影响判断" }
+    });
+
+    function replaceLocaleSyntaxSymbols(text = "") {
+      return Array.from(String(text)).map((char) => C_LOCALE_SYNTAX_SYMBOLS[char]?.ascii || char).join("");
+    }
+
+    function inspectLocaleSyntaxIssue(lines = []) {
+      const sourceLines = Array.isArray(lines) ? lines : String(lines || "").split("\n");
+      let inBlockComment = false;
+      for (let lineIndex = 0; lineIndex < sourceLines.length; lineIndex += 1) {
+        const rawLine = String(sourceLines[lineIndex] || "");
+        let inAsciiString = false;
+        let inAsciiChar = false;
+        let escaped = false;
+        for (let columnIndex = 0; columnIndex < rawLine.length; columnIndex += 1) {
+          const char = rawLine[columnIndex];
+          const next = rawLine[columnIndex + 1] || "";
+          if (inBlockComment) {
+            if (char === "*" && next === "/") {
+              inBlockComment = false;
+              columnIndex += 1;
+            }
+            continue;
+          }
+          if (!inAsciiString && !inAsciiChar && char === "/" && next === "*") {
+            inBlockComment = true;
+            columnIndex += 1;
+            continue;
+          }
+          if (!inAsciiString && !inAsciiChar && char === "/" && next === "/") break;
+          if (escaped) {
+            escaped = false;
+            continue;
+          }
+          if ((inAsciiString || inAsciiChar) && char === "\\") {
+            escaped = true;
+            continue;
+          }
+          if (!inAsciiChar && char === "\"") {
+            inAsciiString = !inAsciiString;
+            continue;
+          }
+          if (!inAsciiString && char === "'") {
+            inAsciiChar = !inAsciiChar;
+            continue;
+          }
+          if (inAsciiString || inAsciiChar) continue;
+          const symbol = C_LOCALE_SYNTAX_SYMBOLS[char];
+          if (symbol) {
+            return {
+              line: lineIndex + 1,
+              column: Array.from(rawLine.slice(0, columnIndex)).length + 1,
+              char,
+              ...symbol,
+              rawLine,
+              fixedLine: replaceLocaleSyntaxSymbols(rawLine)
+            };
+          }
+        }
+      }
+      return null;
+    }
+
+    function formatLocaleSyntaxIssue(issue) {
+      if (!issue) return "";
+      return `[第${issue.line}行，第${issue.column}列] 发现中文符号“${issue.char}”（${issue.name}）。\n错误点：${issue.reason}。\n修正示例：${issue.fixedLine.trim() || issue.ascii}\n导师评价：代码符号要切到英文输入法；中文文字可以放在双引号里面，语法符号必须是英文半角。`;
     }
 
     function hasUnclosedCString(lineText = "") {
@@ -29728,6 +30366,8 @@ ${item.code}
 
     function inspectCommonCProgram(cCode) {
       const lines = cCode.split("\n");
+      const localeSyntaxIssue = inspectLocaleSyntaxIssue(lines);
+      if (localeSyntaxIssue) return formatLocaleSyntaxIssue(localeSyntaxIssue);
       const includeLine = findLine(lines, /#include\s*<stdio\.h>/);
       if (!includeLine) {
         return `[第1行] 缺少 #include <stdio.h>。\n知识点提示：网站 C 语言入门课程把基本输入输出放在基础语法中，printf 来自 stdio.h。`;
@@ -36296,6 +36936,7 @@ ${item.code}
     safeRunEffect("startupLore", () => showWorldLoreLoadingSequence());
     safeRunEffect("startupOfflineCache", () => registerOfflineServiceWorker());
     safeRunEffect("startupEditorVisuals", () => updateEditorVisuals());
+    safeRunEffect("startupPopupCollapseControls", () => refreshPopupCollapseControls());
     safeRunEffect("startupProgressHud", () => updateProgressHud());
     safeRunEffect("startupCardAlbum", () => renderCardAlbum());
     safeRunEffect("startupAchievements", () => renderAchievements());
