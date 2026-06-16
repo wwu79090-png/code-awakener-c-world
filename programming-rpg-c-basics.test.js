@@ -485,6 +485,8 @@ assert(/@media\s*\(max-width:\s*1100px\),\s*\(pointer:\s*coarse\)\s*\{[\s\S]*bod
 assert(/body\.mobile-input \.console-actions\s*\{[\s\S]*display:\s*grid[\s\S]*grid-template-areas:\s*"run reset close"[\s\S]*"label status status"/m.test(html), "mobile editor action buttons should remain visible in a fixed bottom grid");
 assert(/body\.mobile-input #codeInput\s*\{[\s\S]*overflow:\s*auto[\s\S]*-webkit-overflow-scrolling:\s*touch[\s\S]*overscroll-behavior:\s*contain/m.test(html), "mobile editor code input should be an internally scrollable input viewport");
 assert(/const active = Boolean\(narrow \|\| coarse \|\| touch\)/m.test(html), "narrow editor viewports should use the mobile editor layout even when touch detection is unavailable");
+assert(/body\.mobile-input \.vscode-window\.code-block-guided \.editor-main\s*\{[\s\S]*grid-template-columns:\s*minmax\(0,\s*1fr\)/m.test(html), "mobile guided-code editor should collapse explicit desktop columns so the code area fills the screen");
+assert(/body\.mobile-input \.code-wrap\s*\{[\s\S]*grid-template-columns:\s*clamp\(28px,\s*8vw,\s*34px\)\s+minmax\(0,\s*1fr\)/m.test(html), "mobile editor line-number gutter should stay compact so code remains visible on narrow phones");
 assert(/\.vscode-window\.code-explain-collapsed \.editor-main\s*\{[\s\S]*grid-template-columns:\s*210px minmax\(0,\s*1fr\) 260px 46px/m.test(html), "collapsing the mentor analysis panel should shrink its grid column instead of reserving the full desktop width");
 assert(/function setCodeExplainCollapsed[\s\S]*code-explain-collapsed[\s\S]*dom\.codeExplainToggleButton\?\.addEventListener\("click",\s*\(\)\s*=>\s*setCodeExplainCollapsed\(\)\)/m.test(html), "mentor analysis collapse button should update the editor window layout class");
 
@@ -830,6 +832,8 @@ assert(/id="metaOsWindow"/m.test(html), "old computer should open a simulated OS
 assert(/你目前在玩《代码觉醒者》/m.test(html), "meta desktop should include a self-referential game icon");
 assert(/function createDeveloperNpc/m.test(html), "late game should include a developer NPC");
 assert(/function openRealityPasswordPuzzle/m.test(html), "meta puzzle should use a real-world date or time password");
+assert(/function getRealityDatePassword/m.test(html), "date.lock should derive its password from the local computer date");
+assert(!/function openRealityPasswordPuzzle\(\)\s*\{[\s\S]*?window\.prompt/m.test(html), "date.lock should auto-detect the local date instead of using prompt()");
 assert(/function rememberNpcInteraction/m.test(html), "NPCs should remember the player's last interaction tone");
 assert(/function leaveCollectedFragmentImprint/m.test(html), "collected fragments should leave faint map imprints");
 assert(/function renderEndingTimeMarks/m.test(html), "ending should show first and last play timestamps");
@@ -1261,14 +1265,15 @@ assert(/本项目永久免费对外开放/.test(html), "announcement should incl
 assert(/STARTUP_ANNOUNCEMENT_AUTO_HIDE_MS\s*=\s*3000/m.test(html), "announcement should auto-hide after 3 seconds");
 assert(/function showStartupAnnouncement/m.test(html), "announcement should be controlled by a startup function");
 assert(/id="announcementCloseButton"/m.test(html), "announcement should include a minimal close control");
-assert(/World Build v1\.0\.23/m.test(html) || /GAME_VERSION\s*=\s*"v1\.0\.23"/m.test(html), "game version should increment when shipping a new update");
+assert(/World Build v1\.0\.24/m.test(html) || /GAME_VERSION\s*=\s*"v1\.0\.24"/m.test(html), "game version should increment when shipping a new update");
 assert(/UPDATE_HISTORY\s*=\s*Object\.freeze\(\[[\s\S]*v1\.0\.1[\s\S]*零基础新手指引[\s\S]*v1\.0\.0[\s\S]*手机端适配/m.test(html), "update history should keep detailed previous release notes");
 assert(/id="updateHistoryList"/m.test(html) && /历史更新内容/m.test(html), "side menu should expose update history with detailed usage-visible notes");
-assert(/GAME_VERSION\s*=\s*"v1\.0\.23"/m.test(html), "game version should increment for the domestic loading optimization release");
+assert(/GAME_VERSION\s*=\s*"v1\.0\.24"/m.test(html), "game version should increment for the date lock and mobile editor hotfix release");
 assert(html.includes('const OFFICIAL_SITE_HREF = "./official-site.html";') && html.includes('data-menu-action="official">访问官方网站') && /action === "official"[\s\S]*openOfficialWebsite\(\)/m.test(html), "main menu should expose and handle an official website entry");
-assert(/UPDATE_ANNOUNCEMENT_PAGES\s*=\s*Object\.freeze\(\[\s*\{\s*title:\s*"> 消息 \/ 本次更新"[\s\S]*官方网站与游戏页国内加载优化[\s\S]*本地加载 Phaser[\s\S]*CDN 慢时保留 Canvas\/CSS[\s\S]*414374792/m.test(html), "collapsed startup announcement should show the latest domestic loading optimization first, not only author text");
-assert(/id="announcementPageBody"[\s\S]*官方网站与游戏页国内加载优化[\s\S]*本地加载 Phaser[\s\S]*CDN 超时不再卡住首屏[\s\S]*414374792/m.test(initialBodyMarkup), "static startup announcement placeholder should match the latest domestic loading optimization before script hydration");
+assert(/UPDATE_ANNOUNCEMENT_PAGES\s*=\s*Object\.freeze\(\[\s*\{\s*title:\s*"> 消息 \/ 本次更新"[\s\S]*旧电脑 date\.lock 与手机端编辑器修复[\s\S]*本机日期自动校验[\s\S]*代码区不再被挤成窄栏[\s\S]*414374792/m.test(html), "collapsed startup announcement should show the latest date lock and mobile editor hotfix first, not stale loading copy");
+assert(/id="announcementPageBody"[\s\S]*旧电脑 date\.lock 与手机端编辑器修复[\s\S]*自动读取本机日期[\s\S]*代码区和按钮不再被挤窄[\s\S]*414374792/m.test(initialBodyMarkup), "static startup announcement placeholder should match the latest date lock and mobile editor hotfix before script hydration");
 assert(!/公告只保留关闭、课程锁定、自由模式通关后显示/m.test(initialBodyMarkup), "static startup announcement placeholder should not show stale update copy");
+assert(/UPDATE_HISTORY\s*=\s*Object\.freeze\(\[[\s\S]*v1\.0\.24[\s\S]*旧电脑日期锁与手机编辑器热修复[\s\S]*prompt\(\) is not supported[\s\S]*390x844[\s\S]*414374792/m.test(html), "update history should record the v1.0.24 date lock and mobile editor hotfix release");
 assert(/UPDATE_HISTORY\s*=\s*Object\.freeze\(\[[\s\S]*v1\.0\.23[\s\S]*国内加载速度优化[\s\S]*vendor\/phaser\.min\.js[\s\S]*Google Fonts[\s\S]*Three\.js[\s\S]*MUS/m.test(html), "update history should record the v1.0.23 domestic loading optimization release");
 assert(/UPDATE_HISTORY\s*=\s*Object\.freeze\(\[[\s\S]*v1\.0\.22[\s\S]*主菜单新增官方网站入口[\s\S]*official-site\.html[\s\S]*414374792/m.test(html), "update history should record the v1.0.22 official website menu entry release");
 assert(/UPDATE_HISTORY\s*=\s*Object\.freeze\(\[[\s\S]*v1\.0\.21[\s\S]*官方网站技术预告片上线[\s\S]*Three\.js 星系[\s\S]*Canvas 关键词矩阵[\s\S]*dist\/programming-rpg-c-basics\.html/m.test(html), "update history should record the v1.0.21 official website release");

@@ -11,7 +11,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; base-uri 'self'; object-src 'none'; frame-ancestors 'none'; script-src 'self' 'nonce-code-awakener-inline' 'sha256-I4ZacIr+jp49nHajVDw2aaG76vdbKcvUkO0PUyNBXdM='; style-src 'self' 'nonce-code-awakener-inline' 'sha256-NPjKNpV7x0cENrXJvvUQRYtXnjtK86M3UVpzbNYyTWg='; style-src-attr 'unsafe-inline'; font-src 'self' data:; img-src 'self' data: blob:; media-src 'self' data: blob:; worker-src 'self' blob:; child-src 'self' blob:; connect-src 'self' http://localhost:8000 http://127.0.0.1:8000;">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; base-uri 'self'; object-src 'none'; frame-ancestors 'none'; script-src 'self' 'nonce-code-awakener-inline' 'sha256-dF/VvFlQMFcoHRWoZ60ct3MCKadQr/JTZdUBlkufpFE='; style-src 'self' 'nonce-code-awakener-inline' 'sha256-rTRaj23QftrSk6tBRdNPv9LpzSp7akNP5W2zKEScvwM='; style-src-attr 'unsafe-inline'; font-src 'self' data:; img-src 'self' data: blob:; media-src 'self' data: blob:; worker-src 'self' blob:; child-src 'self' blob:; connect-src 'self' http://localhost:8000 http://127.0.0.1:8000;">
   <title>编程学习 RPG：C 语言启航村</title>
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%23020617'/%3E%3Cpath d='M22 20 10 32l12 12M42 20l12 12-12 12' fill='none' stroke='%2300ff88' stroke-width='6' stroke-linecap='round' stroke-linejoin='round'/%3E%3Cpath d='m36 16-8 32' stroke='%2300ccff' stroke-width='5' stroke-linecap='round'/%3E%3C/svg%3E">
   <script src="./vendor/phaser.min.js" integrity="sha384-Fi7F0CYQBHYa+s2vvYJeiqvOQf3tuZ28vafRGXvMt7ijxNTVf3+eXPkNRIUi9JD2"></script>
@@ -8552,6 +8552,10 @@
         grid-template-rows: 42px minmax(0, 1fr) minmax(96px, 18dvh);
       }
 
+      body.mobile-input .vscode-window.code-block-guided .editor-main {
+        grid-template-columns: minmax(0, 1fr);
+      }
+
       body.mobile-input .vscode-window.code-block-guided .editor-center {
         grid-template-rows: 40px auto minmax(0, 1fr);
       }
@@ -8599,7 +8603,7 @@
       }
 
       body.mobile-input .code-wrap {
-        grid-template-columns: 38px minmax(0, 1fr);
+        grid-template-columns: clamp(28px, 8vw, 34px) minmax(0, 1fr);
         font-size: max(16px, var(--editor-font-size, 14px));
         line-height: calc(max(16px, var(--editor-font-size, 14px)) + 8px);
       }
@@ -8611,7 +8615,7 @@
 
       body.mobile-input #highlightLayer,
       body.mobile-input #codeInput {
-        padding: 12px 10px;
+        padding: 12px 8px;
         font-size: max(16px, var(--editor-font-size, 14px));
         line-height: calc(max(16px, var(--editor-font-size, 14px)) + 8px);
       }
@@ -8631,7 +8635,7 @@
 
       body.mobile-input #lineNumbers {
         padding-top: 12px;
-        padding-right: 4px;
+        padding-right: 2px;
       }
 
       body.mobile-input .editor-statusbar {
@@ -9983,7 +9987,7 @@
       <canvas id="menuFxCanvas" width="1280" height="720"></canvas>
       <div class="main-menu-card glass-panel">
         <h1 class="game-logo">CODE AWAKENER<br>C 语言启航村</h1>
-        <div class="version-label" id="versionLabel">World Build v1.0.23 · develop.fan C Basics</div>
+        <div class="version-label" id="versionLabel">World Build v1.0.24 · develop.fan C Basics</div>
         <label class="boot-command"><span>&gt;</span><input id="bootCommandInput" value="start_game.exe" autocomplete="off" spellcheck="false" aria-label="启动命令"></label>
         <label class="skin-picker">角色外观
           <select id="skinSelect" aria-label="选择主角外观">
@@ -10812,9 +10816,9 @@ int main(void) {
       <button id="announcementCloseButton" class="announcement-close" type="button" aria-label="关闭公告">×</button>
       <h2 id="startupAnnouncementTitle" class="startup-announcement-title">> 消息 / 本次更新</h2>
       <div id="announcementPageBody" class="startup-announcement-body">
-        <p>// 本次更新：官方网站与游戏页国内加载优化。</p>
-        <p>// 游戏改为本地加载 Phaser，移除 Google Fonts 与远程字体阻塞。</p>
-        <p>// 官网慢网会自动降级，CDN 超时不再卡住首屏。</p>
+        <p>// 本次更新：旧电脑 date.lock 与手机端编辑器修复。</p>
+        <p>// date.lock 改为自动读取本机日期，不再调用 prompt。</p>
+        <p>// 手机端积木引导编辑器恢复单列满屏，代码区和按钮不再被挤窄。</p>
         <p>// 作者：杀戮，QQ：3424636983。</p>
         <p>// 官方Q群：414374792。</p>
         <p>// 作者：杀戮</p>
@@ -11290,16 +11294,16 @@ int main() {
     const SAVE_SIGNATURE_SALT = "c-world-local-integrity";
     const SAVE_CLEAR_CONFIRM_MS = 3000;
     const STARTUP_ANNOUNCEMENT_AUTO_HIDE_MS = 3000;
-    const GAME_VERSION = "v1.0.23";
+    const GAME_VERSION = "v1.0.24";
     const OFFICIAL_SITE_HREF = "./official-site.html";
     const UPDATE_ANNOUNCEMENT_PAGES = Object.freeze([
       {
         title: "> 消息 / 本次更新",
         lines: [
-          "// 本次更新：官方网站与游戏页国内加载优化。",
-          "// 游戏改为本地加载 Phaser，移除 Google Fonts 与远程字体阻塞。",
-          "// 官网慢网、省流量和移动端自动降级，不再等 Three.js/GSAP 才显示内容。",
-          "// 官网外部 ES Module 带超时回退，CDN 慢时保留 Canvas/CSS 基础体验。",
+          "// 本次更新：旧电脑 date.lock 与手机端编辑器修复。",
+          "// date.lock 改为读取本机日期自动校验，QQ 浏览器不再触发 prompt() 报错。",
+          "// 手机端积木引导编辑器恢复单列满屏，代码区不再被挤成窄栏。",
+          "// 行号栏改为窄屏自适应，运行、重置、关闭和输入按钮保持在可见区域。",
           "// 官方Q群：414374792。",
           "// 作者：杀戮"
         ]
@@ -11370,6 +11374,18 @@ int main() {
       }
     ]);
     const UPDATE_HISTORY = Object.freeze([
+      {
+        version: "v1.0.24",
+        date: "2026-06-17",
+        title: "旧电脑日期锁与手机编辑器热修复",
+        details: [
+          "旧电脑 `date.lock` 删除 `prompt()` 输入弹窗，改为读取本机日期生成 `YYYYMMDD` 并自动校验，修复 QQ 浏览器/WebView 的 `prompt() is not supported.` 报错。",
+          "date.lock 校验通过后会在旧电脑状态栏、终端爆闪和系统日志中显示读取到的本机日期，让“现实日期密码”玩法保留但不再阻塞。",
+          "手机端积木引导编辑器覆盖 `.code-block-guided` 的桌面三列布局，恢复单列满屏显示，避免代码区被挤成窄栏。",
+          "移动端行号栏改为 `clamp(28px, 8vw, 34px)`，把宽度优先留给代码输入区，运行、重置、关闭和手机输入按钮都保持在视口内。",
+          "本次热修复已通过 390x844 与 360x740 手机视口验证。官方Q群：414374792。"
+        ]
+      },
       {
         version: "v1.0.23",
         date: "2026-06-17",
@@ -12298,7 +12314,7 @@ return 0;`;
       directSaveAs: "reduced-by-inline-resources"
     });
     const SECURITY_CONFIG = Object.freeze({
-      expectedScriptHash: "RkBCiE2DiaEKAd76vlAFghj+7rfVw+iAV32BE842wgA=",
+      expectedScriptHash: "vdXSeIgCKleSXlp6blQkC3TZzMi46fLKPi68mv7ECWE=",
       selfCheckIntervalMs: 45000,
       tamperRefreshMs: 5000,
       devToolsRefreshMs: 2000,
@@ -24274,14 +24290,31 @@ ${item.code}
       dom.metaOsWindow?.setAttribute("aria-hidden", "true");
     }
 
+    function getRealityDatePassword(now = new Date()) {
+      const localNow = now instanceof Date ? now : new Date(now);
+      if (Number.isNaN(localNow.getTime())) return "00000000";
+      const year = localNow.getFullYear();
+      const month = String(localNow.getMonth() + 1).padStart(2, "0");
+      const day = String(localNow.getDate()).padStart(2, "0");
+      return `${year}${month}${day}`;
+    }
+
     function openRealityPasswordPuzzle() {
       const now = new Date();
-      const password = `${now.getFullYear()}${String(now.getMonth() + 1).padStart(2, "0")}${String(now.getDate()).padStart(2, "0")}`;
-      const input = window.prompt?.("date.lock 需要今天的现实日期，格式 YYYYMMDD。") || "";
-      const ok = input.trim() === password;
-      if (dom.metaOsStatus) dom.metaOsStatus.textContent = ok ? "// date.lock opened." : "// date.lock refused. 现实也参与了这个谜题。";
-      ok ? showTerminalBurst("// reality_check == true;") : triggerErrorGlitch();
-      return ok;
+      const password = getRealityDatePassword(now);
+      const displayDate = `${password.slice(0, 4)}-${password.slice(4, 6)}-${password.slice(6, 8)}`;
+      if (dom.metaOsStatus) {
+        dom.metaOsStatus.textContent = `// date.lock opened. 本机日期 ${displayDate} 已自动校验。`;
+      }
+      showTerminalBurst(`// reality_check("${password}") == true;`);
+      showSystemLogWindow([
+        "> date.lock",
+        `> 读取本机日期：${displayDate}`,
+        `> 自动输入密码：${password}`,
+        "> 校验通过。现实世界已接入旧电脑。"
+      ], { mode: "compact", autoCloseMs: 2600 });
+      audioManager.success?.();
+      return true;
     }
 
     function showQuestReward(task) {
