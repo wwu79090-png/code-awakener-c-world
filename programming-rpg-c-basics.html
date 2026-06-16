@@ -11,7 +11,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; base-uri 'self'; object-src 'none'; frame-ancestors 'none'; script-src 'self' https://cdn.jsdelivr.net 'nonce-code-awakener-inline' 'sha256-v8qNcbndJpPmj+YbMLlmxqtQpXBkme5as+TEFl5YUfM='; style-src 'self' https://cdn.jsdelivr.net https://fonts.googleapis.com 'nonce-code-awakener-inline' 'sha256-uZA6c3hD1nzLpbZHOfWAXLgRN3eaaZwAWtNurC99EBA='; style-src-attr 'unsafe-inline'; font-src 'self' https://cdn.jsdelivr.net https://fonts.gstatic.com data:; img-src 'self' data: blob:; media-src 'self' data: blob:; worker-src 'self' blob:; child-src 'self' blob:; connect-src 'self' https://cdn.jsdelivr.net http://localhost:8000 http://127.0.0.1:8000;">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; base-uri 'self'; object-src 'none'; frame-ancestors 'none'; script-src 'self' https://cdn.jsdelivr.net 'nonce-code-awakener-inline' 'sha256-ZIFL55L8dDFG+a85E/i+wAkxGMqp8eX0jCPJo/J6RbQ='; style-src 'self' https://cdn.jsdelivr.net https://fonts.googleapis.com 'nonce-code-awakener-inline' 'sha256-2E0PXa3p7Q8cfymMbQ0Smheqy7U5qtJQUpH628ZJXuk='; style-src-attr 'unsafe-inline'; font-src 'self' https://cdn.jsdelivr.net https://fonts.gstatic.com data:; img-src 'self' data: blob:; media-src 'self' data: blob:; worker-src 'self' blob:; child-src 'self' blob:; connect-src 'self' https://cdn.jsdelivr.net http://localhost:8000 http://127.0.0.1:8000;">
   <title>编程学习 RPG：C 语言启航村</title>
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%23020617'/%3E%3Cpath d='M22 20 10 32l12 12M42 20l12 12-12 12' fill='none' stroke='%2300ff88' stroke-width='6' stroke-linecap='round' stroke-linejoin='round'/%3E%3Cpath d='m36 16-8 32' stroke='%2300ccff' stroke-width='5' stroke-linecap='round'/%3E%3C/svg%3E">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/firacode@6.2.0/distr/fira_code.css">
@@ -543,7 +543,8 @@
     }
 
     body.is-editor-open #game canvas,
-    body.is-paused #game canvas {
+    body.menu-open #game canvas,
+    body.pause-menu-open #game canvas {
       filter: brightness(0.55) saturate(0.7) blur(2px);
       transform: scale(0.985);
       transition: filter 250ms ease-in-out, transform 250ms cubic-bezier(0.34, 1.56, 0.64, 1);
@@ -9325,10 +9326,14 @@
 
     /* 通用弹窗折叠器：所有信息弹层都能一键收起成透明小条，避免遮挡视野。 */
     .collapsible-glass-popup {
-      position: relative;
       background:
         linear-gradient(135deg, rgba(125, 211, 252, 0.03), transparent 44%),
         rgba(3, 7, 18, 0.34) !important;
+      --popup-collapsed-width: min(260px, calc(100vw - 24px));
+    }
+
+    .choice-window.choice-island .choice-panel.collapsible-glass-popup {
+      position: relative;
     }
 
     .popup-collapse-button {
@@ -9358,13 +9363,23 @@
     }
 
     .collapsible-glass-popup.popup-collapsed {
+      width: var(--popup-collapsed-width) !important;
       max-height: 42px !important;
       min-height: 36px !important;
       overflow: hidden !important;
       opacity: 0.58 !important;
-      transform: translateY(0) scale(0.985);
       background: rgba(3, 7, 18, 0.22) !important;
       box-shadow: 0 6px 18px rgba(0, 0, 0, 0.16) !important;
+      cursor: grab;
+      touch-action: none;
+      user-select: none;
+    }
+
+    .collapsible-glass-popup.popup-collapsed.popup-dragging {
+      cursor: grabbing;
+      opacity: 0.76 !important;
+      z-index: 170 !important;
+      transform: none !important;
     }
 
     .collapsible-glass-popup.popup-collapsed > :not(.popup-collapse-button) {
@@ -9374,7 +9389,7 @@
     }
 
     .collapsible-glass-popup.popup-collapsed::after {
-      content: "已折叠";
+      content: attr(data-popup-collapse-label);
       position: absolute;
       left: 14px;
       top: 50%;
@@ -9458,10 +9473,15 @@
       top: max(8px, env(safe-area-inset-top));
       left: max(86px, calc(env(safe-area-inset-left) + 86px));
       right: max(12px, env(safe-area-inset-right));
-      grid-template-columns: repeat(3, minmax(0, 1fr));
+      grid-template-columns: minmax(0, 1fr);
       gap: 6px;
-      max-width: none;
+      width: min(560px, calc(100vw - 112px));
+      max-width: calc(100vw - 112px);
       pointer-events: none;
+    }
+
+    .absolute-guide-chip:not(.primary) {
+      display: none !important;
     }
 
     .absolute-guide-chip {
@@ -9479,6 +9499,51 @@
     .absolute-guide-chip.primary {
       border-color: rgba(246, 200, 95, 0.34) !important;
       opacity: 0.82;
+    }
+
+    .startup-announcement-island {
+      width: min(520px, calc(100vw - 30px)) !important;
+      padding: 10px 46px 10px 14px !important;
+      border-radius: 22px !important;
+      background:
+        linear-gradient(135deg, rgba(125, 211, 252, 0.04), transparent 48%),
+        rgba(3, 7, 18, 0.38) !important;
+      backdrop-filter: blur(10px) saturate(1.08) !important;
+      -webkit-backdrop-filter: blur(10px) saturate(1.08) !important;
+    }
+
+    .startup-announcement-island[data-expanded="false"] {
+      min-height: 42px;
+      max-height: 72px;
+      overflow: hidden;
+    }
+
+    .startup-announcement-island[data-expanded="false"] .startup-announcement-title {
+      margin-bottom: 2px;
+      font-size: 13px;
+    }
+
+    .startup-announcement-island[data-expanded="false"] .startup-announcement-body {
+      display: block;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      font-size: 12px;
+    }
+
+    .startup-announcement-island[data-expanded="false"] .startup-announcement-body p:not(:first-child),
+    .startup-announcement-island[data-expanded="false"] .startup-announcement-pager {
+      display: none !important;
+    }
+
+    .announcement-expand {
+      min-height: 30px;
+      border: 1px solid rgba(125, 211, 252, 0.3);
+      border-radius: 999px;
+      padding: 0 12px;
+      background: rgba(3, 7, 18, 0.34);
+      color: #dffbff;
+      font: 800 11px/1 var(--font-code);
     }
 
     .absolute-guide-tag {
@@ -9537,6 +9602,7 @@
       body.mobile-input .absolute-guide-stack {
         left: max(84px, calc(env(safe-area-inset-left) + 84px));
         right: max(10px, env(safe-area-inset-right));
+        width: auto;
         grid-template-columns: 1fr;
       }
 
@@ -9563,6 +9629,31 @@
 
       body.mobile-input .absolute-guide-help.show {
         opacity: 0.82;
+      }
+
+      body.mobile-input.is-editor-open #editorOverlay {
+        position: fixed;
+        inset: var(--mobile-visual-offset-top, 0px) 0 auto 0;
+        height: var(--mobile-visual-height, 100dvh);
+        min-height: var(--mobile-visual-height, 100dvh);
+        padding: max(6px, env(safe-area-inset-top)) 8px max(6px, env(safe-area-inset-bottom));
+        align-items: flex-start;
+        justify-content: center;
+        overflow: hidden;
+      }
+
+      body.mobile-input.is-editor-open .vscode-window {
+        width: calc(100vw - 16px);
+        height: calc(var(--mobile-visual-height, 100dvh) - 14px);
+        max-height: calc(var(--mobile-visual-height, 100dvh) - 14px);
+      }
+
+      body.mobile-input.mobile-keyboard-open .vscode-window {
+        grid-template-rows: 38px minmax(0, 1fr) minmax(70px, 15vh);
+      }
+
+      body.mobile-input.mobile-keyboard-open .editor-statusbar {
+        max-height: 16vh;
       }
     }
 
@@ -9726,7 +9817,7 @@
       <canvas id="menuFxCanvas" width="1280" height="720"></canvas>
       <div class="main-menu-card glass-panel">
         <h1 class="game-logo">CODE AWAKENER<br>C 语言启航村</h1>
-        <div class="version-label" id="versionLabel">World Build v1.0.5 · develop.fan C Basics</div>
+        <div class="version-label" id="versionLabel">World Build v1.0.9 · develop.fan C Basics</div>
         <label class="boot-command"><span>&gt;</span><input id="bootCommandInput" value="start_game.exe" autocomplete="off" spellcheck="false" aria-label="启动命令"></label>
         <label class="skin-picker">角色外观
           <select id="skinSelect" aria-label="选择主角外观">
@@ -10617,6 +10708,7 @@ int main(void) {
       <div class="startup-announcement-pager" aria-label="公告分页">
         <button id="announcementPrevButton" class="announcement-page-button" type="button">上一页</button>
         <span id="announcementPageIndicator" class="announcement-page-indicator">1/1</span>
+        <button id="announcementExpandButton" class="announcement-expand" type="button">详情</button>
         <button id="announcementNextButton" class="announcement-page-button" type="button">下一页</button>
       </div>
     </aside>
@@ -11084,26 +11176,34 @@ int main() {
     const SAVE_SIGNATURE_SALT = "c-world-local-integrity";
     const SAVE_CLEAR_CONFIRM_MS = 3000;
     const STARTUP_ANNOUNCEMENT_AUTO_HIDE_MS = 3000;
-    const GAME_VERSION = "v1.0.8";
+    const GAME_VERSION = "v1.0.9";
     const UPDATE_ANNOUNCEMENT_PAGES = Object.freeze([
       {
         title: "> 消息 / 本次更新",
         lines: [
           "// 作者：杀戮",
-          "// 本次更新：性能保护改为保守触发，持续严重掉帧才会自动降级。",
-          "// “是否需要帮助”改为长时间无操作才出现，并增加冷却，避免频繁打扰。",
-          "// 手机端右下角“点击开始”按钮已隐藏，首次触摸仍会自动启用音频。",
-          "// 引导与弹窗改为更透明、更贴边，不再遮挡游戏视野。",
-          "// 编辑器错误会指出第几行第几列，并识别中文符号/全角符号。"
+          "// 本次更新：主线关卡严格对齐 develop.fan 的 C 语言学习路径。",
+          "// 新增 C语言概述、基础语法正式节点，后续章节按官网大纲顺序推进。",
+          "// 修复积木模式误套所有关卡的问题，非积木关卡恢复正常编辑器。",
+          "// 编译失败不再清空玩家代码，方便按提示继续修改。"
         ]
       },
       {
-        title: "> 更新内容 / 体验降噪",
+        title: "> 更新内容 / 视觉与手机",
         lines: [
-          "// 性能保护从短窗口检测改为12秒滚动窗口，低于18FPS才处理。",
-          "// 每次自动降级至少间隔30秒，防止连续弹提示。",
-          "// 绝对引导求助从3秒延长到15秒，并且点“不用”后长时间不再出现。",
-          "// 统一字体、色彩、动效和玻璃面板纹理，让功能界面更干净。"
+          "// 顶部绝对引导只保留一条当前步骤，不再三条并排遮挡画面。",
+          "// 所有可折叠弹窗收起后显示具体名称，并支持拖动到合适位置。",
+          "// 修复通用折叠样式导致弹窗定位错乱、画面元素跑到顶部的问题。",
+          "// 手机软键盘弹出时，编辑器会贴合可视区域，不再被输入法顶飞。"
+        ]
+      },
+      {
+        title: "> 更新内容 / 学习体验",
+        lines: [
+          "// 公告改为紧凑摘要，点击“详情”才展开，减少开屏遮挡。",
+          "// 关卡数据增加课程来源编号，任务说明会标注对应学习路径。",
+          "// 编辑器说明与错误提示继续保留导师口吻，帮助零基础玩家定位问题。",
+          "// 本版重点是把堆叠内容收束成清晰、稳定、可继续学习的路径。"
         ]
       },
       {
@@ -11117,6 +11217,22 @@ int main() {
       }
     ]);
     const UPDATE_HISTORY = Object.freeze([
+      {
+        version: "v1.0.9",
+        date: "2026-06-16",
+        title: "官网课程路径对齐、弹窗折叠拖动与手机编辑器修复",
+        details: [
+          "主线关卡严格按 develop.fan 的《C 语言从入门到精通》路径组织，新增“C 语言概述”和“基础语法”正式节点。",
+          "每个章节数据记录官网课程编号与标题，后续任务、石碑和地图能按权威路径继续扩展。",
+          "修复代码积木模式误套到所有关卡的问题，只有配置了积木练习的早期节点才显示积木。",
+          "编译失败或运行异常时保留玩家正在编辑的代码，不再清空输入内容。",
+          "所有可折叠弹窗收起后显示具体折叠对象名称，并可拖动到屏幕任意安全位置。",
+          "移除通用折叠弹窗对 fixed/absolute 定位的破坏，修复画面元素异常跑到顶部的问题。",
+          "手机软键盘弹出时，编辑器自动贴合 visualViewport 可视区域，避免输入法把画面顶上去。",
+          "顶部绝对引导只保留当前最重要的一条提示，目标和反馈信息折叠到当前流程中显示。",
+          "启动公告改为紧凑摘要 + 详情展开模式，减少开屏遮挡。"
+        ]
+      },
       {
         version: "v1.0.8",
         date: "2026-06-16",
@@ -11808,8 +11924,8 @@ return 0;`;
         id: "pass_compile_gate",
         type: TASK_TYPES.main,
         title: "通过第一座编译之门",
-        description: "完成入口石碑代码填空，再让编译守卫确认你可以继续前进。",
-        requirement: { clearedChapter: "hello", requiredAmount: 1 },
+        description: "完成第一座 C 语言概述石碑，再让编译守卫确认你可以继续前进。",
+        requirement: { clearedChapter: "overview", requiredAmount: 1 },
         reward: { exp: 80, codeBlock: "return 0;", skin: "neonBlue" },
         next: ["collect_hidden_blocks"]
       },
@@ -11867,7 +11983,7 @@ return 0;`;
       directSaveAs: "reduced-by-inline-resources"
     });
     const SECURITY_CONFIG = Object.freeze({
-      expectedScriptHash: "5ccUZFYOJXZzodbkX/ppeiyQKCB23NPRR/2lZS1ZR08=",
+      expectedScriptHash: "RqfOwZVaNzpDyUo8ZJBXf3ZcG26/SOT02+VDC3a3nMI=",
       selfCheckIntervalMs: 45000,
       tamperRefreshMs: 5000,
       devToolsRefreshMs: 2000,
@@ -15114,7 +15230,7 @@ return 0;`;
       disabledEffects: {},
       timelineLocked: false,
       settings: savedSettings,
-      activeChallengeId: "hello",
+      activeChallengeId: "overview",
       editorOpen: false,
       dialogOpen: false,
       noviceGuideActive: false,
@@ -16106,9 +16222,70 @@ return 0;`;
       }, 500, "frozen-reverb-release");
     }
 
+    // 课程路径权威来源：https://www.develop.fan/Static/course/detail?classId=e126c7a4f22247c0b597203c02d08639
+    // 主线关卡必须严格按该网站的 C 语言大纲推进，避免自定义顺序把零基础玩家带乱。
+    const DEVELOP_FAN_C_LANGUAGE_PATH = Object.freeze([
+      { index: 1, title: "C 语言概述", sections: ["C 语言简介", "C 语言的历史和发展", "C 语言的特点和优势", "C 语言的应用场景"] },
+      { index: 2, title: "开发环境搭建", sections: ["选择编译器和 IDE", "安装和配置开发环境", "第一个 C 程序：Hello World", "编译和运行程序"] },
+      { index: 3, title: "基础语法", sections: ["C 程序的基本结构", "注释", "标识符和关键字", "基本输入输出"] },
+      { index: 4, title: "数据类型和变量", sections: ["基本数据类型", "变量声明和定义", "常量", "类型修饰符", "枚举类型"] },
+      { index: 5, title: "运算符和表达式", sections: ["算术运算符", "关系运算符", "逻辑运算符", "位运算符", "赋值运算符", "其他运算符", "表达式和优先级"] },
+      { index: 6, title: "控制流语句", sections: ["条件语句：if-else", "循环语句：for, while, do-while", "跳转语句：break, continue, goto", "switch 语句"] },
+      { index: 7, title: "函数", sections: ["函数的定义和声明", "函数参数和返回值", "函数调用", "递归函数", "内联函数", "函数指针"] },
+      { index: 8, title: "数组和字符串", sections: ["一维数组", "多维数组", "字符串和字符数组", "字符串处理函数"] },
+      { index: 9, title: "指针", sections: ["指针的基本概念", "指针和数组", "指针和函数", "多级指针", "动态内存分配与指针"] },
+      { index: 10, title: "结构体和联合体", sections: ["结构体的定义和使用", "结构体数组和指针", "联合体", "位域"] },
+      { index: 11, title: "文件输入输出", sections: ["文件操作基础", "文件的打开和关闭", "文件的读写操作", "文件定位", "错误处理"] },
+      { index: 12, title: "内存管理", sections: ["静态和动态内存", "malloc, calloc, realloc, free", "内存泄漏和调试"] },
+      { index: 13, title: "预处理器", sections: ["宏定义", "条件编译", "文件包含", "其他预处理器指令"] },
+      { index: 14, title: "标准库详解", sections: ["stdio.h 输入输出函数", "stdlib.h 通用工具函数", "string.h 字符串处理函数", "math.h 数学函数", "time.h 时间函数"] },
+      { index: 15, title: "高级主题和最佳实践", sections: ["模块化编程", "错误处理技巧", "性能优化", "可移植性考虑", "C99 和 C11 新特性"] }
+    ]);
+
     const chapters = [
       {
+        id: "overview",
+        coursePathIndex: 1,
+        coursePathTitle: "C 语言概述",
+        title: "C 语言概述",
+        stoneLabel: "概述石碑",
+        gateLabel: "语言之门",
+        skill: "C 语言认知技能卡",
+        shard: "C 语言简介、特点、应用场景",
+        output: "C language",
+        lessonLines: [
+          "按照开发爱好者 C 语言路径，第一站不是直接写复杂代码，而是先知道 C 是什么。",
+          "C 语言诞生于系统编程场景，特点是接近底层、执行效率高、可移植性强。",
+          "它常见于操作系统、嵌入式、游戏底层、驱动和高性能工具。",
+          "本关只用 printf 输出 C language，让你先把“C 能让电脑说话”这个入口建立起来。"
+        ],
+        files: {
+          "main.c": `#include <stdio.h>
+
+int main(void) {
+  // 输出 C language，认识这门语言
+  return 0;
+}`,
+          "README.md": `任务：C 语言概述。
+
+路径来源：开发爱好者 C 语言从入门到精通 1. C 语言概述。
+
+要求：
+1. 引入 stdio.h。
+2. 定义 int main(void)。
+3. 使用 printf 输出 C language。
+4. 用 return 0; 正常结束。`
+        },
+        taskGoal: "请输出 <code>C language</code>，完成 C 语言概述的第一步。",
+        taskTarget: "目标结构：<code>#include &lt;stdio.h&gt;</code>、<code>int main(void)</code>、<code>printf(\"C language\")</code>、<code>return 0;</code>",
+        taskExample: "<code>printf(\"C language\");</code>",
+        taskHint: "导师提示：先知道 C 语言做什么，再写第一行代码。printf 会把文字打印到终端。",
+        validator: "overview"
+      },
+      {
         id: "hello",
+        coursePathIndex: 2,
+        coursePathTitle: "开发环境搭建",
         title: "Hello World",
         stoneLabel: "入口石碑",
         gateLabel: "编译之门",
@@ -16143,7 +16320,50 @@ int main(void) {
         validator: "hello"
       },
       {
+        id: "syntax",
+        coursePathIndex: 3,
+        coursePathTitle: "基础语法",
+        title: "基础语法",
+        stoneLabel: "语法石碑",
+        gateLabel: "语法之门",
+        skill: "C 基础结构技能卡",
+        shard: "程序结构、注释、标识符和基本输入输出",
+        output: "syntax ok",
+        lessonLines: [
+          "网站路径第三章是基础语法：你会认识 C 程序的基本结构、注释、标识符和基本输入输出。",
+          "注释以 // 开头时不会被执行，它像写给自己和队友看的便签。",
+          "标识符就是变量名、函数名这类名字，建议使用清楚的英文单词。",
+          "本关用一条注释解释代码意图，再输出 syntax ok，确认基础结构能正常运行。"
+        ],
+        files: {
+          "main.c": `#include <stdio.h>
+
+int main(void) {
+  // 这行注释不会运行，它只是解释下面的输出
+  printf("syntax ok");
+  return 0;
+}`,
+          "README.md": `任务：基础语法。
+
+路径来源：开发爱好者 C 语言从入门到精通 3. 基础语法。
+
+要求：
+1. 保留 #include <stdio.h>。
+2. 保留 int main(void)。
+3. 写一行 // 注释说明输出用途。
+4. 使用 printf("syntax ok");。
+5. 保留 return 0;。`
+        },
+        taskGoal: "请保留注释并输出 <code>syntax ok</code>，完成基础语法节点。",
+        taskTarget: "目标结构：<code>// 注释</code>、<code>printf(\"syntax ok\")</code>、<code>return 0;</code>",
+        taskExample: "<code>// 注释不会执行\nprintf(\"syntax ok\");</code>",
+        taskHint: "导师提示：注释帮助人理解代码，编译器会跳过它；真正运行的是 printf 语句。",
+        validator: "syntax"
+      },
+      {
         id: "variables",
+        coursePathIndex: 4,
+        coursePathTitle: "数据类型和变量",
         title: "数据类型和变量",
         stoneLabel: "变量石碑",
         gateLabel: "变量符文箱",
@@ -16180,6 +16400,8 @@ int main(void) {
       },
       {
         id: "operators",
+        coursePathIndex: 5,
+        coursePathTitle: "运算符和表达式",
         title: "运算符和表达式",
         stoneLabel: "表达式石碑",
         gateLabel: "算术机关",
@@ -16218,6 +16440,8 @@ int main(void) {
       },
       {
         id: "conditions",
+        coursePathIndex: 6,
+        coursePathTitle: "控制流语句",
         title: "控制流：if-else",
         stoneLabel: "分支石碑",
         gateLabel: "判断之门",
@@ -16255,6 +16479,8 @@ int main(void) {
       },
       {
         id: "loops",
+        coursePathIndex: 6,
+        coursePathTitle: "控制流语句",
         title: "控制流：循环",
         stoneLabel: "循环石碑",
         gateLabel: "循环齿轮",
@@ -16292,6 +16518,8 @@ int main(void) {
       },
       {
         id: "functions",
+        coursePathIndex: 7,
+        coursePathTitle: "函数",
         title: "函数",
         stoneLabel: "函数石碑",
         gateLabel: "调用祭坛",
@@ -16329,6 +16557,8 @@ int main(void) {
       },
       {
         id: "arrays",
+        coursePathIndex: 8,
+        coursePathTitle: "数组和字符串",
         title: "数组和字符串",
         stoneLabel: "数组石碑",
         gateLabel: "索引栅栏",
@@ -16364,6 +16594,8 @@ int main(void) {
       },
       {
         id: "pointers",
+        coursePathIndex: 9,
+        coursePathTitle: "指针",
         title: "指针",
         stoneLabel: "指针石碑",
         gateLabel: "地址之门",
@@ -16400,6 +16632,8 @@ int main(void) {
       },
       {
         id: "structs",
+        coursePathIndex: 10,
+        coursePathTitle: "结构体和联合体",
         title: "结构体和联合体",
         stoneLabel: "结构体石碑",
         gateLabel: "字段机关",
@@ -16437,6 +16671,8 @@ int main(void) {
       },
       {
         id: "files",
+        coursePathIndex: 11,
+        coursePathTitle: "文件输入输出",
         title: "文件输入输出",
         stoneLabel: "文件石碑",
         gateLabel: "档案锁",
@@ -16475,6 +16711,8 @@ int main(void) {
       },
       {
         id: "memory",
+        coursePathIndex: 12,
+        coursePathTitle: "内存管理",
         title: "内存管理",
         stoneLabel: "内存石碑",
         gateLabel: "堆空间门",
@@ -16514,6 +16752,8 @@ int main(void) {
       },
       {
         id: "preprocessor",
+        coursePathIndex: 13,
+        coursePathTitle: "预处理器",
         title: "预处理器",
         stoneLabel: "宏定义石碑",
         gateLabel: "宏替换门",
@@ -16550,6 +16790,8 @@ int main(void) {
       },
       {
         id: "stdlib",
+        coursePathIndex: 14,
+        coursePathTitle: "标准库详解",
         title: "标准库详解",
         stoneLabel: "标准库石碑",
         gateLabel: "库函数门",
@@ -16586,6 +16828,8 @@ int main(void) {
       },
       {
         id: "best-practices",
+        coursePathIndex: 15,
+        coursePathTitle: "高级主题和最佳实践",
         title: "高级主题和最佳实践",
         stoneLabel: "最佳实践石碑",
         gateLabel: "毕业之门",
@@ -16625,6 +16869,12 @@ int main(void) {
     ];
 
     const chapterById = Object.fromEntries(chapters.map((chapter) => [chapter.id, chapter]));
+    const FIRST_MAINLINE_CHAPTER_ID = chapters[0]?.id || "overview";
+
+    function getChapterObjects(scene, chapterId = FIRST_MAINLINE_CHAPTER_ID) {
+      if (!scene?.chapterObjects) return null;
+      return scene.chapterObjects[chapterId] || scene.chapterObjects[FIRST_MAINLINE_CHAPTER_ID] || scene.chapterObjects.overview || scene.chapterObjects.hello || null;
+    }
 
     const DATA_BUS_MAP_LAYOUT = Object.freeze({
       title: "世界一：C语言基础",
@@ -16639,8 +16889,8 @@ int main(void) {
     });
 
     const CHAPTER_REGION_LAYOUT = Object.freeze([
-      { id: "foundation", title: "区域一：基础类型总线", chapterIds: ["hello", "variables", "operators", "conditions"], origin: { x: 180, y: 360 }, theme: 0x38bdf8 },
-      { id: "control", title: "区域二：控制流回廊", chapterIds: ["loops", "functions", "arrays"], origin: { x: 180, y: 880 }, theme: 0xfacc15 },
+      { id: "foundation", title: "区域一：C 语言起点总线", chapterIds: ["overview", "hello", "syntax", "variables", "operators", "conditions"], origin: { x: 180, y: 360 }, theme: 0x38bdf8 },
+      { id: "control", title: "区域二：控制流与函数回廊", chapterIds: ["loops", "functions", "arrays"], origin: { x: 180, y: 880 }, theme: 0xfacc15 },
       { id: "memory", title: "区域三：内存与结构体层", chapterIds: ["pointers", "structs", "files", "memory"], origin: { x: 1980, y: 360 }, theme: 0xa855f7 },
       { id: "systems", title: "区域四：系统库终端", chapterIds: ["preprocessor", "stdlib", "best-practices"], origin: { x: 1980, y: 880 }, theme: 0x22c55e }
     ]);
@@ -16704,7 +16954,7 @@ int main(void) {
       });
       gameState.progress.unlockedRegions = Array.from(unlocked);
       if (!gameState.progress.currentRegionId || !unlocked.has(gameState.progress.currentRegionId)) {
-        gameState.progress.currentRegionId = getChapterRegionId(chapters[getCurrentMainlineChapterIndex?.() || 0]?.id || "hello");
+        gameState.progress.currentRegionId = getChapterRegionId(chapters[getCurrentMainlineChapterIndex?.() || 0]?.id || FIRST_MAINLINE_CHAPTER_ID);
       }
       return gameState.progress.unlockedRegions;
     }
@@ -16791,7 +17041,7 @@ int main(void) {
     const chapterManager = new ChapterManager();
     const tutorialSequence = new TutorialSequence();
 
-    function renderStoryStoneTerminal(chapterId = "hello") {
+    function renderStoryStoneTerminal(chapterId = FIRST_MAINLINE_CHAPTER_ID) {
       const spec = getStonePuzzleSpec(chapterId);
       return [
         "┌──────────────────────────────────┐",
@@ -17048,6 +17298,7 @@ int main(void) {
     let editorVisualTimer = null;
     let clearSaveConfirmTimer = null;
     let startupAnnouncementTimer = null;
+    let startupAnnouncementExpanded = false;
     let islandToastTimer = null;
     const islandToastQueue = [];
     const COLLAPSIBLE_POPUP_SELECTORS = Object.freeze([
@@ -17068,6 +17319,20 @@ int main(void) {
       ".system-log-window",
       ".code-road-window"
     ]);
+    const POPUP_COLLAPSE_LABELS = Object.freeze({
+      rewardToast: "顶部灵动岛提示",
+      startupAnnouncement: "更新公告",
+      securityMascotToast: "安全提示",
+      browserShortcutWarning: "快捷键提示",
+      questProgressToast: "任务进度提示",
+      choiceFeedbackIsland: "选择反馈",
+      errorRecoveryToast: "修复提示",
+      saveToast: "保存提示",
+      absoluteGuideHelp: "当前步骤帮助",
+      bottomActionBar: "底部确认动作条",
+      dialogOverlay: "导师对话栏",
+      npcCodeWindow: "代码演示窗"
+    });
     let autocompleteItems = [];
     let autocompleteIndex = 0;
     const recentFragmentUnlocks = new Set();
@@ -17353,6 +17618,7 @@ int main(void) {
       announcementPageBody: document.getElementById("announcementPageBody"),
       announcementPrevButton: document.getElementById("announcementPrevButton"),
       announcementNextButton: document.getElementById("announcementNextButton"),
+      announcementExpandButton: document.getElementById("announcementExpandButton"),
       announcementPageIndicator: document.getElementById("announcementPageIndicator"),
       securityMascotToast: document.getElementById("securityMascotToast"),
       securityMascotTitle: document.getElementById("securityMascotTitle"),
@@ -17792,8 +18058,8 @@ int main(void) {
     function getAbsoluteGuideTargetPoint(scene) {
       if (!scene?.chapterObjects) return null;
       const stage = gameState.progress.absoluteGuideStage || "welcome";
-      const chapterId = gameState.activeChallengeId || chapters?.[gameState.progress.currentLevel || 0]?.id || "hello";
-      const object = scene.chapterObjects[chapterId] || scene.chapterObjects.hello;
+      const chapterId = gameState.activeChallengeId || chapters?.[gameState.progress.currentLevel || 0]?.id || FIRST_MAINLINE_CHAPTER_ID;
+      const object = getChapterObjects(scene, chapterId);
       if (!object) return null;
       if (stage === "followPath" && object.gate?.active) return object.gate;
       return object.stone || object.gate || null;
@@ -17960,10 +18226,34 @@ int main(void) {
     function applyMobileEditorLayout(force = detectMobileInputMode()) {
       document.body.classList.toggle("editor-mobile-compact", Boolean(force));
       if (force && gameState?.editorOpen) {
+        updateMobileEditorViewport();
         dom.codeInput?.focus?.({ preventScroll: true });
         dom.codeInput?.setAttribute?.("inputmode", "text");
       }
       return Boolean(force);
+    }
+
+    function updateMobileEditorViewport() {
+      const viewport = window.visualViewport;
+      const isMobileEditor = document.body.classList.contains("mobile-input") && gameState?.editorOpen;
+      if (!isMobileEditor) {
+        document.body.classList.remove("mobile-keyboard-open");
+        document.documentElement.style.removeProperty("--mobile-visual-height");
+        document.documentElement.style.removeProperty("--mobile-visual-offset-top");
+        return false;
+      }
+      const height = Math.max(320, Math.floor(viewport?.height || window.innerHeight || 640));
+      const offsetTop = Math.max(0, Math.floor(viewport?.offsetTop || 0));
+      const keyboardOpen = viewport ? height < window.innerHeight * 0.82 : false;
+      document.documentElement.style.setProperty("--mobile-visual-height", `${height}px`);
+      document.documentElement.style.setProperty("--mobile-visual-offset-top", `${offsetTop}px`);
+      document.body.classList.toggle("mobile-keyboard-open", keyboardOpen);
+      if (keyboardOpen && dom.codeInput) {
+        trackedSetTimeout(() => {
+          dom.codeInput?.scrollIntoView?.({ block: "center", inline: "nearest", behavior: "smooth" });
+        }, 60, "mobile-editor-scroll-into-view");
+      }
+      return keyboardOpen;
     }
 
     function handleVirtualJoystickStart(event) {
@@ -20578,9 +20868,12 @@ ${item.code}
     }
 
     function getCodeBlockModeSnippet() {
+      const activeChapterId = gameState.activeChallengeId || getCurrentTutorialSnippet?.()?.chapterId || FIRST_MAINLINE_CHAPTER_ID;
+      const config = CODE_BLOCK_MODE_SNIPPETS.find((item) => item.lesson === activeChapterId);
+      if (!config) return null;
       const snippet = getCurrentTutorialSnippet?.();
-      if (!snippet || Number(snippet.order) > 10) return null;
-      return CODE_BLOCK_MODE_SNIPPETS[0];
+      if (snippet && snippet.chapterId === activeChapterId && Number(snippet.order) > 10) return null;
+      return config;
     }
 
     function renderCodeBlockMode() {
@@ -22998,7 +23291,7 @@ ${item.code}
       const steps = [
         { label: "第一步：收集 3 个基础碎片", done: basicFragments >= 3 },
         { label: `第二步：修复石碑 ${currentChapter?.title || "入口石碑"}`, done: currentCleared },
-        { label: "第三步：通过编译之门", done: isCleared("hello") }
+        { label: "第三步：通过第一座编译之门", done: isCleared(FIRST_MAINLINE_CHAPTER_ID) }
       ];
       const stepHtml = steps.map((step) => `<li class="${step.done ? "done" : "todo"}">${step.done ? "✓" : "·"} ${escapeHtml(step.label)}</li>`).join("");
       return `<article class="quest-card world-repair-card" data-status="inProgress"><h3>修复世界一 <small>${basicFragments}/3</small></h3><p>${basicFragments >= 3 ? "基础结构正在重建。继续挑战当前石碑。" : `还剩 ${Math.max(0, 3 - basicFragments)} 个基础碎片，世界正在恢复。`}</p><ul class="quest-step-list">${stepHtml}</ul><div class="quest-bar" aria-label="世界一基础修复进度 ${Math.round((basicFragments / 3) * 100)}%"><span data-progress-fill="${Math.min(100, Math.round((basicFragments / 3) * 100))}"></span></div></article>`;
@@ -23533,7 +23826,7 @@ ${item.code}
         scene.spawnStoneLifeRecoveryStartedAt = 0;
         return false;
       }
-      const anchor = scene.chapterObjects?.hello?.stone || { x: 180, y: 348 };
+      const anchor = getChapterObjects(scene)?.stone || { x: 180, y: 348 };
       const near = Phaser.Math.Distance.Between(scene.player.x, scene.player.y, anchor.x, anchor.y) < 92;
       if (!near) {
         scene.spawnStoneLifeRecoveryStartedAt = 0;
@@ -25137,7 +25430,18 @@ ${item.code}
       if (dom.announcementPageIndicator) dom.announcementPageIndicator.textContent = `${safeIndex + 1}/${pages.length}`;
       if (dom.announcementPrevButton) dom.announcementPrevButton.disabled = safeIndex <= 0;
       if (dom.announcementNextButton) dom.announcementNextButton.disabled = safeIndex >= pages.length - 1;
+      if (dom.announcementExpandButton) dom.announcementExpandButton.textContent = startupAnnouncementExpanded ? "收起" : "详情";
+      dom.startupAnnouncement?.setAttribute("data-expanded", startupAnnouncementExpanded ? "true" : "false");
       return page;
+    }
+
+    function toggleStartupAnnouncementExpanded(force = null) {
+      startupAnnouncementExpanded = typeof force === "boolean" ? force : !startupAnnouncementExpanded;
+      dom.startupAnnouncement?.setAttribute("data-expanded", startupAnnouncementExpanded ? "true" : "false");
+      if (dom.announcementExpandButton) dom.announcementExpandButton.textContent = startupAnnouncementExpanded ? "收起" : "详情";
+      if (startupAnnouncementTimer) timerTracker.clear(startupAnnouncementTimer);
+      startupAnnouncementTimer = trackedSetTimeout(closeStartupAnnouncement, startupAnnouncementExpanded ? STARTUP_ANNOUNCEMENT_AUTO_HIDE_MS + 4500 : STARTUP_ANNOUNCEMENT_AUTO_HIDE_MS, "startup-announcement-auto-hide-expanded");
+      return startupAnnouncementExpanded;
     }
 
     function changeStartupAnnouncementPage(delta = 1) {
@@ -25161,7 +25465,9 @@ ${item.code}
 
     function showStartupAnnouncement() {
       if (!dom.startupAnnouncement) return false;
+      startupAnnouncementExpanded = false;
       renderStartupAnnouncementPage(0);
+      dom.startupAnnouncement.setAttribute("data-expanded", "false");
       dom.startupAnnouncement.classList.remove("closing");
       dom.startupAnnouncement.classList.add("show");
       announceGameEvent("消息：本次更新内容已显示，公告支持分页查看。");
@@ -26198,7 +26504,7 @@ ${item.code}
         const action = getNpcQuestAction(npc || {});
         if (action.ready) return `E 向${npc.name}交付任务`;
         if (action.available) return `E 与${npc.name}对话并接取任务`;
-        if (npc?.type === NPC_TYPES.guard && !isCleared("hello")) return "E 询问守卫（需要先通过编译）";
+        if (npc?.type === NPC_TYPES.guard && !isCleared(FIRST_MAINLINE_CHAPTER_ID)) return "E 询问守卫（需要先通过编译）";
         return `E 与${npc?.name || "NPC"}交互`;
       }
       if (interaction.type === "roomEntrance") return "E 进入一个安静的小房间";
@@ -26247,10 +26553,66 @@ ${item.code}
       updateContextualHint(text);
     }
 
+    function getPopupCollapseLabel(element) {
+      if (!element) return "信息弹窗";
+      if (element.dataset.popupCollapseTitle) return element.dataset.popupCollapseTitle;
+      const mapped = POPUP_COLLAPSE_LABELS[element.id];
+      if (mapped) return mapped;
+      if (element.classList?.contains("system-log-window")) return "系统日志";
+      if (element.classList?.contains("code-road-window")) return "铺路动画日志";
+      if (element.classList?.contains("global-error-window")) return "错误提示";
+      if (element.classList?.contains("choice-panel")) return "选择面板";
+      return element.getAttribute?.("aria-label") || element.querySelector?.("h2,h3,strong")?.textContent?.trim?.() || "信息弹窗";
+    }
+
+    function clampPopupDragPosition(element, left, top) {
+      const width = element.offsetWidth || 220;
+      const height = element.offsetHeight || 42;
+      return {
+        left: Math.max(8, Math.min(window.innerWidth - width - 8, left)),
+        top: Math.max(8, Math.min(window.innerHeight - height - 8, top))
+      };
+    }
+
+    function enableCollapsedPopupDrag(element) {
+      if (!element || element.dataset.popupDragReady === "true") return false;
+      element.dataset.popupDragReady = "true";
+      let drag = null;
+      const endDrag = () => {
+        if (!drag) return;
+        element.classList.remove("popup-dragging");
+        drag = null;
+      };
+      element.addEventListener("pointerdown", (event) => {
+        if (!element.classList.contains("popup-collapsed")) return;
+        if (event.target?.closest?.(".popup-collapse-button")) return;
+        const rect = element.getBoundingClientRect();
+        drag = { dx: event.clientX - rect.left, dy: event.clientY - rect.top };
+        element.classList.add("popup-dragging");
+        element.setPointerCapture?.(event.pointerId);
+        event.preventDefault();
+      });
+      element.addEventListener("pointermove", (event) => {
+        if (!drag) return;
+        const next = clampPopupDragPosition(element, event.clientX - drag.dx, event.clientY - drag.dy);
+        element.style.position = "fixed";
+        element.style.left = `${next.left}px`;
+        element.style.top = `${next.top}px`;
+        element.style.right = "auto";
+        element.style.bottom = "auto";
+        element.style.transform = "none";
+        event.preventDefault();
+      });
+      element.addEventListener("pointerup", endDrag);
+      element.addEventListener("pointercancel", endDrag);
+      return true;
+    }
+
     function ensurePopupCollapseControl(element) {
       if (!element || element.dataset.popupCollapseReady === "true") return false;
       element.dataset.popupCollapseReady = "true";
       element.classList.add("collapsible-glass-popup");
+      element.dataset.popupCollapseLabel = `已折叠：${getPopupCollapseLabel(element)}`;
       const button = document.createElement("button");
       button.type = "button";
       button.className = "popup-collapse-button";
@@ -26262,8 +26624,19 @@ ${item.code}
         const collapsed = element.classList.toggle("popup-collapsed");
         button.textContent = collapsed ? "⌃" : "⌄";
         button.setAttribute("aria-label", collapsed ? "展开信息" : "折叠信息");
+        element.dataset.popupCollapseLabel = `${collapsed ? "已折叠" : "可折叠"}：${getPopupCollapseLabel(element)}`;
+        if (!collapsed) {
+          element.classList.remove("popup-dragging");
+          element.style.left = "";
+          element.style.top = "";
+          element.style.right = "";
+          element.style.bottom = "";
+          element.style.position = "";
+          element.style.transform = "";
+        }
       });
       element.appendChild(button);
+      enableCollapsedPopupDrag(element);
       return true;
     }
 
@@ -26368,6 +26741,7 @@ ${item.code}
       dom.overlay.classList.add("active");
       dom.overlay.classList.remove("closing");
       document.body.classList.add("is-editor-open");
+      updateMobileEditorViewport();
       audioManager.setEditorFocus(true);
       selectFile("main.c");
       dom.codeInput.value = NOVICE_GUIDE_HELLO_CODE;
@@ -27853,6 +28227,7 @@ ${item.code}
         gameState.menuOpen = true;
         gameState.paused = true;
         document.body.classList.add("menu-open", "is-paused");
+        document.body.classList.remove("pause-menu-open");
         dom.mainMenu.classList.add("active");
         dom.worldSelectOverlay?.classList.remove("active");
         dom.pauseMenu.classList.remove("active");
@@ -27877,7 +28252,7 @@ ${item.code}
         this.active = "game";
         gameState.menuOpen = false;
         gameState.paused = false;
-        document.body.classList.remove("menu-open", "is-paused");
+        document.body.classList.remove("menu-open", "is-paused", "pause-menu-open");
         dom.mainMenu.classList.remove("active");
         dom.pauseMenu.classList.remove("active");
         audioManager.startLayeredBgm();
@@ -27895,7 +28270,7 @@ ${item.code}
         this.active = "pause";
         this.selectedIndex = 0;
         gameState.paused = true;
-        document.body.classList.add("is-paused");
+        document.body.classList.add("is-paused", "pause-menu-open");
         dom.pauseMenu.classList.add("active");
         showCodePauseMenu();
         pauseFreezeAnimations();
@@ -27907,7 +28282,7 @@ ${item.code}
       resumeGame() {
         this.active = "game";
         gameState.paused = false;
-        document.body.classList.remove("is-paused");
+        document.body.classList.remove("is-paused", "pause-menu-open");
         dom.pauseMenu.classList.remove("active");
         resumeFrozenAnimations();
         if (gameState.scene) gameState.scene.scene.resume();
@@ -28632,7 +29007,10 @@ ${item.code}
       trackedSetTimeout(() => {
         if (!absoluteGuideRuntime.active) openEditorGuide(false);
       }, 120, "editor-guide-auto-open");
-      window.setTimeout(() => dom.codeInput.focus(), 60);
+      window.setTimeout(() => {
+        updateMobileEditorViewport();
+        dom.codeInput.focus();
+      }, 60);
     }
 
     function loadChapterTask(chapterId) {
@@ -28664,6 +29042,7 @@ ${item.code}
       triggerGlitchEffect();
       dom.overlay.classList.add("closing");
       document.body.classList.remove("is-editor-open");
+      updateMobileEditorViewport();
       hideAutocomplete();
       closeEditorGuide(false);
       audioManager.setEditorFocus(false);
@@ -28681,7 +29060,9 @@ ${item.code}
     }
 
     function selectFile(fileName) {
-      files[currentFile] = dom.codeInput.value;
+      if (currentFile && currentFile !== "README.md" && dom.codeInput && !dom.codeInput.readOnly) {
+        files[currentFile] = dom.codeInput.value;
+      }
       currentFile = fileName;
       dom.activeTab.textContent = fileName;
       dom.codeInput.value = files[fileName];
@@ -30029,9 +30410,21 @@ ${item.code}
       return { ok: false };
     }
 
+    function restoreEditorSourceAfterFailedRun(source = "", reason = "compile-failed") {
+      if (!gameState.editorOpen || !dom.codeInput || currentFile !== "main.c") return false;
+      const preserved = String(source ?? "");
+      dom.codeInput.value = preserved;
+      files["main.c"] = preserved;
+      editorHistory.lastValue = preserved;
+      updateEditorVisuals();
+      console.warn("[editor] preserved user code after failed run", reason);
+      return true;
+    }
+
     async function runChallenge() {
       files[currentFile] = dom.codeInput.value;
       const rawCCode = files["main.c"];
+      const userSourceBeforeRun = rawCCode;
       const cCode = autoInjectStdIoHeader(rawCCode);
       const chapter = chapterById[gameState.activeChallengeId];
       if (!spendWorldEvolutionMp(1)) {
@@ -30091,6 +30484,7 @@ ${item.code}
           showNpcKnowledgePopup(chapter);
           tutorialAnimationManager.trigger("T07_COMPILE_SUCCESS", { scene: gameState.scene, chapter }).then(() => completeChallenge());
         } else {
+          restoreEditorSourceAfterFailedRun(userSourceBeforeRun, "validate-result");
           gameState.codeAccuracy = Math.max(20, gameState.codeAccuracy - 14);
           handleCompileFailurePenalty(chapter?.id, { source: "compile", message: result.message });
           updateCompanionAiEvolution();
@@ -30103,6 +30497,7 @@ ${item.code}
           setOutput(result.message, "error");
         }
       } catch (error) {
+        restoreEditorSourceAfterFailedRun(userSourceBeforeRun, "exception");
         gameState.codeAccuracy = Math.max(20, gameState.codeAccuracy - 18);
         handleCompileFailurePenalty(chapter?.id, { source: "exception", message: error.message });
         updateCompanionAiEvolution();
@@ -30182,12 +30577,14 @@ ${item.code}
       return { ok: true, output: acceptedOutput, mode: result.mode, lenient: lenientPass };
     }
 
-    function inspectCBeforeRun(cCode, chapter = chapterById.hello) {
+    function inspectCBeforeRun(cCode, chapter = chapterById[FIRST_MAINLINE_CHAPTER_ID]) {
       const commonIssue = inspectCommonCProgram(cCode);
       if (commonIssue) return commonIssue;
 
       const validators = {
+        overview: inspectOverviewChallenge,
         hello: inspectHelloChallenge,
+        syntax: inspectSyntaxChallenge,
         variables: inspectVariableChallenge,
         operators: inspectOperatorChallenge,
         conditions: inspectConditionChallenge,
@@ -30205,7 +30602,7 @@ ${item.code}
       return validators[chapter.validator](cCode, chapter);
     }
 
-    function inspectRunnableCBeforeRun(cCode, chapter = chapterById.hello) {
+    function inspectRunnableCBeforeRun(cCode, chapter = chapterById[FIRST_MAINLINE_CHAPTER_ID]) {
       const lines = String(cCode || "").split("\n");
       const code = stripCComments(String(cCode || ""));
       const localeSyntaxIssue = inspectLocaleSyntaxIssue(lines);
@@ -30356,7 +30753,7 @@ ${item.code}
       return Boolean(quote);
     }
 
-    function isLenientChallengePass(cCode, chapter = chapterById.hello, output = "") {
+    function isLenientChallengePass(cCode, chapter = chapterById[FIRST_MAINLINE_CHAPTER_ID], output = "") {
       if (inspectRunnableCBeforeRun(cCode, chapter)) return false;
       const code = stripCComments(String(cCode || ""));
       const hasExecutableIntent = /\b(printf|puts|return|if|for|while|malloc|free|fopen|fclose|fprintf|atoi|struct)\b|#define|=/.test(code);
@@ -30381,6 +30778,20 @@ ${item.code}
       const bracesIssue = inspectBraceBalance(lines);
       if (bracesIssue) return bracesIssue;
       return "";
+    }
+
+    function inspectOverviewChallenge(cCode, chapter) {
+      const lines = cCode.split("\n");
+      const mainLine = findLine(lines, /\bint\s+main\s*\(\s*(void)?\s*\)/);
+      const printfLine = findLine(lines, /printf\s*\(/);
+      if (!printfLine) {
+        return `[第${mainLine || 1}行] 请用 printf 输出 C language。\n知识点提示：第一章先认识 C 语言能让电脑显示文字。`;
+      }
+      const output = simulateCOutput(cCode, chapter);
+      if (output !== chapter.output) {
+        return `[第${printfLine}行] 输出内容不匹配，当前输出是 "${output}"。\n知识点提示：本关要求精确输出 C language。`;
+      }
+      return inspectReturnZero(cCode, printfLine);
     }
 
     function inspectHelloChallenge(cCode, chapter) {
@@ -30413,6 +30824,23 @@ ${item.code}
       }
 
       return "";
+    }
+
+    function inspectSyntaxChallenge(cCode, chapter) {
+      const lines = cCode.split("\n");
+      const code = stripCComments(cCode);
+      const hasComment = lines.some((line) => /\/\//.test(line));
+      if (!hasComment) {
+        return `[第3行] 请保留一行 // 注释。\n知识点提示：网站基础语法章节会先讲注释，注释不会执行，但能解释代码意图。`;
+      }
+      const printfLine = findLine(lines, /printf\s*\(/);
+      if (!printfLine) {
+        return `[第4行] 请用 printf("syntax ok"); 输出文字。\n知识点提示：基本输入输出是基础语法的重要部分。`;
+      }
+      if (!/printf\s*\(\s*"syntax ok"\s*\)\s*;/.test(code)) {
+        return `[第${printfLine}行] printf 内容需要是 syntax ok。\n知识点提示：字符串内容、空格和大小写都会影响输出。`;
+      }
+      return inspectReturnZero(cCode, printfLine);
     }
 
     function inspectVariableChallenge(cCode, chapter) {
@@ -31626,7 +32054,7 @@ ${item.code}
 
       getNearestObjective(player) {
         const next = chapters.find((chapter) => !isCleared(chapter.id));
-        return this.scene.chapterObjects[next?.id || "hello"]?.stone || player;
+        return getChapterObjects(this.scene, next?.id || FIRST_MAINLINE_CHAPTER_ID)?.stone || player;
       }
 
       calculatePath(from, to) {
@@ -31661,7 +32089,9 @@ ${item.code}
     }
 
     const stonePuzzleCatalog = {
+      overview: { answer: "printf", template: '____("C language");', decoys: ["scanf", "return"] },
       hello: { answer: "return", template: "int main(void) { ____ 0; }", decoys: ["printf", "int"] },
+      syntax: { answer: "//", template: "____ 注释不会运行", decoys: ["printf", "return"] },
       variables: { answer: "int", template: "____ score = 100;", decoys: ["char", "float"] },
       operators: { answer: "+", template: "int sum = a ____ b;", decoys: ["-", "*"] },
       conditions: { answer: "if", template: "____ (score >= 60) { pass = 1; }", decoys: ["for", "while"] },
@@ -33162,7 +33592,7 @@ ${item.code}
     }
 
     function resetCurrentChapterFragments(scene = gameState.scene) {
-      const chapterId = chapters[getCurrentMainlineChapterIndex()]?.id || "hello";
+      const chapterId = chapters[getCurrentMainlineChapterIndex()]?.id || FIRST_MAINLINE_CHAPTER_ID;
       gameState.progress.collectedFragmentKeys = gameState.progress.collectedFragmentKeys.filter((key) => !key.startsWith(`${chapterId}:`));
       gameState.codeInventory = gameState.codeInventory.filter((keyword) => !(scene?.codeFragments || []).some((fragment) => fragment.chapterId === chapterId && fragment.keyword === keyword));
       gameState.codeInventory = normalizeCodeInventoryList(gameState.codeInventory);
@@ -33857,7 +34287,7 @@ ${item.code}
         return createGuidanceTargetData(task, state, npc?.container, guideType, npc);
       }
       if (task.id === "pass_compile_gate") {
-        const target = scene.chapterObjects.hello?.gate || scene.coreNpcs?.find((npc) => npc.data.type === NPC_TYPES.guard)?.container;
+        const target = getChapterObjects(scene)?.gate || scene.coreNpcs?.find((npc) => npc.data.type === NPC_TYPES.guard)?.container;
         return createGuidanceTargetData(task, state, target, guideType);
       }
       if (task.id === "collect_basic_fragments" || task.id === "collect_hidden_blocks") {
@@ -34749,10 +35179,11 @@ ${item.code}
         return;
       }
       if (action.available) questManager.acceptTask(action.available);
-      const line = getNpcReactiveLine(npc, isCleared("hello") ? "回导师处提交后，继续深入。" : "编译未通过，你不能通过。");
-      openNpcCodeWindow("编译门守卫", [line], isCleared("hello") ? "normal" : "surprised", npc.data.color, npc.container);
+      const firstGateCleared = isCleared(FIRST_MAINLINE_CHAPTER_ID);
+      const line = getNpcReactiveLine(npc, firstGateCleared ? "回导师处提交后，继续深入。" : "编译未通过，你不能通过。");
+      openNpcCodeWindow("编译门守卫", [line], firstGateCleared ? "normal" : "surprised", npc.data.color, npc.container);
       showNpcBubble(scene, npc, line);
-      if (!isCleared("hello")) triggerErrorGlitch();
+      if (!firstGateCleared) triggerErrorGlitch();
     }
 
     function interactWithDeveloperNpc(scene, npc) {
@@ -34838,7 +35269,7 @@ ${item.code}
       if (!scene?.add) return;
       const count = gameState.codeInventory.length;
       if (count < 5) return;
-      const base = scene.chapterObjects.hello?.stone || { x: 280, y: 330 };
+      const base = getChapterObjects(scene)?.stone || { x: 280, y: 330 };
       if (!scene.milestoneFlower) {
         const stem = scene.add.rectangle(base.x + 36, base.y + 24, 3, 18, 0x22c55e, 0.9).setDepth(6);
         const bud = scene.add.circle(base.x + 36, base.y + 12, 5, 0xf9a8d4, 0.92).setDepth(6);
@@ -36262,6 +36693,10 @@ ${item.code}
       event.stopPropagation();
       changeStartupAnnouncementPage(1);
     });
+    dom.announcementExpandButton?.addEventListener("click", (event) => {
+      event.stopPropagation();
+      toggleStartupAnnouncementExpanded();
+    });
 
     dom.codeInput.addEventListener("beforeinput", handleMobileEditorBeforeInput);
     dom.codeInput.addEventListener("compositionstart", handleManualEditorCompositionStart);
@@ -36283,6 +36718,12 @@ ${item.code}
     dom.codeInput.addEventListener("touchstart", () => {
       if (gameState.editorOpen) focusMobileEditorKeyboard();
     }, { passive: true });
+    dom.codeInput.addEventListener("focus", () => {
+      updateMobileEditorViewport();
+    });
+    dom.codeInput.addEventListener("blur", () => {
+      trackedSetTimeout(updateMobileEditorViewport, 120, "mobile-editor-blur-viewport");
+    });
     dom.codeInput.addEventListener("pointermove", handleManualEditorPointerMove);
     dom.codeInput.addEventListener("mousemove", handleCodeExplanationHover);
     dom.codeInput.addEventListener("mouseleave", hideCodeHoverTooltip);
@@ -36807,6 +37248,8 @@ ${item.code}
       handleMetaFinaleCommand();
     });
     window.addEventListener("resize", detectMobileInputMode);
+    window.visualViewport?.addEventListener?.("resize", updateMobileEditorViewport);
+    window.visualViewport?.addEventListener?.("scroll", updateMobileEditorViewport);
 
     document.addEventListener("keydown", (event) => {
       handleKonamiKey(event);

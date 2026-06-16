@@ -96,6 +96,7 @@ globalThis.__gameApi = {
   manualEditorOperationFromBeforeInput: typeof manualEditorOperationFromBeforeInput === "function" ? manualEditorOperationFromBeforeInput : undefined,
   C_TUTORIAL_COURSE: typeof C_TUTORIAL_COURSE !== "undefined" ? C_TUTORIAL_COURSE : undefined,
   C_VISUAL_ENTITY_MAP: typeof C_VISUAL_ENTITY_MAP !== "undefined" ? C_VISUAL_ENTITY_MAP : undefined,
+  DEVELOP_FAN_C_LANGUAGE_PATH: typeof DEVELOP_FAN_C_LANGUAGE_PATH !== "undefined" ? DEVELOP_FAN_C_LANGUAGE_PATH : undefined,
   flattenCTutorialSnippets: typeof flattenCTutorialSnippets === "function" ? flattenCTutorialSnippets : undefined,
   buildExecutionPlanForSnippet: typeof buildExecutionPlanForSnippet === "function" ? buildExecutionPlanForSnippet : undefined,
   getTutorialDifficultyTiming: typeof getTutorialDifficultyTiming === "function" ? getTutorialDifficultyTiming : undefined,
@@ -121,7 +122,9 @@ function sha256Directive(source) {
   return `sha256-${crypto.createHash("sha256").update(source, "utf8").digest("base64")}`;
 }
 const expectedIds = [
+  "overview",
   "hello",
+  "syntax",
   "variables",
   "operators",
   "conditions",
@@ -141,6 +144,11 @@ assert(api.chapters.length === expectedIds.length, `expected ${expectedIds.lengt
 for (const id of expectedIds) {
   assert(api.chapterById[id], `missing chapter ${id}`);
 }
+assert(Array.isArray(api.DEVELOP_FAN_C_LANGUAGE_PATH) && api.DEVELOP_FAN_C_LANGUAGE_PATH.length === 15, "develop.fan C path should be captured as 15 main sections");
+assert(api.DEVELOP_FAN_C_LANGUAGE_PATH[0].title === "C 语言概述", "develop.fan path should start with C overview");
+assert(api.DEVELOP_FAN_C_LANGUAGE_PATH[14].title === "高级主题和最佳实践", "develop.fan path should end with advanced best practices");
+assert(api.chapterById.overview.coursePathIndex === 1 && api.chapterById.hello.coursePathIndex === 2 && api.chapterById.syntax.coursePathIndex === 3, "first playable chapters should follow develop.fan ordering");
+assert(api.chapterById["best-practices"]?.coursePathIndex === 15, "final chapter should map to develop.fan section 15");
 
 assert(api.compressSavePayload, "save compressor should be exported for tests");
 assert(api.decompressSavePayload, "save decompressor should be exported for tests");
@@ -155,9 +163,20 @@ assert(api.escapeHtml, "HTML escaper should be exported for tests");
 }
 
 const samples = {
+  overview: `#include <stdio.h>
+int main(void) {
+  printf("C language");
+  return 0;
+}`,
   hello: `#include <stdio.h>
 int main(void) {
   printf("Hello, C World!");
+  return 0;
+}`,
+  syntax: `#include <stdio.h>
+int main(void) {
+  // 说明：这行注释不会执行
+  printf("syntax ok");
   return 0;
 }`,
   variables: `#include <stdio.h>
@@ -1082,13 +1101,15 @@ assert(/本项目永久免费对外开放/.test(html), "announcement should incl
 assert(/STARTUP_ANNOUNCEMENT_AUTO_HIDE_MS\s*=\s*3000/m.test(html), "announcement should auto-hide after 3 seconds");
 assert(/function showStartupAnnouncement/m.test(html), "announcement should be controlled by a startup function");
 assert(/id="announcementCloseButton"/m.test(html), "announcement should include a minimal close control");
-assert(/World Build v1\.0\.8/m.test(html) || /GAME_VERSION\s*=\s*"v1\.0\.8"/m.test(html), "game version should increment when shipping a new update");
+assert(/World Build v1\.0\.9/m.test(html) || /GAME_VERSION\s*=\s*"v1\.0\.9"/m.test(html), "game version should increment when shipping a new update");
 assert(/UPDATE_HISTORY\s*=\s*Object\.freeze\(\[[\s\S]*v1\.0\.1[\s\S]*零基础新手指引[\s\S]*v1\.0\.0[\s\S]*手机端适配/m.test(html), "update history should keep detailed previous release notes");
 assert(/id="updateHistoryList"/m.test(html) && /历史更新内容/m.test(html), "side menu should expose update history with detailed usage-visible notes");
-assert(/GAME_VERSION\s*=\s*"v1\.0\.8"/m.test(html), "game version should increment for the guidance and performance quieting release");
+assert(/GAME_VERSION\s*=\s*"v1\.0\.9"/m.test(html), "game version should increment for the course-path and UI stability release");
+assert(/UPDATE_HISTORY\s*=\s*Object\.freeze\(\[[\s\S]*v1\.0\.9[\s\S]*官网课程路径对齐[\s\S]*develop\.fan[\s\S]*弹窗收起后显示具体折叠对象名称[\s\S]*手机软键盘/m.test(html), "update history should record the v1.0.9 course path and UI stability release");
+assert(/UPDATE_ANNOUNCEMENT_PAGES\s*=\s*Object\.freeze\(\[[\s\S]*develop\.fan[\s\S]*C 语言学习路径[\s\S]*编译失败不再清空玩家代码[\s\S]*软键盘/m.test(html), "startup announcement should describe the v1.0.9 course path and UI stability release");
 assert(/UPDATE_HISTORY\s*=\s*Object\.freeze\(\[[\s\S]*v1\.0\.8[\s\S]*性能保护降噪、透明引导[\s\S]*12秒滚动窗口[\s\S]*15秒无操作/m.test(html), "update history should record the v1.0.8 guidance and performance quieting release");
 assert(/UPDATE_HISTORY\s*=\s*Object\.freeze\(\[[\s\S]*v1\.0\.7[\s\S]*稳定档位移除中档[\s\S]*renderQuality=medium/m.test(html), "update history should record the v1.0.7 stable quality cleanup");
-assert(/UPDATE_ANNOUNCEMENT_PAGES\s*=\s*Object\.freeze\(\[[\s\S]*性能保护[\s\S]*持续严重掉帧[\s\S]*是否需要帮助[\s\S]*手机端右下角“点击开始”按钮已隐藏/m.test(html), "startup announcement should describe the v1.0.8 guidance and performance quieting release");
+assert(/UPDATE_HISTORY\s*=\s*Object\.freeze\(\[[\s\S]*性能保护[\s\S]*低于18FPS[\s\S]*是否需要帮助[\s\S]*手机版隐藏右下角“点击开始”音频按钮/m.test(html), "history should retain the v1.0.8 guidance and performance quieting release");
 assert(/UPDATE_HISTORY\s*=\s*Object\.freeze\(\[[\s\S]*v1\.0\.6[\s\S]*绝对引导系统[\s\S]*错误行标红/m.test(html), "update history should record the v1.0.6 absolute guide release");
 assert(/UPDATE_HISTORY\s*=\s*Object\.freeze\(\[[\s\S]*v1\.0\.5[\s\S]*新手教程热修复[\s\S]*不卡死[\s\S]*跳过可用/m.test(html), "update history should record the v1.0.5 novice guide hotfix");
 assert(/UPDATE_HISTORY\s*=\s*Object\.freeze\(\[[\s\S]*v1\.0\.3[\s\S]*手机横屏全屏[\s\S]*触摸对话/m.test(html), "update history should record the v1.0.3 mobile landscape release");
@@ -1417,6 +1438,7 @@ assert(/averageWindowMs:\s*12000/m.test(html) && /thresholdFps:\s*18/m.test(html
 assert(/function suspendSceneForEditor/m.test(html), "editor mode should fully suspend gameplay simulation work");
 assert(/function isObjectInsideCameraView/m.test(html), "off-camera animation and particles should be culled");
 assert(/const CHAPTER_REGION_LAYOUT\s*=\s*Object\.freeze/m.test(html), "map should define isolated chapter regions");
+assert(/chapterIds:\s*\["overview", "hello", "syntax", "variables", "operators", "conditions"\]/m.test(html), "foundation region should follow the develop.fan course path start");
 assert(/const REGION_PORTAL_CONFIG\s*=\s*Object\.freeze/m.test(html), "regions should be connected through explicit portals");
 assert(/function getChapterRegionId/m.test(html), "chapters should resolve to a region id");
 assert(/function isChapterFragmentUnlocked/m.test(html), "fragments should be gated by chapter unlock state");
@@ -1444,6 +1466,8 @@ assert(/id="mobileControls"/m.test(html) && /id="virtualJoystick"/m.test(html) &
 assert(/body\.mobile-input\.is-settings-open \.mobile-controls[\s\S]*display:\s*none/m.test(html) && /document\.body\.classList\.add\("is-settings-open"\)/m.test(html), "mobile controls should hide while settings is open");
 assert(/function detectMobileInputMode/m.test(html), "mobile mode should be detected by width and touch capability");
 assert(/function applyMobileEditorLayout/m.test(html), "small screens should switch editor to compact layout");
+assert(/function updateMobileEditorViewport/m.test(html) && /visualViewport/m.test(html) && /mobile-keyboard-open/m.test(html), "mobile editor should track the visual viewport when the soft keyboard opens");
+assert(/--mobile-visual-height/m.test(html) && /scrollIntoView/m.test(html), "mobile editor should stay visible above the soft keyboard");
 assert(/function installGameErrorBoundary/m.test(html), "game should install an outer error boundary");
 assert(/function attemptSceneAutoRepair/m.test(html), "error boundary should try to reload scene data");
 assert(/id="errorRecoveryToast"/m.test(html), "recoverable errors should show a pixel repair toast");
@@ -1464,9 +1488,14 @@ assert(/bezierFragmentArc/m.test(html), "fragment collection should use a bezier
 assert(/Final Art Direction Pass/m.test(html) && /--ui-motion:\s*cubic-bezier\(0\.2,\s*0\.9,\s*0\.4,\s*1\)/m.test(html), "final polish should define a unified visual language and motion curve");
 assert(/\.info-side-menu::before[\s\S]*background-size:\s*56px 56px/m.test(html), "side menu should have a subtle circuit texture tying UI to the world");
 assert(/\.info-side-menu\s*\{[\s\S]*overflow-y:\s*auto[\s\S]*-webkit-overflow-scrolling:\s*touch/m.test(html), "mobile side menu should remain vertically scrollable after visual polish");
+const genericCollapsibleBlock = html.match(/\.collapsible-glass-popup\s*\{([\s\S]*?)\n\s*\}/)?.[1] || "";
+assert(!/position\s*:/.test(genericCollapsibleBlock), "generic collapsible popup class must not override fixed or absolute popup positioning");
+assert(/content:\s*attr\(data-popup-collapse-label\)/m.test(html) && /POPUP_COLLAPSE_LABELS\s*=\s*Object\.freeze/m.test(html), "collapsed popup strips should show what was folded");
+assert(/function enableCollapsedPopupDrag/m.test(html) && /popup-dragging/m.test(html), "collapsed popups should be draggable after folding");
 assert(/function getUnifiedFeedbackTier/m.test(html) && /data-feedback-tier/m.test(html), "dynamic island feedback should use unified normal/important/epic tiers");
 assert(/document\.body\.classList\.toggle\("is-menu-open", next\)/m.test(html) && /document\.body\.classList\.add\("is-dialog-open"\)/m.test(html), "menu and dialog states should dim the playfield consistently");
 assert(/body\.mobile-input \.absolute-guide-chip:not\(\.primary\)[\s\S]*display:\s*none !important/m.test(html), "mobile absolute guide should keep only one transparent top hint visible");
+assert(/body\.pause-menu-open #game canvas/m.test(html) && !/body\.is-paused #game canvas/m.test(html), "tutorial input locks should not blur or shrink the game canvas");
 assert(/\.dynamic-island-toast,[\s\S]*\.bottom-action-bar,[\s\S]*\.save-toast[\s\S]*rgba\(3, 7, 18, 0\.42\)/m.test(html), "transient popups should use transparent glass instead of blocking panels");
 assert(/function ensurePopupCollapseControl/m.test(html) && /COLLAPSIBLE_POPUP_SELECTORS\s*=\s*Object\.freeze/m.test(html), "all major popup surfaces should get a shared collapse control");
 assert(/\.collapsible-glass-popup\.popup-collapsed[\s\S]*max-height:\s*42px/m.test(html), "collapsed popups should shrink into a transparent compact strip");
@@ -1552,6 +1581,9 @@ assert(api.resolveStartupRouteFromSave, "startup route resolver should be export
 }
 assert(/function applyManualEditorKeyOperation/m.test(html), "editor should expose a pure manual keyboard operation engine");
 assert(/function manualEditorOperationFromBeforeInput/m.test(html), "mobile soft keyboard beforeinput should be translated into manual editor operations");
+assert(/function restoreEditorSourceAfterFailedRun/m.test(html), "compile failures should preserve the user's current editor source");
+assert(/restoreEditorSourceAfterFailedRun\(userSourceBeforeRun,\s*"validate-result"\)/m.test(html), "validation failures should restore the original user source");
+assert(/restoreEditorSourceAfterFailedRun\(userSourceBeforeRun,\s*"exception"\)/m.test(html), "runtime exceptions should restore the original user source");
 assert(/dom\.codeInput\.addEventListener\("beforeinput", handleMobileEditorBeforeInput\)/m.test(html), "editor beforeinput should use the mobile-safe manual input bridge");
 assert(/<textarea id="codeInput"[^>]*inputmode="text"[^>]*enterkeyhint="enter"[^>]*autocapitalize="none"[^>]*autocorrect="off"/m.test(html), "code editor should expose mobile-friendly input attributes");
 assert(/id="mobileEditorKeyboardButton"/m.test(html) && /function focusMobileEditorKeyboard/m.test(html), "mobile code editor should expose a touch-first keyboard focus affordance");
@@ -1767,6 +1799,7 @@ assert(/id="littleCCompanion"/m.test(html) && /function showLittleCSpeech/m.test
 assert(/ZERO_BASIS_FOUNDATION_LESSONS\s*=\s*Object\.freeze\(\[[\s\S]*什么是“指令”[\s\S]*拿碗[\s\S]*什么是“变量”[\s\S]*年龄[\s\S]*什么是“输入”和“输出”[\s\S]*发送[\s\S]*什么是“条件判断”[\s\S]*下雨[\s\S]*什么是“循环”[\s\S]*走一圈/m.test(html), "zero-basis foundation should include five no-code concept exercises");
 assert(/id="foundationOverlay"/m.test(html) && /function startZeroBasisFoundation/m.test(html) && /function completeFoundationLesson/m.test(html), "zero-basis foundation overlay should be playable and completable");
 assert(/CODE_BLOCK_MODE_SNIPPETS\s*=\s*Object\.freeze/m.test(html) && /id="codeBlockModePanel"/m.test(html) && /function renderCodeBlockMode/m.test(html) && /function verifyCodeBlockProgram/m.test(html), "first ten snippets should support colorful code block mode");
+assert(/CODE_BLOCK_MODE_SNIPPETS\.find\(\(item\) => item\.lesson === activeChapterId\)/m.test(html) && /if \(!config\) return null/m.test(html), "code block mode should only show blocks for the active configured chapter");
 assert(/selectedIds\s*=\s*new Set\(codeBlockSelection\)/m.test(html) && /remainingBlocks\s*=\s*config\.blocks\.filter\(\(block\)\s*=>\s*!selectedIds\.has\(block\.id\)\)/m.test(html), "picked code blocks should disappear from the source bank");
 assert(/code-block-guided/m.test(html) && /grid-template-columns:\s*92px minmax\(0, 1fr\) 48px/m.test(html), "code block guide mode should simplify the editor layout");
 assert(/body\.mobile-input \.code-block-bank-row[\s\S]*overflow-x:\s*auto/m.test(html), "mobile code block rows should scroll horizontally instead of cluttering the screen");
