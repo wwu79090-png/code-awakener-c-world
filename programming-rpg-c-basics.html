@@ -11,7 +11,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; base-uri 'self'; object-src 'none'; frame-ancestors 'none'; script-src 'self' https://cdn.jsdelivr.net 'nonce-code-awakener-inline' 'sha256-9Ku0aZJKdo/OVsfLLfx1jU0S+QPcblHSRJeXU4WhkdM='; style-src 'self' https://cdn.jsdelivr.net https://fonts.googleapis.com 'nonce-code-awakener-inline' 'sha256-FqUOXMftslySn/KHpQS9FcURJrSTdhIRtQJkfe0FxaQ='; style-src-attr 'unsafe-inline'; font-src 'self' https://cdn.jsdelivr.net https://fonts.gstatic.com data:; img-src 'self' data: blob:; media-src 'self' data: blob:; worker-src 'self' blob:; child-src 'self' blob:; connect-src 'self' https://cdn.jsdelivr.net http://localhost:8000 http://127.0.0.1:8000;">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; base-uri 'self'; object-src 'none'; frame-ancestors 'none'; script-src 'self' https://cdn.jsdelivr.net 'nonce-code-awakener-inline' 'sha256-SdlV4JgM9/Ckpjy5qUqJSnaCuKoQWVYqy7cfVenh+Ls='; style-src 'self' https://cdn.jsdelivr.net https://fonts.googleapis.com 'nonce-code-awakener-inline' 'sha256-Zbtrhs0URyLU/+qcNIEb+Zltmxduh8krf/bn2X9UGt0='; style-src-attr 'unsafe-inline'; font-src 'self' https://cdn.jsdelivr.net https://fonts.gstatic.com data:; img-src 'self' data: blob:; media-src 'self' data: blob:; worker-src 'self' blob:; child-src 'self' blob:; connect-src 'self' https://cdn.jsdelivr.net http://localhost:8000 http://127.0.0.1:8000;">
   <title>编程学习 RPG：C 语言启航村</title>
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%23020617'/%3E%3Cpath d='M22 20 10 32l12 12M42 20l12 12-12 12' fill='none' stroke='%2300ff88' stroke-width='6' stroke-linecap='round' stroke-linejoin='round'/%3E%3Cpath d='m36 16-8 32' stroke='%2300ccff' stroke-width='5' stroke-linecap='round'/%3E%3C/svg%3E">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/firacode@6.2.0/distr/fira_code.css">
@@ -4852,7 +4852,7 @@
 
     .editor-error-line-overlay.show {
       opacity: 1;
-      animation: editorErrorLinePulse 620ms steps(2, end) 3;
+      animation: editorErrorLinePulse 620ms steps(2, end) 1;
     }
 
     @keyframes editorErrorLinePulse {
@@ -9843,7 +9843,7 @@
       <canvas id="menuFxCanvas" width="1280" height="720"></canvas>
       <div class="main-menu-card glass-panel">
         <h1 class="game-logo">CODE AWAKENER<br>C 语言启航村</h1>
-        <div class="version-label" id="versionLabel">World Build v1.0.16 · develop.fan C Basics</div>
+        <div class="version-label" id="versionLabel">World Build v1.0.18 · develop.fan C Basics</div>
         <label class="boot-command"><span>&gt;</span><input id="bootCommandInput" value="start_game.exe" autocomplete="off" spellcheck="false" aria-label="启动命令"></label>
         <label class="skin-picker">角色外观
           <select id="skinSelect" aria-label="选择主角外观">
@@ -10275,12 +10275,12 @@
         </section>
         <section class="info-menu-section">
           <strong>成长 / 惩罚</strong>
-          <p class="menu-help">编译失败会扣关卡生命。生命归零会回到出生点复习当前关卡；成功编译和修复敌人会获得经验。</p>
+          <p class="menu-help">编译失败会记录调试次数，但不会锁定编辑器；连续失败会在底部终端显示核心示例和常见检查点。</p>
           <div class="info-menu-row"><span>关卡生命</span><span id="infoCompileLivesText">3/3</span></div>
           <div class="info-menu-meter"><span id="infoCompileLivesFill"></span></div>
           <div class="info-menu-row"><span>等级经验</span><span id="infoExpText">Lv.1 · 0/100</span></div>
           <div class="info-menu-meter"><span id="infoExpFill"></span></div>
-          <div id="infoGrowthHint">// 编译失败会扣 1 点关卡生命；归零会回到出生点。</div>
+          <div id="infoGrowthHint">// 编译失败后可以继续修改；按 Esc 或“关闭编辑器”随时返回地图。</div>
         </section>
         <section class="info-menu-section">
           <strong>装配碎片说明</strong>
@@ -10668,10 +10668,10 @@ int main(void) {
       <button id="announcementCloseButton" class="announcement-close" type="button" aria-label="关闭公告">×</button>
       <h2 id="startupAnnouncementTitle" class="startup-announcement-title">> 消息 / 本次更新</h2>
       <div id="announcementPageBody" class="startup-announcement-body">
-        <p>// 本次更新：石碑编译器新增空代码和乱码前置拦截。</p>
-        <p>// 编译错误会保留输入框原文，方便直接修改，不会自动清空。</p>
-        <p>// 切换到新石碑时 main.c 会强制清空，上一关代码不再串关。</p>
-        <p>// 编译前会核对当前任务ID，避免旧任务输入误推进新任务。</p>
+        <p>// 本次更新：启动诊断、离线缓存和移动端性能保护完成清理。</p>
+        <p>// 离线缓存不再尝试无效 blob Service Worker，启动控制台保持干净。</p>
+        <p>// 手机端先使用低功耗特效预算，避免先掉帧再紧急降级。</p>
+        <p>// 桌面端仍保留高画质默认值和核心玩法流程。</p>
         <p>// 作者：杀戮</p>
         <p class="announcement-dismiss-hint">- 点击任意处关闭</p>
       </div>
@@ -10834,7 +10834,7 @@ int main(void) {
             <span id="runSpinner" class="spinner" aria-hidden="true"></span>
             <span>输出控制台</span>
             <span id="editorStatusText">导师提示：先读任务，再运行小步验证。</span>
-            <button id="closeEditorButton" class="close-button">ESC 关闭</button>
+            <button id="closeEditorButton" class="close-button">关闭编辑器</button>
           </div>
           <pre id="consoleOutput">等待运行。请在 main.c 中补全 C 语言 Hello World 程序。</pre>
             <div id="editorRichConsole" class="editor-rich-console" aria-live="polite">彩色控制台：等待编译信号。</div>
@@ -11145,35 +11145,34 @@ int main() {
     const SAVE_SIGNATURE_SALT = "c-world-local-integrity";
     const SAVE_CLEAR_CONFIRM_MS = 3000;
     const STARTUP_ANNOUNCEMENT_AUTO_HIDE_MS = 3000;
-    const GAME_VERSION = "v1.0.16";
+    const GAME_VERSION = "v1.0.18";
     const UPDATE_ANNOUNCEMENT_PAGES = Object.freeze([
       {
         title: "> 消息 / 本次更新",
         lines: [
-          "// 本次更新：石碑编译器新增空代码和乱码前置拦截。",
-          "// 编译错误会保留输入框原文，方便直接修改，不会自动清空。",
-          "// 切换到新石碑时 main.c 会强制清空，上一关代码不再串关。",
-          "// 编译前会核对当前任务ID，避免旧任务输入误推进新任务。",
-          "// 公告历史已记录本次修复并同步提升版本号。",
+          "// 本次更新：启动诊断、离线缓存和移动端性能保护完成清理。",
+          "// 离线缓存不再尝试无效 blob Service Worker，启动控制台保持干净。",
+          "// 手机端先使用低功耗特效预算，避免先掉帧再紧急降级。",
+          "// 桌面端仍保留高画质默认值和核心玩法流程。",
           "// 作者：杀戮"
         ]
       },
       {
-        title: "> 更新内容 / 编译器",
+        title: "> 更新内容 / 启动诊断",
         lines: [
-          "// 空文本会立即提示“编译错误：代码不能为空”，不会扣掉流程进度。",
-          "// 不含 int main(void) 的乱码会在沙箱启动前被拦截。",
-          "// unlock_gate 等世界命令也必须先通过当前石碑的编译前校验。",
-          "// 编译失败路径会回写玩家原始输入，保留现场给玩家修正。"
+          "// 旧的 blob Service Worker 注册路径已移除，避免浏览器每次启动都打印警告。",
+          "// 离线缓存保留显式同源注册入口，未来有独立 sw 文件时再启用。",
+          "// 启动烟测覆盖主菜单、开始按钮、移动端代码创世终端和控制台健康。",
+          "// 存档、编译、任务、碎片和编辑器既有流程未改变。"
         ]
       },
       {
-        title: "> 更新内容 / 石碑切换",
+        title: "> 更新内容 / 移动端性能",
         lines: [
-          "// 打开新石碑时跳过旧文件自动保存，防止上一关输入被写回新关 main.c。",
-          "// 新任务生命周期会显式执行 clearEditorSourceForTask(chapterId)。",
-          "// README 和任务说明仍保留，只有可编辑的 main.c 被清空。",
-          "// 重置按钮仍可恢复本关初始模板，方便需要模板的玩家。"
+          "// 手机和触控视口会先跳过 SSAO、程序化草地、深度雾和高频粒子更新。",
+          "// 低功耗预算由现有电影化调度器执行，不新增菜单，也不改变桌面默认高画质。",
+          "// 目标是减少 10fps 以下的后处理悬崖和紧急降级提示。",
+          "// 性能保护仍会在极端低帧率时兜底降级，避免卡死。"
         ]
       },
       {
@@ -11187,6 +11186,28 @@ int main() {
       }
     ]);
     const UPDATE_HISTORY = Object.freeze([
+      {
+        version: "v1.0.18",
+        date: "2026-06-16",
+        title: "启动诊断、离线缓存降噪与移动端性能保护",
+        details: [
+          "删除无效 blob Service Worker 注册路径，离线缓存没有同源 sw 文件时安静跳过，启动控制台不再出现重复警告。",
+          "手机和触控视口进入现有低功耗特效预算，先跳过 SSAO、程序化草地、深度雾和高频粒子更新，减少后处理导致的低帧率悬崖。",
+          "桌面端继续保留高画质默认值；任务、关卡、判题、存档和编辑器核心流程保持不变。",
+          "公告与历史更新同步记录本次修复，版本号提升到 v1.0.18。"
+        ]
+      },
+      {
+        version: "v1.0.17",
+        date: "2026-06-16",
+        title: "智能判题与编译失败恢复",
+        details: [
+          "主线判题改为先确认 C 语法可运行，再以终端输出作为通关标准，不再要求源码与目标答案逐字一致。",
+          "多余末尾空行、行尾空格、缩进宽度和注释差异不会阻止通关；关键字、分号、括号和字符串输出仍保持严格。",
+          "编译失败只累计调试次数，不再扣到生命归零、关闭编辑器或传送回出生点。",
+          "连续三次失败会在编辑器底部显示不完整核心示例和常见错误检查点，Esc 与关闭按钮始终可用。"
+        ]
+      },
       {
         version: "v1.0.16",
         date: "2026-06-16",
@@ -12033,7 +12054,7 @@ return 0;`;
       directSaveAs: "reduced-by-inline-resources"
     });
     const SECURITY_CONFIG = Object.freeze({
-      expectedScriptHash: "p9SC9WTlrj+nYz3a2LGodZOJqYVab4dR7ZqY5rMKF88=",
+      expectedScriptHash: "wrFd/x8iv+osBubwOLN0dIIHR4bke0gjTHtZKjssTAA=",
       selfCheckIntervalMs: 45000,
       tamperRefreshMs: 5000,
       devToolsRefreshMs: 2000,
@@ -12382,26 +12403,18 @@ return 0;`;
       { name: "editor-overlay", action: "open-first-gate" }
     ]);
 
-    const SERVICE_WORKER_SOURCE = `
-      const CACHE_NAME = "code-awakener-c-world-v1";
-      self.addEventListener("install", (event) => {
-        event.waitUntil(caches.open(CACHE_NAME).then((cache) => cache.addAll(["./"])));
-      });
-      self.addEventListener("fetch", (event) => {
-        event.respondWith(caches.match(event.request).then((cached) => cached || fetch(event.request)));
-      });
-    `;
+    const SERVICE_WORKER_REGISTRATION_PATH = "";
 
     function registerOfflineServiceWorker() {
       try {
-        if (!("serviceWorker" in (globalThis.navigator || {})) || typeof Blob === "undefined" || typeof URL === "undefined") return false;
-        const url = URL.createObjectURL(new Blob([SERVICE_WORKER_SOURCE], { type: "text/javascript" }));
-        globalThis.navigator.serviceWorker.register(url).catch((error) => {
-          console.warn("[offline-cache] Service Worker 注册失败，已降级为普通单页运行。", error);
+        const navigatorRef = globalThis.navigator || {};
+        if (!("serviceWorker" in navigatorRef) || !SERVICE_WORKER_REGISTRATION_PATH) return false;
+        navigatorRef.serviceWorker.register(SERVICE_WORKER_REGISTRATION_PATH).catch((error) => {
+          console.info("[offline-cache] Service Worker 注册跳过，单页游戏继续运行。", error?.message || error);
         });
         return true;
       } catch (error) {
-        console.warn("[offline-cache] Service Worker 初始化异常，已跳过离线缓存。", error);
+        console.info("[offline-cache] Service Worker 初始化跳过，单页游戏继续运行。", error?.message || error);
         return false;
       }
     }
@@ -14168,6 +14181,7 @@ return 0;`;
       applyNextDowngrade(average, now = performance.now()) {
         const step = PERFORMANCE_DEGRADE_SEQUENCE[Math.floor(this.degradeIndex)];
         if (!step) return false;
+        if (isLowPowerCinematicViewport()) return false;
         this.lastActionAt = now;
         this.degradeIndex += 1;
         const runtime = gameState.runtimeRenderDowngrade || (gameState.runtimeRenderDowngrade = {});
@@ -14209,6 +14223,10 @@ return 0;`;
       const coarse = globalThis.matchMedia?.("(pointer: coarse)")?.matches;
       const touch = "ontouchstart" in window || (globalThis.navigator?.maxTouchPoints || 0) > 0;
       return Boolean(document.body?.classList?.contains("mobile-input") || ((window.innerWidth <= 768) && touch) || coarse);
+    }
+
+    function isLowPowerCinematicViewport() {
+      return Boolean(isMobileTouchViewport() || gameState?.mobilePowerSaveActive || getPerformanceModeId() === "low");
     }
 
     function getRuntimeParticleLimit(scene = gameState.scene) {
@@ -14398,13 +14416,13 @@ return 0;`;
         updateQualityRuntimeStatus(average);
         renderSafetyManager?.checkFrameBudget?.(average);
         const severeDrop = average < 22 || frameMs > 120;
-        if (severeDrop && now - this.lastLogAt > 12000 && !gameState.menuOpen && !gameState.editorOpen) {
+        if (severeDrop && !isLowPowerCinematicViewport() && now - this.lastLogAt > 12000 && !gameState.menuOpen && !gameState.editorOpen) {
           this.lastLogAt = now;
           recordPerformanceLog("severe-fps-drop", { fps: average, frameMs, particles });
         }
         if (average < 22) {
           this.lowSince = this.lowSince || now;
-          if (now - this.lowSince > 5000 && getPerformanceModeId() !== "low") {
+          if (now - this.lowSince > 5000 && getPerformanceModeId() !== "low" && !isLowPowerCinematicViewport()) {
             applyPerformanceMode("low", "连续5秒低于22fps严重保护", { runtimeOnly: true });
             recordPerformanceLog("hard-switch-low", { fps: average, frameMs, particles });
           }
@@ -14413,7 +14431,7 @@ return 0;`;
         }
         if (average < 12) {
           this.criticalSince = this.criticalSince || now;
-          if (now - this.criticalSince > 1200) applyPerformanceMode("low", "低于12fps紧急保护", { runtimeOnly: true });
+          if (now - this.criticalSince > 1200 && !isLowPowerCinematicViewport()) applyPerformanceMode("low", "低于12fps紧急保护", { runtimeOnly: true });
         } else {
           this.criticalSince = 0;
         }
@@ -16921,6 +16939,195 @@ int main(void) {
         validator: "best-practices"
       }
     ];
+
+    function exactCodeLines(...lines) {
+      return lines.join("\n");
+    }
+
+    const EXACT_TASK_ERROR_MESSAGE = "代码与任务要求不一致，请检查";
+    const EXACT_TASK_CODE_BY_ID = Object.freeze({
+      overview: exactCodeLines(
+        "#include <stdio.h>",
+        "",
+        "int main(void) {",
+        "  printf(\"C language\");",
+        "  return 0;",
+        "}"
+      ),
+      hello: exactCodeLines(
+        "#include <stdio.h>",
+        "",
+        "int main(void) {",
+        "  printf(\"Hello, C World!\");",
+        "  return 0;",
+        "}"
+      ),
+      syntax: exactCodeLines(
+        "#include <stdio.h>",
+        "",
+        "int main(void) {",
+        "  // 这行注释不会运行，它只是解释下面的输出",
+        "  printf(\"syntax ok\");",
+        "  return 0;",
+        "}"
+      ),
+      variables: exactCodeLines(
+        "#include <stdio.h>",
+        "",
+        "int main(void) {",
+        "  int level = 7;",
+        "  printf(\"%d\", level);",
+        "  return 0;",
+        "}"
+      ),
+      operators: exactCodeLines(
+        "#include <stdio.h>",
+        "",
+        "int main(void) {",
+        "  int attack = 12;",
+        "  int bonus = 3;",
+        "  int power = attack + bonus;",
+        "  printf(\"%d\", power);",
+        "  return 0;",
+        "}"
+      ),
+      conditions: exactCodeLines(
+        "#include <stdio.h>",
+        "",
+        "int main(void) {",
+        "  int score = 86;",
+        "  if (score >= 60) {",
+        "    printf(\"pass\");",
+        "  } else {",
+        "    printf(\"fail\");",
+        "  }",
+        "  return 0;",
+        "}"
+      ),
+      loops: exactCodeLines(
+        "#include <stdio.h>",
+        "",
+        "int main(void) {",
+        "  int sum = 0;",
+        "  for (int i = 1; i <= 5; i++) {",
+        "    sum += i;",
+        "  }",
+        "  printf(\"%d\", sum);",
+        "  return 0;",
+        "}"
+      ),
+      functions: exactCodeLines(
+        "#include <stdio.h>",
+        "",
+        "int add(int a, int b) {",
+        "  return a + b;",
+        "}",
+        "",
+        "int main(void) {",
+        "  int result = add(4, 6);",
+        "  printf(\"%d\", result);",
+        "  return 0;",
+        "}"
+      ),
+      arrays: exactCodeLines(
+        "#include <stdio.h>",
+        "",
+        "int main(void) {",
+        "  int nums[3] = {2, 4, 6};",
+        "  int total = nums[0] + nums[1] + nums[2];",
+        "  printf(\"%d\", total);",
+        "  return 0;",
+        "}"
+      ),
+      pointers: exactCodeLines(
+        "#include <stdio.h>",
+        "",
+        "int main(void) {",
+        "  int value = 9;",
+        "  int *ptr = &value;",
+        "  printf(\"%d\", *ptr);",
+        "  return 0;",
+        "}"
+      ),
+      structs: exactCodeLines(
+        "#include <stdio.h>",
+        "",
+        "struct Hero {",
+        "  int level;",
+        "};",
+        "",
+        "int main(void) {",
+        "  struct Hero hero = {8};",
+        "  printf(\"%d\", hero.level);",
+        "  return 0;",
+        "}"
+      ),
+      files: exactCodeLines(
+        "#include <stdio.h>",
+        "",
+        "int main(void) {",
+        "  FILE *fp = fopen(\"note.txt\", \"w\");",
+        "  fprintf(fp, \"C File\");",
+        "  fclose(fp);",
+        "  printf(\"file saved\");",
+        "  return 0;",
+        "}"
+      ),
+      memory: exactCodeLines(
+        "#include <stdio.h>",
+        "#include <stdlib.h>",
+        "",
+        "int main(void) {",
+        "  int *numbers = malloc(3 * sizeof(int));",
+        "  numbers[0] = 1;",
+        "  numbers[1] = 2;",
+        "  numbers[2] = 3;",
+        "  printf(\"%d\", numbers[0] + numbers[1] + numbers[2]);",
+        "  free(numbers);",
+        "  return 0;",
+        "}"
+      ),
+      preprocessor: exactCodeLines(
+        "#include <stdio.h>",
+        "",
+        "#define MAX_LEVEL 99",
+        "",
+        "int main(void) {",
+        "  printf(\"%d\", MAX_LEVEL);",
+        "  return 0;",
+        "}"
+      ),
+      stdlib: exactCodeLines(
+        "#include <stdio.h>",
+        "#include <stdlib.h>",
+        "",
+        "int main(void) {",
+        "  int value = atoi(\"42\");",
+        "  printf(\"%d\", value);",
+        "  return 0;",
+        "}"
+      ),
+      "best-practices": exactCodeLines(
+        "#include <stdio.h>",
+        "",
+        "int clampLevel(int level) {",
+        "  if (level > 99) return 99;",
+        "  if (level < 1) return 1;",
+        "  return level;",
+        "}",
+        "",
+        "int main(void) {",
+        "  printf(\"%d\", clampLevel(120));",
+        "  return 0;",
+        "}"
+      )
+    });
+
+    chapters.forEach((chapter) => {
+      chapter.taskId = chapter.id;
+      chapter.exactCode = EXACT_TASK_CODE_BY_ID[chapter.id] || chapter.files?.["main.c"] || "";
+      chapter.errorMessage = EXACT_TASK_ERROR_MESSAGE;
+    });
 
     const chapterById = Object.fromEntries(chapters.map((chapter) => [chapter.id, chapter]));
     const FIRST_MAINLINE_CHAPTER_ID = chapters[0]?.id || "overview";
@@ -22574,7 +22781,7 @@ ${item.code}
             drawerGesture = { mode: "leftEdgeSwipe", startX: firstTouch.clientX, progress: 0 };
             updateInfoMenuDragProgress(0, drawerGesture.mode);
           } else if (menuActive && event.target?.closest?.("#infoSideMenu")) {
-            drawerGesture = { mode: "menuCloseSwipe", startX: firstTouch.clientX, progress: 1 };
+            drawerGesture = { mode: "menuCloseSwipe", startX: firstTouch.clientX, startY: firstTouch.clientY, progress: 1, pending: true };
           } else if (menuActive && !event.target?.closest?.("#infoSideMenu,.info-menu-toggle")) {
             toggleInfoSideMenu(false);
           }
@@ -22590,6 +22797,15 @@ ${item.code}
         if (touchesStartedOnMobileControls(event.touches)) return;
         if (drawerGesture && event.touches.length === 1) {
           const deltaX = event.touches[0].clientX - drawerGesture.startX;
+          const deltaY = event.touches[0].clientY - (drawerGesture.startY || event.touches[0].clientY);
+          if (drawerGesture.mode === "menuCloseSwipe" && drawerGesture.pending) {
+            if (Math.abs(deltaY) > 8 && Math.abs(deltaY) > Math.abs(deltaX)) {
+              drawerGesture = null;
+              return;
+            }
+            if (deltaX > -10 || Math.abs(deltaX) <= Math.abs(deltaY)) return;
+            drawerGesture.pending = false;
+          }
           drawerGesture.progress = updateInfoMenuDragProgress(deltaX, drawerGesture.mode);
           event.preventDefault();
           return;
@@ -24015,44 +24231,33 @@ ${item.code}
       return true;
     }
 
-    function triggerCompileLifeZeroPenalty(chapterId = gameState.activeChallengeId) {
-      triggerErrorGlitch();
-      dom.errorGlitchOverlay?.classList.add("active");
-      gameState.scene && (gameState.scene.playerFrozen = true);
-      showReward("生命归零：系统正在把你传送回出生点，当前关卡进度重置。");
-      trackedSetTimeout(() => {
-        dom.errorGlitchOverlay?.classList.remove("active");
-        closeEditor(false);
-        resetCurrentChallengeProgress(chapterId);
-        teleportPlayerToSpawn(gameState.scene);
-        if (gameState.scene) gameState.scene.playerFrozen = false;
-        updateInfoSideMenu();
-      }, 2000, "compile-life-zero-teleport");
-      return true;
-    }
-
     function handleCompileFailurePenalty(chapterId = gameState.activeChallengeId, detail = {}) {
       normalizeCompileLifeState();
-      recordCompileFailure();
+      const totalFailures = recordCompileFailure();
       const key = chapterId || "unknown";
       gameState.progress.chapterFailureCounts[key] = (Number(gameState.progress.chapterFailureCounts[key]) || 0) + 1;
       gameState.progress.compileFailureStreak = (Number(gameState.progress.compileFailureStreak) || 0) + 1;
-      gameState.progress.compileLives = Math.max(0, Number(gameState.progress.compileLives) - 1);
       triggerErrorGlitch();
-      flashHpDamage?.(1);
-      showCompileLifeLossFloat(1);
       const scene = gameState.scene;
       scene?.player?.setTint?.(0xff4444);
       trackedSetTimeout(() => scene?.player?.clearTint?.(), 260, "compile-life-player-red");
       const index = getChapterLevelIndex(key);
       const limit = index >= COMPILE_LIFE_RULES.lateChapterIndex ? COMPILE_LIFE_RULES.lateFailureHintLimit : COMPILE_LIFE_RULES.earlyFailureHintLimit;
       if (gameState.progress.chapterFailureCounts[key] >= limit) {
-        showReward("建议重新复习一下当前章节的知识。");
+        showReward("连续编译失败：核心提示已显示在编辑器底部。");
+      } else {
+        showReward("编译失败已记录，编辑器仍可继续修改。");
       }
       updateInfoSideMenu();
       saveProgress();
-      if (gameState.progress.compileLives <= 0) triggerCompileLifeZeroPenalty(key);
-      return { lives: gameState.progress.compileLives, limit, detail };
+      resetEditorAfterCompileFailure(detail.source || "compile-failed");
+      return {
+        lives: gameState.progress.compileLives,
+        limit,
+        detail,
+        failureCount: gameState.progress.chapterFailureCounts[key],
+        totalFailures
+      };
     }
 
     function updateSpawnStoneLifeRecovery(scene = gameState.scene) {
@@ -25143,6 +25348,7 @@ ${item.code}
       if (renderSafetyManager?.isEffectDisabled(feature)) return false;
       if (gameState.settings.animationQuality === ANIMATION_QUALITY.off) return false;
       if (feature !== "lut" && gameState.settings.lighting === false) return false;
+      if (isLowPowerCinematicViewport() && ["ssao", "proceduralGrass", "depthFog"].includes(feature)) return false;
       const budget = getCinematicFeatureBudget();
       if (feature === "bloom") return gameState.settings.effectSwitches?.bloom !== false;
       if (feature === "ssao") return gameState.settings.ssao !== false && gameState.runtimeRenderDowngrade?.ssao !== false;
@@ -25188,7 +25394,7 @@ ${item.code}
       const quality = getEffectiveCinematicQuality();
       const profile = gameState.effectiveRenderQuality || chooseInitialQualityProfile();
       const perf = getPerformanceModeConfig();
-      const lowPower = profile === "low" || quality === CINEMATIC_RENDER_MODES.low || gameState.settings.animationQuality === ANIMATION_QUALITY.reduced;
+      const lowPower = isLowPowerCinematicViewport() || profile === "low" || quality === CINEMATIC_RENDER_MODES.low || gameState.settings.animationQuality === ANIMATION_QUALITY.reduced;
       const mediumPower = profile === "medium" || quality === CINEMATIC_RENDER_MODES.medium;
       const intervals = {
         cinematicRenderPipeline: lowPower ? 4 : mediumPower ? 2 : 1,
@@ -25198,6 +25404,7 @@ ${item.code}
         worldAtmosphere: lowPower ? 6 : mediumPower ? 3 : 2,
         weatherDirector: lowPower ? 8 : mediumPower ? 4 : 2
       };
+      if (isLowPowerCinematicViewport() && ["ambientParticles", "proceduralGrass", "volumetricLight"].includes(feature)) return 0;
       if (perf.id === "low" && ["ambientParticles", "proceduralGrass", "volumetricLight"].includes(feature)) return 0;
       if (perf.id === "medium") return Math.max(intervals[feature] ?? 1, feature === "worldAtmosphere" ? 3 : 2);
       return intervals[feature] ?? 1;
@@ -29266,8 +29473,83 @@ ${item.code}
       return true;
     }
 
-    function createCompilePreflightError(message, reason) {
-      return { ok: false, message: `编译错误：${message}`, reason };
+    function createCompilePreflightError(message, reason, details = {}) {
+      return { ok: false, message: formatCompileErrorMessage(message), reason, ...details };
+    }
+
+    const COMPILE_FAILURE_CORE_EXAMPLES = Object.freeze({
+      overview: 'printf("C language");',
+      hello: 'printf("Hello, C World!");',
+      syntax: '// 注释...\nprintf("syntax ok");',
+      variables: 'int level = ___;\nprintf("%d", level);',
+      operators: 'int power = ___ + ___;\nprintf("%d", power);',
+      conditions: 'if (score >= 60) {\n  printf("pass");\n}',
+      loops: 'for (int i = 1; i <= 5; i++) {\n  sum += i;\n}',
+      functions: 'int add(int a, int b) {\n  return ___;\n}',
+      arrays: 'int nums[3] = {___, ___, ___};',
+      pointers: 'int *ptr = &___;\nprintf("%d", *ptr);',
+      structs: 'struct Hero { int level; };\nprintf("%d", hero.level);',
+      files: 'FILE *fp = fopen("note.txt", "w");\nfprintf(fp, "C File");',
+      memory: 'int *numbers = malloc(___ * sizeof(int));\nfree(numbers);',
+      preprocessor: '#define MAX_LEVEL ___\nprintf("%d", MAX_LEVEL);',
+      stdlib: 'int value = atoi("42");\nprintf("%d", value);',
+      "best-practices": 'if (level > 99) return ___;\nreturn level;'
+    });
+
+    const COMPILE_FAILURE_COMMON_CHECKS = Object.freeze([
+      "检查变量名是否拼写正确，声明和 printf 里的名字要一致。",
+      "检查分号是否遗漏，每条普通语句末尾都需要 ;。",
+      "检查括号和花括号是否成对。",
+      "检查字符串内容是否完全一致，大小写、空格和标点都会影响输出。"
+    ]);
+
+    function buildCompileFailureHelp(chapter = chapterById[FIRST_MAINLINE_CHAPTER_ID], failureCount = 0) {
+      const count = Math.max(0, Number(failureCount) || 0);
+      if (count < 3) return "";
+      const chapterId = chapter?.id || FIRST_MAINLINE_CHAPTER_ID;
+      const example = COMPILE_FAILURE_CORE_EXAMPLES[chapterId] || "int value = ___;\nprintf(\"%d\", value);";
+      return [
+        `连续编译失败 ${count} 次。`,
+        "核心示例（不完整）：",
+        example,
+        "常见检查：",
+        ...COMPILE_FAILURE_COMMON_CHECKS.map((item) => `- ${item}`)
+      ].join("\n");
+    }
+
+    function appendCompileFailureHelp(message = "", chapter = chapterById[FIRST_MAINLINE_CHAPTER_ID], failureCount = 0) {
+      const help = buildCompileFailureHelp(chapter, failureCount);
+      if (!help) return String(message || "");
+      if (dom.editorRichConsole) {
+        dom.editorRichConsole.dataset.tone = "error";
+        dom.editorRichConsole.textContent = help;
+      }
+      return `${String(message || "")}\n\n${help}`;
+    }
+
+    function resetEditorAfterCompileFailure(reason = "compile-failed") {
+      setRunning(false);
+      if (dom.runButton) {
+        dom.runButton.disabled = false;
+        dom.runButton.classList.remove("compiling");
+        dom.runButton.textContent = "运行代码";
+      }
+      dom.runSpinner?.classList.remove("active");
+      if (dom.codeInput && currentFile === "main.c") {
+        dom.codeInput.disabled = false;
+        dom.codeInput.readOnly = false;
+        dom.codeInput.removeAttribute?.("aria-disabled");
+      }
+      if (gameState.editorOpen) {
+        dom.overlay?.classList.add("active");
+        dom.overlay?.classList.remove("closing");
+        document.body.classList.add("is-editor-open");
+        inputManager.setMode(INPUT_MODES.editor);
+      }
+      gameState.editorLocked = false;
+      gameState.compileLocked = false;
+      console.warn("[editor] reset after failed compile", reason);
+      return true;
     }
 
     function formatCompileErrorMessage(message = "未知错误") {
@@ -29275,23 +29557,129 @@ ${item.code}
       return text.startsWith("编译错误") ? text : `编译错误：${text}`;
     }
 
+    function normalizeExactCodeLineEndings(code = "") {
+      return String(code ?? "").replace(/\r\n/g, "\n").replace(/\r/g, "\n");
+    }
+
+    function stripExtraTrailingBlankLines(code = "") {
+      return normalizeExactCodeLineEndings(code).replace(/(?:\n[ \t]*)+$/g, "");
+    }
+
+    function normalizeExactCodeForComparison(code = "", options = {}) {
+      const normalized = normalizeExactCodeLineEndings(code);
+      return options.ignoreTrailingBlankLines === false ? normalized : stripExtraTrailingBlankLines(normalized);
+    }
+
+    function getExactCodeLineColumn(prefix = "") {
+      let line = 1;
+      let column = 1;
+      for (const char of String(prefix || "")) {
+        if (char === "\n") {
+          line += 1;
+          column = 1;
+        } else {
+          column += 1;
+        }
+      }
+      return { line, column };
+    }
+
+    function describeExactCodeCharacter(char) {
+      if (char === undefined || char === "") return "缺失";
+      if (char === " ") return "空格";
+      if (char === "\t") return "\\t（制表符）";
+      if (char === "\n") return "\\n（换行）";
+      return char;
+    }
+
+    function findFirstExactCodeDifference(expected = "", actual = "") {
+      const expectedChars = Array.from(String(expected ?? ""));
+      const actualChars = Array.from(String(actual ?? ""));
+      const maxLength = Math.max(expectedChars.length, actualChars.length);
+      for (let index = 0; index < maxLength; index += 1) {
+        const expectedChar = expectedChars[index] ?? "";
+        const actualChar = actualChars[index] ?? "";
+        if (expectedChar === actualChar) continue;
+        const position = getExactCodeLineColumn(expectedChars.slice(0, index).join(""));
+        return {
+          index,
+          line: position.line,
+          column: position.column,
+          expected: expectedChar,
+          actual: actualChar,
+          expectedDisplay: describeExactCodeCharacter(expectedChar),
+          actualDisplay: describeExactCodeCharacter(actualChar)
+        };
+      }
+      return null;
+    }
+
+    function formatExactCodeDifference(diff) {
+      if (!diff) return "代码与任务要求不一致，请检查";
+      return `第${diff.line}行第${diff.column}列：预期为${diff.expectedDisplay}，实际为 ${diff.actualDisplay}`;
+    }
+
+    function getExactCodeMismatchAttemptNumber(taskId = gameState.activeChallengeId) {
+      const key = taskId || "unknown";
+      return Math.max(1, Number(gameState.progress?.chapterFailureCounts?.[key] || 0) + 1);
+    }
+
+    function validateExactTaskCode(rawSource = "", taskConfig = null, options = {}) {
+      const source = String(rawSource ?? "");
+      const taskId = taskConfig?.taskId || taskConfig?.id || "";
+      const exactCode = typeof taskConfig?.exactCode === "string" ? taskConfig.exactCode : "";
+      if (!taskId || typeof taskConfig?.exactCode !== "string") {
+        return createCompilePreflightError("当前任务缺少 taskId 或 exactCode 配置。", "task-config-missing", { taskId });
+      }
+      const compareOptions = { ignoreTrailingBlankLines: options.ignoreTrailingBlankLines !== false };
+      const expected = normalizeExactCodeForComparison(exactCode, compareOptions);
+      const actual = normalizeExactCodeForComparison(source, compareOptions);
+      if (actual === expected) return { ok: true, source, taskId, exactCode };
+
+      const attemptNumber = Math.max(1, Number(options.attemptNumber) || getExactCodeMismatchAttemptNumber(taskId));
+      const diff = findFirstExactCodeDifference(expected, actual);
+      const baseMessage = String(taskConfig.errorMessage || EXACT_TASK_ERROR_MESSAGE);
+      let message = baseMessage;
+      const showReference = attemptNumber >= 3;
+      if (attemptNumber === 2) {
+        message = `${baseMessage}\n${formatExactCodeDifference(diff)}`;
+      } else if (showReference) {
+        message = `${baseMessage}\n目标代码（仅供参考，不可复制）：\n${exactCode}`;
+      }
+      return createCompilePreflightError(message, "exact-code-mismatch", {
+        taskId,
+        attemptNumber,
+        diff,
+        referenceCode: showReference ? exactCode : "",
+        showReference
+      });
+    }
+
+    function clearExactCodeReferenceForCurrentTask() {
+      if (!dom.editorRichConsole) return false;
+      delete dom.editorRichConsole.dataset.lockedReference;
+      dom.editorRichConsole.style.userSelect = "";
+      return true;
+    }
+
     function validateEditorSubmissionForCurrentTask(rawSource = "", chapter = null, expectedTaskId = "", activeTaskId = expectedTaskId) {
       const source = String(rawSource ?? "");
       const chapterId = chapter?.id || "";
-      if (!source.trim()) {
-        return createCompilePreflightError("代码不能为空。请在当前石碑输入 C 代码后再编译。", "empty-source");
-      }
       if (!chapter || !chapterId || chapterId !== expectedTaskId || chapterId !== activeTaskId) {
         return createCompilePreflightError(`任务ID不匹配。当前任务ID=${activeTaskId || "未知"}，代码绑定任务ID=${chapterId || expectedTaskId || "未知"}。请重新打开当前石碑后再编译。`, "task-id-mismatch");
       }
-      const runnableIssue = inspectRunnableCBeforeRun(autoInjectStdIoHeader(source), chapter);
-      if (runnableIssue) return createCompilePreflightError(runnableIssue, "syntax-preflight");
-      return { ok: true, source, chapterId };
+      if (!source.trim()) {
+        return createCompilePreflightError("代码不能为空。请先在 main.c 中输入 C 代码。", "empty-source");
+      }
+      const syntaxIssue = inspectRunnableCBeforeRun(source, chapter);
+      if (syntaxIssue) return createCompilePreflightError(syntaxIssue, "syntax-preflight");
+      return { ok: true, source, taskId: chapterId };
     }
 
     function openEditor(chapterId) {
       if (isCleared(chapterId) || gameState.dialogOpen) return;
       loadChapterTask(chapterId);
+      clearExactCodeReferenceForCurrentTask();
       gameState.editorOpen = true;
       inputManager.setMode(INPUT_MODES.editor);
       triggerGlitchEffect();
@@ -30741,7 +31129,7 @@ ${item.code}
       if (!preflight.ok) {
         restoreEditorSourceAfterFailedRun(userSourceBeforeRun, preflight.reason);
         gameState.codeAccuracy = Math.max(20, gameState.codeAccuracy - 8);
-        handleCompileFailurePenalty(chapter?.id, { source: "preflight", message: preflight.message });
+        const penalty = handleCompileFailurePenalty(chapter?.id, { source: "preflight", message: preflight.message });
         updateCompanionAiEvolution();
         updateStatusBars();
         audioManager.error();
@@ -30749,9 +31137,11 @@ ${item.code}
         triggerStoryCinematicBars("编译错误：先修正当前石碑代码，再让世界响应。", 1400);
         tutorialAnimationManager.trigger("T08_COMPILE_FAILURE", { scene: gameState.scene, chapter });
         markAbsoluteGuideAction("compileError", { chapterId: chapter?.id, reason: preflight.reason });
-        setOutput(preflight.message, "error");
+        resetEditorAfterCompileFailure(preflight.reason);
+        setOutput(appendCompileFailureHelp(preflight.message, chapter, penalty.failureCount), "error");
         return;
       }
+      clearExactCodeReferenceForCurrentTask();
       const cCode = autoInjectStdIoHeader(rawCCode);
       if (!spendWorldEvolutionMp(1)) {
         setOutput("MP不足：已提示你在信息菜单中使用进化碎片回复MP。本次进入教学保护模式，仍继续运行代码。", "info");
@@ -30813,7 +31203,7 @@ ${item.code}
           restoreEditorSourceAfterFailedRun(userSourceBeforeRun, "validate-result");
           const failureMessage = formatCompileErrorMessage(result.message);
           gameState.codeAccuracy = Math.max(20, gameState.codeAccuracy - 14);
-          handleCompileFailurePenalty(chapter?.id, { source: "compile", message: failureMessage });
+          const penalty = handleCompileFailurePenalty(chapter?.id, { source: "compile", message: failureMessage });
           updateCompanionAiEvolution();
           flashHpDamage(14);
           updateStatusBars();
@@ -30821,20 +31211,22 @@ ${item.code}
           triggerMusicCompileError();
           triggerStoryCinematicBars("编译失败：错误不是惩罚，是世界给你的回声。", 1500);
           tutorialAnimationManager.trigger("T08_COMPILE_FAILURE", { scene: gameState.scene, chapter });
-          setOutput(failureMessage, "error");
+          resetEditorAfterCompileFailure("validate-result");
+          setOutput(appendCompileFailureHelp(failureMessage, chapter, penalty.failureCount), "error");
         }
       } catch (error) {
         restoreEditorSourceAfterFailedRun(userSourceBeforeRun, "exception");
         const failureMessage = formatCompileErrorMessage(`[第1行] 运行超时或沙箱异常：${error.message}\n知识点提示：本关只需要写 C 的基本结构，不需要复杂循环或指针。`);
         gameState.codeAccuracy = Math.max(20, gameState.codeAccuracy - 18);
-        handleCompileFailurePenalty(chapter?.id, { source: "exception", message: failureMessage });
+        const penalty = handleCompileFailurePenalty(chapter?.id, { source: "exception", message: failureMessage });
         updateCompanionAiEvolution();
         flashHpDamage(18);
         updateStatusBars();
         audioManager.error();
         triggerMusicCompileError();
         triggerStoryCinematicBars("沙箱异常：系统已保护现场，请修改后重试。", 1500);
-        setOutput(failureMessage, "error");
+        resetEditorAfterCompileFailure("exception");
+        setOutput(appendCompileFailureHelp(failureMessage, chapter, penalty.failureCount), "error");
       } finally {
         setRunning(false);
       }
@@ -30964,6 +31356,17 @@ ${item.code}
         return `[第${semicolonIssue + 1}行] 这行看起来缺少分号 ;。\n导师评价：宽松判定会放过思路差异，但真正的语法错误还是要修。`;
       }
 
+      const printfIntArg = code.match(/printf\s*\(\s*"%d"\s*,\s*([A-Za-z_]\w*)\s*\)\s*;/);
+      if (printfIntArg) {
+        const argName = printfIntArg[1];
+        const declaredNames = new Set(Array.from(code.matchAll(/\b(?:int|char|float|double)\s+\*?\s*([A-Za-z_]\w*)\s*(?:=|;|\[)/g), (match) => match[1]));
+        const macroNames = new Set(Array.from(code.matchAll(/#define\s+([A-Za-z_]\w*)\b/g), (match) => match[1]));
+        if (!declaredNames.has(argName) && !macroNames.has(argName)) {
+          const line = findLine(lines, new RegExp(`printf\\s*\\(\\s*"%d"\\s*,\\s*${argName}\\s*\\)`)) || 1;
+          return `[第${line}行] 变量 ${argName} 未声明。\n导师评价：变量名可以自己取，但声明处和使用处必须拼写一致。`;
+        }
+      }
+
       return "";
     }
 
@@ -31083,10 +31486,7 @@ ${item.code}
 
     function isLenientChallengePass(cCode, chapter = chapterById[FIRST_MAINLINE_CHAPTER_ID], output = "") {
       if (inspectRunnableCBeforeRun(cCode, chapter)) return false;
-      const code = stripCComments(String(cCode || ""));
-      const hasExecutableIntent = /\b(printf|puts|return|if|for|while|malloc|free|fopen|fclose|fprintf|atoi|struct)\b|#define|=/.test(code);
-      const hasApproximateOutput = compareProgramOutput(output, chapter?.output || "").ok || Boolean(String(output || "").trim());
-      return hasExecutableIntent || hasApproximateOutput;
+      return compareProgramOutput(output, chapter?.output || "").ok;
     }
 
     function inspectCommonCProgram(cCode) {
@@ -32417,7 +32817,7 @@ ${item.code}
     }
 
     const stonePuzzleCatalog = {
-      overview: { answer: "printf", template: '____("C language");', decoys: ["scanf", "return"] },
+      overview: { answer: "printf", template: '____("C language");', decoys: ["int", "return"] },
       hello: { answer: "return", template: "int main(void) { ____ 0; }", decoys: ["printf", "int"] },
       syntax: { answer: "//", template: "____ 注释不会运行", decoys: ["printf", "return"] },
       variables: { answer: "int", template: "____ score = 100;", decoys: ["char", "float"] },
@@ -32835,6 +33235,18 @@ ${item.code}
         });
     }
 
+    function repairLegacyBeginnerQuestInventory(inventory = [], fragmentKeys = []) {
+      const codeInventory = normalizeCodeInventoryList(inventory);
+      const collectedFragmentKeys = normalizeFragmentKeyList(fragmentKeys);
+      const hasLegacyFirstStoneSet = ["printf", "scanf", "return"].every((keyword) => codeInventory.includes(keyword));
+      if (!hasLegacyFirstStoneSet || codeInventory.includes("int")) {
+        return { codeInventory, collectedFragmentKeys, repaired: false };
+      }
+      codeInventory.push("int");
+      if (!collectedFragmentKeys.includes("overview:int:1")) collectedFragmentKeys.push("overview:int:1");
+      return { codeInventory, collectedFragmentKeys, repaired: true };
+    }
+
     function hasCollectedCourseFragment(chapterId) {
       const keys = gameState.progress.collectedFragmentKeys || [];
       return keys.includes(getMainCourseFragmentKey(chapterId))
@@ -32854,8 +33266,11 @@ ${item.code}
     function repairFragmentProgressState() {
       if (!gameState?.progress) return false;
       gameState.codeInventory = normalizeCodeInventoryList(gameState.codeInventory || gameState.progress.codeInventory || []);
-      gameState.progress.codeInventory = clonePlainData(gameState.codeInventory);
       gameState.progress.collectedFragmentKeys = normalizeFragmentKeyList(gameState.progress.collectedFragmentKeys || gameState.progress.collectedFragments || []);
+      const beginnerRepair = repairLegacyBeginnerQuestInventory(gameState.codeInventory, gameState.progress.collectedFragmentKeys);
+      gameState.codeInventory = beginnerRepair.codeInventory;
+      gameState.progress.collectedFragmentKeys = beginnerRepair.collectedFragmentKeys;
+      gameState.progress.codeInventory = clonePlainData(gameState.codeInventory);
       gameState.progress.collectedFragments = clonePlainData(gameState.progress.collectedFragmentKeys);
       gameState.progress.fragmentCount = getCourseFragmentProgressCount();
       if (gameState.worldVariables) gameState.worldVariables.code_fragments_collected = gameState.progress.fragmentCount;

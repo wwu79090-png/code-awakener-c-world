@@ -83,6 +83,10 @@ globalThis.__gameApi = {
   isLenientChallengePass: typeof isLenientChallengePass === "function" ? isLenientChallengePass : undefined,
   createEditorFilesForTask: typeof createEditorFilesForTask === "function" ? createEditorFilesForTask : undefined,
   validateEditorSubmissionForCurrentTask: typeof validateEditorSubmissionForCurrentTask === "function" ? validateEditorSubmissionForCurrentTask : undefined,
+  validateExactTaskCode: typeof validateExactTaskCode === "function" ? validateExactTaskCode : undefined,
+  findFirstExactCodeDifference: typeof findFirstExactCodeDifference === "function" ? findFirstExactCodeDifference : undefined,
+  buildCompileFailureHelp: typeof buildCompileFailureHelp === "function" ? buildCompileFailureHelp : undefined,
+  resetEditorAfterCompileFailure: typeof resetEditorAfterCompileFailure === "function" ? resetEditorAfterCompileFailure : undefined,
   simulateCOutput,
   autoInjectStdIoHeader,
   normalizeProgramOutput,
@@ -97,6 +101,9 @@ globalThis.__gameApi = {
   applyManualEditorKeyOperation: typeof applyManualEditorKeyOperation === "function" ? applyManualEditorKeyOperation : undefined,
   manualEditorOperationFromBeforeInput: typeof manualEditorOperationFromBeforeInput === "function" ? manualEditorOperationFromBeforeInput : undefined,
   C_TUTORIAL_COURSE: typeof C_TUTORIAL_COURSE !== "undefined" ? C_TUTORIAL_COURSE : undefined,
+  QUEST_DATA: typeof QUEST_DATA !== "undefined" ? QUEST_DATA : undefined,
+  getStonePuzzleSpec: typeof getStonePuzzleSpec === "function" ? getStonePuzzleSpec : undefined,
+  repairLegacyBeginnerQuestInventory: typeof repairLegacyBeginnerQuestInventory === "function" ? repairLegacyBeginnerQuestInventory : undefined,
   C_VISUAL_ENTITY_MAP: typeof C_VISUAL_ENTITY_MAP !== "undefined" ? C_VISUAL_ENTITY_MAP : undefined,
   DEVELOP_FAN_C_LANGUAGE_PATH: typeof DEVELOP_FAN_C_LANGUAGE_PATH !== "undefined" ? DEVELOP_FAN_C_LANGUAGE_PATH : undefined,
   flattenCTutorialSnippets: typeof flattenCTutorialSnippets === "function" ? flattenCTutorialSnippets : undefined,
@@ -320,7 +327,8 @@ int main(void) {
   return 0;
 }`;
 assert(api.inspectRunnableCBeforeRun(looseVariableSolution, api.chapterById.variables) === "", "runtime judge should allow different variable names when C syntax is runnable");
-assert(api.isLenientChallengePass(looseVariableSolution, api.chapterById.variables, "7"), "runtime judge should pass approximate runnable C solutions");
+assert(api.isLenientChallengePass(looseVariableSolution, api.chapterById.variables, "7"), "runtime judge should pass runnable C solutions only when output matches");
+assert(!api.isLenientChallengePass(looseVariableSolution, api.chapterById.variables, "8"), "runtime judge should reject runnable code when output does not match the task target");
 const syntaxBrokenSolution = `#include <stdio.h>
 int main(void) {
   int score = 7
@@ -328,6 +336,13 @@ int main(void) {
   return 0;
 }`;
 assert(api.inspectRunnableCBeforeRun(syntaxBrokenSolution, api.chapterById.variables).includes("缺少分号"), "runtime judge should still reject real syntax errors");
+const undeclaredVariableSolution = `#include <stdio.h>
+int main(void) {
+  int score = 7;
+  printf("%d", level);
+  return 0;
+}`;
+assert(api.inspectRunnableCBeforeRun(undeclaredVariableSolution, api.chapterById.variables).includes("未声明"), "runtime judge should reject printf arguments that were not declared");
 const chineseSemicolonSolution = `#include <stdio.h>
 int main(void) {
   int score = 7；
@@ -351,23 +366,50 @@ assert(typeof api.validateEditorSubmissionForCurrentTask === "function", "compil
   assert(freshFiles["README.md"] === api.chapterById.hello.files["README.md"], "clearing main.c for a new task should keep task README content");
 }
 {
-  const validHelloSource = `#include <stdio.h>
+  const exactHelloSource = `#include <stdio.h>
+
 int main(void) {
   printf("Hello, C World!");
   return 0;
 }`;
-  const emptyCompile = api.validateEditorSubmissionForCurrentTask("", api.chapterById.hello, "hello", "hello");
-  assert(!emptyCompile.ok && emptyCompile.message.includes("编译错误") && emptyCompile.message.includes("不能为空"), "empty editor input should produce a compile error before any progress advances");
-  const garbageCompile = api.validateEditorSubmissionForCurrentTask("this is not C", api.chapterById.hello, "hello", "hello");
-  assert(!garbageCompile.ok && garbageCompile.message.includes("编译错误") && /int main|main/.test(garbageCompile.message), "garbage editor input should be blocked as a compile error");
-  const staleTaskCompile = api.validateEditorSubmissionForCurrentTask(validHelloSource, api.chapterById.hello, "syntax", "syntax");
+  assert(api.chapterById.hello.taskId === "hello", "each task should expose a unique taskId");
+
+  const exactCompile = api.validateEditorSubmissionForCurrentTask(exactHelloSource, api.chapterById.hello, "hello", "hello", { attemptNumber: 1 });
+  assert(exactCompile.ok, "source identical to exactCode should pass compile preflight");
+  const trailingBlankCompile = api.validateEditorSubmissionForCurrentTask(`${exactHelloSource}\n\n`, api.chapterById.hello, "hello", "hello", { attemptNumber: 1 });
+  assert(trailingBlankCompile.ok, "extra blank lines at the end should be ignored by preflight");
+  const reindentedCompile = api.validateEditorSubmissionForCurrentTask(exactHelloSource.replace("  printf", "    printf").replace("  return", " return"), api.chapterById.hello, "hello", "hello", { attemptNumber: 1 });
+  assert(reindentedCompile.ok, "indentation width differences should not block compilation preflight");
+  const changedCommentCompile = api.validateEditorSubmissionForCurrentTask(`#include <stdio.h>
+
+int main(void) {
+    // any learner note is acceptable
+    printf("Hello, C World!");
+    return 0;
+}`, api.chapterById.hello, "hello", "hello", { attemptNumber: 1 });
+  assert(changedCommentCompile.ok, "comment differences should not block compilation preflight");
+  const renamedVariableCompile = api.validateEditorSubmissionForCurrentTask(looseVariableSolution, api.chapterById.variables, "variables", "variables", { attemptNumber: 1 });
+  assert(renamedVariableCompile.ok, "variable-name differences should pass preflight when C syntax is runnable");
+  const syntaxPreflight = api.validateEditorSubmissionForCurrentTask(syntaxBrokenSolution, api.chapterById.variables, "variables", "variables", { attemptNumber: 1 });
+  assert(!syntaxPreflight.ok && syntaxPreflight.message.includes("缺少分号"), "preflight should still reject real C syntax errors");
+  const emptyPreflight = api.validateEditorSubmissionForCurrentTask("", api.chapterById.hello, "hello", "hello", { attemptNumber: 1 });
+  assert(!emptyPreflight.ok && emptyPreflight.message.includes("代码不能为空"), "preflight should reject empty submissions with a compiler-style error");
+
+  const staleTaskCompile = api.validateEditorSubmissionForCurrentTask(exactHelloSource, api.chapterById.hello, "syntax", "syntax");
   assert(!staleTaskCompile.ok && staleTaskCompile.message.includes("编译错误") && staleTaskCompile.message.includes("任务ID"), "compile validation should reject submissions for a stale or mismatched task id");
-  const validCompile = api.validateEditorSubmissionForCurrentTask(validHelloSource, api.chapterById.hello, "hello", "hello");
-  assert(validCompile.ok, "valid source for the current task id should pass compile preflight");
 }
-assert(/validateEditorSubmissionForCurrentTask\(rawCCode,\s*chapter,\s*gameState\.activeChallengeId,\s*gameState\.activeChallengeId\)/m.test(html), "runChallenge should validate non-empty source and current task id before running world commands");
+assert(!/return validateExactTaskCode\(source,\s*chapter,\s*options\)/m.test(html), "compile preflight should no longer require exact source-code matching");
+assert(/validateEditorSubmissionForCurrentTask\(rawCCode,\s*chapter,\s*gameState\.activeChallengeId,\s*gameState\.activeChallengeId\)/m.test(html), "runChallenge should validate task identity and syntax before running world commands");
+assert(!/renderExactCodeReferenceForCurrentTask\(preflight\)/m.test(html), "compile preflight failures should not render a full copy-only target answer");
 assert(/restoreEditorSourceAfterFailedRun\(userSourceBeforeRun,\s*preflight\.reason/m.test(html), "compile preflight failures should preserve the user's erroneous text for in-place correction");
-assert(/function formatCompileErrorMessage/m.test(html) && /setOutput\(failureMessage,\s*"error"\)/m.test(html), "all failed compile paths should display a compile-error message while preserving editor text");
+assert(/function formatCompileErrorMessage/m.test(html) && /appendCompileFailureHelp\(failureMessage,\s*chapter,\s*penalty\.failureCount\)/m.test(html), "all failed compile paths should display a compile-error message with non-blocking help while preserving editor text");
+assert(typeof api.buildCompileFailureHelp === "function", "compile failures should expose a non-blocking help builder");
+assert(api.buildCompileFailureHelp(api.chapterById.variables, 2) === "", "compile help should stay quiet before the third failed attempt");
+{
+  const help = api.buildCompileFailureHelp(api.chapterById.variables, 3);
+  assert(help.includes("连续编译失败 3 次") && help.includes("核心示例") && help.includes("int level = ___;"), "third compile failure should show an incomplete core code example");
+  assert(help.includes("检查变量名是否拼写正确") && help.includes("检查分号是否遗漏"), "third compile failure should show common error checks");
+}
 assert(/selectFile\("main\.c",\s*\{\s*skipSaveCurrent:\s*true\s*\}\)/m.test(html), "opening a new stone should not save the previous stone input back into main.c");
 assert(/clearEditorSourceForTask\(chapterId\)/m.test(html), "opening a new stone should explicitly clear the visible code input lifecycle state");
 assert(!/localStorage\.setItem\([^)]*(?:codeInput|main\.c|activeChallengeCode|lastCode)/m.test(html), "stone editor source should not be persisted through localStorage across tasks or scenes");
@@ -396,6 +438,9 @@ const qualityMarkers = [
 for (const marker of qualityMarkers) {
   assert(html.includes(marker), `missing quality marker: ${marker}`);
 }
+assert(/<button id="closeEditorButton" class="close-button">关闭编辑器<\/button>/m.test(html), "editor should expose an explicit close-editor button");
+assert(/event\.key === "Escape" && gameState\.editorOpen[\s\S]*closeEditor\(true\)/m.test(html), "Esc should always close the editor while it is open");
+assert(/editorErrorLinePulse 620ms steps\(2, end\) 1/m.test(html), "compile error line should flash once when highlighted");
 
 const menuMarkers = [
   "id=\"mainMenuOverlay\"",
@@ -601,6 +646,8 @@ assert(/safeRunEffect\("cinematicRenderPipeline"/m.test(html), "cinematic render
 assert(/safeRunEffect\("proceduralGrass"/m.test(html), "procedural grass should be guarded");
 assert(/safeRunEffect\("weatherDirector"/m.test(html), "weather director should be guarded");
 assert(/registerOfflineServiceWorker\(\)[\s\S]*catch/m.test(html), "offline worker registration should be safely caught");
+assert(!/URL\.createObjectURL\(new Blob\(\[SERVICE_WORKER_SOURCE\]/m.test(html), "offline cache should not attempt invalid blob: service worker registration");
+assert(!/console\.warn\("\[offline-cache\]/m.test(html), "offline cache fallback should stay out of console warning/error logs during normal single-file launches");
 assert(/WebGL SSR is approximated/m.test(html), "unstable SSR should document its stable approximation and future upgrade path");
 assert(/ULTIMATE_EXPERIENCE_MODULES\s*=\s*Object\.freeze/m.test(html), "ultimate experience layer should declare its module map");
 assert(/class UnifiedInputPromptManager/m.test(html), "game should unify keyboard, mouse, touch, and gamepad prompt switching");
@@ -638,6 +685,9 @@ assert(/renderTopKeymap\(\)/m.test(html), "shortcut manager should render the to
 assert(/flashTopKeymap\(event\)/m.test(html), "shortcut manager should animate key feedback when the player presses a mapped key");
 assert(/shortcutManager\.flashTopKeymap\(event\)/m.test(html), "global keydown should feed visual keymap feedback");
 assert(/id="infoSideMenu"/m.test(html), "persistent HUD data should live in the collapsible side info menu");
+assert(/touch-action:\s*pan-y/m.test(html), "mobile info side menu should allow native vertical panning");
+assert(/mode:\s*"menuCloseSwipe"[\s\S]*startY:\s*firstTouch\.clientY[\s\S]*pending:\s*true/m.test(html), "menu close swipe should track vertical movement before capturing touch events");
+assert(/Math\.abs\(deltaY\)\s*>\s*8[\s\S]*Math\.abs\(deltaY\)\s*>\s*Math\.abs\(deltaX\)[\s\S]*drawerGesture\s*=\s*null[\s\S]*return/m.test(html), "vertical swipes inside the mobile menu should be released for native scrolling");
 assert(/id="infoTaskText"/m.test(html) && /id="infoFragmentText"/m.test(html), "side info menu should include task and fragment status");
 assert(/id="infoHpText"/m.test(html) && /id="infoMpText"/m.test(html), "side info menu should include HP and MP");
 assert(/id="infoEquipText"/m.test(html), "side info menu should explain equipped fragments");
@@ -676,6 +726,20 @@ assert(/mentor[\s\S]*merchant[\s\S]*lost[\s\S]*guard[\s\S]*easterEgg/m.test(html
 assert(/QUEST_DATA\s*=\s*Object\.freeze/m.test(html), "task system should define quest data");
 assert(/class QuestManager/m.test(html), "task system should have a QuestManager");
 assert(/collect_basic_fragments/m.test(html), "new player task should collect three basic syntax fragments");
+{
+  assert(typeof api.getStonePuzzleSpec === "function" && api.QUEST_DATA?.collect_basic_fragments, "beginner quest and stone puzzle data should be available to tests");
+  const beginnerRequiredKeywords = api.QUEST_DATA.collect_basic_fragments.requirement.keywords;
+  const firstStoneSpec = api.getStonePuzzleSpec(api.chapters[0].id);
+  const firstVisibleKeywords = [firstStoneSpec.answer, ...firstStoneSpec.decoys];
+  assert(beginnerRequiredKeywords.every((keyword) => firstVisibleKeywords.includes(keyword)), "beginner collect quest should be completable from the first visible stone fragments");
+  assert(typeof api.repairLegacyBeginnerQuestInventory === "function", "legacy beginner fragment repair helper should exist");
+  const repairedBeginnerInventory = api.repairLegacyBeginnerQuestInventory(
+    ["printf", "scanf", "return"],
+    ["overview:printf:0", "overview:scanf:1", "overview:return:2"]
+  );
+  assert(repairedBeginnerInventory.repaired && repairedBeginnerInventory.codeInventory.includes("int"), "old saves with the previous scanf beginner fragment should be credited with int");
+  assert(repairedBeginnerInventory.collectedFragmentKeys.includes("overview:int:1"), "old saves should mark the replacement first-stone int fragment as collected");
+}
 assert(/function createCoreNpcs/m.test(html), "scene should create core NPCs on the map");
 assert(/function updateNpcQuestIndicators/m.test(html), "NPCs should show task-state indicators");
 assert(/const nameLabel = scene\.add\.text\(0, -63, data\.name \|\| "NPC"/m.test(html), "NPCs should render their names above their heads");
@@ -887,6 +951,12 @@ assert(/id="performanceBudgetPanel"/m.test(html), "performance budget panel shou
 assert(/performanceMode:\s*"high"/m.test(html), "default performance mode should start at high without auto lowering");
 assert(/renderQuality:\s*"high"/m.test(html), "default render quality should start at high");
 assert(/cinematicQuality:\s*CINEMATIC_RENDER_MODES\.high/m.test(html), "default cinematic quality should start at high");
+assert(/function isLowPowerCinematicViewport/m.test(html), "cinematic scheduler should detect mobile low-power viewports before FPS collapses");
+assert(/const lowPower = isLowPowerCinematicViewport\(\) \|\|/m.test(html), "mobile low-power viewports should use the low-power cinematic frame budget immediately");
+assert(/isLowPowerCinematicViewport\(\) && \["ssao", "proceduralGrass", "depthFog"\]\.includes\(feature\)/m.test(html), "mobile low-power viewports should skip expensive SSAO, grass and fog before emergency downgrade warnings");
+assert(/applyNextDowngrade\(average[\s\S]*if \(isLowPowerCinematicViewport\(\)\) return false;[\s\S]*const runtime = gameState\.runtimeRenderDowngrade/m.test(html), "rolling FPS monitor should not warn-downgrade effects already bypassed by the mobile low-power budget");
+assert(/if \(severeDrop && !isLowPowerCinematicViewport\(\) && now - this\.lastLogAt > 12000/m.test(html), "severe FPS logging should stay quiet when mobile low-power budgeting already handled the render load");
+assert(/average < 22[\s\S]*getPerformanceModeId\(\) !== "low"[\s\S]*!isLowPowerCinematicViewport\(\)[\s\S]*applyPerformanceMode\("low"/m.test(html), "emergency performance governor should avoid duplicate low-mode warnings on mobile low-power viewports");
 assert(!/<option value="auto">自动检测<\/option>/m.test(html), "stable render-quality selector should not expose auto-detect");
 assert(!/<option value="auto">启动自动基准<\/option>/m.test(html), "performance selector should not expose startup benchmark mode");
 assert(/const STARTUP_BENCHMARK_MS = 0/m.test(html), "startup should not run a benchmark that can lower the user's FPS settings");
@@ -897,8 +967,8 @@ assert(/#qualityRuntimeStatus[\s\S]*min-width:\s*220px/m.test(html), "runtime st
 assert(!/\["renderQuality",\s*"performanceMode",\s*"ssr"/m.test(html), "stable render-quality changes should not reset every runtime downgrade");
 assert(!/renderQualitySelect\?\.addEventListener\("change"/m.test(html), "removed render-quality selector should not keep a dangling change listener");
 assert(/bindFastTouchAction\(dom\.openGameSettingsButton[\s\S]*menuManager\.openSettings\("game"\)/m.test(html), "mobile side-menu game settings button should open the settings panel");
-assert(/SERVICE_WORKER_SOURCE/m.test(html), "PWA offline support should define a service worker source");
-assert(/function registerOfflineServiceWorker/m.test(html), "PWA offline support should be registerable");
+assert(/SERVICE_WORKER_REGISTRATION_PATH/m.test(html), "offline cache should use an explicit same-origin service-worker path when one is available");
+assert(/function registerOfflineServiceWorker/m.test(html), "offline cache support should be guarded and registerable");
 assert(/BUILD_PIPELINE_MANIFEST/m.test(html), "single-file build pipeline should be documented by a manifest");
 assert(/function createInlineProductionBundle/m.test(html), "build tooling should expose an inline production bundle helper");
 assert(!/C\+\+/m.test(html), "advanced expansion prep must still keep the first world C-only");
@@ -1141,14 +1211,15 @@ assert(/本项目永久免费对外开放/.test(html), "announcement should incl
 assert(/STARTUP_ANNOUNCEMENT_AUTO_HIDE_MS\s*=\s*3000/m.test(html), "announcement should auto-hide after 3 seconds");
 assert(/function showStartupAnnouncement/m.test(html), "announcement should be controlled by a startup function");
 assert(/id="announcementCloseButton"/m.test(html), "announcement should include a minimal close control");
-assert(/World Build v1\.0\.16/m.test(html) || /GAME_VERSION\s*=\s*"v1\.0\.16"/m.test(html), "game version should increment when shipping a new update");
+assert(/World Build v1\.0\.18/m.test(html) || /GAME_VERSION\s*=\s*"v1\.0\.18"/m.test(html), "game version should increment when shipping a new update");
 assert(/UPDATE_HISTORY\s*=\s*Object\.freeze\(\[[\s\S]*v1\.0\.1[\s\S]*零基础新手指引[\s\S]*v1\.0\.0[\s\S]*手机端适配/m.test(html), "update history should keep detailed previous release notes");
 assert(/id="updateHistoryList"/m.test(html) && /历史更新内容/m.test(html), "side menu should expose update history with detailed usage-visible notes");
-assert(/GAME_VERSION\s*=\s*"v1\.0\.16"/m.test(html), "game version should increment for the compiler validation and task-input isolation release");
-assert(/UPDATE_ANNOUNCEMENT_PAGES\s*=\s*Object\.freeze\(\[\s*\{\s*title:\s*"> 消息 \/ 本次更新"[\s\S]*石碑编译器新增空代码和乱码前置拦截[\s\S]*切换到新石碑时 main\.c 会强制清空/m.test(html), "collapsed startup announcement should show the latest compiler validation summary first, not only author text");
-assert(/id="announcementPageBody"[\s\S]*石碑编译器新增空代码和乱码前置拦截[\s\S]*编译前会核对当前任务ID/m.test(initialBodyMarkup), "static startup announcement placeholder should match the latest update before script hydration");
+assert(/GAME_VERSION\s*=\s*"v1\.0\.18"/m.test(html), "game version should increment for the startup diagnostic and mobile performance cleanup release");
+assert(/UPDATE_ANNOUNCEMENT_PAGES\s*=\s*Object\.freeze\(\[\s*\{\s*title:\s*"> 消息 \/ 本次更新"[\s\S]*离线缓存不再尝试无效 blob Service Worker[\s\S]*手机端先使用低功耗特效预算/m.test(html), "collapsed startup announcement should show the latest diagnostic cleanup summary first, not only author text");
+assert(/id="announcementPageBody"[\s\S]*离线缓存不再尝试无效 blob Service Worker[\s\S]*手机端先使用低功耗特效预算/m.test(initialBodyMarkup), "static startup announcement placeholder should match the latest update before script hydration");
 assert(!/公告只保留关闭、课程锁定、自由模式通关后显示/m.test(initialBodyMarkup), "static startup announcement placeholder should not show stale update copy");
-assert(/UPDATE_HISTORY\s*=\s*Object\.freeze\(\[[\s\S]*v1\.0\.16[\s\S]*石碑编译校验与输入框串关修复[\s\S]*任务ID前置校验[\s\S]*main\.c/m.test(html), "update history should record the v1.0.16 compiler validation and task-input isolation fixes");
+assert(/UPDATE_HISTORY\s*=\s*Object\.freeze\(\[[\s\S]*v1\.0\.18[\s\S]*启动诊断、离线缓存降噪与移动端性能保护[\s\S]*无效 blob Service Worker[\s\S]*低功耗特效预算/m.test(html), "update history should record the v1.0.18 startup diagnostic and mobile performance cleanup");
+assert(/UPDATE_HISTORY\s*=\s*Object\.freeze\(\[[\s\S]*v1\.0\.17[\s\S]*智能判题与编译失败恢复[\s\S]*终端输出作为通关标准[\s\S]*连续三次失败/m.test(html), "update history should record the v1.0.17 intelligent judge and failure recovery fixes");
 assert(/UPDATE_HISTORY\s*=\s*Object\.freeze\(\[[\s\S]*v1\.0\.15[\s\S]*公告按钮删减[\s\S]*100%重复触发修复[\s\S]*课程权限收口/m.test(html), "update history should record the v1.0.15 announcement, 100%, and course-lock fixes");
 assert(!/<option value="medium">中画质<\/option>/.test(html), "performance mode should not expose the flickering medium-quality option");
 assert(/if \(saved === "medium"\) return "high"/m.test(html) && /savedSettings\.performanceMode === "auto" \|\| savedSettings\.performanceMode === "medium"/m.test(html), "old medium performance-mode saves should migrate to high");
@@ -1162,7 +1233,7 @@ assert(!/id="announcementExpandButton"/m.test(html) && !/announcementExpandButto
 assert(/UPDATE_HISTORY\s*=\s*Object\.freeze\(\[[\s\S]*v1\.0\.13[\s\S]*手机版设置入口[\s\S]*误开菜单[\s\S]*公告折叠状态/m.test(html), "update history should record the v1.0.13 mobile settings and announcement fix");
 assert(/UPDATE_HISTORY\s*=\s*Object\.freeze\(\[[\s\S]*v1\.0\.12[\s\S]*移除防白屏手动选项[\s\S]*CRT 雪花噪声 canvas 默认隐藏/m.test(html), "update history should record the v1.0.12 anti-white-screen option removal");
 assert(/UPDATE_HISTORY\s*=\s*Object\.freeze\(\[[\s\S]*v1\.0\.11[\s\S]*防白屏高档位白色噪点闪烁修复[\s\S]*CRT 噪声[\s\S]*每6帧[\s\S]*最多18个/m.test(html), "update history should record the v1.0.11 anti-white-noise release");
-assert(/UPDATE_ANNOUNCEMENT_PAGES\s*=\s*Object\.freeze\(\[[\s\S]*石碑编译器新增空代码和乱码前置拦截[\s\S]*编译错误会保留输入框原文[\s\S]*当前任务ID/m.test(html), "startup announcement should describe the current compiler validation and task-input cleanup");
+assert(/UPDATE_ANNOUNCEMENT_PAGES\s*=\s*Object\.freeze\(\[[\s\S]*离线缓存不再尝试无效 blob Service Worker[\s\S]*旧的 blob Service Worker 注册路径已移除[\s\S]*手机和触控视口会先跳过 SSAO/m.test(html), "startup announcement should describe the current startup diagnostic and mobile performance cleanup");
 assert(/id="announcementCloseButton"[\s\S]*>×<\/button>/m.test(html), "announcement close button should be a compact icon, not wrapping text");
 assert(/function isCTutorialChapterUnlocked/m.test(html) && /course-lesson-item[\s\S]*locked[\s\S]*disabled aria-disabled/m.test(html), "course progress should lock future chapters until the player reaches them");
 assert(/function isCTutorialFullyCompleted/m.test(html) && /const unlocked = isCTutorialFullyCompleted\(\)/m.test(html), "free mode editor should only unlock after full course completion");
@@ -1780,8 +1851,10 @@ assert(/WORLD_EVOLUTION_MEMORY_FRAGMENTS\s*=\s*Object\.freeze/m.test(html) && /f
 assert(/function beginWorldEvolutionNewGamePlus/m.test(html) && /worldEvolutionNewGamePlus/m.test(html), "world evolution should include ending and new-game-plus lifecycle");
 assert(/COMPILE_LIFE_RULES\s*=\s*Object\.freeze/m.test(html), "compile failure penalty should centralize life and failure threshold rules");
 assert(/compileLives:\s*3/m.test(html) && /compileLifeMax:\s*3/m.test(html), "save progress should start each player with three compile lives");
-assert(/function handleCompileFailurePenalty/m.test(html), "compile failures should deduct compile life through a dedicated handler");
-assert(/function triggerCompileLifeZeroPenalty/m.test(html), "life reaching zero should trigger teleport and current-level reset");
+assert(/function handleCompileFailurePenalty/m.test(html), "compile failures should be recorded through a dedicated handler");
+assert(/function resetEditorAfterCompileFailure/m.test(html), "compile failures should reset editor state after every failed run");
+assert(!/function triggerCompileLifeZeroPenalty/m.test(html), "compile failures should not trigger a life-zero teleport or editor lock");
+assert(!/compileLives\s*<=\s*0[\s\S]{0,120}triggerCompileLifeZeroPenalty/m.test(html), "compile failure count must not lock the editor after repeated failures");
 assert(/function restoreCompileLife/m.test(html) && /interactWithRoomBed[\s\S]*restoreCompileLife\("full"/m.test(html), "room bed rest should restore compile lives");
 assert(/function updateSpawnStoneLifeRecovery/m.test(html), "standing near the spawn stone should recover life after ten seconds");
 assert(/ENEMY_ENCOUNTER_RULES\s*=\s*Object\.freeze/m.test(html), "enemy encounter rules should describe Bug and logic guard progression");
