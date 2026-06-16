@@ -1061,10 +1061,10 @@ assert(/本项目永久免费对外开放/.test(html), "announcement should incl
 assert(/STARTUP_ANNOUNCEMENT_AUTO_HIDE_MS\s*=\s*3000/m.test(html), "announcement should auto-hide after 3 seconds");
 assert(/function showStartupAnnouncement/m.test(html), "announcement should be controlled by a startup function");
 assert(/id="announcementCloseButton"/m.test(html), "announcement should include a minimal close control");
-assert(/World Build v1\.0\.3/m.test(html) || /GAME_VERSION\s*=\s*"v1\.0\.3"/m.test(html), "game version should increment when shipping a new update");
+assert(/World Build v1\.0\.4/m.test(html) || /GAME_VERSION\s*=\s*"v1\.0\.4"/m.test(html), "game version should increment when shipping a new update");
 assert(/UPDATE_HISTORY\s*=\s*Object\.freeze\(\[[\s\S]*v1\.0\.1[\s\S]*零基础新手指引[\s\S]*v1\.0\.0[\s\S]*手机端适配/m.test(html), "update history should keep detailed previous release notes");
 assert(/id="updateHistoryList"/m.test(html) && /历史更新内容/m.test(html), "side menu should expose update history with detailed usage-visible notes");
-assert(/GAME_VERSION\s*=\s*"v1\.0\.3"/m.test(html), "game version should increment for the mobile landscape release");
+assert(/GAME_VERSION\s*=\s*"v1\.0\.4"/m.test(html), "game version should increment for the zero-basis friendly release");
 assert(/UPDATE_HISTORY\s*=\s*Object\.freeze\(\[[\s\S]*v1\.0\.3[\s\S]*手机横屏全屏[\s\S]*触摸对话/m.test(html), "update history should record the v1.0.3 mobile landscape release");
 assert(/UPDATE_HISTORY\s*=\s*Object\.freeze\(\[[\s\S]*v1\.0\.3[\s\S]*信息菜单新增图标和一句话用途标签/m.test(html), "update history should record side menu icon and purpose labels");
 assert(/UPDATE_HISTORY\s*=\s*Object\.freeze\(\[[\s\S]*v1\.0\.2[\s\S]*第一行代码仪式[\s\S]*编程护照/m.test(html), "update history should record the v1.0.2 learning-assist release");
@@ -1313,7 +1313,11 @@ assert(fs.existsSync("docs/adr/0002-save-format.md"), "architecture decision rec
 assert(fs.existsSync("CHANGELOG.md"), "project should have a changelog");
 assert(/http-equiv="Content-Security-Policy"/m.test(html), "page should define a Content Security Policy meta tag");
 assert(/frame-ancestors 'none'/.test(html), "CSP should prevent iframe embedding");
-assert(!/unsafe-eval/.test(html) && !/unsafe-inline/.test(html), "CSP should avoid unsafe eval and unsafe inline");
+const scriptSrcDirective = cspContent.split(";").find((part) => part.trim().startsWith("script-src")) || "";
+const styleSrcDirective = cspContent.split(";").find((part) => part.trim().startsWith("style-src ")) || "";
+assert(!/unsafe-eval/.test(scriptSrcDirective) && !/unsafe-inline/.test(scriptSrcDirective), "CSP script-src should avoid unsafe eval and unsafe inline");
+assert(!/unsafe-inline/.test(styleSrcDirective), "CSP style-src should avoid broad unsafe inline styles");
+assert(/style-src-attr 'unsafe-inline'/.test(cspContent), "CSP should allow runtime style attributes used by game animations without relaxing script execution");
 assert(cspContent.includes(sha256Directive(rawStyleContent)), "CSP style hash must match raw browser style content");
 assert(cspContent.includes(sha256Directive(rawInlineScriptContent)), "CSP script hash must match raw browser script content");
 {
@@ -1654,6 +1658,10 @@ assert(/function drawNoviceGuideVideoFrame/m.test(html) && /function toggleNovic
 assert(/function startNoviceGuide/m.test(html) && /function advanceNoviceGuideStep/m.test(html), "novice guide should have explicit start and step progression functions");
 assert(/noviceGuideCompleted/m.test(html) && /localStorage\.setItem\("noviceGuideCompleted"/m.test(html), "novice guide completion should persist to localStorage");
 assert(/safeRunEffect\("startupNoviceGuide"[\s\S]*maybeStartNoviceGuide/m.test(html), "first load should automatically enter novice guide mode");
+assert(/function isGuidanceOverlayBlocking/m.test(html) && /dom\.settingsPanel[\s\S]*dom\.infoSideMenu[\s\S]*dom\.overlay[\s\S]*dom\.dialog/m.test(html), "auto novice guidance should treat settings, side menu, editor, and dialog as blocking surfaces");
+assert(/function canAutoStartGuidance/m.test(html) && /hasCompletedCodeGenesisCharacter\(\)[\s\S]*menuManager\?\.active === "game"[\s\S]*!isGuidanceOverlayBlocking\(\)/m.test(html), "auto novice guidance should centralize strict start conditions");
+assert(/maybeStartNoviceGuide[\s\S]*scheduleNoviceGuide\(\(\) => \{[\s\S]*canAutoStartGuidance\(\)[\s\S]*startNoviceGuide\(\{ auto: true \}\)/m.test(html), "novice guide delayed callback should re-check conditions before opening");
+assert(/bindFastTouchAction\(dom\.startFoundationButton[\s\S]*startZeroBasisFoundation/m.test(html), "zero-basis foundation should be manually replayable from the side menu instead of surprising users during settings");
 assert(/function hasCompletedCodeGenesisCharacter/m.test(html), "novice guide should wait until character creation is complete");
 assert(/isStartupOverlayBlockingNoviceGuide[\s\S]*dom\.mainMenu[\s\S]*dom\.worldSelectOverlay[\s\S]*dom\.codeGenesisOverlay/m.test(html), "novice guide should treat menu, world select, and code genesis overlays as blocking");
 assert(/maybeStartNoviceGuide[\s\S]*hasCompletedCodeGenesisCharacter\(\)/m.test(html), "novice guide should not auto-start before a character exists");
@@ -1665,9 +1673,11 @@ assert(/novice-guide-hand-cursor/m.test(html), "guided code step should show an 
 assert(/bindFastTouchAction\(dom\.noviceGuideVideoPlayButton[\s\S]*toggleNoviceGuideVideoPlayback/m.test(html), "novice guide simulated video should support touch play/pause");
 assert(/bindFastTouchAction\(dom\.replayNoviceGuideButton[\s\S]*startNoviceGuide/m.test(html), "replay novice guide button should restart the guide");
 assert(/compileAndAdvanceWorld[\s\S]*if \(gameState\.noviceGuideActive/m.test(html), "compile button should route through novice guide feedback while guidance is active");
-assert(/const CODE_GENESIS_BEGINNER_TEMPLATE[\s\S]*\/\/ 第1步[\s\S]*\/\/ hp 是生命值[\s\S]*\/\/ name 是你的名字[\s\S]*\/\/ return 0/m.test(html), "code genesis should preload beginner-friendly // comment guidance");
+assert(/const CODE_GENESIS_BEGINNER_TEMPLATE[\s\S]*int hp = 88;[\s\S]*char name\[\] = "行者";[\s\S]*return 0/m.test(html), "code genesis should retain a concise reference template");
+assert(/CODE_GENESIS_GUIDED_LINES\s*=\s*Object\.freeze\(\[/m.test(html) && html.includes("int hp = 88;") && html.includes('char name[] = \\"行者\\";') && html.includes("int level = 1;") && html.includes("return 0;"), "code genesis should teach character creation line by line");
 assert(/id="codeGenesisExampleButton"/m.test(html) && /id="codeGenesisExplainButton"/m.test(html) && /id="codeGenesisCreateButton"/m.test(html), "code genesis should expose helper buttons for zero-basis players");
-assert(/function fillCodeGenesisBeginnerTemplate/m.test(html) && /function explainCodeGenesisBeginnerTemplate/m.test(html) && /function runCodeGenesisEditor/m.test(html), "code genesis helper buttons should use dedicated helper functions");
+assert(/function showCodeGenesisNextLineHint/m.test(html) && /function explainCodeGenesisBeginnerTemplate/m.test(html) && /function runCodeGenesisEditor/m.test(html), "code genesis helper buttons should guide the next line without completing creation for the player");
+assert(/runCodeGenesisEditor[\s\S]*const source = dom\.codeGenesisInput\.value[\s\S]*!source\.trim\(\)/m.test(html), "code genesis create button should validate player-typed code instead of auto-running the full template");
 assert(/function pickPreferredSpeechVoice/m.test(html) && /function applyPreferredSpeechVoice/m.test(html), "TTS should prefer softer local browser voices instead of forcing the default voice");
 assert(/TTSFM_CONFIG\s*=\s*Object\.freeze[\s\S]*http:\/\/localhost:8000\/v1\/audio\/speech[\s\S]*voice:\s*"nova"/m.test(html), "TTS should default to the requested ttsfm local OpenAI-compatible endpoint and female-style voice");
 assert(/function speakWithTtsfmFemale/m.test(html) && /fetch\(endpoint[\s\S]*\/v1\/audio\/speech/m.test(html), "TTS should include a ttsfm connector before browser speech fallback");
@@ -1686,6 +1696,21 @@ assert(/function decorateInfoMenuSectionIcons/m.test(html), "side menu headings 
 assert(/menu-section-icon/m.test(html) && /menu-section-purpose/m.test(html), "side menu should render visual icons and one-line purpose labels");
 assert(/decorateInfoMenuSectionIcons\(\)/m.test(html), "side menu icon decoration should run during startup");
 assert((html.match(/class="menu-help"/g) || []).length >= 18, "side menu should explain each major function with usage notes");
+assert(/friendlyMode:\s*true/m.test(html) && /id="friendlyModeToggle"/m.test(html) && /function applyFriendlyMode/m.test(html), "friendly mode should be enabled by default and toggleable from the menu");
+assert(/FRIENDLY_TERM_GLOSSARY\s*=\s*Object\.freeze[\s\S]*变量[\s\S]*带名字的盒子[\s\S]*编译[\s\S]*运行我的代码/m.test(html), "friendly mode should explain first-time terms with life metaphors");
+assert(/id="littleCCompanion"/m.test(html) && /function showLittleCSpeech/m.test(html) && /function triggerLittleCDance/m.test(html), "Little C companion should exist, talk, and animate");
+assert(/ZERO_BASIS_FOUNDATION_LESSONS\s*=\s*Object\.freeze\(\[[\s\S]*什么是“指令”[\s\S]*拿碗[\s\S]*什么是“变量”[\s\S]*年龄[\s\S]*什么是“输入”和“输出”[\s\S]*发送[\s\S]*什么是“条件判断”[\s\S]*下雨[\s\S]*什么是“循环”[\s\S]*走一圈/m.test(html), "zero-basis foundation should include five no-code concept exercises");
+assert(/id="foundationOverlay"/m.test(html) && /function startZeroBasisFoundation/m.test(html) && /function completeFoundationLesson/m.test(html), "zero-basis foundation overlay should be playable and completable");
+assert(/CODE_BLOCK_MODE_SNIPPETS\s*=\s*Object\.freeze/m.test(html) && /id="codeBlockModePanel"/m.test(html) && /function renderCodeBlockMode/m.test(html) && /function verifyCodeBlockProgram/m.test(html), "first ten snippets should support colorful code block mode");
+assert(/id="littleCReadButton"/m.test(html) && /function readWithLittleC/m.test(html) && /karaoke-highlight/m.test(html), "follow-reading mode should expose Little C TTS with karaoke highlighting");
+assert(/id="codeStoryBookPanel"/m.test(html) && /function renderCodeStoryBook/m.test(html) && /CODE_STORYBOOK_PAGES\s*=\s*Object\.freeze/m.test(html), "side menu should include a code storybook with comic-style pages");
+assert(/id="rewardGardenCanvas"/m.test(html) && /function growRewardGardenFlower/m.test(html) && /function drawRewardGarden/m.test(html), "reward garden should grow flowers and render them on Canvas");
+assert(/id="parentGuidePanel"/m.test(html) && /给家长的话/m.test(html) && /function unlockParentGuide/m.test(html), "menu should include a parent helper panel with a simple lock");
+["第一次按下按钮", "我让电脑说话了", "我的第一个盒子", "岔路口小能手", "转圈圈大师", "积木建筑师", "打字小勇士", "花园园丁", "星穹守护者"].forEach((label) => {
+  assert(html.includes(label), `friendly achievement label should include ${label}`);
+});
+assert(/function showPositiveMicroFeedback/m.test(html) && /✨ 做得好/.test(html), "every friendly action should be able to show positive micro feedback");
+assert(/REST_REMINDER_MS\s*=\s*15\s*\*\s*60\s*\*\s*1000/m.test(html) && /function showRestReminder/m.test(html) && /休息5分钟/m.test(html), "Little C should remind long learners to rest after fifteen minutes");
 assert(!/id="worldEvolutionDevButton"|开发者面板|id="worldEvolutionDevConsole"|WORLD_DEV_CONSOLE/.test(html), "player-facing menu should not expose developer value-editing or cheat panels");
 assert(!/id="testIslandToastButton"|测试弹窗/.test(html), "player-facing menu should not expose test-only toast tools");
 assert(/<strong>学习辅助<\/strong>[\s\S]*手动保存[\s\S]*重新观看指引/m.test(html), "utility section should keep player-safe learning actions only");

@@ -11,7 +11,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; base-uri 'self'; object-src 'none'; frame-ancestors 'none'; script-src 'self' https://cdn.jsdelivr.net 'nonce-code-awakener-inline' 'sha256-61CZlNJ2FR+4E18rEfgBp+19C7vPkhwH13M+WqiIaPc='; style-src 'self' https://cdn.jsdelivr.net https://fonts.googleapis.com 'nonce-code-awakener-inline' 'sha256-m1j4SHsT49srE1EaALL9n9wtCc598D7he7Z/FxERGi0='; font-src 'self' https://cdn.jsdelivr.net https://fonts.gstatic.com data:; img-src 'self' data: blob:; media-src 'self' data: blob:; worker-src 'self' blob:; child-src 'self' blob:; connect-src 'self' https://cdn.jsdelivr.net http://localhost:8000 http://127.0.0.1:8000;">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; base-uri 'self'; object-src 'none'; frame-ancestors 'none'; script-src 'self' https://cdn.jsdelivr.net 'nonce-code-awakener-inline' 'sha256-UVzPYexUpGdkfsfGy1fLB6mHI9YdKdk0SPAVQz/fFwA='; style-src 'self' https://cdn.jsdelivr.net https://fonts.googleapis.com 'nonce-code-awakener-inline' 'sha256-h9HBc2293Ig2IRcdBVmvWiory5GdJIOiSUR793omWO0='; style-src-attr 'unsafe-inline'; font-src 'self' https://cdn.jsdelivr.net https://fonts.gstatic.com data:; img-src 'self' data: blob:; media-src 'self' data: blob:; worker-src 'self' blob:; child-src 'self' blob:; connect-src 'self' https://cdn.jsdelivr.net http://localhost:8000 http://127.0.0.1:8000;">
   <title>编程学习 RPG：C 语言启航村</title>
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%23020617'/%3E%3Cpath d='M22 20 10 32l12 12M42 20l12 12-12 12' fill='none' stroke='%2300ff88' stroke-width='6' stroke-linecap='round' stroke-linejoin='round'/%3E%3Cpath d='m36 16-8 32' stroke='%2300ccff' stroke-width='5' stroke-linecap='round'/%3E%3C/svg%3E">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/firacode@6.2.0/distr/fira_code.css">
@@ -2712,6 +2712,79 @@
       line-height: 1.6;
     }
 
+    .friendly-mode-toggle {
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    .friendly-mode-toggle input {
+      width: 22px;
+      height: 22px;
+      accent-color: #facc15;
+    }
+
+    .foundation-progress {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 6px;
+      margin-top: 8px;
+    }
+
+    .foundation-star {
+      min-height: 28px;
+      display: grid;
+      place-items: center;
+      border: 1px solid rgba(250, 204, 21, 0.22);
+      border-radius: 12px;
+      background: rgba(2, 6, 23, 0.32);
+      color: rgba(254, 243, 199, 0.48);
+      font-size: 16px;
+    }
+
+    .foundation-star.done {
+      color: #facc15;
+      box-shadow: 0 0 18px rgba(250, 204, 21, 0.2);
+    }
+
+    .code-storybook-card,
+    .parent-guide-card {
+      padding: 10px;
+      border: 1px solid rgba(125, 211, 252, 0.18);
+      border-radius: 16px;
+      background: rgba(2, 6, 23, 0.34);
+      color: #dbeafe;
+      line-height: 1.65;
+    }
+
+    .code-storybook-art {
+      min-height: 74px;
+      display: grid;
+      place-items: center;
+      margin-bottom: 8px;
+      border-radius: 14px;
+      color: #fef3c7;
+      background:
+        radial-gradient(circle at 38% 28%, rgba(250, 204, 21, 0.18), transparent 36%),
+        linear-gradient(135deg, rgba(14, 165, 233, 0.12), rgba(2, 6, 23, 0.72));
+      font: 800 13px/1.6 var(--font-code);
+      text-align: center;
+    }
+
+    .reward-garden-card {
+      display: grid;
+      gap: 8px;
+    }
+
+    #rewardGardenCanvas {
+      width: 100%;
+      height: 108px;
+      border: 1px solid rgba(34, 197, 94, 0.22);
+      border-radius: 16px;
+      background:
+        radial-gradient(circle at 50% 100%, rgba(34, 197, 94, 0.2), transparent 52%),
+        rgba(2, 6, 23, 0.42);
+    }
+
     .import-progress-label {
       display: inline-grid;
       place-items: center;
@@ -2737,6 +2810,246 @@
     .first-code-ritual.active {
       display: grid;
       animation: firstCodeRitualFade 5200ms ease forwards;
+    }
+
+    .positive-micro-feedback {
+      position: absolute;
+      right: max(18px, env(safe-area-inset-right));
+      top: max(78px, calc(env(safe-area-inset-top) + 78px));
+      z-index: 75;
+      pointer-events: none;
+      padding: 9px 14px;
+      border: 1px solid rgba(250, 204, 21, 0.48);
+      border-radius: 999px;
+      color: #fef3c7;
+      background: rgba(2, 6, 23, 0.72);
+      box-shadow: 0 0 26px rgba(250, 204, 21, 0.2);
+      opacity: 0;
+      transform: translateY(10px) scale(0.96);
+      transition: opacity 180ms ease, transform 180ms ease;
+      font: 900 14px/1 var(--font-code);
+    }
+
+    .positive-micro-feedback.active {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+
+    .little-c-companion {
+      position: absolute;
+      right: max(18px, env(safe-area-inset-right));
+      bottom: max(128px, calc(env(safe-area-inset-bottom) + 128px));
+      z-index: 62;
+      display: grid;
+      justify-items: end;
+      gap: 8px;
+      pointer-events: none;
+    }
+
+    .little-c-speech {
+      max-width: min(320px, calc(100vw - 120px));
+      padding: 10px 13px;
+      border: 1px solid rgba(125, 211, 252, 0.32);
+      border-radius: 18px 18px 6px 18px;
+      color: #e0f2fe;
+      background: rgba(2, 6, 23, 0.76);
+      box-shadow: 0 0 24px rgba(56, 189, 248, 0.18);
+      opacity: 0;
+      transform: translateY(8px);
+      transition: opacity 220ms cubic-bezier(0.2, 0.9, 0.4, 1), transform 220ms cubic-bezier(0.2, 0.9, 0.4, 1);
+      font: 700 clamp(12px, 2.7vw, 14px)/1.55 var(--font-ui);
+      backdrop-filter: blur(16px);
+    }
+
+    .little-c-companion.speaking .little-c-speech {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    #littleCCanvas {
+      width: 86px;
+      height: 86px;
+      filter: drop-shadow(0 0 18px rgba(96, 165, 250, 0.36));
+      transform-origin: 50% 100%;
+    }
+
+    .little-c-companion.dancing #littleCCanvas {
+      animation: littleCCompanionDance 480ms ease-in-out infinite alternate;
+    }
+
+    .little-c-companion.confused #littleCCanvas {
+      filter: drop-shadow(0 0 18px rgba(250, 204, 21, 0.34));
+    }
+
+    @keyframes littleCCompanionDance {
+      from { transform: translateY(0) rotate(-5deg); }
+      to { transform: translateY(-7px) rotate(5deg); }
+    }
+
+    .foundation-overlay {
+      position: absolute;
+      inset: 0;
+      z-index: 96;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: max(18px, env(safe-area-inset-top)) max(18px, env(safe-area-inset-right)) max(18px, env(safe-area-inset-bottom)) max(18px, env(safe-area-inset-left));
+      pointer-events: none;
+      background: linear-gradient(180deg, rgba(2, 6, 23, 0.24), rgba(2, 6, 23, 0.52));
+    }
+
+    .foundation-overlay.active {
+      display: flex;
+    }
+
+    .foundation-card {
+      width: min(920px, 94vw);
+      max-height: min(720px, 88vh);
+      display: grid;
+      grid-template-columns: minmax(260px, 1fr) minmax(240px, 0.92fr);
+      gap: 16px;
+      padding: 18px;
+      border: 1px solid rgba(125, 211, 252, 0.32);
+      border-radius: 28px;
+      background:
+        radial-gradient(circle at 16% 10%, rgba(250, 204, 21, 0.14), transparent 30%),
+        linear-gradient(135deg, rgba(2, 6, 23, 0.86), rgba(15, 23, 42, 0.74));
+      box-shadow: 0 28px 72px rgba(0, 0, 0, 0.42), 0 0 38px rgba(56, 189, 248, 0.14);
+      pointer-events: auto;
+      overflow: auto;
+      backdrop-filter: blur(22px) saturate(1.1);
+    }
+
+    .foundation-stage {
+      display: grid;
+      gap: 12px;
+      min-width: 0;
+    }
+
+    #foundationCanvas {
+      width: 100%;
+      min-height: 260px;
+      border: 1px solid rgba(125, 211, 252, 0.22);
+      border-radius: 20px;
+      background: rgba(2, 6, 23, 0.38);
+    }
+
+    .foundation-title {
+      margin: 0;
+      color: #fef3c7;
+      font: 900 clamp(18px, 3.8vw, 28px)/1.25 var(--font-code);
+    }
+
+    .foundation-text {
+      margin: 0;
+      color: #dbeafe;
+      font: 700 clamp(13px, 2.8vw, 16px)/1.7 var(--font-ui);
+    }
+
+    .foundation-actions {
+      display: grid;
+      gap: 10px;
+      align-content: start;
+    }
+
+    .foundation-choice-grid {
+      display: grid;
+      gap: 8px;
+    }
+
+    .foundation-choice {
+      min-height: 48px;
+      border-radius: 16px;
+      text-align: left;
+      justify-content: flex-start;
+    }
+
+    .foundation-choice.done {
+      border-color: rgba(34, 197, 94, 0.58);
+      background: rgba(34, 197, 94, 0.16);
+    }
+
+    .foundation-result {
+      min-height: 44px;
+      color: #bbf7d0;
+      font: 800 13px/1.6 var(--font-code);
+    }
+
+    .code-block-mode-panel {
+      display: none;
+      gap: 8px;
+      padding: 10px;
+      border: 1px solid rgba(125, 211, 252, 0.18);
+      border-radius: 16px;
+      background: rgba(2, 6, 23, 0.42);
+    }
+
+    body.friendly-mode #editorOverlay .code-block-mode-panel.active {
+      display: grid;
+    }
+
+    .code-block-bank,
+    .code-block-program {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 7px;
+    }
+
+    .code-block {
+      min-height: 40px;
+      padding: 0 10px;
+      border: 1px solid rgba(255, 255, 255, 0.16);
+      border-radius: 12px;
+      color: #e0f2fe;
+      background: linear-gradient(135deg, rgba(14, 165, 233, 0.32), rgba(2, 6, 23, 0.72));
+      font: 800 12px/1 var(--font-code);
+      cursor: pointer;
+    }
+
+    .code-block.printf { background: linear-gradient(135deg, rgba(34, 197, 94, 0.36), rgba(2, 6, 23, 0.72)); }
+    .code-block.main { background: linear-gradient(135deg, rgba(248, 113, 113, 0.34), rgba(2, 6, 23, 0.72)); }
+    .code-block.return { background: linear-gradient(135deg, rgba(250, 204, 21, 0.34), rgba(2, 6, 23, 0.72)); }
+
+    .code-block-mode-status {
+      color: #bfdbfe;
+      font: 700 12px/1.55 var(--font-ui);
+    }
+
+    .code-block-mode-panel.ready {
+      box-shadow: 0 0 28px rgba(34, 197, 94, 0.18);
+      border-color: rgba(34, 197, 94, 0.38);
+    }
+
+    .karaoke-highlight {
+      background: rgba(250, 204, 21, 0.24);
+      color: #fef3c7;
+      border-radius: 6px;
+      padding: 1px 2px;
+    }
+
+    @media (max-width: 768px) {
+      .little-c-companion {
+        right: max(10px, env(safe-area-inset-right));
+        bottom: max(112px, calc(env(safe-area-inset-bottom) + 112px));
+      }
+
+      #littleCCanvas {
+        width: 68px;
+        height: 68px;
+      }
+
+      .little-c-speech {
+        max-width: min(78vw, 300px);
+      }
+
+      .foundation-card {
+        grid-template-columns: 1fr;
+        width: min(94vw, 620px);
+      }
+
+      #foundationCanvas {
+        min-height: 210px;
+      }
     }
 
     .first-code-message {
@@ -8375,18 +8688,17 @@
     <section id="codeGenesisOverlay" class="code-genesis-overlay" aria-label="代码创世终端" aria-hidden="true">
       <div id="codeGenesisTerminal" class="code-genesis-terminal">
         <pre id="codeGenesisOutput" class="code-genesis-output"></pre>
-        <label class="code-genesis-input-row"><span>&gt;</span><textarea id="codeGenesisInput" class="code-genesis-input" rows="4" inputmode="text" enterkeyhint="enter" autocomplete="off" autocapitalize="none" autocorrect="off" spellcheck="false" aria-label="输入 C 语言创世代码"></textarea></label>
+        <label class="code-genesis-input-row"><span>&gt;</span><textarea id="codeGenesisInput" class="code-genesis-input" rows="4" inputmode="text" enterkeyhint="enter" autocomplete="off" autocapitalize="none" autocorrect="off" spellcheck="false" aria-label="输入 C 语言创世代码" placeholder="照着右侧提示自己输入第一行：int hp = 88;"></textarea></label>
         <div class="code-genesis-helper" aria-label="零基础创角说明">
-          <strong class="code-genesis-helper-title">&gt; 零基础说明：先看注释，再点创建</strong>
-          <pre id="codeGenesisHelperText">// 代码里以 // 开头的内容是注释，只负责解释，不会被执行。
-// int hp = 88; 表示定义生命值，数字范围 1-100。
-// char name[] = "行者"; 表示定义你的名字。
-// int level = 1; 表示初始等级，先写 1 就可以。
-// return 0; 表示全部定义完成，正式进入世界。</pre>
+          <strong class="code-genesis-helper-title">&gt; 零基础说明：跟着一行一行打</strong>
+          <pre id="codeGenesisHelperText">// 先别急着全写完。
+// 看这里给出的“下一行”，自己打到左边输入框。
+// 每写完一行按 Enter，系统会读懂它。
+// 最后一行 return 0; 代表“我写完了”。</pre>
           <div class="menu-actions">
-            <button id="codeGenesisExampleButton" class="pixel-button secondary" type="button">填入示例</button>
-            <button id="codeGenesisExplainButton" class="pixel-button secondary" type="button">解释代码</button>
-            <button id="codeGenesisCreateButton" class="pixel-button" type="button">创建角色</button>
+            <button id="codeGenesisExampleButton" class="pixel-button secondary" type="button">显示下一行</button>
+            <button id="codeGenesisExplainButton" class="pixel-button secondary" type="button">解释当前行</button>
+            <button id="codeGenesisCreateButton" class="pixel-button" type="button">检查并创建</button>
           </div>
         </div>
       </div>
@@ -8508,7 +8820,7 @@
       <canvas id="menuFxCanvas" width="1280" height="720"></canvas>
       <div class="main-menu-card glass-panel">
         <h1 class="game-logo">CODE AWAKENER<br>C 语言启航村</h1>
-        <div class="version-label" id="versionLabel">World Build v1.0.3 · develop.fan C Basics</div>
+        <div class="version-label" id="versionLabel">World Build v1.0.4 · develop.fan C Basics</div>
         <label class="boot-command"><span>&gt;</span><input id="bootCommandInput" value="start_game.exe" autocomplete="off" spellcheck="false" aria-label="启动命令"></label>
         <label class="skin-picker">角色外观
           <select id="skinSelect" aria-label="选择主角外观">
@@ -8807,6 +9119,23 @@
       <div id="keymapGlassBar" class="keymap-glass-bar" aria-label="当前游戏键位映射"></div>
       <aside id="infoSideMenu" class="info-side-menu" aria-label="局内信息菜单" aria-hidden="true">
         <h2 class="info-menu-title">&gt; OPERATOR_STATUS</h2>
+        <section class="info-menu-section">
+          <strong>友好模式</strong>
+          <p class="menu-help">默认开启。把“变量、函数、编译”这些词先翻译成生活里的比喻，按钮也会变得更像朋友在提醒你。</p>
+          <label class="setting-check friendly-mode-toggle"><span>小C友好讲解</span><input id="friendlyModeToggle" type="checkbox" checked></label>
+          <div id="friendlyModeHint">// 变量像带名字的盒子；编译就是“运行我的代码”。</div>
+          <div class="info-menu-actions">
+            <button id="startFoundationButton" class="pixel-button secondary" type="button">开始思维启蒙</button>
+            <button id="littleCReadButton" class="pixel-button secondary" type="button">▶ 听小C读</button>
+          </div>
+        </section>
+        <section class="info-menu-section">
+          <strong>思维启蒙</strong>
+          <p class="menu-help">前5步完全不写代码，只用厨房、盒子、对讲机、岔路口和绕圈圈来理解编程思维。</p>
+          <div id="foundationProgressStars" class="foundation-progress" aria-label="思维启明星星">
+            <span class="foundation-star">☆</span><span class="foundation-star">☆</span><span class="foundation-star">☆</span><span class="foundation-star">☆</span><span class="foundation-star">☆</span>
+          </div>
+        </section>
         <section id="worldEvolutionDifficultyGroup" class="info-menu-section">
           <strong>难度选择</strong>
           <p class="menu-help">选择编译推进的节奏。新手建议用“简单”；想正常学习用“普通”；困难会消耗更多MP并可能出现时空裂隙。</p>
@@ -8872,6 +9201,23 @@
           <div id="programmingPassportPanel" class="programming-passport-panel">// 护照等待第一次编译。</div>
           <div class="info-menu-actions">
             <button id="saveProgrammingPassportButton" class="pixel-button secondary" type="button">保存护照图片</button>
+          </div>
+        </section>
+        <section id="codeStoryBookPanel" class="info-menu-section">
+          <strong>我的代码故事书</strong>
+          <p class="menu-help">把学过的代码变成连环画：一页代码、一张画、一句小C旁白，适合回顾。</p>
+          <div id="codeStoryBookPage" class="code-storybook-card">// 故事书等待第一段代码。</div>
+          <div class="info-menu-actions">
+            <button id="storyBookPrevButton" class="pixel-button secondary" type="button">上一页</button>
+            <button id="storyBookNextButton" class="pixel-button secondary" type="button">下一页</button>
+          </div>
+        </section>
+        <section class="info-menu-section">
+          <strong>奖励花园</strong>
+          <p class="menu-help">每次尝试运行代码都会长出一朵花。点击花朵可回忆对应知识点，失败也会留下成长痕迹。</p>
+          <div class="reward-garden-card">
+            <canvas id="rewardGardenCanvas" width="320" height="108" aria-label="知识奖励花园"></canvas>
+            <div id="rewardGardenText">// 花园还在等待第一朵花。</div>
           </div>
         </section>
         <section class="info-menu-section">
@@ -9050,6 +9396,14 @@
           <p class="menu-help">麦克风和摄像头都需要你主动授权。不开启也不影响学习和通关。</p>
           <label class="setting-check"><input id="worldEvolutionMicToggle" type="checkbox"> 麦克风影响粒子（需授权）</label>
           <label class="setting-check"><input id="worldEvolutionCameraToggle" type="checkbox"> 摄像头情绪反馈（需授权）</label>
+        </section>
+        <section id="parentGuidePanel" class="info-menu-section">
+          <strong>给家长的话</strong>
+          <p class="menu-help">这里解释游戏的教育目标、陪伴建议和鼓励方式。默认锁定，避免孩子误改设置。</p>
+          <div id="parentGuideContent" class="parent-guide-card">// 输入四位密码 1234 后可查看家长说明。</div>
+          <div class="info-menu-actions">
+            <button id="parentGuideUnlockButton" class="pixel-button secondary" type="button">解锁家长说明</button>
+          </div>
         </section>
         <section class="info-menu-section">
           <strong>文本速度</strong>
@@ -9422,6 +9776,15 @@ int main(void) {
             <div class="tabs">
               <div id="activeTab" class="tab active">main.c</div>
             </div>
+            <section id="codeBlockModePanel" class="code-block-mode-panel" aria-label="代码积木模式">
+              <div class="code-block-mode-status" id="codeBlockModeStatus">// 前10个代码片段可用积木拼程序。按正确顺序点积木，程序会自动填入编辑器。</div>
+              <div id="codeBlockBank" class="code-block-bank" aria-label="可选代码积木"></div>
+              <div id="codeBlockProgram" class="code-block-program" aria-label="已选择代码积木"></div>
+              <div class="info-menu-actions">
+                <button id="codeBlockClearButton" class="pixel-button secondary" type="button">清空积木</button>
+                <button id="codeBlockApplyButton" class="pixel-button secondary" type="button">填入积木程序</button>
+              </div>
+            </section>
             <div class="code-wrap">
               <div id="lineNumbers">1</div>
               <div class="code-layer">
@@ -9498,6 +9861,26 @@ int main(void) {
     <section id="firstCodeRitual" class="first-code-ritual" aria-hidden="true">
       <div class="first-code-message">你写下了人生第一行代码！</div>
       <div class="little-c-dance" aria-hidden="true"></div>
+    </section>
+    <div id="positiveMicroFeedback" class="positive-micro-feedback" aria-live="polite">✨ 做得好！</div>
+    <section id="littleCCompanion" class="little-c-companion" aria-live="polite" aria-label="虚拟导师小C">
+      <div id="littleCSpeech" class="little-c-speech">你好！我是小C，今天我们一起学写代码，超简单的！</div>
+      <canvas id="littleCCanvas" width="128" height="128" aria-hidden="true"></canvas>
+    </section>
+    <section id="foundationOverlay" class="foundation-overlay" aria-live="polite" aria-hidden="true">
+      <div class="foundation-card">
+        <div class="foundation-stage">
+          <h2 id="foundationTitle" class="foundation-title">零基础·思维启蒙</h2>
+          <p id="foundationText" class="foundation-text">我们先不写代码，先用生活里的小动作理解编程。</p>
+          <canvas id="foundationCanvas" width="640" height="360" aria-label="思维启蒙动画"></canvas>
+        </div>
+        <div class="foundation-actions">
+          <div id="foundationChoiceGrid" class="foundation-choice-grid" aria-label="启蒙互动选项"></div>
+          <div id="foundationResult" class="foundation-result">// 跟着小C点一点就好。</div>
+          <button id="foundationNextButton" class="pixel-button" type="button">下一步</button>
+          <button id="foundationCloseButton" class="pixel-button secondary" type="button">稍后再学</button>
+        </div>
+      </div>
     </section>
     <section id="noviceGuideOverlay" class="novice-guide-overlay" data-step="interface" data-target="menu" aria-live="polite" aria-hidden="true">
       <button id="noviceGuideSkipButton" class="pixel-button secondary novice-guide-skip novice-guide-control" type="button">跳过指引</button>
@@ -9767,23 +10150,23 @@ int main() {
     const SAVE_SIGNATURE_SALT = "c-world-local-integrity";
     const SAVE_CLEAR_CONFIRM_MS = 3000;
     const STARTUP_ANNOUNCEMENT_AUTO_HIDE_MS = 3000;
-    const GAME_VERSION = "v1.0.3";
+    const GAME_VERSION = "v1.0.4";
     const UPDATE_ANNOUNCEMENT_PAGES = Object.freeze([
       {
         title: "> 消息 / 本次更新",
         lines: [
           "// 作者：杀戮",
-          "// 本次更新：手机横屏全屏、创角说明、新手指引与语音体验优化。",
-          "// 手机进入游戏后会询问是否横屏全屏，比例更接近真正游戏。",
-          "// 对话新增手机继续/跳过按钮，不再依赖空格键。"
+          "// 本次更新：新增零基础友好模式与虚拟导师小C。",
+          "// 游戏会先用生活比喻讲清楚指令、变量、输入输出、条件和循环。",
+          "// 菜单功能增加图标和用途说明，一眼能看懂每个入口是干嘛的。"
         ]
       },
       {
-        title: "> 更新内容 / 零基础与语音",
+        title: "> 更新内容 / 零基础学习",
         lines: [
-          "// 创角编辑器预填带注释的C代码，解释 hp/name/level/return 0。",
-          "// 新手指引会等角色创建并真正进入游戏后再出现。",
-          "// TTS可对接本地 ttsfm，默认使用 nova 女声风格；ttsfm不可用时不会播放浏览器机器人声。"
+          "// 新增5个“不写代码”的思维启蒙练习，先学思维再写代码。",
+          "// 新增前10课代码积木模式，可点积木自动拼出第一个C程序。",
+          "// 新增小C跟读、代码故事书、奖励花园、家长说明和儿童友好成就。"
         ]
       },
       {
@@ -9797,6 +10180,19 @@ int main() {
       }
     ]);
     const UPDATE_HISTORY = Object.freeze([
+      {
+        version: "v1.0.4",
+        date: "2026-06-16",
+        title: "零基础友好模式、小C导师与菜单图标说明",
+        details: [
+          "默认开启友好模式：编译、变量、函数、循环等术语首次出现时会用生活比喻解释。",
+          "新增虚拟导师“小C”：会挥手、说话、跳舞、鼓励玩家，并在出错时给温柔提示。",
+          "新增5个零基础思维启蒙练习：指令、变量、输入输出、条件判断、循环，全部不需要先打代码。",
+          "新增前10课代码积木模式，可点击彩色积木拼出C程序，再自动填入编辑器运行。",
+          "新增小C跟读、卡拉OK式文本高亮、我的代码故事书、奖励花园、家长说明和零基础儿童友好成就。",
+          "侧边菜单所有主要功能加入图标和一句话用途说明，减少看不懂菜单功能的问题。"
+        ]
+      },
       {
         version: "v1.0.3",
         date: "2026-06-16",
@@ -9859,6 +10255,8 @@ int main() {
       }
     ]);
     const INFO_MENU_SECTION_ICON_MAP = Object.freeze({
+      "友好模式": { icon: "🤝", purpose: "把术语讲成人话" },
+      "思维启蒙": { icon: "🌟", purpose: "先练思维不写代码" },
       "难度选择": { icon: "🎚️", purpose: "选择学习节奏" },
       "课程进度": { icon: "📚", purpose: "查看C语言路线" },
       "学习日志": { icon: "📝", purpose: "回看最近反馈" },
@@ -9867,6 +10265,8 @@ int main() {
       "零基础代码辅助": { icon: "🧩", purpose: "填入示例先运行" },
       "执行观察": { icon: "🔍", purpose: "暂停和逐行看动画" },
       "我的编程护照": { icon: "🪪", purpose: "保存学习身份卡" },
+      "我的代码故事书": { icon: "📚", purpose: "用连环画复习代码" },
+      "奖励花园": { icon: "🌷", purpose: "看见每次尝试的花" },
       "学习报告 / 备份": { icon: "📦", purpose: "导出报告和进度" },
       "世界进化": { icon: "🌍", purpose: "观察世界修复" },
       "任务提示": { icon: "🧭", purpose: "确认下一步目标" },
@@ -9886,6 +10286,7 @@ int main() {
       "记忆图鉴": { icon: "📖", purpose: "阅读世界记忆" },
       "成就 / 分享": { icon: "🏆", purpose: "查看成就与分享" },
       "隐私互动": { icon: "🔒", purpose: "管理麦克风和摄像头" },
+      "给家长的话": { icon: "👪", purpose: "了解陪伴学习建议" },
       "文本速度": { icon: "⏱️", purpose: "调整逐字显示速度" },
       "学习辅助": { icon: "🧠", purpose: "保存、重看和求助" }
     });
@@ -9940,6 +10341,44 @@ int main() {
       { id: "if", label: "if判断模板", code: "if (score >= 60) {\\n    printf(\"pass\\n\");\\n} else {\\n    printf(\"try again\\n\");\\n}", note: "让电脑根据条件做选择。" },
       { id: "function", label: "函数模板", code: "int add(int a, int b) {\\n    return a + b;\\n}", note: "把一段逻辑命名并复用。" },
       { id: "array", label: "数组模板", code: "int nums[3] = {1, 2, 3};\\nprintf(\"%d\\n\", nums[0]);", note: "保存一组同类型数据。" }
+    ]);
+    const REST_REMINDER_MS = 15 * 60 * 1000;
+    const FRIENDLY_TERM_GLOSSARY = Object.freeze({
+      "编译": "编译就是“运行我的代码”：让电脑按你的步骤试一遍。",
+      "变量": "变量就像一个带名字的盒子，盒子里可以放数字、文字或状态。",
+      "函数": "函数像一张固定菜谱，你给它材料，它按步骤做完再给你结果。",
+      "指针": "指针像一束指路光，告诉程序某个东西放在哪里。",
+      "数组": "数组像一排书架，每一格都有编号。",
+      "循环": "循环像绕圈圈：同一件事重复做几次。"
+    });
+    const ZERO_BASIS_FOUNDATION_LESSONS = Object.freeze([
+      { id: "instruction", title: "启蒙1：什么是“指令”？", metaphor: "厨房比喻", prompt: "代码就是给电脑的做菜步骤。电脑很认真，但它需要你把每一步说清楚。", choices: ["拿碗", "打鸡蛋", "搅拌"], correctOrder: ["拿碗", "打鸡蛋", "搅拌"], success: "你排对了！这就是程序的顺序感。" },
+      { id: "variable", title: "启蒙2：什么是“变量”？", metaphor: "储物盒比喻", prompt: "变量就是带名字的储物盒。把 18 放进“年龄”，把“小明”放进“名字”。", choices: ["18 → 年龄", "小明 → 名字", "99 → 分数"], correctOrder: ["18 → 年龄", "小明 → 名字"], success: "盒子有名字，电脑就能找到里面的东西。" },
+      { id: "io", title: "启蒙3：什么是“输入”和“输出”？", metaphor: "对讲机比喻", prompt: "你说一句，电脑显示一句。输入是给电脑信息，输出是电脑告诉你结果。", choices: ["发送：你好", "接收并显示：你好"], correctOrder: ["发送：你好", "接收并显示：你好"], success: "printf 就是让电脑把文字说出来。" },
+      { id: "condition", title: "启蒙4：什么是“条件判断”？", metaphor: "岔路口比喻", prompt: "如果下雨就走左边，否则走右边。if-else 就是电脑的岔路口。", choices: ["下雨 → 左边", "晴天 → 右边"], correctOrder: ["下雨 → 左边", "晴天 → 右边"], success: "你会让电脑根据情况做选择了。" },
+      { id: "loop", title: "启蒙5：什么是“循环”？", metaphor: "绕圈比喻", prompt: "每点一次“走一圈”，就摘一个苹果。重复5次，就是循环。", choices: ["走一圈", "走一圈", "走一圈", "走一圈", "走一圈"], correctOrder: ["走一圈", "走一圈", "走一圈", "走一圈", "走一圈"], success: "你做到了！这就是编程的思维。" }
+    ]);
+    const CODE_BLOCK_MODE_SNIPPETS = Object.freeze([
+      {
+        lesson: "hello",
+        blocks: [
+          { id: "include", label: "#include <stdio.h>", type: "include", code: "#include <stdio.h>" },
+          { id: "main", label: "int main() {", type: "main", code: "int main(void) {" },
+          { id: "printf", label: "printf(\"Hello C!\");", type: "printf", code: "    printf(\"Hello C!\\n\");" },
+          { id: "return", label: "return 0;", type: "return", code: "    return 0;" },
+          { id: "close", label: "}", type: "return", code: "}" }
+        ],
+        order: ["include", "main", "printf", "return", "close"]
+      }
+    ]);
+    const CODE_STORYBOOK_PAGES = Object.freeze([
+      { id: "printf", title: "第1页：让电脑说话", code: "printf(\"Hello C!\");", art: "屏幕上出现一行 Hello C!", narration: "printf 像小喇叭，把你写的文字告诉世界。" },
+      { id: "variable", title: "第2页：我的第一个盒子", code: "int a = 5;", art: "一个写着 a 的盒子，里面装着数字 5", narration: "变量 a 是一个盒子，数字 5 先住进去。" },
+      { id: "condition", title: "第3页：岔路口小能手", code: "if (a > 3) { ... }", art: "a 走到岔路口，选择更亮的一边", narration: "if 会问一个问题，然后决定走哪条路。" },
+      { id: "loop", title: "第4页：转圈圈大师", code: "for (int i = 0; i < 5; i++)", art: "小人绕树走 5 圈，每圈摘一个苹果", narration: "for 循环会把重复动作变简单。" }
+    ]);
+    const FRIENDLY_ACHIEVEMENT_LABELS = Object.freeze([
+      "第一次按下按钮！", "我让电脑说话了！", "我的第一个盒子！", "岔路口小能手！", "转圈圈大师！", "积木建筑师！", "打字小勇士！", "花园园丁！", "星穹守护者！"
     ]);
     const CLEAR_SAVE_IDLE_TEXT = "清除后会删除学习进度、卡牌、成就和设置，刷新后回到第一次进入游戏。";
     const UNDO_WINDOW_MS = 3000;
@@ -10211,17 +10650,16 @@ int main() {
     const KONAMI_SEQUENCE = Object.freeze(["ArrowUp", "ArrowUp", "ArrowDown", "ArrowDown", "ArrowLeft", "ArrowRight", "ArrowLeft", "ArrowRight", "KeyB", "KeyA"]);
     const CODE_GENESIS_ACTS = Object.freeze(["awakening", "life", "soul", "foundation", "descent", "handoff"]);
     const CODE_GENESIS_REQUIRED_FIELDS = Object.freeze(["hp", "name", "level"]);
-    const CODE_GENESIS_BEGINNER_TEMPLATE = `// 第1步：给自己生命值。// 后面的文字是注释，电脑不会执行，只是给你看的提醒。
-int hp = 88; // hp 是生命值，范围 1-100；越高头像光越亮。
-
-// 第2步：给自己取名字。双引号里的文字可以改成你的名字。
-char name[] = "行者"; // name 是你的名字，导师以后会这样称呼你。
-
-// 第3步：设置初始等级。零基础先写 1 就可以。
-int level = 1; // level 是等级，先从 1 级开始学习。
-
-// 第4步：告诉系统“我定义完了，可以进入世界”。
-return 0; // return 0 表示程序正常结束，并正式创建角色。`;
+    const CODE_GENESIS_BEGINNER_TEMPLATE = `int hp = 88;
+char name[] = "行者";
+int level = 1;
+return 0;`;
+    const CODE_GENESIS_GUIDED_LINES = Object.freeze([
+      { field: "hp", code: "int hp = 88;", explain: "hp 是生命值。int 表示整数，88 是你给自己的初始生命值，范围 1-100。" },
+      { field: "name", code: "char name[] = \"行者\";", explain: "name 是你的名字。char name[] 表示一串文字，双引号里的“行者”可以改成你的名字。" },
+      { field: "level", code: "int level = 1;", explain: "level 是等级。零基础先从 1 级开始，不用改复杂。" },
+      { field: "return", code: "return 0;", explain: "return 0 表示：我已经把角色定义完了，程序可以正常结束并进入世界。" }
+    ]);
     const TTSFM_CONFIG = Object.freeze({
       endpoint: "http://localhost:8000/v1/audio/speech",
       model: "tts-1",
@@ -10398,7 +10836,7 @@ return 0; // return 0 表示程序正常结束，并正式创建角色。`;
       directSaveAs: "reduced-by-inline-resources"
     });
     const SECURITY_CONFIG = Object.freeze({
-      expectedScriptHash: "qg7K2fjnW4p5MV9gvVcLgi7UxxXPUUJzablvhIPswBg=",
+      expectedScriptHash: "IB5Uk8ZMT8SCbv+OZk4r+ih7ufL4U9c0WYU4EpReRa0=",
       selfCheckIntervalMs: 45000,
       tamperRefreshMs: 5000,
       devToolsRefreshMs: 2000,
@@ -12943,7 +13381,13 @@ return 0; // return 0 表示程序正常结束，并正式创建角色。`;
     }
 
     function validateFixedGameSaveJson(raw = "") {
-      if (!String(raw || "").trim()) return { valid: false, reason: "empty", message: "[ERROR] 存档文件为空。请重新创建你的角色。" };
+      if (!String(raw || "").trim()) {
+        return {
+          valid: false,
+          reason: "empty",
+          message: "[提示] 这是第一次进入世界。先亲手写几行 C 代码，创建你的角色。"
+        };
+      }
       try {
         const data = JSON.parse(String(raw));
         const character = data?.character;
@@ -13328,6 +13772,14 @@ return 0; // return 0 表示程序正常结束，并正式创建角色。`;
       performanceLogs: [],
       performanceBenchmark: null,
       editorGuideCompleted: false,
+      friendlyFoundationCompleted: false,
+      friendlyFoundationStars: 0,
+      friendlyFoundationLessonsDone: [],
+      rewardGardenFlowers: [],
+      codeStoryBookPage: 0,
+      friendlyAchievements: [],
+      firstFriendlyOpenedAt: "",
+      restReminderLastShownAt: 0,
       tutorialAnimationsSeen: {},
       editorUseStartedAt: 0,
       randomEventHistory: [],
@@ -13394,6 +13846,7 @@ return 0; // return 0 表示程序正常结束，并正式创建角色。`;
       anonymousTelemetryEnabled: false,
       telemetryEndpoint: TELEMETRY_ENDPOINT,
       executionSpeed: 50,
+      friendlyMode: true,
       keyBindings: JSON.parse(JSON.stringify(DEFAULT_KEY_BINDINGS))
     };
 
@@ -15640,9 +16093,23 @@ int main(void) {
       freeModeCompileButton: document.getElementById("freeModeCompileButton"),
       debugStepButton: document.getElementById("debugStepButton"),
       tutorialFixSuggestionButton: document.getElementById("tutorialFixSuggestionButton"),
+      friendlyModeToggle: document.getElementById("friendlyModeToggle"),
+      friendlyModeHint: document.getElementById("friendlyModeHint"),
+      startFoundationButton: document.getElementById("startFoundationButton"),
+      littleCReadButton: document.getElementById("littleCReadButton"),
+      foundationProgressStars: document.getElementById("foundationProgressStars"),
       fillCurrentLessonButton: document.getElementById("fillCurrentLessonButton"),
       knowledgeCardButton: document.getElementById("knowledgeCardButton"),
       codeTemplateLibrary: document.getElementById("codeTemplateLibrary"),
+      codeStoryBookPanel: document.getElementById("codeStoryBookPanel"),
+      codeStoryBookPage: document.getElementById("codeStoryBookPage"),
+      storyBookPrevButton: document.getElementById("storyBookPrevButton"),
+      storyBookNextButton: document.getElementById("storyBookNextButton"),
+      rewardGardenCanvas: document.getElementById("rewardGardenCanvas"),
+      rewardGardenText: document.getElementById("rewardGardenText"),
+      parentGuidePanel: document.getElementById("parentGuidePanel"),
+      parentGuideContent: document.getElementById("parentGuideContent"),
+      parentGuideUnlockButton: document.getElementById("parentGuideUnlockButton"),
       executionSpeedSlider: document.getElementById("executionSpeedSlider"),
       executionSpeedValue: document.getElementById("executionSpeedValue"),
       executionPauseButton: document.getElementById("executionPauseButton"),
@@ -15657,6 +16124,12 @@ int main(void) {
       infoWorldEvolutionHint: document.getElementById("infoWorldEvolutionHint"),
       worldEvolutionDifficultyHint: document.getElementById("worldEvolutionDifficultyHint"),
       worldAdvanceButton: document.getElementById("worldAdvanceButton"),
+      codeBlockModePanel: document.getElementById("codeBlockModePanel"),
+      codeBlockModeStatus: document.getElementById("codeBlockModeStatus"),
+      codeBlockBank: document.getElementById("codeBlockBank"),
+      codeBlockProgram: document.getElementById("codeBlockProgram"),
+      codeBlockClearButton: document.getElementById("codeBlockClearButton"),
+      codeBlockApplyButton: document.getElementById("codeBlockApplyButton"),
       fragmentStarChartButton: document.getElementById("fragmentStarChartButton"),
       fragmentStarChartPanel: document.getElementById("fragmentStarChartPanel"),
       starChartFragmentText: document.getElementById("starChartFragmentText"),
@@ -15869,6 +16342,18 @@ int main(void) {
       mobileFullscreenPrompt: document.getElementById("mobileFullscreenPrompt"),
       mobileFullscreenStartButton: document.getElementById("mobileFullscreenStartButton"),
       mobileFullscreenLaterButton: document.getElementById("mobileFullscreenLaterButton"),
+      positiveMicroFeedback: document.getElementById("positiveMicroFeedback"),
+      littleCCompanion: document.getElementById("littleCCompanion"),
+      littleCSpeech: document.getElementById("littleCSpeech"),
+      littleCCanvas: document.getElementById("littleCCanvas"),
+      foundationOverlay: document.getElementById("foundationOverlay"),
+      foundationTitle: document.getElementById("foundationTitle"),
+      foundationText: document.getElementById("foundationText"),
+      foundationCanvas: document.getElementById("foundationCanvas"),
+      foundationChoiceGrid: document.getElementById("foundationChoiceGrid"),
+      foundationResult: document.getElementById("foundationResult"),
+      foundationNextButton: document.getElementById("foundationNextButton"),
+      foundationCloseButton: document.getElementById("foundationCloseButton"),
       errorRecoveryToast: document.getElementById("errorRecoveryToast"),
       globalErrorDialog: document.getElementById("globalErrorDialog"),
       globalErrorTitle: document.getElementById("globalErrorTitle"),
@@ -16864,10 +17349,35 @@ int main(void) {
       return state.act;
     }
 
+    function getCodeGenesisNextGuideIndex(state = gameState.codeGenesisState) {
+      if (!(Number(state?.hp) >= 1 && Number(state?.hp) <= 100)) return 0;
+      if (!String(state?.name || "").trim()) return 1;
+      if (!(Number(state?.level) >= 1)) return 2;
+      return 3;
+    }
+
+    function showCodeGenesisNextLineHint(index = getCodeGenesisNextGuideIndex()) {
+      const safeIndex = Math.max(0, Math.min(CODE_GENESIS_GUIDED_LINES.length - 1, Number(index) || 0));
+      codeGenesisGuideLineIndex = safeIndex;
+      const item = CODE_GENESIS_GUIDED_LINES[safeIndex];
+      if (dom.codeGenesisHelperText && item) {
+        dom.codeGenesisHelperText.textContent = `// 下一行请你自己打到左边输入框：
+${item.code}
+
+// 为什么这样写：
+// ${item.explain}
+
+// 写完这一行后按 Enter。`;
+      }
+      appendCodeGenesisOutput(`// 下一行示范：${item.code}`);
+      appendCodeGenesisOutput(`// ${item.explain}`);
+      showReward("照着提示自己打一行，写完按 Enter。");
+      return item;
+    }
+
     function fillCodeGenesisBeginnerTemplate(focus = true) {
       if (!dom.codeGenesisInput) return false;
-      setCodeGenesisInputValue(CODE_GENESIS_BEGINNER_TEMPLATE, CODE_GENESIS_BEGINNER_TEMPLATE.length, CODE_GENESIS_BEGINNER_TEMPLATE.length);
-      resetCodeGenesisEditorHistory(CODE_GENESIS_BEGINNER_TEMPLATE);
+      showCodeGenesisNextLineHint();
       if (focus) {
         try {
           dom.codeGenesisInput.focus({ preventScroll: true });
@@ -16879,13 +17389,12 @@ int main(void) {
     }
 
     function explainCodeGenesisBeginnerTemplate() {
+      const item = CODE_GENESIS_GUIDED_LINES[codeGenesisGuideLineIndex] || CODE_GENESIS_GUIDED_LINES[getCodeGenesisNextGuideIndex()];
       appendCodeGenesisOutput("");
-      appendCodeGenesisOutput("// 读法：你只需要改等号右边的值。");
-      appendCodeGenesisOutput("// int hp = 88; 代表“创建一个整数生命值 hp，并让它等于 88”。");
-      appendCodeGenesisOutput('// char name[] = "行者"; 代表“创建一个名字字符串”。');
-      appendCodeGenesisOutput("// int level = 1; 代表“从 1 级开始”。");
-      appendCodeGenesisOutput("// return 0; 代表“定义完成，程序正常结束”。");
-      showReward("创角提示：先看 // 注释，再点创建角色。");
+      appendCodeGenesisOutput(`// 当前要写：${item.code}`);
+      appendCodeGenesisOutput(`// ${item.explain}`);
+      appendCodeGenesisOutput("// 你可以照着打，也可以只改数字或双引号里的名字。");
+      showReward("创角提示：自己打一行，比直接填入更容易记住。");
       return true;
     }
 
@@ -16895,11 +17404,22 @@ int main(void) {
         appendCodeGenesisOutput("[WARNING] 创世交接正在进行，请稍候。", "warning");
         return false;
       }
-      const source = dom.codeGenesisInput.value || CODE_GENESIS_BEGINNER_TEMPLATE;
+      const source = dom.codeGenesisInput.value || "";
+      if (!source.trim()) {
+        const next = showCodeGenesisNextLineHint();
+        appendCodeGenesisOutput(`[提示] 还没有要检查的代码。先自己输入：${next.code}`, "warning");
+        audioManager?.uiHover?.();
+        return false;
+      }
+      const executableLines = String(source).split(/\r?\n/).map((line) => stripCodeGenesisComment(line).trim()).filter(Boolean);
+      const looksLikeSingleStep = executableLines.length === 1 && !/\r?\n/.test(String(source)) && !gameState.codeGenesisState?.complete;
+      if (looksLikeSingleStep && gameState.codeGenesisState) {
+        return submitCodeGenesisLine(source, { clearInput: true });
+      }
       gameState.codeGenesisState = createCodeGenesisInitialState();
       dom.codeGenesisOutput && (dom.codeGenesisOutput.textContent = "");
       resetCodeGenesisVisualState();
-      appendCodeGenesisOutput("/* 系统正在按顺序读取你的代码。// 注释会被自动跳过。 */");
+      appendCodeGenesisOutput("/* 系统正在按顺序读取你亲手输入的代码。// 注释会被自动跳过。 */");
       const lines = String(source).split(/\r?\n/);
       let sawReturn = false;
       for (const line of lines) {
@@ -16912,7 +17432,8 @@ int main(void) {
         }
       }
       if (!sawReturn && !gameState.codeGenesisState?.handoffStarted) {
-        appendCodeGenesisOutput("[ERROR] 还没有 return 0;。请保留最后一行，告诉系统角色定义完成。", "error");
+        showCodeGenesisNextLineHint(getCodeGenesisNextGuideIndex(gameState.codeGenesisState));
+        appendCodeGenesisOutput("[提示] 还没有 return 0;。请自己打上最后一行，告诉系统角色定义完成。", "warning");
         audioManager?.error?.();
       }
       return sawReturn;
@@ -16935,12 +17456,14 @@ int main(void) {
         playCodeGenesisConfirmSound();
         updateCodeGenesisPreview(result.name, result.value, state);
         advanceCodeGenesisAct(result.name);
+        showCodeGenesisNextLineHint(getCodeGenesisNextGuideIndex(state));
       } else if (result.kind === "warning") {
         appendCodeGenesisOutput(result.message, "warning");
       } else if (result.kind === "return") {
         completeCodeGenesis(state);
       } else if (result.kind === "error") {
         appendCodeGenesisOutput(result.message, "error");
+        showCodeGenesisNextLineHint(getCodeGenesisNextGuideIndex(state));
         audioManager?.error?.();
       }
       if (dom.codeGenesisInput && options.clearInput !== false) dom.codeGenesisInput.value = "";
@@ -17106,14 +17629,17 @@ int main(void) {
       codeGenesisCompletionInFlight = false;
       gameState.codeGenesisState = createCodeGenesisInitialState();
       dom.codeGenesisOutput && (dom.codeGenesisOutput.textContent = "");
-      fillCodeGenesisBeginnerTemplate(false);
+      setCodeGenesisInputValue("", 0, 0);
+      resetCodeGenesisEditorHistory("");
+      codeGenesisGuideLineIndex = 0;
       resetCodeGenesisVisualState();
       dom.codeGenesisOverlay?.classList.add("active");
       dom.codeGenesisOverlay?.setAttribute?.("aria-hidden", "false");
       appendCodeGenesisOutput("/* ACT 1: 觉醒提示 */");
-      appendCodeGenesisOutput("黑暗中只有一个终端。你不用先会 C，先读编辑器里的 // 注释。");
-      appendCodeGenesisOutput("可以直接点“创建角色”，也可以把名字或 hp 数字改成自己喜欢的值。");
-      if (startupMessage) appendCodeGenesisOutput(startupMessage, "error");
+      appendCodeGenesisOutput("黑暗中只有一个终端。你不用一次写完，只要跟着提示一行一行打。");
+      appendCodeGenesisOutput("先输入 int hp = 88; 然后按 Enter。系统会一步一步读懂你写的代码。");
+      showCodeGenesisNextLineHint(0);
+      if (startupMessage) appendCodeGenesisOutput(startupMessage, startupMessage.includes("[ERROR]") ? "error" : "info");
       updateCodeGenesisStatus(gameState.codeGenesisState);
       trackedSetTimeout(() => dom.codeGenesisInput?.focus?.(), 80, "code-genesis-focus");
       return true;
@@ -17131,6 +17657,7 @@ int main(void) {
     let codeGenesisDragAnchor = null;
     let codeGenesisSelectionAnchor = null;
     let codeGenesisCompletionInFlight = false;
+    let codeGenesisGuideLineIndex = 0;
     let codeGenesisBeforeInputAt = 0;
     let codeGenesisCompositionState = null;
     let codeGenesisSuppressNextInsert = null;
@@ -18403,6 +18930,492 @@ int main(void) {
       return gameState.progress;
     }
 
+    let activeFoundationIndex = 0;
+    let activeFoundationSelections = [];
+    let codeBlockSelection = [];
+    let littleCSpeechTimer = 0;
+    let positiveFeedbackTimer = 0;
+    let restReminderTimer = 0;
+
+    function isFriendlyMode() {
+      return gameState?.settings?.friendlyMode !== false;
+    }
+
+    function applyFriendlyMode(enabled = isFriendlyMode()) {
+      gameState.settings.friendlyMode = enabled !== false;
+      document.body.classList.toggle("friendly-mode", isFriendlyMode());
+      if (dom.friendlyModeToggle) dom.friendlyModeToggle.checked = isFriendlyMode();
+      if (dom.friendlyModeHint) {
+        dom.friendlyModeHint.textContent = isFriendlyMode()
+          ? "// 友好模式已开启：术语会先用生活比喻解释，按钮会更像朋友在提醒你。"
+          : "// 友好模式已关闭：保留标准术语与简洁提示。";
+      }
+      updateFriendlyRunButtonText();
+      renderFoundationProgressStars();
+      renderCodeBlockMode();
+      renderCodeStoryBook();
+      drawRewardGarden();
+      drawLittleCCompanion();
+      return isFriendlyMode();
+    }
+
+    function updateFriendlyRunButtonText() {
+      const runLabel = isFriendlyMode() ? "▶ 运行我的代码" : "运行代码";
+      const advanceLabel = isFriendlyMode() ? "▶ 运行我的代码" : "编译 / 推进";
+      if (dom.runButton) dom.runButton.textContent = runLabel;
+      if (dom.worldAdvanceButton && !dom.worldAdvanceButton.classList.contains("complete")) dom.worldAdvanceButton.textContent = advanceLabel;
+      return runLabel;
+    }
+
+    function showFriendlyTermBubble(term = "变量") {
+      if (!isFriendlyMode()) return false;
+      const text = FRIENDLY_TERM_GLOSSARY[term];
+      if (!text) return false;
+      gameState.progress.friendlyTermsSeen ||= {};
+      if (gameState.progress.friendlyTermsSeen[term]) return false;
+      gameState.progress.friendlyTermsSeen[term] = true;
+      showLittleCSpeech(text, "happy", 5200);
+      saveProgress();
+      return true;
+    }
+
+    function drawLittleCCompanion(mood = "happy") {
+      const canvas = dom.littleCCanvas;
+      const ctx = canvas?.getContext?.("2d");
+      if (!ctx) return false;
+      if (typeof ctx.fill !== "function" || typeof ctx.beginPath !== "function" || typeof ctx.fillText !== "function") return false;
+      if (typeof ctx.clearRect === "function") ctx.clearRect(0, 0, canvas.width, canvas.height);
+      const gradient = ctx.createLinearGradient(0, 16, 0, 120);
+      gradient.addColorStop(0, mood === "confused" ? "#facc15" : "#60a5fa");
+      gradient.addColorStop(1, mood === "confused" ? "#f97316" : "#2563eb");
+      ctx.save();
+      ctx.shadowColor = mood === "confused" ? "rgba(250,204,21,.58)" : "rgba(96,165,250,.58)";
+      ctx.shadowBlur = 18;
+      ctx.fillStyle = gradient;
+      roundRect(ctx, 28, 20, 72, 82, 26);
+      ctx.fill();
+      ctx.restore();
+      ctx.fillStyle = "rgba(2, 6, 23, 0.72)";
+      roundRect(ctx, 38, 38, 52, 30, 12);
+      ctx.fill();
+      ctx.fillStyle = "#dbeafe";
+      ctx.font = "900 18px JetBrains Mono, monospace";
+      ctx.fillText(mood === "confused" ? "?.?" : ">_", 48, 60);
+      ctx.strokeStyle = "#93c5fd";
+      ctx.lineWidth = 5;
+      ctx.lineCap = "round";
+      ctx.beginPath();
+      ctx.moveTo(27, 70);
+      ctx.lineTo(14, mood === "wave" ? 46 : 82);
+      ctx.moveTo(101, 70);
+      ctx.lineTo(114, mood === "wave" ? 44 : 82);
+      ctx.stroke();
+      ctx.fillStyle = "#60a5fa";
+      ctx.beginPath();
+      ctx.arc(42, 108, 12, 0, Math.PI * 2);
+      ctx.arc(86, 108, 12, 0, Math.PI * 2);
+      ctx.fill();
+      return true;
+    }
+
+    function showLittleCSpeech(text = "你好！我是小C，今天我们一起学写代码，超简单的！", mood = "happy", duration = 4200) {
+      if (!dom.littleCCompanion || !dom.littleCSpeech) return false;
+      clearTimeout(littleCSpeechTimer);
+      dom.littleCSpeech.textContent = text;
+      dom.littleCCompanion.classList.add("speaking");
+      dom.littleCCompanion.classList.toggle("confused", mood === "confused");
+      drawLittleCCompanion(mood === "confused" ? "confused" : "wave");
+      littleCSpeechTimer = trackedSetTimeout(() => {
+        dom.littleCCompanion?.classList.remove("speaking", "confused");
+        drawLittleCCompanion();
+      }, duration, "little-c-speech-hide");
+      return true;
+    }
+
+    function triggerLittleCDance(text = "太棒了！") {
+      if (!dom.littleCCompanion) return false;
+      dom.littleCCompanion.classList.add("dancing");
+      showLittleCSpeech(text, "happy", 2600);
+      trackedSetTimeout(() => dom.littleCCompanion?.classList.remove("dancing"), 1600, "little-c-dance-stop");
+      return true;
+    }
+
+    function showPositiveMicroFeedback(text = "✨ 做得好！") {
+      if (!dom.positiveMicroFeedback) return false;
+      clearTimeout(positiveFeedbackTimer);
+      dom.positiveMicroFeedback.textContent = text;
+      dom.positiveMicroFeedback.classList.add("active");
+      audioManager?.playUiBlip?.();
+      positiveFeedbackTimer = trackedSetTimeout(() => dom.positiveMicroFeedback?.classList.remove("active"), 1000, "positive-micro-feedback-hide");
+      return true;
+    }
+
+    function friendlyPositiveAction(text = "✨ 做得好！", speech = "太棒了！") {
+      if (!isFriendlyMode()) return false;
+      showPositiveMicroFeedback(text);
+      triggerLittleCDance(speech);
+      return true;
+    }
+
+    function renderFoundationProgressStars() {
+      const stars = dom.foundationProgressStars?.querySelectorAll?.(".foundation-star") || [];
+      const completed = new Set(gameState.progress.friendlyFoundationLessonsDone || []);
+      stars.forEach((star, index) => {
+        const done = completed.has(ZERO_BASIS_FOUNDATION_LESSONS[index]?.id);
+        star.classList.toggle("done", done);
+        star.textContent = done ? "🌟" : "☆";
+      });
+      return completed.size;
+    }
+
+    function drawFoundationScene(lesson = ZERO_BASIS_FOUNDATION_LESSONS[0]) {
+      const canvas = dom.foundationCanvas;
+      const ctx = canvas?.getContext?.("2d");
+      if (!ctx) return false;
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      const w = canvas.width;
+      const h = canvas.height;
+      ctx.fillStyle = "#07111f";
+      ctx.fillRect(0, 0, w, h);
+      ctx.strokeStyle = "rgba(125,211,252,.16)";
+      for (let x = 0; x < w; x += 32) {
+        ctx.beginPath();
+        ctx.moveTo(x, 0);
+        ctx.lineTo(x, h);
+        ctx.stroke();
+      }
+      ctx.fillStyle = "#fef3c7";
+      ctx.font = "900 24px JetBrains Mono, monospace";
+      ctx.fillText(lesson.metaphor, 28, 42);
+      ctx.font = "800 18px JetBrains Mono, monospace";
+      if (lesson.id === "instruction") {
+        ["拿碗", "打鸡蛋", "搅拌"].forEach((step, index) => {
+          const x = 80 + index * 165;
+          ctx.fillStyle = ["#38bdf8", "#facc15", "#34d399"][index];
+          roundRect(ctx, x, 130, 112, 76, 18);
+          ctx.fill();
+          ctx.fillStyle = "#031525";
+          ctx.fillText(step, x + 22, 176);
+          if (index < 2) {
+            ctx.strokeStyle = "#e0f2fe";
+            ctx.beginPath();
+            ctx.moveTo(x + 126, 168);
+            ctx.lineTo(x + 156, 168);
+            ctx.stroke();
+          }
+        });
+      } else if (lesson.id === "variable") {
+        ["年龄", "名字", "分数"].forEach((label, index) => {
+          const x = 82 + index * 160;
+          ctx.strokeStyle = "#facc15";
+          ctx.lineWidth = 3;
+          roundRect(ctx, x, 125, 112, 84, 16);
+          ctx.stroke();
+          ctx.fillStyle = "#dbeafe";
+          ctx.fillText(label, x + 34, 176);
+        });
+        ctx.fillStyle = "#34d399";
+        ctx.fillText("18", 115, 242);
+        ctx.fillText("小明", 260, 242);
+      } else if (lesson.id === "io") {
+        ctx.fillStyle = "#38bdf8";
+        roundRect(ctx, 78, 134, 150, 88, 22);
+        ctx.fill();
+        ctx.fillStyle = "#facc15";
+        roundRect(ctx, 410, 134, 150, 88, 22);
+        ctx.fill();
+        ctx.fillStyle = "#07111f";
+        ctx.fillText("发送：你好", 98, 184);
+        ctx.fillText("接收：你好", 430, 184);
+        ctx.strokeStyle = "#dbeafe";
+        ctx.beginPath();
+        ctx.moveTo(246, 178);
+        ctx.lineTo(390, 178);
+        ctx.stroke();
+      } else if (lesson.id === "condition") {
+        ctx.strokeStyle = "#facc15";
+        ctx.lineWidth = 5;
+        ctx.beginPath();
+        ctx.moveTo(320, 232);
+        ctx.lineTo(220, 122);
+        ctx.moveTo(320, 232);
+        ctx.lineTo(420, 122);
+        ctx.stroke();
+        ctx.fillStyle = "#dbeafe";
+        ctx.fillText("下雨 → 左边", 120, 96);
+        ctx.fillText("晴天 → 右边", 395, 96);
+      } else {
+        ctx.strokeStyle = "#34d399";
+        ctx.lineWidth = 5;
+        ctx.beginPath();
+        ctx.arc(320, 172, 78, 0, Math.PI * 2);
+        ctx.stroke();
+        ctx.fillStyle = "#facc15";
+        for (let i = 0; i < 5; i += 1) {
+          const a = -Math.PI / 2 + i * (Math.PI * 2 / 5);
+          ctx.beginPath();
+          ctx.arc(320 + Math.cos(a) * 78, 172 + Math.sin(a) * 78, 10, 0, Math.PI * 2);
+          ctx.fill();
+        }
+        ctx.fillStyle = "#dbeafe";
+        ctx.fillText("走一圈，摘一个苹果", 216, 292);
+      }
+      return true;
+    }
+
+    function startZeroBasisFoundation(options = {}) {
+      gameState.foundationGuideActive = true;
+      activeFoundationIndex = Math.max(0, Math.min(ZERO_BASIS_FOUNDATION_LESSONS.length - 1, Number(options.index) || 0));
+      activeFoundationSelections = [];
+      dom.foundationOverlay?.classList.add("active");
+      dom.foundationOverlay?.setAttribute("aria-hidden", "false");
+      renderFoundationLesson();
+      showLittleCSpeech("我们先不急着写代码，先玩5个小练习理解编程思维。", "wave", 4200);
+      return true;
+    }
+
+    function renderFoundationLesson() {
+      const lesson = ZERO_BASIS_FOUNDATION_LESSONS[activeFoundationIndex] || ZERO_BASIS_FOUNDATION_LESSONS[0];
+      if (dom.foundationTitle) dom.foundationTitle.textContent = lesson.title;
+      if (dom.foundationText) dom.foundationText.textContent = lesson.prompt;
+      if (dom.foundationResult) dom.foundationResult.textContent = `// ${lesson.metaphor}：按正确顺序点卡片。`;
+      drawFoundationScene(lesson);
+      if (dom.foundationChoiceGrid) {
+        dom.foundationChoiceGrid.innerHTML = lesson.choices.map((choice, index) => `<button class="pixel-button secondary foundation-choice" type="button" data-foundation-choice="${index}">${escapeHtml(choice)}</button>`).join("");
+      }
+      return lesson;
+    }
+
+    function handleFoundationChoice(choiceIndex = 0) {
+      const lesson = ZERO_BASIS_FOUNDATION_LESSONS[activeFoundationIndex] || ZERO_BASIS_FOUNDATION_LESSONS[0];
+      const choice = lesson.choices[Number(choiceIndex) || 0];
+      const expected = lesson.correctOrder[activeFoundationSelections.length];
+      if (choice === expected) {
+        activeFoundationSelections.push(choice);
+        dom.foundationChoiceGrid?.querySelector?.(`[data-foundation-choice="${choiceIndex}"]`)?.classList.add("done");
+        showPositiveMicroFeedback("✨ 做得好！");
+        if (activeFoundationSelections.length >= lesson.correctOrder.length) completeFoundationLesson(lesson.id);
+      } else {
+        if (dom.foundationResult) dom.foundationResult.textContent = "// 这是另一种尝试。我们换个顺序试试，不着急。";
+        showLittleCSpeech("这是另一种尝试。我们换个顺序试试，我陪你。", "confused", 3200);
+      }
+      return activeFoundationSelections.length;
+    }
+
+    function completeFoundationLesson(lessonId = "") {
+      const lesson = ZERO_BASIS_FOUNDATION_LESSONS.find((item) => item.id === lessonId) || ZERO_BASIS_FOUNDATION_LESSONS[activeFoundationIndex];
+      gameState.progress.friendlyFoundationLessonsDone ||= [];
+      if (!gameState.progress.friendlyFoundationLessonsDone.includes(lesson.id)) {
+        gameState.progress.friendlyFoundationLessonsDone.push(lesson.id);
+        gameState.progress.friendlyFoundationStars = Math.min(5, gameState.progress.friendlyFoundationLessonsDone.length);
+      }
+      if (dom.foundationResult) dom.foundationResult.textContent = `// ${lesson.success}`;
+      friendlyPositiveAction("🌟 获得一颗小星星！", "你做到了！这就是编程的思维！");
+      renderFoundationProgressStars();
+      saveProgress();
+      if (gameState.progress.friendlyFoundationLessonsDone.length >= ZERO_BASIS_FOUNDATION_LESSONS.length) {
+        gameState.progress.friendlyFoundationCompleted = true;
+        showReward("5个思维启蒙完成。现在可以进入代码积木啦！");
+      }
+      return true;
+    }
+
+    function advanceFoundationLesson() {
+      if (activeFoundationIndex < ZERO_BASIS_FOUNDATION_LESSONS.length - 1) {
+        activeFoundationIndex += 1;
+        activeFoundationSelections = [];
+        renderFoundationLesson();
+      } else {
+        closeFoundationOverlay();
+      }
+      return activeFoundationIndex;
+    }
+
+    function closeFoundationOverlay() {
+      gameState.foundationGuideActive = false;
+      dom.foundationOverlay?.classList.remove("active");
+      dom.foundationOverlay?.setAttribute("aria-hidden", "true");
+      return true;
+    }
+
+    function getCodeBlockModeSnippet() {
+      const snippet = getCurrentTutorialSnippet?.();
+      if (!snippet || Number(snippet.order) > 10) return null;
+      return CODE_BLOCK_MODE_SNIPPETS[0];
+    }
+
+    function renderCodeBlockMode() {
+      const config = getCodeBlockModeSnippet();
+      const enabled = Boolean(config && isFriendlyMode() && gameState.editorOpen);
+      dom.codeBlockModePanel?.classList.toggle("active", enabled);
+      if (!enabled || !dom.codeBlockBank || !dom.codeBlockProgram) return false;
+      dom.codeBlockBank.innerHTML = config.blocks.map((block) => `<button class="code-block ${escapeHtml(block.type)}" type="button" data-code-block="${escapeHtml(block.id)}">${escapeHtml(block.label)}</button>`).join("");
+      dom.codeBlockProgram.innerHTML = codeBlockSelection.map((id) => {
+        const block = config.blocks.find((item) => item.id === id);
+        return block ? `<button class="code-block ${escapeHtml(block.type)}" type="button" data-remove-code-block="${escapeHtml(block.id)}">${escapeHtml(block.label)}</button>` : "";
+      }).join("");
+      verifyCodeBlockProgram(false);
+      return true;
+    }
+
+    function verifyCodeBlockProgram(applyWhenReady = false) {
+      const config = getCodeBlockModeSnippet();
+      if (!config) return false;
+      const ready = config.order.every((id, index) => codeBlockSelection[index] === id) && codeBlockSelection.length === config.order.length;
+      dom.codeBlockModePanel?.classList.toggle("ready", ready);
+      if (dom.codeBlockModeStatus) dom.codeBlockModeStatus.textContent = ready ? "// 积木顺序正确，可以编译啦！" : "// 按顺序点积木：蓝色引入库、红色主入口、绿色输出、黄色结束。";
+      if (ready && applyWhenReady) applyCodeBlockProgramToEditor();
+      return ready;
+    }
+
+    function applyCodeBlockProgramToEditor() {
+      const config = getCodeBlockModeSnippet();
+      if (!config || !dom.codeInput) return false;
+      const code = config.order.map((id) => config.blocks.find((block) => block.id === id)?.code || "").join("\n");
+      applyEditorMutation(code, code.length);
+      files[currentFile] = code;
+      updateEditorVisuals();
+      friendlyPositiveAction("✨ 积木拼好了！", "积木建筑师，准备运行吧！");
+      unlockFriendlyAchievement("积木建筑师！");
+      return true;
+    }
+
+    function renderCodeStoryBook() {
+      const pageIndex = Math.max(0, Math.min(CODE_STORYBOOK_PAGES.length - 1, Number(gameState.progress.codeStoryBookPage) || 0));
+      gameState.progress.codeStoryBookPage = pageIndex;
+      const page = CODE_STORYBOOK_PAGES[pageIndex];
+      if (!dom.codeStoryBookPage || !page) return false;
+      dom.codeStoryBookPage.innerHTML = `
+        <div class="code-storybook-art">${escapeHtml(page.art)}</div>
+        <strong>${escapeHtml(page.title)}</strong>
+        <div><code>${escapeHtml(page.code)}</code></div>
+        <p>${escapeHtml(page.narration)}</p>`;
+      return true;
+    }
+
+    function turnCodeStoryBook(delta = 1) {
+      const next = (Number(gameState.progress.codeStoryBookPage) || 0) + delta;
+      gameState.progress.codeStoryBookPage = Math.max(0, Math.min(CODE_STORYBOOK_PAGES.length - 1, next));
+      renderCodeStoryBook();
+      saveProgress();
+      return gameState.progress.codeStoryBookPage;
+    }
+
+    function growRewardGardenFlower(reason = "尝试运行代码") {
+      gameState.progress.rewardGardenFlowers ||= [];
+      const palette = ["#ef4444", "#38bdf8", "#facc15", "#f472b6", "#34d399"];
+      const flower = {
+        id: `flower-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`,
+        x: Math.random(),
+        y: Math.random(),
+        color: palette[gameState.progress.rewardGardenFlowers.length % palette.length],
+        reason,
+        at: Date.now()
+      };
+      gameState.progress.rewardGardenFlowers.push(flower);
+      gameState.progress.rewardGardenFlowers = gameState.progress.rewardGardenFlowers.slice(-80);
+      drawRewardGarden();
+      if (gameState.progress.rewardGardenFlowers.length >= 10) unlockFriendlyAchievement("花园园丁！");
+      saveProgress();
+      return flower;
+    }
+
+    function drawRewardGarden() {
+      const canvas = dom.rewardGardenCanvas;
+      const ctx = canvas?.getContext?.("2d");
+      if (!ctx) return false;
+      if (typeof ctx.clearRect === "function") ctx.clearRect(0, 0, canvas.width, canvas.height);
+      if (typeof ctx.fillRect !== "function") return false;
+      const grd = typeof ctx.createLinearGradient === "function" ? ctx.createLinearGradient(0, 0, 0, canvas.height) : "#07111f";
+      grd.addColorStop(0, "#07111f");
+      grd.addColorStop(1, "#052e1b");
+      ctx.fillStyle = grd;
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      ctx.fillStyle = "rgba(34,197,94,.28)";
+      ctx.fillRect(0, canvas.height - 24, canvas.width, 24);
+      const flowers = gameState.progress.rewardGardenFlowers || [];
+      flowers.slice(-32).forEach((flower, index) => {
+        const x = 16 + (flower.x || ((index % 8) / 8)) * (canvas.width - 32);
+        const y = canvas.height - 20 - (flower.y || 0.5) * 38;
+        ctx.strokeStyle = "#65a30d";
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.moveTo(x, canvas.height - 20);
+        ctx.lineTo(x, y);
+        ctx.stroke();
+        ctx.fillStyle = flower.color || "#facc15";
+        for (let p = 0; p < 5; p += 1) {
+          const a = p * Math.PI * 2 / 5;
+          ctx.beginPath();
+          ctx.arc(x + Math.cos(a) * 7, y + Math.sin(a) * 7, 5, 0, Math.PI * 2);
+          ctx.fill();
+        }
+        ctx.fillStyle = "#fef3c7";
+        ctx.beginPath();
+        ctx.arc(x, y, 3, 0, Math.PI * 2);
+        ctx.fill();
+      });
+      if (dom.rewardGardenText) dom.rewardGardenText.textContent = flowers.length ? `// 已长出 ${flowers.length} 朵知识小花。` : "// 花园还在等待第一朵花。";
+      return true;
+    }
+
+    function unlockFriendlyAchievement(label = "") {
+      if (!label) return false;
+      gameState.progress.friendlyAchievements ||= [];
+      if (gameState.progress.friendlyAchievements.includes(label)) return false;
+      gameState.progress.friendlyAchievements.push(label);
+      showReward(`🏅 ${label}`);
+      saveProgress();
+      return true;
+    }
+
+    function readWithLittleC(text = "") {
+      const phrase = text || dom.dialogText?.textContent || dom.noviceGuideText?.textContent || "我们慢慢来，先理解，再动手。";
+      if (!phrase) return false;
+      showLittleCSpeech(`▶ ${phrase}`, "happy", Math.max(4200, phrase.length * 180));
+      if (dom.littleCSpeech) {
+        const words = phrase.split(/(\s+)/);
+        dom.littleCSpeech.innerHTML = words.map((word, index) => `<span class="${index === 0 ? "karaoke-highlight" : ""}">${escapeHtml(word)}</span>`).join("");
+      }
+      if ("speechSynthesis" in globalThis) {
+        try {
+          globalThis.speechSynthesis.cancel();
+          const utterance = new SpeechSynthesisUtterance(phrase);
+          utterance.lang = "zh-CN";
+          utterance.rate = 0.78;
+          utterance.pitch = 1.28;
+          utterance.volume = 0.78;
+          const voices = globalThis.speechSynthesis.getVoices?.() || [];
+          utterance.voice = voices.find((voice) => /female|xiaoxiao|huihui|zh-CN|Chinese/i.test(`${voice.name} ${voice.lang}`)) || voices[0] || null;
+          globalThis.speechSynthesis.speak(utterance);
+        } catch (error) {
+          reportSoftError(error, ERROR_LEVELS.recoverable, { source: "little-c-read" });
+        }
+      }
+      return true;
+    }
+
+    function unlockParentGuide() {
+      if (!dom.parentGuideContent) return false;
+      dom.parentGuideContent.innerHTML = `
+        <strong>给家长的话</strong><br>
+        这款游戏先教孩子“顺序、存储、选择、重复”这些思维，再进入C语言代码。建议每次陪伴 20-30 分钟，多夸“你愿意尝试”而不是只看结果。遇到不会的地方，可以让孩子先点“填入当前代码”，看动画理解，再慢慢尝试打字。`;
+      showReward("家长说明已打开。");
+      return true;
+    }
+
+    function showRestReminder() {
+      const now = Date.now();
+      if (now - (Number(gameState.progress.restReminderLastShownAt) || 0) < REST_REMINDER_MS) return false;
+      gameState.progress.restReminderLastShownAt = now;
+      showLittleCSpeech("你学得好认真！要不要去喝口水？回来我们继续～", "happy", 7200);
+      openBottomActionBar("休息5分钟？我会暂停提醒，等你回来继续。", () => {
+        showReward("休息计时开始，5分钟后欢迎回来。");
+      }, { confirmLabel: "休息5分钟", cancelLabel: "继续学习" });
+      saveProgress();
+      return true;
+    }
+
     function saveCTutorialLocalKeys() {
       try {
         normalizeCTutorialState();
@@ -19177,7 +20190,20 @@ int main(void) {
 
     function compileAndAdvanceWorld(chargeMultiplier = 1) {
       if (gameState.noviceGuideActive) return handleNoviceGuideCompile();
-      if (compileCurrentTutorialSnippet() === false) return false;
+      const friendlySnippet = getCurrentTutorialSnippet?.();
+      const tutorialResult = compileCurrentTutorialSnippet();
+      growRewardGardenFlower(tutorialResult === false ? "另一种尝试" : "成功运行");
+      if (tutorialResult === false) {
+        showLittleCSpeech("换个思路试试？我来帮你～", "confused", 3600);
+        showPositiveMicroFeedback("✨ 又试了一次！");
+        return false;
+      }
+      friendlyPositiveAction("✨ 做得好！", "太棒了！");
+      unlockFriendlyAchievement("第一次按下按钮！");
+      if (String(friendlySnippet?.code || "").includes("printf")) unlockFriendlyAchievement("我让电脑说话了！");
+      if (/变量|int|float|char/.test(`${friendlySnippet?.concept || ""} ${friendlySnippet?.title || ""}`)) unlockFriendlyAchievement("我的第一个盒子！");
+      if (/if|条件/.test(`${friendlySnippet?.concept || ""} ${friendlySnippet?.title || ""}`)) unlockFriendlyAchievement("岔路口小能手！");
+      if (/for|while|循环/.test(`${friendlySnippet?.concept || ""} ${friendlySnippet?.title || ""}`)) unlockFriendlyAchievement("转圈圈大师！");
       return advanceWorldEvolution(chargeMultiplier);
     }
 
@@ -20379,7 +21405,7 @@ int main(void) {
       renderWorldEvolutionAchievements();
       if (dom.worldAdvanceButton) {
         dom.worldAdvanceButton.classList.toggle("complete", completion >= 100);
-        dom.worldAdvanceButton.textContent = completion >= 100 ? "世界已完成" : "编译 / 推进";
+        dom.worldAdvanceButton.textContent = completion >= 100 ? "世界已完成" : (isFriendlyMode() ? "▶ 运行我的代码" : "编译 / 推进");
         dom.worldAdvanceButton.title = `世界完成度 ${Math.round(completion)}% · 进化碎片 ${fragments}/20`;
       }
       renderWorldEvolutionCodex();
@@ -20479,6 +21505,7 @@ int main(void) {
       if (dom.infoExpFill) dom.infoExpFill.style.width = `${Math.min(100, (growthExp / COMPILE_LIFE_RULES.expPerLevel) * 100)}%`;
       if (dom.infoGrowthHint) dom.infoGrowthHint.textContent = `// 移动速度 +${Math.round((getPlayerMoveSpeedMultiplier() - 1) * 100)}%，导师提示等级 ${getCompilerHintDetailLevel()}。`;
       if (dom.infoEquipText) dom.infoEquipText.textContent = getEquippedFragmentDescription();
+      if (dom.friendlyModeToggle) dom.friendlyModeToggle.checked = isFriendlyMode();
       if (dom.textSpeedSlider) dom.textSpeedSlider.value = gameState.settings.textSpeed ?? 55;
       if (dom.textSpeedValue) dom.textSpeedValue.textContent = gameState.settings.textSpeed ?? 55;
       if (dom.worldEvolutionThemeSelect) dom.worldEvolutionThemeSelect.value = gameState.settings.worldEvolutionTheme || "deepStar";
@@ -20488,6 +21515,10 @@ int main(void) {
       renderWorldEvolutionCodex();
       renderUpdateHistoryList();
       renderCTutorialSideMenu();
+      renderFoundationProgressStars();
+      renderCodeStoryBook();
+      drawRewardGarden();
+      applyFriendlyMode(isFriendlyMode());
       decorateInfoMenuSectionIcons();
       return true;
     }
@@ -22475,6 +23506,7 @@ int main(void) {
         if (dom.worldEvolutionThemeSelect) dom.worldEvolutionThemeSelect.value = gameState.settings.worldEvolutionTheme || "deepStar";
         if (dom.worldEvolutionTimeFlowToggle) dom.worldEvolutionTimeFlowToggle.checked = gameState.settings.worldEvolutionTimeFlowEnabled !== false;
         if (dom.worldEvolutionTimePauseButton) dom.worldEvolutionTimePauseButton.textContent = gameState.settings.worldEvolutionTimePaused ? "继续日夜" : "暂停日夜";
+        if (dom.friendlyModeToggle) dom.friendlyModeToggle.checked = isFriendlyMode();
         if (dom.worldEvolutionMicToggle) dom.worldEvolutionMicToggle.checked = Boolean(gameState.settings.worldEvolutionMicrophoneEnabled);
         if (dom.worldEvolutionCameraToggle) dom.worldEvolutionCameraToggle.checked = Boolean(gameState.settings.worldEvolutionCameraEnabled);
         if (dom.editorGuideModeSelect) dom.editorGuideModeSelect.value = gameState.settings.editorGuideMode || EDITOR_GUIDE_MODES.full;
@@ -22492,6 +23524,7 @@ int main(void) {
         if (dom.proceduralGrassToggle) dom.proceduralGrassToggle.checked = gameState.settings.proceduralGrass !== false;
         if (dom.fractalShatterToggle) dom.fractalShatterToggle.checked = gameState.settings.fractalShatter !== false;
       }
+      applyFriendlyMode(isFriendlyMode());
       applyWorldEvolutionUiTheme(gameState.settings.worldEvolutionTheme || "deepStar");
     }
 
@@ -24279,19 +25312,74 @@ int main(void) {
       }
     }
 
+    function isOverlayActive(element) {
+      return Boolean(element?.classList?.contains("active"));
+    }
+
+    function isGuidanceOverlayBlocking() {
+      return [
+        dom.systemBootOverlay,
+        dom.mainMenu,
+        dom.worldSelectOverlay,
+        dom.codeGenesisOverlay,
+        dom.pixelLoadingOverlay,
+        dom.mobileFullscreenPrompt,
+        dom.settingsPanel,
+        dom.infoSideMenu,
+        dom.overlay,
+        dom.dialog,
+        dom.pauseMenu,
+        dom.creditsOverlay,
+        dom.startupAnnouncement
+      ].some(isOverlayActive);
+    }
+
+    function canAutoStartGuidance() {
+      return Boolean(
+        hasCompletedCodeGenesisCharacter() &&
+        menuManager?.active === "game" &&
+        !gameState.menuOpen &&
+        !gameState.paused &&
+        !gameState.editorOpen &&
+        !gameState.dialogOpen &&
+        !gameState.noviceGuideActive &&
+        !gameState.foundationGuideActive &&
+        !isGuidanceOverlayBlocking()
+      );
+    }
+
     function isStartupOverlayBlockingNoviceGuide() {
-      return [dom.systemBootOverlay, dom.mainMenu, dom.worldSelectOverlay, dom.codeGenesisOverlay, dom.pixelLoadingOverlay, dom.mobileFullscreenPrompt].some((element) => element?.classList?.contains("active"));
+      return isGuidanceOverlayBlocking();
     }
 
     function maybeStartNoviceGuide(attempt = 0) {
       if (localStorage.getItem("noviceGuideCompleted") === "true") return false;
       if (gameState.noviceGuideActive) return false;
       if (!hasCompletedCodeGenesisCharacter()) return false;
-      if ((menuManager?.active !== "game" || gameState.menuOpen || gameState.paused || isStartupOverlayBlockingNoviceGuide()) && attempt < 90) {
+      if (!canAutoStartGuidance()) {
         scheduleNoviceGuide(() => maybeStartNoviceGuide(attempt + 1), 1000, "novice-guide-wait-startup");
         return true;
       }
-      scheduleNoviceGuide(() => startNoviceGuide({ auto: true }), 1200, "novice-guide-auto-start");
+      scheduleNoviceGuide(() => {
+        if (canAutoStartGuidance()) startNoviceGuide({ auto: true });
+      }, 1200, "novice-guide-auto-start");
+      return true;
+    }
+
+    function maybeStartZeroBasisFoundation(attempt = 0) {
+      if (!isFriendlyMode()) return false;
+      if (gameState.progress.friendlyFoundationCompleted) return false;
+      if (gameState.foundationGuideActive) return false;
+      if (localStorage.getItem("noviceGuideCompleted") !== "true") return false;
+      if (!canAutoStartGuidance() && attempt < 90) {
+        trackedSetTimeout(() => maybeStartZeroBasisFoundation(attempt + 1), 1000, "zero-basis-foundation-wait-startup");
+        return true;
+      }
+      if (!canAutoStartGuidance()) return false;
+      trackedSetTimeout(() => {
+        if (!isFriendlyMode() || gameState.progress.friendlyFoundationCompleted || !canAutoStartGuidance()) return;
+        startZeroBasisFoundation({ index: 0, auto: true });
+      }, 1400, "zero-basis-foundation-auto-start");
       return true;
     }
 
@@ -26002,6 +27090,8 @@ int main(void) {
       audioManager.playBgm("puzzle");
       adaptiveSymphonicAudioDirector?.setVerticalLayer("teaching");
       selectFile("main.c");
+      codeBlockSelection = [];
+      renderCodeBlockMode();
       tutorialAnimationManager.trigger("T06_EDITOR_OPEN", { scene: gameState.scene, chapterId });
       setOutput(`等待运行。当前任务：${chapterById[chapterId].title}。\n${getPersonalNoteHint(chapterId)}`, "info");
       ideExperienceManager?.enrichConsole?.(`当前挑战：${chapterById[chapterId].title}。导师正在观察你的代码节奏。`, "info");
@@ -26069,6 +27159,7 @@ int main(void) {
         item.classList.toggle("active", item.dataset.file === fileName);
       });
       updateEditorVisuals();
+      renderCodeBlockMode();
     }
 
     function updateEditorVisuals() {
@@ -33718,6 +34809,43 @@ int main(void) {
       showReward("已保持窗口模式。手机可随时在设置中进入全屏。");
     });
     bindFastTouchAction(dom.infoMenuToggle, () => toggleInfoSideMenu());
+    dom.friendlyModeToggle?.addEventListener("change", (event) => {
+      applyFriendlyMode(event.target.checked);
+      saveSettings();
+      showReward(event.target.checked ? "友好模式已开启：小C会把术语讲成人话。" : "友好模式已关闭。");
+      showLittleCSpeech(event.target.checked ? "我会用更简单的话陪你学。" : "好的，我会说得更简洁。", "happy", 3200);
+    });
+    bindFastTouchAction(dom.startFoundationButton, () => startZeroBasisFoundation({ index: 0 }));
+    bindFastTouchAction(dom.littleCReadButton, () => readWithLittleC());
+    dom.foundationChoiceGrid?.addEventListener("click", (event) => {
+      const target = event.target?.closest?.("[data-foundation-choice]");
+      if (target) handleFoundationChoice(target.dataset.foundationChoice);
+    });
+    bindFastTouchAction(dom.foundationNextButton, advanceFoundationLesson);
+    bindFastTouchAction(dom.foundationCloseButton, closeFoundationOverlay);
+    dom.codeBlockBank?.addEventListener("click", (event) => {
+      const target = event.target?.closest?.("[data-code-block]");
+      if (!target) return;
+      codeBlockSelection.push(target.dataset.codeBlock);
+      renderCodeBlockMode();
+      verifyCodeBlockProgram(true);
+    });
+    dom.codeBlockProgram?.addEventListener("click", (event) => {
+      const target = event.target?.closest?.("[data-remove-code-block]");
+      if (!target) return;
+      const index = codeBlockSelection.indexOf(target.dataset.removeCodeBlock);
+      if (index >= 0) codeBlockSelection.splice(index, 1);
+      renderCodeBlockMode();
+    });
+    bindFastTouchAction(dom.codeBlockClearButton, () => {
+      codeBlockSelection = [];
+      renderCodeBlockMode();
+      showReward("积木已清空，可以重新拼。");
+    });
+    bindFastTouchAction(dom.codeBlockApplyButton, applyCodeBlockProgramToEditor);
+    bindFastTouchAction(dom.storyBookPrevButton, () => turnCodeStoryBook(-1));
+    bindFastTouchAction(dom.storyBookNextButton, () => turnCodeStoryBook(1));
+    bindFastTouchAction(dom.parentGuideUnlockButton, unlockParentGuide);
     dom.textSpeedSlider?.addEventListener("input", (event) => {
       const value = Math.max(0, Math.min(100, Number(event.target.value) || 0));
       gameState.settings.textSpeed = value;
@@ -34104,6 +35232,22 @@ int main(void) {
     safeRunEffect("startupWorldEvolutionGestures", () => installWorldEvolutionTouchGestures());
     safeRunEffect("startupMobileBatterySaver", () => installMobileBatterySaver());
     safeRunEffect("startupWorldEvolutionUi", () => updateWorldEvolutionUi());
+    safeRunEffect("startupFriendlyMode", () => applyFriendlyMode(gameState.settings.friendlyMode !== false));
+    safeRunEffect("startupLittleC", () => {
+      drawLittleCCompanion("wave");
+      trackedSetTimeout(() => {
+        if (hasCompletedCodeGenesisCharacter() && menuManager?.active === "game") {
+          showLittleCSpeech("你好！我是小C，今天我们一起学写代码，超简单的！", "wave", 5200);
+        }
+      }, 1300, "little-c-hello");
+    });
+    safeRunEffect("startupRestReminder", () => {
+      window.clearInterval(restReminderTimer);
+      restReminderTimer = window.setInterval(() => {
+        if (!gameState.editorOpen && !gameState.dialogOpen && !gameState.menuOpen && menuManager?.active === "game") showRestReminder();
+      }, 60000);
+      restReminderTimer?.unref?.();
+    });
     safeRunEffect("startupNoviceGuide", () => maybeStartNoviceGuide());
     safeRunEffect("startupCTutorialUi", () => renderCTutorialSideMenu());
     safeRunEffect("startupDailyCodingQuote", () => trackedSetTimeout(() => showDailyCodingQuote(), 1800, "daily-coding-quote"));
