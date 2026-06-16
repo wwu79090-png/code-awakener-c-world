@@ -1,0 +1,3591 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="description" content="代码觉醒者官方网站：HTML/CSS/JS 技术预告片式编程学习游戏官网，作者杀戮，QQ 3424636983，官方Q群 414374792。" />
+  <meta name="theme-color" content="#06111f" />
+  <title>代码觉醒者官方网站 | 杀戮 HTML 编程学习游戏</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%2306111f'/%3E%3Cpath d='M21 19 10 32l11 13M43 19l11 13-11 13' fill='none' stroke='%2300ff9c' stroke-width='6' stroke-linecap='round' stroke-linejoin='round'/%3E%3Cpath d='m37 15-10 34' stroke='%237c3cff' stroke-width='5' stroke-linecap='round'/%3E%3C/svg%3E" />
+  <style>
+    :root {
+      --bg: #030712;
+      --bg-2: #06111f;
+      --text: #edf7ff;
+      --muted: #9fb3c7;
+      --line: rgba(143, 229, 255, 0.18);
+      --panel: rgba(5, 16, 32, 0.72);
+      --panel-strong: rgba(5, 22, 42, 0.88);
+      --cyan: #38e8ff;
+      --violet: #8a5cff;
+      --green: #19ff95;
+      --red: #ff335c;
+      --amber: #ffd166;
+      --font-ui: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      --font-mono: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+      --section-accent: var(--cyan);
+      --section-secondary: var(--violet);
+      --cursor-x: 50vw;
+      --cursor-y: 50vh;
+      --shake-x: 0px;
+      --shake-y: 0px;
+      color-scheme: dark;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      min-height: 100%;
+      background: var(--bg);
+      scroll-behavior: smooth;
+      overflow-x: hidden;
+    }
+
+    body {
+      min-height: 100%;
+      margin: 0;
+      background:
+        radial-gradient(circle at var(--cursor-x) var(--cursor-y), color-mix(in srgb, var(--section-accent) 28%, transparent), transparent 24rem),
+        linear-gradient(180deg, #020611 0%, #04101d 42%, #020611 100%);
+      color: var(--text);
+      font-family: var(--font-ui);
+      line-height: 1.5;
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      z-index: -6;
+      pointer-events: none;
+      background:
+        linear-gradient(rgba(255,255,255,0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,0.035) 1px, transparent 1px);
+      background-size: 68px 68px;
+      mask-image: linear-gradient(to bottom, transparent, black 14%, black 72%, transparent);
+      opacity: 0.32;
+    }
+
+    body::after {
+      content: "";
+      position: fixed;
+      inset: 0;
+      z-index: 12;
+      pointer-events: none;
+      background:
+        linear-gradient(rgba(255,255,255,0.035) 1px, transparent 1px),
+        radial-gradient(ellipse at center, transparent 42%, rgba(0,0,0,0.5) 100%);
+      background-size: 100% 4px, 100% 100%;
+      mix-blend-mode: screen;
+      opacity: 0.1;
+    }
+
+    body.low-power #galaxyLayer,
+    body.low-power #kineticLayer,
+    body.low-power #energyLayer,
+    body.reduced-motion #galaxyLayer,
+    body.reduced-motion #kineticLayer,
+    body.reduced-motion #energyLayer,
+    body.reduced-motion #keywordLayer,
+    body.reduced-motion .cursor,
+    body.reduced-motion .trail-dot {
+      display: none;
+    }
+
+    body.low-power .hud-frame,
+    body.low-power .telemetry-rail,
+    body.low-power .mission-stack,
+    body.low-power .max-decor,
+    body.low-power .overdrive-panel,
+    body.low-power .code-ribbon,
+    body.low-power .reactor-stage,
+    body.low-power .systems-deck {
+      display: none;
+    }
+
+    body.low-power .reveal {
+      opacity: 1;
+      transform: none;
+      transition: none;
+    }
+
+    body.debug * {
+      outline: 1px dashed rgba(25, 255, 149, 0.42);
+    }
+
+    body.extreme-overload {
+      background:
+        radial-gradient(circle at var(--cursor-x) var(--cursor-y), color-mix(in srgb, var(--section-accent) 42%, transparent), transparent 28rem),
+        radial-gradient(circle at 72% 20%, rgba(25,255,149,0.14), transparent 26rem),
+        radial-gradient(circle at 18% 78%, rgba(255,51,92,0.12), transparent 24rem),
+        linear-gradient(180deg, #020611 0%, #06111f 42%, #020611 100%);
+    }
+
+    body.beat .site-shell {
+      animation: screenKick 150ms cubic-bezier(0.2, 0.8, 0.2, 1);
+    }
+
+    body.kill-flash::after {
+      content: "";
+      position: fixed;
+      inset: 0;
+      z-index: 120;
+      pointer-events: none;
+      background: rgba(255, 0, 40, 0.5);
+      animation: redFlash 860ms steps(6, end) 2;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    button,
+    textarea,
+    input {
+      font: inherit;
+    }
+
+    button {
+      cursor: pointer;
+    }
+
+    .skip-link {
+      position: fixed;
+      left: 1rem;
+      top: 1rem;
+      z-index: 200;
+      transform: translateY(-150%);
+      background: #e9fbff;
+      color: #03111d;
+      padding: 0.6rem 0.8rem;
+      border-radius: 6px;
+    }
+
+    .skip-link:focus {
+      transform: translateY(0);
+    }
+
+    .loading {
+      position: fixed;
+      inset: 0;
+      z-index: 180;
+      display: grid;
+      place-items: center;
+      background: #020611;
+      transition: opacity 360ms ease, visibility 360ms ease;
+    }
+
+    .loading.done {
+      opacity: 0;
+      visibility: hidden;
+    }
+
+    .compiler {
+      width: min(34rem, calc(100vw - 2rem));
+      border: 1px solid var(--line);
+      background: rgba(2, 8, 18, 0.9);
+      padding: 1rem;
+      box-shadow: 0 0 42px rgba(56, 232, 255, 0.15);
+    }
+
+    .compiler-line {
+      display: flex;
+      justify-content: space-between;
+      gap: 1rem;
+      font-family: var(--font-mono);
+      color: var(--green);
+      font-size: 0.86rem;
+    }
+
+    .progress-track {
+      height: 0.35rem;
+      margin-top: 0.9rem;
+      background: rgba(255, 255, 255, 0.08);
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      height: 100%;
+      width: 12%;
+      background: linear-gradient(90deg, var(--cyan), var(--green));
+      box-shadow: 0 0 18px var(--cyan);
+      animation: bootLoad 1.2s ease-in-out infinite;
+    }
+
+    .fx-layer {
+      position: fixed;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+    }
+
+    #galaxyLayer {
+      z-index: -5;
+      opacity: 0.92;
+    }
+
+    #keywordLayer {
+      z-index: -4;
+      opacity: 0.82;
+    }
+
+    #kineticLayer {
+      z-index: -3;
+      opacity: 0.88;
+      mix-blend-mode: screen;
+    }
+
+    #energyLayer {
+      z-index: -2;
+      opacity: 0.92;
+      mix-blend-mode: screen;
+    }
+
+    #fireworkLayer,
+    #rainLayer {
+      z-index: 110;
+    }
+
+    .cursor {
+      position: fixed;
+      z-index: 130;
+      width: 4.8rem;
+      height: 4.8rem;
+      left: var(--cursor-x);
+      top: var(--cursor-y);
+      transform: translate(-50%, -50%);
+      border: 1px solid color-mix(in srgb, var(--section-accent) 58%, transparent);
+      border-radius: 50%;
+      pointer-events: none;
+      mix-blend-mode: screen;
+      display: grid;
+      place-items: center;
+      color: var(--green);
+      font-family: var(--font-mono);
+      font-weight: 800;
+      letter-spacing: 0;
+      text-shadow: 0 0 14px var(--green);
+      box-shadow:
+        0 0 24px color-mix(in srgb, var(--section-accent) 42%, transparent),
+        inset 0 0 20px color-mix(in srgb, var(--section-accent) 20%, transparent);
+    }
+
+    .trail-dot {
+      position: fixed;
+      z-index: 129;
+      width: 0.5rem;
+      height: 0.5rem;
+      border-radius: 50%;
+      pointer-events: none;
+      background: var(--section-accent);
+      box-shadow: 0 0 14px var(--section-accent);
+      animation: trailFade 680ms ease-out forwards;
+    }
+
+    .site-shell {
+      position: relative;
+      z-index: 2;
+    }
+
+    .hud-frame {
+      position: fixed;
+      inset: max(0.75rem, env(safe-area-inset-top)) max(0.75rem, env(safe-area-inset-right)) max(0.75rem, env(safe-area-inset-bottom)) max(0.75rem, env(safe-area-inset-left));
+      z-index: 6;
+      pointer-events: none;
+      border: 1px solid color-mix(in srgb, var(--section-accent) 18%, transparent);
+      opacity: 0.72;
+    }
+
+    .hud-frame::before,
+    .hud-frame::after {
+      content: "";
+      position: absolute;
+      width: min(18vw, 10rem);
+      height: min(18vw, 10rem);
+      border-color: var(--section-accent);
+      filter: drop-shadow(0 0 12px color-mix(in srgb, var(--section-accent) 48%, transparent));
+    }
+
+    .hud-frame::before {
+      left: -1px;
+      top: -1px;
+      border-left: 2px solid;
+      border-top: 2px solid;
+    }
+
+    .hud-frame::after {
+      right: -1px;
+      bottom: -1px;
+      border-right: 2px solid;
+      border-bottom: 2px solid;
+    }
+
+    .scroll-progress {
+      position: fixed;
+      left: 0;
+      top: 0;
+      z-index: 90;
+      width: 100%;
+      height: 3px;
+      background: rgba(255, 255, 255, 0.04);
+      pointer-events: none;
+    }
+
+    .scroll-progress span {
+      display: block;
+      width: calc(var(--scroll-progress, 0) * 100%);
+      height: 100%;
+      background: linear-gradient(90deg, var(--green), var(--section-accent), var(--section-secondary));
+      box-shadow: 0 0 18px var(--section-accent);
+    }
+
+    .telemetry-rail {
+      position: fixed;
+      left: max(0.95rem, env(safe-area-inset-left));
+      top: 50%;
+      z-index: 4;
+      transform: translateY(-50%);
+      display: grid;
+      gap: 0.52rem;
+      pointer-events: none;
+      font-family: var(--font-mono);
+      color: var(--muted);
+      font-size: 0.65rem;
+    }
+
+    .telemetry-rail span {
+      writing-mode: vertical-rl;
+      border-left: 1px solid var(--line);
+      padding: 0.55rem 0.1rem;
+      text-shadow: 0 0 8px color-mix(in srgb, var(--section-accent) 44%, transparent);
+    }
+
+    .mission-stack {
+      position: fixed;
+      left: 50%;
+      top: max(4.75rem, calc(env(safe-area-inset-top) + 4.75rem));
+      z-index: 4;
+      width: min(48rem, calc(100vw - 23rem));
+      transform: translateX(-50%);
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 0.45rem;
+      pointer-events: none;
+      font-family: var(--font-mono);
+      font-size: 0.68rem;
+      opacity: 0.78;
+    }
+
+    .mission-stack .mini-module {
+      border: 1px solid color-mix(in srgb, var(--section-accent) 22%, transparent);
+      border-radius: 6px;
+      background: rgba(1, 5, 14, 0.46);
+      padding: 0.46rem 0.55rem;
+      box-shadow: 0 0 14px color-mix(in srgb, var(--section-accent) 8%, transparent);
+    }
+
+    .mini-module strong {
+      display: block;
+      color: var(--section-accent);
+      margin-bottom: 0.28rem;
+    }
+
+    .mini-module span {
+      color: var(--muted);
+    }
+
+    .mini-meter {
+      height: 0.25rem;
+      margin-top: 0.42rem;
+      background: rgba(255,255,255,0.08);
+      overflow: hidden;
+    }
+
+    .mini-meter i {
+      display: block;
+      width: var(--m);
+      height: 100%;
+      background: linear-gradient(90deg, var(--green), var(--section-accent));
+      box-shadow: 0 0 12px var(--section-accent);
+    }
+
+    .max-decor {
+      position: fixed;
+      inset: 0;
+      z-index: 3;
+      pointer-events: none;
+      font-family: var(--font-mono);
+      color: var(--muted);
+      opacity: 0.9;
+    }
+
+    .holo-ticker {
+      position: absolute;
+      left: 12rem;
+      right: 21rem;
+      bottom: max(1.05rem, env(safe-area-inset-bottom));
+      width: auto;
+      overflow: hidden;
+      border: 1px solid color-mix(in srgb, var(--section-accent) 25%, transparent);
+      border-radius: 7px;
+      background: rgba(1, 5, 14, 0.46);
+      box-shadow: 0 0 20px color-mix(in srgb, var(--section-accent) 10%, transparent);
+      white-space: nowrap;
+    }
+
+    .holo-ticker span {
+      display: inline-flex;
+      gap: 2.2rem;
+      min-width: 200%;
+      padding: 0.52rem 0.8rem;
+      color: var(--green);
+      font-size: 0.68rem;
+      animation: tickerFlow 24s linear infinite;
+    }
+
+    .radar-widget {
+      position: absolute;
+      left: 1rem;
+      bottom: 4.1rem;
+      width: 7.6rem;
+      aspect-ratio: 1;
+      border: 1px solid color-mix(in srgb, var(--green) 34%, transparent);
+      border-radius: 50%;
+      background:
+        radial-gradient(circle, transparent 0 22%, rgba(25,255,149,0.06) 22.5% 23%, transparent 23.5% 45%, rgba(56,232,255,0.06) 45.5% 46%, transparent 46.5%),
+        conic-gradient(from 0deg, color-mix(in srgb, var(--green) 30%, transparent), transparent 18%, transparent 100%);
+      box-shadow: inset 0 0 24px rgba(25,255,149,0.08), 0 0 18px rgba(25,255,149,0.1);
+      animation: radarSweep 3.8s linear infinite;
+      opacity: 0.72;
+    }
+
+    .radar-widget::before,
+    .radar-widget::after {
+      content: "";
+      position: absolute;
+      width: 0.5rem;
+      height: 0.5rem;
+      border-radius: 50%;
+      background: var(--green);
+      box-shadow: 0 0 14px var(--green);
+    }
+
+    .radar-widget::before {
+      left: 62%;
+      top: 33%;
+    }
+
+    .radar-widget::after {
+      left: 32%;
+      top: 68%;
+      background: var(--cyan);
+      box-shadow: 0 0 14px var(--cyan);
+    }
+
+    .achievement-strip {
+      position: absolute;
+      left: 9.6rem;
+      bottom: 4.8rem;
+      display: flex;
+      gap: 0.48rem;
+      max-width: min(32rem, calc(100vw - 43rem));
+      flex-wrap: wrap;
+      opacity: 0.8;
+    }
+
+    .achievement-strip i {
+      font-style: normal;
+      border: 1px solid color-mix(in srgb, var(--section-accent) 24%, transparent);
+      border-radius: 999px;
+      background: rgba(1, 5, 14, 0.62);
+      color: #dffcff;
+      padding: 0.38rem 0.55rem;
+      font-size: 0.64rem;
+      box-shadow: 0 0 18px color-mix(in srgb, var(--section-accent) 12%, transparent);
+      animation: badgePulse 2.8s ease-in-out infinite;
+    }
+
+    .achievement-strip i:nth-child(2n) {
+      animation-delay: 500ms;
+      color: var(--green);
+    }
+
+    .achievement-strip i:nth-child(3n) {
+      animation-delay: 950ms;
+      color: var(--amber);
+    }
+
+    .data-tower {
+      position: absolute;
+      right: 1rem;
+      bottom: 6.55rem;
+      width: 11.2rem;
+      display: grid;
+      gap: 0.35rem;
+      opacity: 0.76;
+    }
+
+    .data-tower span {
+      display: block;
+      height: 0.42rem;
+      border: 1px solid rgba(255,255,255,0.08);
+      background: linear-gradient(90deg, var(--section-accent), transparent var(--w), rgba(255,255,255,0.04) var(--w));
+      box-shadow: 0 0 12px color-mix(in srgb, var(--section-accent) 12%, transparent);
+      animation: dataRise 1.6s ease-in-out infinite;
+    }
+
+    .data-tower span:nth-child(2) { --w: 71%; animation-delay: 110ms; }
+    .data-tower span:nth-child(3) { --w: 88%; animation-delay: 220ms; }
+    .data-tower span:nth-child(4) { --w: 53%; animation-delay: 330ms; }
+    .data-tower span:nth-child(5) { --w: 94%; animation-delay: 440ms; }
+    .data-tower span:nth-child(6) { --w: 66%; animation-delay: 550ms; }
+
+    .equalizer {
+      position: absolute;
+      right: 13.2rem;
+      bottom: 6.45rem;
+      height: 5.15rem;
+      display: inline-grid;
+      grid-auto-flow: column;
+      align-items: end;
+      gap: 0.18rem;
+      padding: 0.55rem;
+      border: 1px solid color-mix(in srgb, var(--green) 22%, transparent);
+      border-radius: 7px;
+      background: rgba(1, 5, 14, 0.46);
+      opacity: 0.78;
+    }
+
+    .equalizer b {
+      display: block;
+      width: 0.32rem;
+      height: var(--h);
+      background: linear-gradient(180deg, var(--green), var(--section-accent));
+      box-shadow: 0 0 12px var(--green);
+      animation: eqJump 780ms ease-in-out infinite;
+    }
+
+    .equalizer b:nth-child(2n) { animation-delay: 100ms; }
+    .equalizer b:nth-child(3n) { animation-delay: 180ms; }
+
+    .code-cloud {
+      position: absolute;
+      right: 1.1rem;
+      top: 11.2rem;
+      width: min(19rem, 24vw);
+      height: 20rem;
+      overflow: hidden;
+      opacity: 0.62;
+      mask-image: linear-gradient(to bottom, transparent, black 16%, black 84%, transparent);
+    }
+
+    .code-cloud code {
+      position: absolute;
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 5px;
+      background: rgba(1, 5, 14, 0.34);
+      color: color-mix(in srgb, var(--section-accent) 82%, #ffffff);
+      padding: 0.32rem 0.42rem;
+      font-size: 0.62rem;
+      opacity: 0.58;
+      box-shadow: 0 0 16px color-mix(in srgb, var(--section-accent) 12%, transparent);
+      animation: cloudDrift 9s ease-in-out infinite;
+    }
+
+    .code-cloud code:nth-child(1) { left: 2%; top: 7%; }
+    .code-cloud code:nth-child(2) { left: 28%; top: 5%; animation-delay: 400ms; }
+    .code-cloud code:nth-child(3) { left: 66%; top: 12%; animation-delay: 800ms; }
+    .code-cloud code:nth-child(4) { left: 82%; top: 32%; animation-delay: 1200ms; }
+    .code-cloud code:nth-child(5) { left: 8%; top: 44%; animation-delay: 1600ms; }
+    .code-cloud code:nth-child(6) { left: 38%; top: 53%; animation-delay: 2000ms; }
+    .code-cloud code:nth-child(7) { left: 74%; top: 62%; animation-delay: 2400ms; }
+    .code-cloud code:nth-child(8) { left: 18%; top: 79%; animation-delay: 2800ms; }
+
+    .chapter-dots {
+      position: absolute;
+      right: 1.05rem;
+      top: 50%;
+      transform: translateY(-50%);
+      display: grid;
+      gap: 0.48rem;
+    }
+
+    .chapter-dots i {
+      width: 0.5rem;
+      height: 0.5rem;
+      border: 1px solid var(--section-accent);
+      border-radius: 50%;
+      box-shadow: 0 0 12px var(--section-accent);
+      animation: dotBlink 2.2s ease-in-out infinite;
+    }
+
+    .chapter-dots i:nth-child(2) { animation-delay: 180ms; }
+    .chapter-dots i:nth-child(3) { animation-delay: 360ms; }
+    .chapter-dots i:nth-child(4) { animation-delay: 540ms; }
+    .chapter-dots i:nth-child(5) { animation-delay: 720ms; }
+    .chapter-dots i:nth-child(6) { animation-delay: 900ms; }
+
+    .topbar {
+      position: fixed;
+      top: max(0.75rem, env(safe-area-inset-top));
+      left: 50%;
+      z-index: 80;
+      width: min(72rem, calc(100vw - 1.2rem));
+      transform: translateX(-50%);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      padding: 0.58rem 0.7rem;
+      border: 1px solid var(--line);
+      background: rgba(2, 8, 18, 0.72);
+      backdrop-filter: blur(18px);
+      box-shadow: 0 18px 54px rgba(0, 0, 0, 0.24);
+    }
+
+    .brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.6rem;
+      min-width: 0;
+      border: 0;
+      background: transparent;
+      color: var(--text);
+      padding: 0;
+      text-align: left;
+    }
+
+    .brand-mark {
+      display: grid;
+      place-items: center;
+      width: 2.1rem;
+      height: 2.1rem;
+      flex: 0 0 auto;
+      border: 1px solid color-mix(in srgb, var(--section-accent) 58%, transparent);
+      background: rgba(56, 232, 255, 0.08);
+      color: var(--green);
+      font-family: var(--font-mono);
+      font-weight: 900;
+      box-shadow: inset 0 0 18px rgba(25, 255, 149, 0.12);
+    }
+
+    .brand-text {
+      display: grid;
+      gap: 0.08rem;
+      min-width: 0;
+    }
+
+    .brand-name {
+      overflow: hidden;
+      color: var(--text);
+      font-weight: 800;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+    }
+
+    .brand-sub {
+      overflow: hidden;
+      color: var(--muted);
+      font-family: var(--font-mono);
+      font-size: 0.68rem;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+    }
+
+    .nav {
+      display: flex;
+      gap: 0.25rem;
+      align-items: center;
+    }
+
+    .nav a {
+      padding: 0.55rem 0.72rem;
+      color: var(--muted);
+      font-family: var(--font-mono);
+      font-size: 0.78rem;
+      border: 1px solid transparent;
+    }
+
+    .nav a:hover,
+    .nav a:focus-visible {
+      color: var(--text);
+      border-color: var(--line);
+      background: rgba(255, 255, 255, 0.05);
+      outline: none;
+    }
+
+    .top-actions {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .audio-bars {
+      display: inline-grid;
+      grid-auto-flow: column;
+      align-items: end;
+      gap: 0.12rem;
+      height: 1rem;
+      width: 1.15rem;
+    }
+
+    .audio-bars i {
+      width: 0.16rem;
+      min-height: 0.25rem;
+      background: currentColor;
+      transform-origin: bottom;
+      animation: audioBar 850ms ease-in-out infinite;
+    }
+
+    .audio-bars i:nth-child(2) { animation-delay: 120ms; }
+    .audio-bars i:nth-child(3) { animation-delay: 240ms; }
+    .audio-bars i:nth-child(4) { animation-delay: 360ms; }
+
+    .audio-state {
+      font-family: var(--font-mono);
+      font-size: 0.62rem;
+      font-weight: 900;
+    }
+
+    .icon-btn,
+    .text-btn,
+    .primary-btn,
+    .secondary-btn {
+      min-height: 2.25rem;
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      background: rgba(255, 255, 255, 0.05);
+      color: var(--text);
+      transition: transform 160ms ease, border-color 160ms ease, background 160ms ease;
+    }
+
+    .icon-btn {
+      width: 2.25rem;
+      display: inline-grid;
+      place-items: center;
+      padding: 0;
+      font-family: var(--font-mono);
+      font-weight: 900;
+    }
+
+    #overloadButton {
+      width: 3.1rem;
+      color: var(--green);
+      font-size: 0.68rem;
+      text-shadow: 0 0 10px var(--green);
+    }
+
+    #muteButton {
+      width: 3.4rem;
+      gap: 0.18rem;
+    }
+
+    .text-btn,
+    .primary-btn,
+    .secondary-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.45rem;
+      padding: 0.58rem 0.78rem;
+      font-family: var(--font-mono);
+      font-size: 0.82rem;
+      white-space: nowrap;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .primary-btn {
+      border-color: color-mix(in srgb, var(--green) 65%, transparent);
+      background: linear-gradient(90deg, rgba(25, 255, 149, 0.92), rgba(56, 232, 255, 0.82));
+      color: #02100e;
+      font-weight: 900;
+      box-shadow: 0 0 26px rgba(25, 255, 149, 0.24);
+    }
+
+    .primary-btn::after,
+    .secondary-btn::after,
+    .text-btn::after {
+      content: "";
+      position: absolute;
+      inset: -60%;
+      background: linear-gradient(110deg, transparent 38%, rgba(255,255,255,0.55), transparent 62%);
+      transform: translateX(-72%);
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .primary-btn:hover::after,
+    .secondary-btn:hover::after,
+    .text-btn:hover::after {
+      animation: buttonSheen 780ms ease;
+    }
+
+    .secondary-btn {
+      border-color: color-mix(in srgb, var(--section-accent) 46%, transparent);
+      background: rgba(56, 232, 255, 0.08);
+    }
+
+    .icon-btn:hover,
+    .text-btn:hover,
+    .primary-btn:hover,
+    .secondary-btn:hover {
+      transform: translateY(-1px);
+      border-color: var(--section-accent);
+    }
+
+    .section {
+      position: relative;
+      min-height: 100vh;
+      padding: clamp(6rem, 10vw, 8.5rem) clamp(1rem, 4vw, 3rem) clamp(4rem, 8vw, 7rem);
+      display: grid;
+      align-items: center;
+      isolation: isolate;
+    }
+
+    .section::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      z-index: -1;
+      pointer-events: none;
+      background:
+        radial-gradient(circle at 20% 28%, color-mix(in srgb, var(--section-accent) 17%, transparent), transparent 28rem),
+        radial-gradient(circle at 78% 70%, color-mix(in srgb, var(--section-secondary) 14%, transparent), transparent 30rem),
+        linear-gradient(180deg, rgba(255,255,255,0.02), rgba(0,0,0,0.18));
+      opacity: 0.92;
+    }
+
+    .section::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      z-index: -1;
+      pointer-events: none;
+      background:
+        linear-gradient(90deg, transparent 0 9%, color-mix(in srgb, var(--section-accent) 16%, transparent) 9.1%, transparent 9.6% 90.4%, color-mix(in srgb, var(--section-secondary) 14%, transparent) 91%, transparent 91.5%),
+        conic-gradient(from calc(var(--scroll-progress, 0) * 360deg) at 50% 50%, transparent, color-mix(in srgb, var(--section-accent) 9%, transparent), transparent 24%);
+      opacity: 0.5;
+      transform: perspective(900px) rotateX(52deg) translateY(26%);
+      transform-origin: center bottom;
+      mask-image: linear-gradient(to bottom, transparent, black 28%, transparent 84%);
+    }
+
+    .section-inner {
+      position: relative;
+      z-index: 10;
+      width: min(72rem, 100%);
+      margin: 0 auto;
+    }
+
+    .hero {
+      min-height: 100svh;
+      padding-top: clamp(6.8rem, 12vw, 9rem);
+      align-items: end;
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.05fr) minmax(19rem, 0.75fr);
+      gap: clamp(1.3rem, 4vw, 3.5rem);
+      align-items: end;
+    }
+
+    .hero-copy {
+      display: grid;
+      gap: 1.3rem;
+      padding-bottom: clamp(0.4rem, 4vw, 2.8rem);
+    }
+
+    .overdrive-panel {
+      max-width: 46rem;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: linear-gradient(90deg, rgba(25,255,149,0.1), rgba(56,232,255,0.055), rgba(138,92,255,0.08));
+      padding: 0.78rem;
+      display: grid;
+      gap: 0.58rem;
+      box-shadow: inset 0 0 24px rgba(56,232,255,0.06);
+    }
+
+    .systems-deck {
+      max-width: 48rem;
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 0.55rem;
+    }
+
+    .system-tile {
+      min-height: 4.6rem;
+      border: 1px solid color-mix(in srgb, var(--section-accent) 22%, transparent);
+      border-radius: 7px;
+      background:
+        linear-gradient(145deg, rgba(255,255,255,0.07), rgba(255,255,255,0.015)),
+        rgba(1, 5, 14, 0.56);
+      padding: 0.68rem;
+      display: grid;
+      align-content: space-between;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .system-tile::after {
+      content: attr(data-symbol);
+      position: absolute;
+      right: -0.15rem;
+      bottom: -0.55rem;
+      color: color-mix(in srgb, var(--section-accent) 22%, transparent);
+      font-family: var(--font-mono);
+      font-size: 2.8rem;
+      font-weight: 900;
+    }
+
+    .system-tile strong {
+      color: var(--text);
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+    }
+
+    .system-tile span {
+      color: var(--green);
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+    }
+
+    .overdrive-row {
+      display: grid;
+      grid-template-columns: 8.5rem minmax(0, 1fr) auto;
+      gap: 0.7rem;
+      align-items: center;
+      font-family: var(--font-mono);
+      font-size: 0.74rem;
+      color: #dff9ff;
+    }
+
+    .meter {
+      height: 0.42rem;
+      border: 1px solid rgba(255,255,255,0.1);
+      background: rgba(0,0,0,0.25);
+      overflow: hidden;
+    }
+
+    .meter span {
+      display: block;
+      width: var(--value);
+      height: 100%;
+      background: linear-gradient(90deg, var(--green), var(--section-accent));
+      box-shadow: 0 0 16px var(--section-accent);
+      animation: meterPulse 1.8s ease-in-out infinite;
+    }
+
+    h1,
+    h2,
+    h3,
+    p {
+      margin: 0;
+    }
+
+    h1 {
+      max-width: 13ch;
+      font-size: clamp(3rem, 9.5vw, 7.5rem);
+      line-height: 0.92;
+      letter-spacing: 0;
+      font-weight: 950;
+      position: relative;
+    }
+
+    .glitch-title::before,
+    .glitch-title::after {
+      content: attr(data-text);
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      opacity: 0;
+      white-space: pre-line;
+      mix-blend-mode: screen;
+    }
+
+    body.extreme-overload .glitch-title::before {
+      color: var(--red);
+      opacity: 0.3;
+      transform: translate(2px, -1px);
+      clip-path: inset(8% 0 74% 0);
+      animation: glitchSlice 2.2s steps(2, end) infinite;
+    }
+
+    body.extreme-overload .glitch-title::after {
+      color: var(--cyan);
+      opacity: 0.28;
+      transform: translate(-2px, 1px);
+      clip-path: inset(68% 0 12% 0);
+      animation: glitchSlice 1.7s steps(2, end) infinite reverse;
+    }
+
+    h1 span {
+      display: block;
+      color: transparent;
+      background: linear-gradient(90deg, var(--green), var(--cyan), #f0f7ff);
+      -webkit-background-clip: text;
+      background-clip: text;
+      filter: drop-shadow(0 0 22px rgba(56, 232, 255, 0.23));
+    }
+
+    .hero-lead {
+      max-width: 44rem;
+      color: #c6d7e6;
+      font-size: clamp(1.02rem, 1.8vw, 1.35rem);
+    }
+
+    .code-ribbon {
+      max-width: 48rem;
+      overflow: hidden;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: rgba(1, 5, 14, 0.54);
+      color: var(--green);
+      font-family: var(--font-mono);
+      font-size: 0.78rem;
+      white-space: nowrap;
+      box-shadow: inset 0 0 24px rgba(25, 255, 149, 0.06);
+    }
+
+    .code-ribbon-track {
+      display: inline-flex;
+      gap: 2rem;
+      padding: 0.65rem 1rem;
+      animation: ribbonFlow 18s linear infinite;
+    }
+
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+      align-items: center;
+    }
+
+    .terminal-panel,
+    .tech-panel,
+    .editor-shell,
+    .author-card,
+    .message-wall,
+    .cta-console {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--panel);
+      box-shadow: 0 24px 80px rgba(0, 0, 0, 0.34);
+      backdrop-filter: blur(18px);
+    }
+
+    .terminal-panel {
+      overflow: hidden;
+    }
+
+    .reactor-stage {
+      position: relative;
+      min-height: 15.5rem;
+      overflow: hidden;
+      border-bottom: 1px solid var(--line);
+      background:
+        radial-gradient(circle at 50% 48%, color-mix(in srgb, var(--green) 28%, transparent), transparent 8rem),
+        conic-gradient(from 120deg at 50% 50%, rgba(56,232,255,0.08), rgba(138,92,255,0.22), rgba(25,255,149,0.16), rgba(56,232,255,0.08)),
+        rgba(1, 5, 14, 0.5);
+    }
+
+    .reactor-stage::before,
+    .reactor-stage::after {
+      content: "";
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      border-radius: 50%;
+      pointer-events: none;
+    }
+
+    .reactor-stage::before {
+      width: 18rem;
+      height: 18rem;
+      border: 1px solid color-mix(in srgb, var(--section-accent) 42%, transparent);
+      box-shadow: inset 0 0 34px rgba(56,232,255,0.1), 0 0 38px rgba(56,232,255,0.18);
+      animation: reactorSpin 18s linear infinite;
+    }
+
+    .reactor-stage::after {
+      width: 11rem;
+      height: 11rem;
+      border: 1px dashed color-mix(in srgb, var(--green) 55%, transparent);
+      animation: reactorSpin 8s linear infinite reverse;
+    }
+
+    .reactor-core {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      z-index: 2;
+      transform: translate(-50%, -50%);
+      display: grid;
+      place-items: center;
+      width: 8.2rem;
+      aspect-ratio: 1;
+      border: 1px solid color-mix(in srgb, var(--green) 68%, transparent);
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(25,255,149,0.28), rgba(56,232,255,0.08) 48%, rgba(1,5,14,0.78) 72%);
+      color: #eafff5;
+      font-family: var(--font-mono);
+      text-align: center;
+      box-shadow: 0 0 34px rgba(25,255,149,0.28), inset 0 0 28px rgba(25,255,149,0.18);
+      animation: corePulse 2.4s ease-in-out infinite;
+    }
+
+    .reactor-core strong {
+      display: block;
+      color: var(--green);
+      font-size: 1.15rem;
+    }
+
+    .reactor-core span {
+      display: block;
+      color: var(--cyan);
+      font-size: 0.72rem;
+    }
+
+    .orbit {
+      position: absolute;
+      inset: 2.2rem;
+      border: 1px solid color-mix(in srgb, var(--section-secondary) 32%, transparent);
+      border-radius: 50%;
+      transform: rotateX(68deg);
+      animation: orbitRoll 7s linear infinite;
+    }
+
+    .orbit:nth-child(2) {
+      inset: 3.8rem 1.4rem;
+      transform: rotateX(62deg) rotateZ(42deg);
+      animation-duration: 10s;
+      border-color: color-mix(in srgb, var(--section-accent) 36%, transparent);
+    }
+
+    .orbit:nth-child(3) {
+      inset: 4.8rem 2.8rem;
+      transform: rotateX(72deg) rotateZ(-28deg);
+      animation-duration: 13s;
+      border-color: color-mix(in srgb, var(--green) 34%, transparent);
+    }
+
+    .code-chip {
+      position: absolute;
+      z-index: 3;
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 5px;
+      background: rgba(1, 5, 14, 0.72);
+      padding: 0.42rem 0.5rem;
+      color: #dffcff;
+      font-family: var(--font-mono);
+      font-size: 0.68rem;
+      box-shadow: 0 0 18px rgba(56,232,255,0.13);
+      animation: chipFloat 4.2s ease-in-out infinite;
+    }
+
+    .code-chip:nth-of-type(1) { left: 1rem; top: 1.1rem; }
+    .code-chip:nth-of-type(2) { right: 0.9rem; top: 3.1rem; animation-delay: 700ms; }
+    .code-chip:nth-of-type(3) { left: 1.8rem; bottom: 1.3rem; animation-delay: 1200ms; }
+    .code-chip:nth-of-type(4) { right: 1.2rem; bottom: 1.2rem; animation-delay: 1800ms; }
+
+    .panel-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      padding: 0.72rem 0.86rem;
+      border-bottom: 1px solid var(--line);
+      background: rgba(255, 255, 255, 0.04);
+      color: var(--muted);
+      font-family: var(--font-mono);
+      font-size: 0.74rem;
+    }
+
+    .window-dots {
+      display: inline-flex;
+      gap: 0.35rem;
+    }
+
+    .window-dots i {
+      width: 0.55rem;
+      height: 0.55rem;
+      border-radius: 50%;
+      background: var(--section-accent);
+      box-shadow: 0 0 12px currentColor;
+    }
+
+    .window-dots i:nth-child(2) {
+      background: var(--amber);
+    }
+
+    .window-dots i:nth-child(3) {
+      background: var(--green);
+    }
+
+    .terminal-body {
+      padding: 1rem;
+      font-family: var(--font-mono);
+      font-size: 0.9rem;
+      color: #d8f9ff;
+      position: relative;
+    }
+
+    .terminal-body::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      background: linear-gradient(180deg, transparent, color-mix(in srgb, var(--green) 20%, transparent), transparent);
+      opacity: 0.24;
+      transform: translateY(-100%);
+      animation: terminalScan 3.8s linear infinite;
+    }
+
+    .terminal-body p {
+      margin: 0.36rem 0;
+    }
+
+    .terminal-body .green {
+      color: var(--green);
+    }
+
+    .terminal-body .cyan {
+      color: var(--cyan);
+    }
+
+    .terminal-body .violet {
+      color: #b9a7ff;
+    }
+
+    .terminal-caret::after {
+      content: "_";
+      color: var(--green);
+      animation: blink 1s steps(2, end) infinite;
+    }
+
+    .section-title {
+      max-width: 48rem;
+      margin-bottom: clamp(1.5rem, 4vw, 3rem);
+    }
+
+    .section-title h2 {
+      margin-bottom: 0.7rem;
+      font-size: clamp(2.1rem, 5vw, 4.5rem);
+      line-height: 0.98;
+      letter-spacing: 0;
+    }
+
+    .section-title p {
+      max-width: 42rem;
+      color: var(--muted);
+      font-size: clamp(1rem, 1.7vw, 1.18rem);
+    }
+
+    .feature-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 1rem;
+    }
+
+    .feature-card {
+      min-height: 17rem;
+      padding: 1.1rem;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background:
+        linear-gradient(145deg, rgba(255,255,255,0.075), rgba(255,255,255,0.02)),
+        rgba(4, 14, 28, 0.78);
+      display: grid;
+      align-content: space-between;
+      overflow: hidden;
+      position: relative;
+      transform-style: preserve-3d;
+      transition: transform 180ms ease, border-color 180ms ease, box-shadow 180ms ease;
+    }
+
+    .feature-card:hover {
+      transform: translateY(-0.35rem) rotateX(2deg) rotateY(-2deg);
+      border-color: color-mix(in srgb, var(--section-accent) 56%, transparent);
+      box-shadow: 0 26px 82px rgba(0,0,0,0.35), 0 0 32px color-mix(in srgb, var(--section-accent) 18%, transparent);
+    }
+
+    .feature-card::after {
+      content: attr(data-code);
+      position: absolute;
+      right: -0.5rem;
+      bottom: -1.2rem;
+      color: color-mix(in srgb, var(--section-accent) 16%, transparent);
+      font-family: var(--font-mono);
+      font-size: 4.8rem;
+      font-weight: 900;
+      line-height: 1;
+    }
+
+    .feature-card h3 {
+      position: relative;
+      z-index: 1;
+      font-size: 1.25rem;
+    }
+
+    .feature-card p {
+      position: relative;
+      z-index: 1;
+      color: #b7c7d8;
+    }
+
+    .feature-meta {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      gap: 0.45rem;
+      flex-wrap: wrap;
+      margin-top: 1.5rem;
+      font-family: var(--font-mono);
+      color: var(--green);
+      font-size: 0.72rem;
+    }
+
+    .knowledge-grid {
+      display: grid;
+      grid-template-columns: 0.85fr 1.15fr;
+      gap: 1rem;
+      align-items: stretch;
+    }
+
+    .knowledge-rail {
+      display: grid;
+      gap: 0.65rem;
+      align-content: center;
+      border-left: 1px solid var(--line);
+      padding-left: 1rem;
+    }
+
+    .node {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 0.75rem;
+      align-items: center;
+      padding: 0.72rem;
+      border: 1px solid transparent;
+      background: rgba(255, 255, 255, 0.035);
+      border-radius: 6px;
+      color: #dbeafe;
+    }
+
+    .node-index {
+      display: grid;
+      place-items: center;
+      width: 2.1rem;
+      height: 2.1rem;
+      border: 1px solid color-mix(in srgb, var(--section-accent) 42%, transparent);
+      color: var(--section-accent);
+      font-family: var(--font-mono);
+      font-weight: 800;
+    }
+
+    .node small {
+      display: block;
+      color: var(--muted);
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+    }
+
+    .editor-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+      min-height: 27rem;
+    }
+
+    .editor-pane {
+      display: grid;
+      grid-template-rows: auto minmax(0, 1fr);
+      min-width: 0;
+      border-right: 1px solid var(--line);
+    }
+
+    .editor-pane:last-child {
+      border-right: 0;
+    }
+
+    .editor-tools {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.75rem;
+      padding: 0.7rem;
+      border-bottom: 1px solid var(--line);
+      background: rgba(255, 255, 255, 0.04);
+      font-family: var(--font-mono);
+      font-size: 0.74rem;
+      color: var(--muted);
+    }
+
+    .example-buttons {
+      display: flex;
+      gap: 0.4rem;
+      flex-wrap: wrap;
+    }
+
+    .tiny-btn {
+      border: 1px solid var(--line);
+      border-radius: 5px;
+      background: rgba(255, 255, 255, 0.04);
+      color: var(--text);
+      padding: 0.35rem 0.48rem;
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+    }
+
+    .tiny-btn:hover,
+    .tiny-btn:focus-visible {
+      border-color: var(--section-accent);
+      outline: none;
+    }
+
+    textarea.code-input {
+      width: 100%;
+      min-height: 100%;
+      resize: none;
+      border: 0;
+      border-radius: 0;
+      outline: none;
+      padding: 1rem;
+      background: rgba(1, 5, 14, 0.64);
+      color: #e6fbff;
+      font-family: var(--font-mono);
+      font-size: 0.9rem;
+      line-height: 1.62;
+      caret-color: var(--green);
+    }
+
+    .highlight {
+      max-height: 10.5rem;
+      margin: 0;
+      padding: 0.8rem 1rem;
+      overflow: auto;
+      border-top: 1px solid var(--line);
+      background: rgba(1, 5, 14, 0.72);
+      color: #d7f7ff;
+      font-family: var(--font-mono);
+      font-size: 0.78rem;
+      line-height: 1.52;
+    }
+
+    .preview-frame {
+      width: 100%;
+      height: 100%;
+      min-height: 18rem;
+      border: 0;
+      background: #fff;
+    }
+
+    .token.tag,
+    .token.keyword {
+      color: #38e8ff;
+    }
+
+    .token.attr-name,
+    .token.property {
+      color: #19ff95;
+    }
+
+    .token.attr-value,
+    .token.string {
+      color: #ffd166;
+    }
+
+    .token.comment {
+      color: #7e90a8;
+    }
+
+    .media-grid {
+      display: grid;
+      grid-template-columns: 1.25fr 0.75fr;
+      gap: 1rem;
+      align-items: stretch;
+    }
+
+    .video-frame {
+      min-height: 28rem;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background:
+        linear-gradient(180deg, rgba(56,232,255,0.08), rgba(2,8,18,0.9)),
+        repeating-linear-gradient(0deg, rgba(255,255,255,0.05), rgba(255,255,255,0.05) 1px, transparent 1px, transparent 4px);
+      overflow: hidden;
+      position: relative;
+    }
+
+    .game-screen {
+      position: absolute;
+      inset: 1rem;
+      border: 1px solid rgba(255,255,255,0.12);
+      background:
+        linear-gradient(180deg, rgba(2, 18, 30, 0.8), rgba(3, 8, 18, 0.96)),
+        radial-gradient(circle at 70% 22%, rgba(25,255,149,0.22), transparent 11rem);
+      overflow: hidden;
+    }
+
+    .game-screen::before {
+      content: "";
+      position: absolute;
+      inset: 15% 8% 20%;
+      background:
+        linear-gradient(90deg, transparent, rgba(56,232,255,0.24), transparent),
+        linear-gradient(0deg, rgba(25,255,149,0.12), transparent 62%);
+      clip-path: polygon(0 85%, 12% 60%, 24% 72%, 38% 42%, 55% 68%, 71% 35%, 100% 80%, 100% 100%, 0 100%);
+    }
+
+    .sprite {
+      position: absolute;
+      left: 18%;
+      bottom: 16%;
+      width: 4rem;
+      height: 5rem;
+      border: 1px solid var(--green);
+      background: linear-gradient(180deg, rgba(25,255,149,0.9), rgba(56,232,255,0.4));
+      box-shadow: 0 0 28px rgba(25,255,149,0.32);
+      animation: spritePulse 2s ease-in-out infinite;
+    }
+
+    .game-terminal {
+      position: absolute;
+      left: 8%;
+      right: 8%;
+      bottom: 1rem;
+      border: 1px solid var(--line);
+      background: rgba(1, 5, 14, 0.84);
+      padding: 0.75rem;
+      color: var(--green);
+      font-family: var(--font-mono);
+      font-size: 0.82rem;
+    }
+
+    .challenge {
+      display: grid;
+      gap: 1rem;
+      align-content: start;
+      padding: 1rem;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: rgba(4, 14, 28, 0.72);
+    }
+
+    .challenge-display {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 8rem;
+      border: 1px solid rgba(255,255,255,0.1);
+      background: rgba(1, 5, 14, 0.58);
+      color: var(--green);
+      font-family: var(--font-mono);
+      font-size: clamp(2rem, 5vw, 3.4rem);
+      font-weight: 900;
+    }
+
+    .challenge input {
+      width: 100%;
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      padding: 0.75rem;
+      background: rgba(0, 0, 0, 0.26);
+      color: var(--text);
+      outline: none;
+    }
+
+    .challenge input:focus {
+      border-color: var(--section-accent);
+    }
+
+    .challenge-status {
+      min-height: 1.5rem;
+      color: var(--muted);
+      font-family: var(--font-mono);
+      font-size: 0.82rem;
+    }
+
+    .author-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr);
+      gap: 1rem;
+      align-items: stretch;
+    }
+
+    .author-card {
+      padding: 1rem;
+      display: grid;
+      gap: 1rem;
+      align-content: start;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .author-card.flame::before {
+      content: "";
+      position: absolute;
+      inset: auto 0 0;
+      height: 46%;
+      background: radial-gradient(circle at 50% 100%, rgba(255, 51, 92, 0.78), transparent 58%);
+      animation: flameRise 800ms ease-out 3;
+      pointer-events: none;
+    }
+
+    .ascii-avatar {
+      margin: 0;
+      padding: 1rem;
+      border: 1px solid rgba(255,255,255,0.11);
+      background: rgba(0, 0, 0, 0.28);
+      color: var(--green);
+      font-family: var(--font-mono);
+      font-size: clamp(0.68rem, 1.4vw, 0.9rem);
+      line-height: 1.2;
+      overflow: auto;
+    }
+
+    .identity-list {
+      display: grid;
+      gap: 0.7rem;
+    }
+
+    .identity-row {
+      display: grid;
+      grid-template-columns: 5.5rem minmax(0, 1fr) auto;
+      gap: 0.6rem;
+      align-items: center;
+      padding: 0.68rem;
+      border: 1px solid rgba(255,255,255,0.1);
+      background: rgba(255,255,255,0.035);
+      border-radius: 6px;
+      font-family: var(--font-mono);
+    }
+
+    .identity-row strong {
+      color: var(--section-accent);
+      font-size: 0.82rem;
+    }
+
+    .identity-row span {
+      overflow-wrap: anywhere;
+    }
+
+    .message-wall {
+      padding: 1rem;
+      display: grid;
+      gap: 1rem;
+    }
+
+    .message-form {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 0.6rem;
+    }
+
+    .message-form input {
+      min-width: 0;
+      border: 1px solid var(--line);
+      border-radius: 6px;
+      padding: 0.75rem;
+      background: rgba(0, 0, 0, 0.24);
+      color: var(--text);
+      outline: none;
+    }
+
+    .messages {
+      display: grid;
+      gap: 0.65rem;
+    }
+
+    .message {
+      padding: 0.75rem;
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 6px;
+      background: rgba(255,255,255,0.035);
+    }
+
+    .message strong {
+      color: var(--green);
+      font-family: var(--font-mono);
+      font-size: 0.78rem;
+    }
+
+    .message p {
+      margin-top: 0.25rem;
+      color: #d4e3f0;
+    }
+
+    .cta-layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1.05fr) minmax(18rem, 0.75fr);
+      gap: 1rem;
+      align-items: stretch;
+    }
+
+    .cta-console {
+      padding: clamp(1rem, 3vw, 2rem);
+      display: grid;
+      gap: 1.2rem;
+      align-content: center;
+    }
+
+    .cta-console h2 {
+      font-size: clamp(2.2rem, 6vw, 5.2rem);
+      line-height: 0.96;
+      letter-spacing: 0;
+    }
+
+    .cta-console p {
+      color: var(--muted);
+      max-width: 46rem;
+    }
+
+    .credits {
+      display: grid;
+      gap: 0.7rem;
+      padding: 1rem;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: rgba(4, 14, 28, 0.74);
+    }
+
+    .credits h3 {
+      color: var(--green);
+      font-family: var(--font-mono);
+    }
+
+    .credit-line {
+      display: flex;
+      justify-content: space-between;
+      gap: 1rem;
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+      padding-bottom: 0.55rem;
+      color: #dbeafe;
+      font-family: var(--font-mono);
+      font-size: 0.84rem;
+    }
+
+    .credit-line:last-child {
+      border-bottom: 0;
+      padding-bottom: 0;
+    }
+
+    .float-contact {
+      position: fixed;
+      right: max(0.8rem, env(safe-area-inset-right));
+      bottom: max(0.8rem, env(safe-area-inset-bottom));
+      z-index: 75;
+      display: grid;
+      gap: 0.18rem;
+      min-width: min(18rem, calc(100vw - 1.6rem));
+      border: 1px solid color-mix(in srgb, var(--green) 48%, transparent);
+      border-radius: 8px;
+      padding: 0.75rem 0.85rem;
+      background: rgba(2, 8, 18, 0.82);
+      color: var(--text);
+      box-shadow: 0 14px 50px rgba(0,0,0,0.32), 0 0 24px rgba(25,255,149,0.14);
+      backdrop-filter: blur(16px);
+      font-family: var(--font-mono);
+      font-size: 0.78rem;
+    }
+
+    .float-contact strong {
+      color: var(--green);
+    }
+
+    .float-contact span {
+      color: var(--muted);
+    }
+
+    .toast {
+      position: fixed;
+      left: 50%;
+      bottom: max(6.7rem, calc(env(safe-area-inset-bottom) + 5.6rem));
+      z-index: 150;
+      transform: translate(-50%, 1rem);
+      max-width: min(32rem, calc(100vw - 2rem));
+      border: 1px solid var(--line);
+      border-radius: 7px;
+      padding: 0.8rem 1rem;
+      background: rgba(2, 8, 18, 0.92);
+      color: var(--text);
+      font-family: var(--font-mono);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 180ms ease, transform 180ms ease;
+    }
+
+    .toast.show {
+      opacity: 1;
+      transform: translate(-50%, 0);
+    }
+
+    .shockwave {
+      position: fixed;
+      z-index: 128;
+      width: 1rem;
+      height: 1rem;
+      left: var(--wave-x);
+      top: var(--wave-y);
+      transform: translate(-50%, -50%);
+      border: 1px solid var(--section-accent);
+      border-radius: 50%;
+      pointer-events: none;
+      animation: shockwave 760ms ease-out forwards;
+      box-shadow: 0 0 24px var(--section-accent);
+    }
+
+    .terminal-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 140;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 1rem;
+      background: rgba(0, 0, 0, 0.58);
+      backdrop-filter: blur(10px);
+    }
+
+    .terminal-overlay.open {
+      display: flex;
+    }
+
+    .command-window {
+      width: min(46rem, 100%);
+      max-height: min(34rem, calc(100svh - 2rem));
+      border: 1px solid color-mix(in srgb, var(--green) 54%, transparent);
+      border-radius: 8px;
+      background: rgba(1, 6, 12, 0.95);
+      display: grid;
+      grid-template-rows: auto minmax(0, 1fr) auto;
+      overflow: hidden;
+      box-shadow: 0 0 70px rgba(25,255,149,0.2);
+    }
+
+    .terminal-log {
+      min-height: 18rem;
+      overflow: auto;
+      padding: 1rem;
+      font-family: var(--font-mono);
+      font-size: 0.88rem;
+      color: #dfffea;
+      white-space: pre-wrap;
+    }
+
+    .command-line {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 0.5rem;
+      border-top: 1px solid var(--line);
+      padding: 0.7rem 1rem;
+      color: var(--green);
+      font-family: var(--font-mono);
+    }
+
+    .command-line input {
+      min-width: 0;
+      border: 0;
+      outline: 0;
+      background: transparent;
+      color: var(--text);
+      font-family: var(--font-mono);
+    }
+
+    .reveal {
+      opacity: 0;
+      transform: translateY(2rem) rotateX(8deg);
+      transition: opacity 700ms ease, transform 700ms cubic-bezier(0.2, 0.85, 0.2, 1);
+      transform-origin: center top;
+    }
+
+    .reveal.in {
+      opacity: 1;
+      transform: translateY(0) rotateX(0);
+    }
+
+    .sr-only {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border: 0;
+    }
+
+    @keyframes bootLoad {
+      0% { transform: translateX(-30%); width: 12%; }
+      60% { width: 72%; }
+      100% { transform: translateX(760%); width: 12%; }
+    }
+
+    @keyframes blink {
+      50% { opacity: 0; }
+    }
+
+    @keyframes trailFade {
+      to { transform: scale(0.2); opacity: 0; }
+    }
+
+    @keyframes redFlash {
+      50% { opacity: 0.18; }
+    }
+
+    @keyframes spritePulse {
+      50% { transform: translateY(-0.35rem); filter: brightness(1.25); }
+    }
+
+    @keyframes audioBar {
+      0%, 100% { transform: scaleY(0.35); opacity: 0.5; }
+      45% { transform: scaleY(1); opacity: 1; }
+    }
+
+    @keyframes meterPulse {
+      50% { filter: brightness(1.35); }
+    }
+
+    @keyframes buttonSheen {
+      0% { transform: translateX(-72%); opacity: 0; }
+      18% { opacity: 0.55; }
+      100% { transform: translateX(72%); opacity: 0; }
+    }
+
+    @keyframes terminalScan {
+      to { transform: translateY(100%); }
+    }
+
+    @keyframes shockwave {
+      to { width: 12rem; height: 12rem; opacity: 0; }
+    }
+
+    @keyframes screenKick {
+      0% { transform: translate(0, 0) scale(1); filter: saturate(1); }
+      24% { transform: translate(3px, -2px) scale(1.006); filter: saturate(1.25); }
+      52% { transform: translate(-2px, 2px) scale(1.003); }
+      100% { transform: translate(0, 0) scale(1); filter: saturate(1); }
+    }
+
+    @keyframes glitchSlice {
+      0%, 86%, 100% { clip-path: inset(8% 0 74% 0); transform: translate(2px, -1px); }
+      88% { clip-path: inset(42% 0 41% 0); transform: translate(-5px, 1px); }
+      91% { clip-path: inset(13% 0 61% 0); transform: translate(4px, -2px); }
+      95% { clip-path: inset(72% 0 9% 0); transform: translate(-3px, 2px); }
+    }
+
+    @keyframes ribbonFlow {
+      to { transform: translateX(-50%); }
+    }
+
+    @keyframes reactorSpin {
+      to { rotate: 360deg; }
+    }
+
+    @keyframes orbitRoll {
+      to { rotate: 360deg; }
+    }
+
+    @keyframes corePulse {
+      50% { transform: translate(-50%, -50%) scale(1.06); filter: brightness(1.35); }
+    }
+
+    @keyframes chipFloat {
+      50% { transform: translateY(-0.45rem); border-color: color-mix(in srgb, var(--section-accent) 48%, transparent); }
+    }
+
+    @keyframes tickerFlow {
+      to { transform: translateX(-50%); }
+    }
+
+    @keyframes radarSweep {
+      to { rotate: 360deg; }
+    }
+
+    @keyframes badgePulse {
+      50% { transform: translateY(-0.18rem); filter: brightness(1.28); }
+    }
+
+    @keyframes dataRise {
+      50% { filter: brightness(1.55); transform: translateX(-0.2rem); }
+    }
+
+    @keyframes eqJump {
+      50% { height: calc(var(--h) * 0.45); filter: brightness(1.4); }
+    }
+
+    @keyframes cloudDrift {
+      50% { transform: translate(0.8rem, -0.65rem) rotate(1deg); opacity: 1; }
+    }
+
+    @keyframes dotBlink {
+      50% { transform: scale(1.5); background: var(--section-accent); }
+    }
+
+    @keyframes flameRise {
+      from { transform: translateY(35%); opacity: 0; }
+      45% { opacity: 1; }
+      to { transform: translateY(-18%); opacity: 0; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *,
+      *::before,
+      *::after {
+        animation-duration: 1ms !important;
+        animation-iteration-count: 1 !important;
+        scroll-behavior: auto !important;
+        transition-duration: 1ms !important;
+      }
+    }
+
+    @media (max-width: 880px) {
+      .topbar {
+        align-items: stretch;
+      }
+
+      .nav {
+        display: none;
+      }
+
+      .brand-sub {
+        display: none;
+      }
+
+      .hero-grid,
+      .knowledge-grid,
+      .media-grid,
+      .author-grid,
+      .cta-layout,
+      .editor-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .editor-pane {
+        border-right: 0;
+        border-bottom: 1px solid var(--line);
+      }
+
+      .editor-pane:last-child {
+        border-bottom: 0;
+      }
+
+      .feature-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .section {
+        min-height: auto;
+        padding-top: 6.8rem;
+      }
+
+      .hero {
+        min-height: 100svh;
+      }
+
+      .top-actions .text-btn {
+        display: none;
+      }
+
+      .hud-frame,
+      .telemetry-rail,
+      .mission-stack {
+        display: none;
+      }
+
+      body::before,
+      .terminal-body::before {
+        display: none;
+      }
+
+      body::after,
+      .section::after {
+        display: none;
+      }
+
+      .section::before {
+        background: linear-gradient(180deg, rgba(56,232,255,0.08), rgba(0,0,0,0.12));
+        opacity: 0.72;
+      }
+
+      .terminal-panel,
+      .tech-panel,
+      .editor-shell,
+      .author-card,
+      .message-wall,
+      .cta-console {
+        backdrop-filter: none;
+        box-shadow: 0 14px 38px rgba(0, 0, 0, 0.24);
+      }
+
+      .reveal {
+        opacity: 1;
+        transform: none;
+        transition: none;
+      }
+
+      .overdrive-panel {
+        display: none;
+      }
+
+      .code-ribbon,
+      .reactor-stage,
+      .systems-deck {
+        display: none;
+      }
+
+      .float-contact {
+        left: max(0.8rem, env(safe-area-inset-left));
+        right: max(0.8rem, env(safe-area-inset-right));
+      }
+
+      .identity-row {
+        grid-template-columns: 1fr auto;
+      }
+
+      .identity-row strong {
+        grid-column: 1 / -1;
+      }
+
+      .message-form {
+        grid-template-columns: 1fr;
+      }
+
+      .cursor {
+        display: none;
+      }
+    }
+
+    @supports not (backdrop-filter: blur(10px)) {
+      .topbar,
+      .terminal-panel,
+      .tech-panel,
+      .editor-shell,
+      .author-card,
+      .message-wall,
+      .cta-console,
+      .float-contact {
+        background: rgba(2, 8, 18, 0.96);
+      }
+    }
+  </style>
+</head>
+<body>
+  <a class="skip-link" href="#main">跳到官网内容</a>
+  <div class="loading" id="loading">
+    <div class="compiler" role="status" aria-live="polite">
+      <div class="compiler-line">
+        <span id="compileText">正在编译代码...</span>
+        <span id="compilePct">0%</span>
+      </div>
+      <div class="progress-track"><div class="progress-fill"></div></div>
+    </div>
+  </div>
+
+  <canvas id="galaxyLayer" class="fx-layer" aria-hidden="true"></canvas>
+  <canvas id="keywordLayer" class="fx-layer" aria-hidden="true"></canvas>
+  <canvas id="kineticLayer" class="fx-layer" aria-hidden="true"></canvas>
+  <canvas id="energyLayer" class="fx-layer" aria-hidden="true"></canvas>
+  <canvas id="rainLayer" class="fx-layer" aria-hidden="true"></canvas>
+  <canvas id="fireworkLayer" class="fx-layer" aria-hidden="true"></canvas>
+  <div id="cursor" class="cursor" aria-hidden="true">&gt;_</div>
+  <div id="trailHost" aria-hidden="true"></div>
+  <div class="scroll-progress" aria-hidden="true"><span></span></div>
+  <div class="hud-frame" aria-hidden="true"></div>
+  <div class="telemetry-rail" aria-hidden="true">
+    <span>STATIC-FIRST</span>
+    <span>CANVAS-HOT</span>
+    <span>COMMUNITY-414374792</span>
+  </div>
+  <div class="mission-stack" aria-hidden="true">
+    <div class="mini-module"><strong>GPU COMPOSITOR</strong><span>galaxy + kinetic field</span><div class="mini-meter"><i style="--m: 97%"></i></div></div>
+    <div class="mini-module"><strong>AUDIO CORE</strong><span>cinematic WAV + soft SFX</span><div class="mini-meter"><i style="--m: 84%"></i></div></div>
+    <div class="mini-module"><strong>COMMUNITY LINK</strong><span>QQ 3424636983 / Q群 414374792</span><div class="mini-meter"><i style="--m: 92%"></i></div></div>
+  </div>
+  <div class="max-decor" aria-hidden="true">
+    <div class="code-cloud">
+      <code>&lt;section data-theme&gt;</code><code>requestAnimationFrame()</code><code>AudioContext()</code><code>Prism.highlight()</code>
+      <code>localStorage.wall</code><code>Konami.fireworks()</code><code>Ctrl+Shift+~</code><code>QQ_GROUP=414374792</code>
+    </div>
+    <div class="radar-widget"></div>
+    <div class="achievement-strip"><i>Canvas Warp</i><i>Three Galaxy</i><i>WAV Music</i><i>Code Editor</i><i>Message Wall</i><i>Easter Eggs</i></div>
+    <div class="equalizer"><b style="--h: 82%"></b><b style="--h: 44%"></b><b style="--h: 96%"></b><b style="--h: 61%"></b><b style="--h: 73%"></b><b style="--h: 52%"></b><b style="--h: 88%"></b></div>
+    <div class="data-tower"><span style="--w: 82%"></span><span></span><span></span><span></span><span></span><span></span></div>
+    <div class="chapter-dots"><i></i><i></i><i></i><i></i><i></i><i></i></div>
+    <div class="holo-ticker"><span><b>HTML REACTOR ONLINE</b><b>CSS COMPOSITOR MAX</b><b>JS EVENT LOOP HOT</b><b>AUDIO CORE ACTIVE</b><b>AUTHOR 杀戮</b><b>QQ 3424636983</b><b>官方Q群 414374792</b></span></div>
+  </div>
+
+  <header class="topbar">
+    <button id="logoButton" class="brand" type="button" aria-label="代码觉醒者 Logo">
+      <span class="brand-mark">&lt;/&gt;</span>
+      <span class="brand-text">
+        <span class="brand-name">代码觉醒者</span>
+        <span class="brand-sub">HTML/CSS/JS 技术预告片</span>
+      </span>
+    </button>
+    <nav class="nav" aria-label="官网章节">
+      <a href="#features">特色</a>
+      <a href="#knowledge">知识</a>
+      <a href="#lab">编辑器</a>
+      <a href="#author">作者</a>
+      <a href="#launch">进入游戏</a>
+    </nav>
+    <div class="top-actions">
+      <button class="icon-btn" id="muteButton" type="button" aria-label="静音或开启音效"><span class="audio-bars" aria-hidden="true"><i></i><i></i><i></i><i></i></span></button>
+      <button class="icon-btn" id="overloadButton" type="button" aria-label="切换极限视觉模式">MAX</button>
+      <button class="icon-btn" id="fullscreenButton" type="button" aria-label="进入全屏">⛶</button>
+      <a class="text-btn" href="./programming-rpg-c-basics.html">启动游戏</a>
+    </div>
+  </header>
+
+  <main id="main" class="site-shell">
+    <section id="hero" class="section hero" data-theme="hero" data-accent="#38e8ff" data-secondary="#8a5cff">
+      <div class="section-inner hero-grid">
+        <div class="hero-copy reveal">
+          <h1 class="glitch-title" data-text="代码觉醒者&#10;Code&#10;Awakener">代码觉醒者<span>Code Awakener</span></h1>
+          <p class="hero-lead">一款把编程知识变成冒险世界的学习游戏。这个官网本身就是一支静态 HTML 技术预告片：Canvas、CSS、Web Audio 与按需加载的 Three.js 在同一屏启动。</p>
+          <div class="code-ribbon" aria-hidden="true">
+            <div class="code-ribbon-track">
+              <span>requestAnimationFrame()</span><span>CSS.registerProperty</span><span>iframe.srcdoc</span><span>WebAudio oscillator</span><span>localStorage message wall</span><span>Three.Points galaxy</span><span>Canvas keyword warp</span>
+            </div>
+          </div>
+          <div class="hero-actions">
+            <a class="primary-btn" href="./programming-rpg-c-basics.html">▶ 进入本项目游戏</a>
+            <a class="secondary-btn" href="#lab">打开在线编辑器</a>
+          </div>
+          <div class="overdrive-panel" aria-label="官网技术状态">
+            <div class="overdrive-row"><span>THREE PARTICLES</span><span class="meter" style="--value: 96%"><span></span></span><strong>5000</strong></div>
+            <div class="overdrive-row"><span>KEYWORD MATRIX</span><span class="meter" style="--value: 91%"><span></span></span><strong>260+</strong></div>
+            <div class="overdrive-row"><span>STATIC PAYLOAD</span><span class="meter" style="--value: 98%"><span></span></span><strong>FAST</strong></div>
+          </div>
+          <div class="systems-deck" aria-hidden="true">
+            <div class="system-tile" data-symbol="DOM"><strong>DOM</strong><span>reactive controls</span></div>
+            <div class="system-tile" data-symbol="CSS"><strong>CSS</strong><span>3D transitions</span></div>
+            <div class="system-tile" data-symbol="JS"><strong>JS</strong><span>easter eggs</span></div>
+            <div class="system-tile" data-symbol="SND"><strong>SOUND</strong><span>cinematic mix</span></div>
+          </div>
+        </div>
+        <aside class="terminal-panel reveal" aria-label="作者信息终端">
+          <div class="panel-head">
+            <span>author.boot</span>
+            <span class="window-dots"><i></i><i></i><i></i></span>
+          </div>
+          <div class="reactor-stage" aria-hidden="true">
+            <div class="orbit"></div>
+            <div class="orbit"></div>
+            <div class="orbit"></div>
+            <code class="code-chip">HTML parser</code>
+            <code class="code-chip">CSS compositor</code>
+            <code class="code-chip">JS event loop</code>
+            <code class="code-chip">Audio synth</code>
+            <div class="reactor-core">
+              <strong>HTML</strong>
+              <span>CSS / JS</span>
+              <span>OVERDRIVE</span>
+            </div>
+          </div>
+          <div class="terminal-body">
+            <p class="cyan">$ whoami</p>
+            <p><span class="green">作者：</span>杀戮</p>
+            <p><span class="green">QQ：</span>3424636983</p>
+            <p><span class="green">官方Q群：</span>414374792</p>
+            <p class="violet">$ community --join 414374792</p>
+            <p class="terminal-caret">> HTML 世界正在唤醒</p>
+          </div>
+        </aside>
+      </div>
+    </section>
+
+    <section id="features" class="section" data-theme="features" data-accent="#19ff95" data-secondary="#38e8ff">
+      <div class="section-inner">
+        <div class="section-title reveal">
+          <h2>游戏特色</h2>
+          <p>每个玩法都围绕“写代码、看反馈、继续探索”设计，玩家不是读说明，而是在世界里亲手调试。</p>
+        </div>
+        <div class="feature-grid">
+          <article class="feature-card reveal" data-code="{}">
+            <h3>编程即战斗</h3>
+            <p>C 语言任务、编译反馈、运行输出与剧情推进绑定，错误提示会回到具体行。</p>
+            <div class="feature-meta"><span>compile</span><span>quest</span><span>reward</span></div>
+          </article>
+          <article class="feature-card reveal" data-code="<>">
+            <h3>零基础友好</h3>
+            <p>基础语法、变量、条件、循环和函数被拆成可操作的小游戏与地图节点。</p>
+            <div class="feature-meta"><span>HTML</span><span>CSS</span><span>JS</span></div>
+          </article>
+          <article class="feature-card reveal" data-code="JS">
+            <h3>纯静态可玩</h3>
+            <p>离线静态页面即可启动，适合 GitHub Pages、Vercel 和浏览器直接体验。</p>
+            <div class="feature-meta"><span>static</span><span>fast</span><span>mobile</span></div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section id="knowledge" class="section" data-theme="knowledge" data-accent="#ffd166" data-secondary="#19ff95">
+      <div class="section-inner knowledge-grid">
+        <div class="section-title reveal">
+          <h2>编程知识点</h2>
+          <p>课程路线以 C 语言基础为第一世界，同时用 HTML 官网展示网页技术的表达力。</p>
+        </div>
+        <div class="knowledge-rail reveal">
+          <div class="node"><span class="node-index">01</span><span>C 语言概述<small>从第一行代码开始</small></span></div>
+          <div class="node"><span class="node-index">02</span><span>基础语法<small>结构、分号、注释、输出</small></span></div>
+          <div class="node"><span class="node-index">03</span><span>变量与运算<small>让数据成为角色属性</small></span></div>
+          <div class="node"><span class="node-index">04</span><span>条件与循环<small>把逻辑写进世界规则</small></span></div>
+          <div class="node"><span class="node-index">05</span><span>函数、数组、指针<small>解锁更高阶的程序地图</small></span></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="lab" class="section" data-theme="lab" data-accent="#8a5cff" data-secondary="#38e8ff">
+      <div class="section-inner">
+        <div class="section-title reveal">
+          <h2>在线代码实验室</h2>
+          <p>textarea 实时写入 iframe srcdoc，语法高亮按需加载 Prism.js，失败时保留纯文本高亮降级。</p>
+        </div>
+        <div class="editor-shell reveal">
+          <div class="editor-grid">
+            <div class="editor-pane">
+              <div class="editor-tools">
+                <span>index.html</span>
+                <div class="example-buttons">
+                  <button class="tiny-btn" type="button" data-example="hero">示例 A</button>
+                  <button class="tiny-btn" type="button" data-example="card">示例 B</button>
+                </div>
+              </div>
+              <textarea id="codeInput" class="code-input" spellcheck="false" aria-label="HTML 在线编辑器"></textarea>
+              <pre class="highlight"><code id="highlightCode"></code></pre>
+            </div>
+            <div class="editor-pane">
+              <div class="editor-tools">
+                <span>live-preview</span>
+                <span id="previewStatus">ready</span>
+              </div>
+              <iframe id="previewFrame" class="preview-frame" title="HTML 实时预览" sandbox="allow-scripts"></iframe>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="media" class="section" data-theme="media" data-accent="#38e8ff" data-secondary="#ff335c">
+      <div class="section-inner media-grid">
+        <div class="video-frame reveal" aria-label="游戏截图和视频预览">
+          <div class="game-screen">
+            <div class="sprite"></div>
+            <div class="game-terminal">printf("Hello, Code Awakener");<br />输出：Hello, Code Awakener</div>
+          </div>
+        </div>
+        <aside class="challenge reveal">
+          <div class="panel-head">
+            <span>challenge.sum</span>
+            <span id="challengeScore">0 combo</span>
+          </div>
+          <div id="challengeQuestion" class="challenge-display">7 + 8</div>
+          <input id="challengeAnswer" inputmode="numeric" autocomplete="off" placeholder="输入结果" aria-label="数字求和挑战答案" />
+          <div id="challengeStatus" class="challenge-status">等待验证</div>
+          <button id="newChallenge" class="secondary-btn" type="button">刷新挑战</button>
+        </aside>
+      </div>
+    </section>
+
+    <section id="author" class="section" data-theme="author" data-accent="#19ff95" data-secondary="#ffd166">
+      <div class="section-inner author-grid">
+        <article id="authorCard" class="author-card reveal" aria-label="作者档案互动区">
+          <pre class="ascii-avatar" aria-label="ASCII 头像">
+   ________  ___  ___       ___  ___  ___
+  /_  __/ / / / |/ (_)___  / _ \/ _ \/ _ \
+   / / / /_/ /    / / __/ / // / , _/ ___/
+  /_/  \____/_/|_/_/\__/ /____/_/|_/_/
+        KILL / HTML-CSS-JS AWAKENER
+          </pre>
+          <div class="identity-list">
+            <div class="identity-row"><strong>姓名</strong><span>杀戮</span><button class="tiny-btn copy-btn" type="button" data-copy="杀戮">复制</button></div>
+            <div class="identity-row"><strong>QQ</strong><span>3424636983</span><button class="tiny-btn copy-btn" type="button" data-copy="3424636983">复制</button></div>
+            <div class="identity-row"><strong>官方Q群</strong><span>414374792</span><button class="tiny-btn copy-btn" type="button" data-copy="414374792">复制</button></div>
+          </div>
+        </article>
+        <aside class="message-wall reveal" aria-label="社区留言墙">
+          <div class="panel-head">
+            <span>community.wall</span>
+            <span id="onlineStatus">checking</span>
+          </div>
+          <form id="messageForm" class="message-form">
+            <input id="messageInput" maxlength="80" autocomplete="off" placeholder="写一句留言" aria-label="社区留言" />
+            <button class="primary-btn" type="submit">发布</button>
+          </form>
+          <div id="messages" class="messages"></div>
+        </aside>
+      </div>
+    </section>
+
+    <section id="launch" class="section" data-theme="launch" data-accent="#ff335c" data-secondary="#38e8ff">
+      <div class="section-inner cta-layout">
+        <div class="cta-console reveal">
+          <h2>进入代码世界</h2>
+          <p>官网负责点燃第一眼，游戏负责把每一次编译都变成冒险。点击下方入口进入本项目游戏。</p>
+          <div class="hero-actions">
+            <a class="primary-btn" href="./programming-rpg-c-basics.html">▶ 打开游戏</a>
+            <a class="secondary-btn" href="#hero">返回首页</a>
+          </div>
+        </div>
+        <aside class="credits reveal" aria-label="制作人员名单">
+          <h3>制作人员名单</h3>
+          <div class="credit-line"><span>制作 / 作者</span><strong>杀戮</strong></div>
+          <div class="credit-line"><span>QQ</span><strong>3424636983</strong></div>
+          <div class="credit-line"><span>官方Q群</span><strong>414374792</strong></div>
+          <div class="credit-line"><span>项目</span><strong>代码觉醒者</strong></div>
+        </aside>
+      </div>
+    </section>
+  </main>
+
+  <button class="float-contact" id="floatContact" type="button" aria-label="复制作者QQ群信息">
+    <strong>杀戮 · QQ 3424636983</strong>
+    <span>官方Q群 414374792 · 点击复制群号</span>
+  </button>
+
+  <div id="terminalOverlay" class="terminal-overlay" aria-hidden="true">
+    <div class="command-window" role="dialog" aria-modal="true" aria-label="隐藏命令行终端">
+      <div class="panel-head">
+        <span>hidden-terminal</span>
+        <button id="closeTerminal" class="tiny-btn" type="button">close</button>
+      </div>
+      <div id="terminalLog" class="terminal-log"></div>
+      <label class="command-line">
+        <span>&gt;</span>
+        <input id="terminalInput" autocomplete="off" spellcheck="false" aria-label="隐藏终端命令输入" />
+      </label>
+    </div>
+  </div>
+
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+  <script type="module">
+    const AUTHOR = Object.freeze({
+      name: "杀戮",
+      qq: "3424636983",
+      group: "414374792",
+      gameHref: "./programming-rpg-c-basics.html"
+    });
+
+    const $ = (selector, root = document) => root.querySelector(selector);
+    const $$ = (selector, root = document) => Array.from(root.querySelectorAll(selector));
+    const prefersReduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const pointerFine = matchMedia("(pointer: fine)").matches;
+    const lowPower = prefersReduced || innerWidth <= 880 || screen.width <= 880 || /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent) || (navigator.hardwareConcurrency || 8) <= 4 || (navigator.deviceMemory || 8) <= 4;
+    const supportsAudio = Boolean(window.AudioContext || window.webkitAudioContext);
+
+    if (prefersReduced) document.body.classList.add("reduced-motion");
+    if (lowPower) document.body.classList.add("low-power");
+
+    const themes = {
+      hero: { keywords: ["HTML", "CSS", "JavaScript", "Canvas", "Three.js", "Web Audio", "iframe", "srcdoc", "DOM", "GPU"], speed: 1 },
+      features: { keywords: ["compile", "quest", "debug", "save", "offline", "chapter", "mentor", "reward", "RPG", "static"], speed: 1.16 },
+      knowledge: { keywords: ["printf", "int", "for", "while", "if", "array", "pointer", "struct", "function", "stdio.h"], speed: 1.04 },
+      lab: { keywords: ["textarea", "Prism", "preview", "sandbox", "syntax", "token", "style", "script", "module", "import"], speed: 1.26 },
+      media: { keywords: ["sprite", "scene", "dialog", "challenge", "sum", "combo", "quest", "output", "frame", "hud"], speed: 1.35 },
+      author: { keywords: ["杀戮", "3424636983", "414374792", "ASCII", "profile", "copy", "community", "localStorage", "QQ", "group"], speed: 1.12 },
+      launch: { keywords: ["GitHub Pages", "Vercel", "static", "open", "play", "join", "share", "deploy", "build", "index.html"], speed: 1.44 }
+    };
+
+    let activeTheme = "hero";
+    let matrixSpeed = 1;
+    let threeHooks = null;
+    let prismRef = null;
+    let logoClicks = 0;
+    let authorClicks = 0;
+    let combo = 0;
+    let challenge = { a: 7, b: 8 };
+    let keyBuffer = "";
+    let konamiIndex = 0;
+    const konami = ["ArrowUp","ArrowUp","ArrowDown","ArrowDown","ArrowLeft","ArrowRight","ArrowLeft","ArrowRight","b","a"];
+
+    function showToast(message) {
+      const toast = $("#toast");
+      toast.textContent = message;
+      toast.classList.add("show");
+      clearTimeout(showToast.timer);
+      showToast.timer = setTimeout(() => toast.classList.remove("show"), 2200);
+    }
+
+    function escapeHtml(value) {
+      return String(value).replace(/[&<>"']/g, (char) => ({
+        "&": "&amp;",
+        "<": "&lt;",
+        ">": "&gt;",
+        '"': "&quot;",
+        "'": "&#39;"
+      }[char]));
+    }
+
+    function bootLoader() {
+      const pct = $("#compilePct");
+      const text = $("#compileText");
+      const phrases = ["正在编译代码...", "链接 Canvas 层...", "初始化交互模块...", "加载官网入口..."];
+      let value = 0;
+      const timer = setInterval(() => {
+        value = Math.min(100, value + 34 + Math.round(Math.random() * 18));
+        pct.textContent = `${value}%`;
+        text.textContent = phrases[Math.floor(value / 30)] || phrases.at(-1);
+        if (value >= 100) {
+          clearInterval(timer);
+          setTimeout(() => $("#loading").classList.add("done"), 80);
+        }
+      }, 32);
+    }
+
+    function installConsoleArt() {
+      console.log(`%c
+  ______          __        ___              __
+ / ____/___  ____/ /__     /   | _      __  / /_____  ____  ___  _____
+/ /   / __ \\/ __  / _ \\   / /| || | /| / / / //_/ _ \\/ __ \\/ _ \\/ ___/
+/ /___/ /_/ / /_/ /  __/  / ___ || |/ |/ / / ,< /  __/ / / /  __/ /
+\\____/\\____/\\__,_/\\___/  /_/  |_||__/|__/ /_/|_|\\___/_/ /_/\\___/_/
+
+作者：${AUTHOR.name} | QQ：${AUTHOR.qq} | 官方Q群：${AUTHOR.group}
+`, "color:#19ff95;background:#030712;font-weight:700");
+    }
+
+    function buildKeywordPool() {
+      const base = [
+        "HTML", "CSS", "JavaScript", "Canvas", "WebGL", "Three.js", "GSAP", "Prism.js", "Web Audio", "DOM", "BOM",
+        "querySelector", "addEventListener", "requestAnimationFrame", "localStorage", "iframe", "srcdoc", "module", "import",
+        "export", "async", "await", "Promise", "fetch", "Array", "Object", "Map", "Set", "class", "function", "const",
+        "let", "var", "if", "else", "switch", "for", "while", "do", "break", "continue", "return", "try", "catch",
+        "finally", "throw", "new", "this", "prototype", "event", "pointer", "touch", "keyboard", "focus", "blur",
+        "transform", "opacity", "filter", "backdrop", "grid", "flex", "position", "z-index", "clip-path", "mask",
+        "linear-gradient", "radial-gradient", "custom-property", "calc", "clamp", "media-query", "container", "GPU",
+        "C", "printf", "scanf", "stdio.h", "int", "float", "char", "double", "void", "main", "include", "define",
+        "pointer", "array", "struct", "enum", "malloc", "free", "stack", "heap", "compile", "link", "debug", "syntax"
+      ];
+      const suffix = ["layout", "state", "render", "token", "node", "scene", "loop", "buffer", "shader", "audio", "route", "quest"];
+      const pool = [];
+      for (const item of base) pool.push(item);
+      for (let i = 0; pool.length < 260; i += 1) {
+        pool.push(`${base[i % base.length]}.${suffix[(i * 7) % suffix.length]}`);
+      }
+      return pool;
+    }
+
+    const allKeywords = buildKeywordPool();
+
+    function initKeywordMatrix() {
+      const canvas = $("#keywordLayer");
+      const ctx = canvas.getContext("2d", { alpha: true });
+      if (!ctx) return;
+      const state = {
+        width: 0,
+        height: 0,
+        dpr: 1,
+        particles: [],
+        count: lowPower ? 36 : 360,
+        pool: allKeywords
+      };
+
+      function resize() {
+        state.dpr = Math.min(1.6, window.devicePixelRatio || 1);
+        state.width = Math.floor(innerWidth * state.dpr);
+        state.height = Math.floor(innerHeight * state.dpr);
+        canvas.width = state.width;
+        canvas.height = state.height;
+        canvas.style.width = "100%";
+        canvas.style.height = "100%";
+      }
+
+      function resetParticle(p, front = false) {
+        const rangeX = state.width * 0.9;
+        const rangeY = state.height * 0.72;
+        p.x = (Math.random() - 0.5) * rangeX;
+        p.y = (Math.random() - 0.5) * rangeY;
+        p.z = front ? Math.random() * 240 + 30 : Math.random() * 900 + 80;
+        p.speed = 1.2 + Math.random() * 3.5;
+        p.text = state.pool[Math.floor(Math.random() * state.pool.length)];
+        p.hue = Math.random();
+      }
+
+      function applyTheme(name) {
+        const theme = themes[name] || themes.hero;
+        state.pool = allKeywords.concat(theme.keywords);
+        matrixSpeed = theme.speed;
+      }
+
+      function tick() {
+        ctx.clearRect(0, 0, state.width, state.height);
+        const cx = state.width / 2;
+        const cy = state.height / 2;
+        const accent = getComputedStyle(document.documentElement).getPropertyValue("--section-accent").trim() || "#38e8ff";
+        const secondary = getComputedStyle(document.documentElement).getPropertyValue("--section-secondary").trim() || "#8a5cff";
+        for (const p of state.particles) {
+          p.z -= p.speed * matrixSpeed * (lowPower ? 1.15 : 1);
+          if (p.z < 18) resetParticle(p);
+          const scale = 360 / p.z;
+          const x = cx + p.x * scale;
+          const y = cy + p.y * scale;
+          if (x < -220 || x > state.width + 220 || y < -60 || y > state.height + 60) {
+            resetParticle(p);
+            continue;
+          }
+          const alpha = Math.max(0.08, Math.min(0.92, 1 - p.z / 940));
+          const size = Math.max(10, Math.min(25, 10 * scale));
+          ctx.font = `${size}px ui-monospace, Consolas, monospace`;
+          ctx.fillStyle = p.hue > 0.5 ? accent : secondary;
+          ctx.globalAlpha = alpha;
+          ctx.fillText(p.text, x, y);
+        }
+        ctx.globalAlpha = 1;
+        if (!lowPower) requestAnimationFrame(tick);
+      }
+
+      resize();
+      state.particles = Array.from({ length: state.count }, () => {
+        const p = {};
+        resetParticle(p, true);
+        return p;
+      });
+      applyTheme(activeTheme);
+      addEventListener("resize", resize, { passive: true });
+      requestAnimationFrame(tick);
+      return { applyTheme };
+    }
+
+    function initKineticLayer() {
+      if (lowPower || prefersReduced) return;
+      const canvas = $("#kineticLayer");
+      const ctx = canvas.getContext("2d", { alpha: true });
+      if (!ctx) return;
+      const state = { width: 0, height: 0, dpr: 1, tick: 0, scroll: 0 };
+
+      function resize() {
+        state.dpr = Math.min(1.5, devicePixelRatio || 1);
+        state.width = Math.floor(innerWidth * state.dpr);
+        state.height = Math.floor(innerHeight * state.dpr);
+        canvas.width = state.width;
+        canvas.height = state.height;
+      }
+
+      function draw(now) {
+        state.tick += 1;
+        const accent = getComputedStyle(document.documentElement).getPropertyValue("--section-accent").trim() || "#38e8ff";
+        const secondary = getComputedStyle(document.documentElement).getPropertyValue("--section-secondary").trim() || "#8a5cff";
+        const cx = state.width / 2;
+        const cy = state.height / 2;
+        ctx.clearRect(0, 0, state.width, state.height);
+        ctx.lineWidth = 1 * state.dpr;
+        for (let ring = 0; ring < 11; ring += 1) {
+          const radius = (90 + ring * 56 + (now * 0.018 + ring * 18) % 54) * state.dpr;
+          const alpha = Math.max(0, 0.18 - ring * 0.018);
+          ctx.strokeStyle = ring % 2 ? secondary : accent;
+          ctx.globalAlpha = alpha;
+          ctx.beginPath();
+          ctx.ellipse(cx, cy, radius * 1.7, radius * 0.38, Math.sin(now * 0.00018) * 0.22, 0, Math.PI * 2);
+          ctx.stroke();
+        }
+        ctx.globalAlpha = 0.2;
+        ctx.strokeStyle = accent;
+        for (let i = 0; i < 34; i += 1) {
+          const y = ((i * 91 + now * 0.035) % (state.height + 140)) - 70;
+          const offset = Math.sin(now * 0.001 + i) * 80 * state.dpr;
+          ctx.beginPath();
+          ctx.moveTo(0, y);
+          ctx.lineTo(cx + offset, y + 80 * state.dpr);
+          ctx.lineTo(state.width, y + 12 * state.dpr);
+          ctx.stroke();
+        }
+        ctx.globalAlpha = 1;
+        requestAnimationFrame(draw);
+      }
+
+      resize();
+      addEventListener("resize", resize, { passive: true });
+      requestAnimationFrame(draw);
+    }
+
+    function initEnergyLayer() {
+      if (lowPower || prefersReduced) return;
+      const canvas = $("#energyLayer");
+      const ctx = canvas.getContext("2d", { alpha: true });
+      if (!ctx) return;
+      const state = { width: 0, height: 0, dpr: 1, sparks: [] };
+      function resize() {
+        state.dpr = Math.min(1.5, devicePixelRatio || 1);
+        state.width = Math.floor(innerWidth * state.dpr);
+        state.height = Math.floor(innerHeight * state.dpr);
+        canvas.width = state.width;
+        canvas.height = state.height;
+        const count = 120;
+        state.sparks = Array.from({ length: count }, () => ({
+          x: Math.random() * state.width,
+          y: Math.random() * state.height,
+          vx: (Math.random() - 0.5) * 0.7 * state.dpr,
+          vy: (1.4 + Math.random() * 4.2) * state.dpr,
+          len: (18 + Math.random() * 90) * state.dpr,
+          hue: Math.random()
+        }));
+      }
+      function draw(now) {
+        const accent = getComputedStyle(document.documentElement).getPropertyValue("--section-accent").trim() || "#38e8ff";
+        const green = getComputedStyle(document.documentElement).getPropertyValue("--green").trim() || "#19ff95";
+        ctx.clearRect(0, 0, state.width, state.height);
+        ctx.lineWidth = 1 * state.dpr;
+        for (const s of state.sparks) {
+          s.x += s.vx + Math.sin(now * 0.001 + s.y * 0.01) * 0.32 * state.dpr;
+          s.y += s.vy;
+          if (s.y - s.len > state.height) {
+            s.y = -s.len;
+            s.x = Math.random() * state.width;
+          }
+          ctx.globalAlpha = 0.12 + s.hue * 0.28;
+          ctx.strokeStyle = s.hue > 0.5 ? green : accent;
+          ctx.beginPath();
+          ctx.moveTo(s.x, s.y);
+          ctx.lineTo(s.x + s.vx * 7, s.y - s.len);
+          ctx.stroke();
+        }
+        ctx.globalAlpha = 1;
+        requestAnimationFrame(draw);
+      }
+      resize();
+      addEventListener("resize", resize, { passive: true });
+      requestAnimationFrame(draw);
+    }
+
+    async function initGalaxy() {
+      if (lowPower || innerWidth <= 880 || !HTMLCanvasElement.prototype.getContext) return;
+      try {
+        const THREE = await import("https://cdn.jsdelivr.net/npm/three@0.179.1/build/three.module.js");
+        const canvas = $("#galaxyLayer");
+        const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: false, powerPreference: "high-performance" });
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(62, innerWidth / innerHeight, 0.1, 120);
+        camera.position.z = 7;
+        const count = 5000;
+        const positions = new Float32Array(count * 3);
+        const colors = new Float32Array(count * 3);
+        const palette = [new THREE.Color("#38e8ff"), new THREE.Color("#8a5cff"), new THREE.Color("#19ff95")];
+        for (let i = 0; i < count; i += 1) {
+          const radius = 1.6 + Math.random() * 12;
+          const arm = (i % 5) * 1.256 + radius * 0.14;
+          const spin = arm + Math.random() * 0.8;
+          positions[i * 3] = Math.cos(spin) * radius + (Math.random() - 0.5) * 0.9;
+          positions[i * 3 + 1] = (Math.random() - 0.5) * 2.8;
+          positions[i * 3 + 2] = Math.sin(spin) * radius + (Math.random() - 0.5) * 0.9;
+          const c = palette[i % palette.length];
+          colors[i * 3] = c.r;
+          colors[i * 3 + 1] = c.g;
+          colors[i * 3 + 2] = c.b;
+        }
+        const geometry = new THREE.BufferGeometry();
+        geometry.setAttribute("position", new THREE.BufferAttribute(positions, 3));
+        geometry.setAttribute("color", new THREE.BufferAttribute(colors, 3));
+        const material = new THREE.PointsMaterial({
+          size: 0.025,
+          vertexColors: true,
+          transparent: true,
+          opacity: 0.9,
+          blending: THREE.AdditiveBlending,
+          depthWrite: false
+        });
+        const points = new THREE.Points(geometry, material);
+        scene.add(points);
+
+        function resize() {
+          const dpr = Math.min(1.45, devicePixelRatio || 1);
+          renderer.setPixelRatio(dpr);
+          renderer.setSize(innerWidth, innerHeight, false);
+          camera.aspect = innerWidth / innerHeight;
+          camera.updateProjectionMatrix();
+        }
+
+        function animate() {
+          points.rotation.y += 0.0008;
+          points.rotation.x = Math.sin(performance.now() * 0.00012) * 0.12;
+          renderer.render(scene, camera);
+          requestAnimationFrame(animate);
+        }
+
+        resize();
+        addEventListener("resize", resize, { passive: true });
+        animate();
+        threeHooks = {
+          applyTheme(name) {
+            const theme = themes[name] || themes.hero;
+            const color = new THREE.Color(theme.accent || getComputedStyle(document.documentElement).getPropertyValue("--section-accent").trim());
+            material.color = color;
+          }
+        };
+      } catch (error) {
+        document.body.classList.add("low-power");
+      }
+    }
+
+    function initCursor() {
+      if (!pointerFine || prefersReduced) return;
+      let trailAt = 0;
+      addEventListener("pointermove", (event) => {
+        document.documentElement.style.setProperty("--cursor-x", `${event.clientX}px`);
+        document.documentElement.style.setProperty("--cursor-y", `${event.clientY}px`);
+        if (performance.now() - trailAt > 34) {
+          trailAt = performance.now();
+          const dot = document.createElement("span");
+          dot.className = "trail-dot";
+          dot.style.left = `${event.clientX}px`;
+          dot.style.top = `${event.clientY}px`;
+          $("#trailHost").appendChild(dot);
+          setTimeout(() => dot.remove(), 760);
+        }
+      }, { passive: true });
+    }
+
+    function initSections(keywordMatrix) {
+      const root = document.documentElement;
+      const observer = new IntersectionObserver((entries) => {
+        const visible = entries
+          .filter((entry) => entry.isIntersecting)
+          .sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
+        if (!visible) return;
+        activeTheme = visible.target.dataset.theme || "hero";
+        root.style.setProperty("--section-accent", visible.target.dataset.accent || "#38e8ff");
+        root.style.setProperty("--section-secondary", visible.target.dataset.secondary || "#8a5cff");
+        keywordMatrix?.applyTheme(activeTheme);
+        threeHooks?.applyTheme(activeTheme);
+      }, { threshold: [0.22, 0.48, 0.7] });
+      $$(".section").forEach((section) => observer.observe(section));
+
+      const revealObserver = new IntersectionObserver((entries) => {
+        for (const entry of entries) {
+          if (entry.isIntersecting) entry.target.classList.add("in");
+          if (entry.isIntersecting && entry.target.id === "lab") enhanceHighlight();
+        }
+      }, { threshold: 0.16 });
+      $$(".reveal").forEach((node) => revealObserver.observe(node));
+
+      if (!prefersReduced && !lowPower) {
+        requestIdleCallback(async () => {
+          try {
+            const mod = await import("https://esm.sh/gsap@3.13.0?bundle");
+            const gsap = mod.gsap || mod.default?.gsap || mod.default || window.gsap;
+            gsap?.to(".brand-mark", { rotate: 360, duration: 18, repeat: -1, ease: "none" });
+          } catch {}
+        }, { timeout: 1800 });
+      }
+    }
+
+    const examples = {
+      hero: `<!doctype html>
+<html lang="zh-CN">
+<body style="margin:0;background:#06111f;color:#e8fbff;font-family:system-ui">
+  <main style="min-height:100vh;display:grid;place-items:center;text-align:center">
+    <section>
+      <h1 style="font-size:48px">Hello, HTML World</h1>
+      <p>CSS 让文字发光，JS 让世界响应。</p>
+      <button onclick="document.body.style.background='#102a43'">点亮场景</button>
+    </section>
+  </main>
+</body>
+</html>`,
+      card: `<!doctype html>
+<html lang="zh-CN">
+<body style="margin:0;background:#030712;color:#fff;font-family:Consolas,monospace">
+  <div style="padding:32px">
+    <h1>任务卡</h1>
+    <p id="out">等待编译...</p>
+    <script>
+      const score = 7 + 8;
+      document.querySelector("#out").textContent = "输出：" + score;
+    <\/script>
+  </div>
+</body>
+</html>`
+    };
+
+    async function loadPrism() {
+      if (prismRef) return prismRef;
+      try {
+        const mod = await import("https://esm.sh/prismjs@1.30.0?bundle");
+        prismRef = mod.default || mod.Prism || window.Prism;
+        return prismRef;
+      } catch {
+        prismRef = { highlight: (code) => escapeHtml(code), languages: { markup: true } };
+        return prismRef;
+      }
+    }
+
+    function updateEditor() {
+      const code = $("#codeInput").value;
+      $("#previewFrame").srcdoc = code;
+      $("#previewStatus").textContent = `${code.length} chars`;
+      $("#highlightCode").innerHTML = escapeHtml(code);
+      if (prismRef) enhanceHighlight();
+    }
+
+    async function enhanceHighlight() {
+      const code = $("#codeInput")?.value || "";
+      if (!code) return;
+      const prism = await loadPrism();
+      const grammar = prism.languages?.markup || prism.languages?.html;
+      $("#highlightCode").innerHTML = grammar ? prism.highlight(code, grammar, "markup") : escapeHtml(code);
+    }
+
+    function initEditor() {
+      $("#codeInput").value = examples.hero;
+      $("#codeInput").addEventListener("input", () => {
+        clearTimeout(initEditor.timer);
+        initEditor.timer = setTimeout(updateEditor, 90);
+      });
+      $$(".tiny-btn[data-example]").forEach((button) => {
+        button.addEventListener("click", () => {
+          playSfx("click");
+          $("#codeInput").value = examples[button.dataset.example] || examples.hero;
+          updateEditor();
+          enhanceHighlight();
+        });
+      });
+      $("#codeInput").addEventListener("focus", enhanceHighlight, { once: true });
+      updateEditor();
+    }
+
+    function newChallenge() {
+      challenge = {
+        a: Math.floor(6 + Math.random() * 38),
+        b: Math.floor(6 + Math.random() * 38)
+      };
+      $("#challengeQuestion").textContent = `${challenge.a} + ${challenge.b}`;
+      $("#challengeAnswer").value = "";
+      $("#challengeStatus").textContent = "等待验证";
+    }
+
+    function initChallenge() {
+      $("#challengeAnswer").addEventListener("input", () => {
+        const value = Number($("#challengeAnswer").value.trim());
+        const expected = challenge.a + challenge.b;
+        if (!$("#challengeAnswer").value.trim()) {
+          $("#challengeStatus").textContent = "等待验证";
+          return;
+        }
+        if (value === expected) {
+          combo += 1;
+          $("#challengeStatus").textContent = `通过：${challenge.a} + ${challenge.b} = ${expected}`;
+          $("#challengeScore").textContent = `${combo} combo`;
+          playSfx("success");
+          setTimeout(newChallenge, 720);
+        } else {
+          $("#challengeStatus").textContent = value > expected ? "偏大" : "偏小";
+          playSfx("hover");
+        }
+      });
+      $("#newChallenge").addEventListener("click", () => {
+        playSfx("click");
+        newChallenge();
+      });
+      newChallenge();
+    }
+
+    function getMessages() {
+      const fallback = [
+        { name: "玩家-001", text: "这个官网像游戏启动器，第一眼就想点进去。" },
+        { name: "编译旅人", text: "已加入官方Q群 414374792，等后续世界更新。" },
+        { name: "HTML学徒", text: "在线编辑器能直接预览，适合新手试代码。" }
+      ];
+      try {
+        return JSON.parse(localStorage.getItem("code-awakener-site-messages") || "null") || fallback;
+      } catch {
+        return fallback;
+      }
+    }
+
+    function saveMessages(messages) {
+      localStorage.setItem("code-awakener-site-messages", JSON.stringify(messages.slice(0, 8)));
+    }
+
+    function renderMessages() {
+      const host = $("#messages");
+      host.innerHTML = getMessages().map((message) => `
+        <article class="message">
+          <strong>${escapeHtml(message.name)}</strong>
+          <p>${escapeHtml(message.text)}</p>
+        </article>
+      `).join("");
+    }
+
+    function initMessages() {
+      $("#messageForm").addEventListener("submit", (event) => {
+        event.preventDefault();
+        const input = $("#messageInput");
+        const text = input.value.trim();
+        if (!text) return;
+        const messages = [{ name: "本地玩家", text }, ...getMessages()];
+        saveMessages(messages);
+        input.value = "";
+        renderMessages();
+        playSfx("success");
+      });
+      renderMessages();
+    }
+
+    async function copyText(value, label = "已复制") {
+      try {
+        await navigator.clipboard.writeText(value);
+        showToast(`${label}：${value}`);
+      } catch {
+        showToast(`请手动复制：${value}`);
+      }
+    }
+
+    function initAuthor() {
+      $$(".copy-btn").forEach((button) => {
+        button.addEventListener("click", () => {
+          playSfx("click");
+          copyText(button.dataset.copy);
+        });
+      });
+      $("#floatContact").addEventListener("click", () => {
+        playSfx("click");
+        copyText(AUTHOR.group, "官方Q群");
+      });
+      $("#authorCard").addEventListener("click", () => {
+        authorClicks += 1;
+        if (authorClicks % 3 === 0) {
+          $("#authorCard").classList.add("flame");
+          playSfx("success");
+          showToast("火焰特效已触发");
+          setTimeout(() => $("#authorCard").classList.remove("flame"), 2200);
+        }
+      });
+    }
+
+    const audio = {
+      ctx: null,
+      master: null,
+      muted: localStorage.getItem("code-awakener-muted") === "1",
+      timer: null,
+      step: 0,
+      started: false,
+      media: null
+    };
+    const AUDIO_MASTER_GAIN = 0.16;
+    const AUDIO_MEDIA_VOLUME = 0.18;
+
+    window.__codeAwakenerAudioDebug = () => ({
+      started: audio.started,
+      muted: audio.muted,
+      mediaPaused: audio.media ? audio.media.paused : null,
+      mediaMuted: audio.media ? audio.media.muted : null,
+      mediaVolume: audio.media ? audio.media.volume : null,
+      mediaCurrentTime: audio.media ? audio.media.currentTime : null,
+      contextState: audio.ctx ? audio.ctx.state : null
+    });
+
+    function initAudio(force = false) {
+      if (audio.muted) return;
+      audio.started = true;
+      if (audio.ctx || !supportsAudio) {
+        startMediaLoop(force);
+        if (force && !supportsAudio) showToast("音乐 ON：当前浏览器使用 WAV 循环播放。");
+        return;
+      }
+      const AudioCtx = window.AudioContext || window.webkitAudioContext;
+      audio.ctx = new AudioCtx();
+      audio.master = audio.ctx.createGain();
+      audio.master.gain.value = AUDIO_MASTER_GAIN;
+      audio.master.connect(audio.ctx.destination);
+      audio.ctx.resume?.();
+      if (force) {
+        playStartupFanfare();
+        showToast("音频引擎 ON：长段落背景音乐已启动");
+      }
+      startMediaLoop(force);
+    }
+
+    function buildWavLoopDataUri() {
+      const sampleRate = 14000;
+      const seconds = 28.8;
+      const total = Math.floor(sampleRate * seconds);
+      const bytes = new Uint8Array(44 + total * 2);
+      const view = new DataView(bytes.buffer);
+      const writeString = (offset, value) => {
+        for (let i = 0; i < value.length; i += 1) bytes[offset + i] = value.charCodeAt(i);
+      };
+      writeString(0, "RIFF");
+      view.setUint32(4, 36 + total * 2, true);
+      writeString(8, "WAVE");
+      writeString(12, "fmt ");
+      view.setUint32(16, 16, true);
+      view.setUint16(20, 1, true);
+      view.setUint16(22, 1, true);
+      view.setUint32(24, sampleRate, true);
+      view.setUint32(28, sampleRate * 2, true);
+      view.setUint16(32, 2, true);
+      view.setUint16(34, 16, true);
+      writeString(36, "data");
+      view.setUint32(40, total * 2, true);
+      const barDur = seconds / 16;
+      const chords = [
+        [196, 247, 294, 392],
+        [220, 262, 330, 440],
+        [174, 220, 262, 349],
+        [196, 247, 311, 392],
+        [147, 196, 247, 330],
+        [165, 208, 247, 330],
+        [185, 233, 294, 370],
+        [196, 247, 294, 392]
+      ];
+      const melody = [392, 494, 587, 0, 523, 659, 587, 494, 440, 523, 659, 784, 659, 587, 523, 0, 330, 392, 494, 587, 494, 440, 392, 0, 370, 494, 587, 740, 659, 587, 494, 392];
+      const envelope = (x, attack = 0.08, release = 0.22) => Math.min(1, x / attack, (1 - x) / release);
+      const wave = (freq, t, phase = 0) => Math.sin(Math.PI * 2 * freq * t + phase);
+      const softClip = (value) => Math.tanh(value * 1.25);
+      for (let i = 0; i < total; i += 1) {
+        const t = i / sampleRate;
+        const bar = Math.floor(t / barDur);
+        const beat = (t % barDur) / barDur;
+        const step = Math.floor(t / (barDur / 8));
+        const localStep = (t % (barDur / 8)) / (barDur / 8);
+        const chord = chords[bar % chords.length];
+        const note = melody[(step + Math.floor(bar / 4)) % melody.length];
+        const masterEnv = Math.min(1, t / 2.2, (seconds - t) / 2.8);
+        const padLfo = 0.72 + 0.18 * wave(0.08, t);
+        const pad = chord.reduce((sum, freq, index) => sum + wave(freq, t, index * 0.85) * (0.035 / (index + 1)), 0) * padLfo;
+        const bassEnv = envelope((beat * 4) % 1, 0.04, 0.5);
+        const bass = wave(chord[0] / 2, t) * 0.072 * bassEnv + wave(chord[0] / 4, t) * 0.035;
+        const leadEnv = note ? envelope(localStep, 0.05, 0.38) : 0;
+        const lead = note ? (wave(note, t) * 0.052 + wave(note * 2, t) * 0.018) * leadEnv : 0;
+        const arpFreq = chord[step % chord.length] * (step % 6 === 0 ? 3 : 2);
+        const arp = (wave(arpFreq, t) + 0.35 * wave(arpFreq * 2, t)) * 0.032 * envelope(localStep, 0.025, 0.22);
+        const beatStep = Math.floor(beat * 8);
+        const beatPos = (beat * 8) % 1;
+        const kick = (beatStep === 0 || beatStep === 4) ? wave(55 + 38 * (1 - beatPos), t) * 0.08 * Math.pow(1 - beatPos, 2.8) : 0;
+        const noiseSeed = Math.sin(i * 12.9898) * 43758.5453;
+        const noise = (noiseSeed - Math.floor(noiseSeed)) * 2 - 1;
+        const hat = (beatStep === 2 || beatStep === 6) ? noise * 0.018 * Math.pow(1 - beatPos, 3) : 0;
+        const shimmer = wave(1175 + 12 * wave(0.11, t), t) * 0.012 * (0.5 + 0.5 * wave(0.17, t));
+        const sample = softClip((pad + bass + lead + arp + kick + hat + shimmer) * masterEnv);
+        view.setInt16(44 + i * 2, sample * 26000, true);
+      }
+      let binary = "";
+      const chunk = 0x8000;
+      for (let i = 0; i < bytes.length; i += chunk) {
+        binary += String.fromCharCode(...bytes.subarray(i, i + chunk));
+      }
+      return `data:audio/wav;base64,${btoa(binary)}`;
+    }
+
+    function primeMediaLoop() {
+      if (!audio.media) {
+        audio.media = new Audio(buildWavLoopDataUri());
+        audio.media.loop = true;
+        audio.media.volume = AUDIO_MEDIA_VOLUME;
+        audio.media.preload = "auto";
+      }
+      return audio.media;
+    }
+
+    function startMediaLoop(force = false) {
+      if (audio.muted) return;
+      primeMediaLoop();
+      audio.media.muted = false;
+      audio.media.volume = AUDIO_MEDIA_VOLUME;
+      const playResult = audio.media.play();
+      if (playResult?.then) {
+        playResult.then(() => stopFallbackMusic()).catch(() => {});
+      }
+      if (playResult?.catch) {
+        playResult.catch(() => {
+          startMusic();
+          if (force) showToast("浏览器暂时拦截 WAV，已切到轻量合成音乐。");
+        });
+      }
+    }
+
+    function stopFallbackMusic() {
+      if (!audio.timer) return;
+      clearInterval(audio.timer);
+      audio.timer = null;
+    }
+
+    function tone(freq, duration = 0.08, type = "square", gain = 0.05) {
+      if (!audio.ctx || audio.muted) return;
+      const osc = audio.ctx.createOscillator();
+      const node = audio.ctx.createGain();
+      osc.type = type;
+      osc.frequency.value = freq;
+      node.gain.value = gain;
+      node.gain.exponentialRampToValueAtTime(0.0001, audio.ctx.currentTime + duration);
+      osc.connect(node);
+      node.connect(audio.master);
+      osc.start();
+      osc.stop(audio.ctx.currentTime + duration);
+    }
+
+    function visualImpact(strength = 1) {
+      if (prefersReduced) return;
+      document.body.classList.remove("beat");
+      void document.body.offsetWidth;
+      document.body.classList.add("beat");
+      setTimeout(() => document.body.classList.remove("beat"), 170);
+      if (strength > 1.2) navigator.vibrate?.(24);
+    }
+
+    function playStartupFanfare() {
+      [262, 330, 392, 523, 784].forEach((freq, index) => {
+        setTimeout(() => tone(freq, 0.18, index % 2 ? "square" : "triangle", 0.052), index * 95);
+      });
+      setTimeout(() => tone(98, 0.42, "sawtooth", 0.045), 80);
+      visualImpact(1.5);
+    }
+
+    function playSfx(kind) {
+      if (!audio.started && kind === "hover") return;
+      initAudio();
+      if (kind === "success") {
+        tone(660, 0.07, "triangle", 0.024);
+        setTimeout(() => tone(990, 0.09, "sine", 0.018), 82);
+      } else if (kind === "click") {
+        tone(360, 0.045, "triangle", 0.014);
+      } else {
+        tone(220, 0.035, "sine", 0.009);
+      }
+    }
+
+    function startMusic() {
+      if (audio.timer || !audio.ctx) return;
+      const notes = [392, 0, 494, 587, 0, 523, 659, 587, 440, 0, 523, 659, 784, 0, 587, 494, 330, 392, 0, 494, 587, 494, 440, 392, 370, 0, 494, 587, 740, 659, 587, 0];
+      const bass = [98, 147, 123, 196, 82, 165, 92, 196];
+      audio.timer = setInterval(() => {
+        if (audio.muted || document.hidden) return;
+        const step = audio.step;
+        const note = notes[step % notes.length];
+        const bassNote = bass[step % bass.length];
+        audio.step += 1;
+        if (note) tone(note, 0.12, "triangle", 0.02);
+        if (step % 2 === 0) tone(bassNote, 0.18, "sine", 0.018);
+        if (step % 4 === 0) tone(74, 0.04, "sine", 0.012);
+        if (step % 8 === 0) visualImpact(0.8);
+      }, 190);
+    }
+
+    function initAudioControls() {
+      const button = $("#muteButton");
+      function render() {
+        if (audio.muted) {
+          button.innerHTML = '<span class="audio-state">OFF</span>';
+        } else if (audio.started) {
+          button.innerHTML = '<span class="audio-bars" aria-hidden="true"><i></i><i></i><i></i><i></i></span><span class="audio-state">ON</span>';
+        } else {
+          button.innerHTML = '<span class="audio-state">MUS</span>';
+        }
+        button.setAttribute("aria-label", audio.muted ? "开启音效" : audio.started ? "静音" : "启动背景音乐");
+      }
+      render();
+      button.addEventListener("click", () => {
+        if (!audio.started && !audio.muted) {
+          initAudio(true);
+          render();
+          return;
+        }
+        audio.muted = !audio.muted;
+        localStorage.setItem("code-awakener-muted", audio.muted ? "1" : "0");
+        if (audio.media) audio.media.muted = audio.muted;
+        if (!audio.muted) {
+          initAudio(true);
+          startMediaLoop(true);
+          playSfx("success");
+        }
+        render();
+      });
+      const unlockAudio = (event) => {
+        if (event?.target?.closest?.("#muteButton")) return;
+        initAudio();
+        render();
+      };
+      addEventListener("pointerdown", unlockAudio, { once: true, passive: true });
+      addEventListener("keydown", unlockAudio, { once: true });
+    }
+
+    function initScrollProgress() {
+      const root = document.documentElement;
+      const update = () => {
+        const max = Math.max(1, root.scrollHeight - innerHeight);
+        const progress = Math.min(1, Math.max(0, scrollY / max));
+        root.style.setProperty("--scroll-progress", progress.toFixed(4));
+      };
+      addEventListener("scroll", update, { passive: true });
+      addEventListener("resize", update, { passive: true });
+      update();
+    }
+
+    function initControls() {
+      const overloadButton = $("#overloadButton");
+      if (!lowPower) document.body.classList.add("extreme-overload");
+      const renderOverload = () => {
+        overloadButton.textContent = document.body.classList.contains("extreme-overload") ? "MAX" : "ECO";
+      };
+      overloadButton.addEventListener("click", () => {
+        document.body.classList.toggle("extreme-overload");
+        renderOverload();
+        visualImpact(1.5);
+        playSfx("success");
+      });
+      renderOverload();
+      $("#fullscreenButton").addEventListener("click", toggleFullscreen);
+      addEventListener("keydown", (event) => {
+        if (event.key.toLowerCase() === "f" && !event.ctrlKey && !event.metaKey && !event.altKey) toggleFullscreen();
+      });
+      function updateOnline() {
+        $("#onlineStatus").textContent = navigator.onLine ? "online" : "offline";
+      }
+      addEventListener("online", updateOnline);
+      addEventListener("offline", updateOnline);
+      updateOnline();
+    }
+
+    function toggleFullscreen() {
+      playSfx("click");
+      if (!document.fullscreenElement) {
+        document.documentElement.requestFullscreen?.();
+      } else {
+        document.exitFullscreen?.();
+      }
+    }
+
+    function initEasterEggs() {
+      $("#logoButton").addEventListener("click", () => {
+        logoClicks += 1;
+        playSfx("click");
+        if (logoClicks >= 10) {
+          logoClicks = 0;
+          document.body.classList.toggle("debug");
+          showToast(`调试边框已切换 | QQ ${AUTHOR.qq}`);
+        }
+      });
+
+      addEventListener("keydown", (event) => {
+        if (event.ctrlKey && event.shiftKey && (event.key === "~" || event.code === "Backquote")) {
+          event.preventDefault();
+          openTerminal();
+          return;
+        }
+
+        const key = event.key.length === 1 ? event.key.toLowerCase() : event.key;
+        if (key === konami[konamiIndex]) {
+          konamiIndex += 1;
+          if (konamiIndex >= konami.length) {
+            konamiIndex = 0;
+            launchFireworks();
+          }
+        } else {
+          konamiIndex = key === konami[0] ? 1 : 0;
+        }
+
+        if (event.key.length === 1 && !event.ctrlKey && !event.metaKey && !event.altKey) {
+          keyBuffer = (keyBuffer + event.key.toLowerCase()).slice(-12);
+          if (keyBuffer.endsWith("kill")) triggerKillMode();
+        }
+      });
+    }
+
+    function triggerKillMode() {
+      document.body.classList.add("kill-flash");
+      matrixSpeed = 4.8;
+      drawCodeRain(2600);
+      playSfx("success");
+      showToast("kill 彩蛋触发：代码雨加速");
+      setTimeout(() => {
+        document.body.classList.remove("kill-flash");
+        matrixSpeed = themes[activeTheme]?.speed || 1;
+      }, 2600);
+    }
+
+    function drawCodeRain(duration) {
+      const canvas = $("#rainLayer");
+      const ctx = canvas.getContext("2d");
+      if (!ctx) return;
+      const dpr = Math.min(1.4, devicePixelRatio || 1);
+      canvas.width = innerWidth * dpr;
+      canvas.height = innerHeight * dpr;
+      const columns = Math.floor(canvas.width / 18);
+      const drops = Array.from({ length: columns }, () => Math.random() * canvas.height);
+      const started = performance.now();
+      function frame(now) {
+        ctx.fillStyle = "rgba(0,0,0,0.16)";
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        ctx.fillStyle = "#ff335c";
+        ctx.font = `${14 * dpr}px monospace`;
+        for (let i = 0; i < drops.length; i += 1) {
+          const text = Math.random() > 0.5 ? "kill" : "0101";
+          ctx.fillText(text, i * 18 * dpr, drops[i]);
+          drops[i] += (18 + Math.random() * 22) * dpr;
+          if (drops[i] > canvas.height) drops[i] = 0;
+        }
+        if (now - started < duration) requestAnimationFrame(frame);
+        else ctx.clearRect(0, 0, canvas.width, canvas.height);
+      }
+      frame(started);
+    }
+
+    function launchFireworks() {
+      const canvas = $("#fireworkLayer");
+      const ctx = canvas.getContext("2d");
+      if (!ctx) return;
+      const dpr = Math.min(1.5, devicePixelRatio || 1);
+      canvas.width = innerWidth * dpr;
+      canvas.height = innerHeight * dpr;
+      const particles = [];
+      for (let burst = 0; burst < 6; burst += 1) {
+        const cx = (0.16 + Math.random() * 0.68) * canvas.width;
+        const cy = (0.18 + Math.random() * 0.48) * canvas.height;
+        for (let i = 0; i < 42; i += 1) {
+          const angle = (Math.PI * 2 * i) / 42;
+          const speed = 1.5 + Math.random() * 4;
+          particles.push({
+            x: cx,
+            y: cy,
+            vx: Math.cos(angle) * speed * dpr,
+            vy: Math.sin(angle) * speed * dpr,
+            life: 70 + Math.random() * 38,
+            color: ["#38e8ff", "#19ff95", "#8a5cff", "#ffd166"][i % 4]
+          });
+        }
+      }
+      playSfx("success");
+      function tick() {
+        ctx.fillStyle = "rgba(0,0,0,0.12)";
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+        for (const p of particles) {
+          p.x += p.vx;
+          p.y += p.vy;
+          p.vy += 0.035 * dpr;
+          p.life -= 1;
+          ctx.globalAlpha = Math.max(0, p.life / 100);
+          ctx.fillStyle = p.color;
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, 2.2 * dpr, 0, Math.PI * 2);
+          ctx.fill();
+        }
+        ctx.globalAlpha = 1;
+        if (particles.some((p) => p.life > 0)) requestAnimationFrame(tick);
+        else ctx.clearRect(0, 0, canvas.width, canvas.height);
+      }
+      tick();
+      showToast("Konami Code：烟花已启动");
+    }
+
+    function openTerminal() {
+      const overlay = $("#terminalOverlay");
+      overlay.classList.add("open");
+      overlay.setAttribute("aria-hidden", "false");
+      $("#terminalLog").textContent ||= `Code Awakener hidden shell
+author=${AUTHOR.name}
+qq=${AUTHOR.qq}
+group=${AUTHOR.group}
+commands: help, qq, group, game, matrix, clear, close
+`;
+      $("#terminalInput").focus();
+      playSfx("success");
+    }
+
+    function closeTerminal() {
+      $("#terminalOverlay").classList.remove("open");
+      $("#terminalOverlay").setAttribute("aria-hidden", "true");
+    }
+
+    function initTerminal() {
+      $("#closeTerminal").addEventListener("click", closeTerminal);
+      $("#terminalOverlay").addEventListener("click", (event) => {
+        if (event.target.id === "terminalOverlay") closeTerminal();
+      });
+      $("#terminalInput").addEventListener("keydown", (event) => {
+        if (event.key !== "Enter") return;
+        const input = event.currentTarget;
+        const command = input.value.trim().toLowerCase();
+        input.value = "";
+        runCommand(command);
+      });
+    }
+
+    function runCommand(command) {
+      const log = $("#terminalLog");
+      const append = (text) => {
+        log.textContent += `\n> ${command}\n${text}\n`;
+        log.scrollTop = log.scrollHeight;
+      };
+      if (command === "help") append("help, qq, group, game, matrix, clear, close");
+      else if (command === "qq") append(AUTHOR.qq);
+      else if (command === "group") append(AUTHOR.group);
+      else if (command === "game") {
+        append("opening game...");
+        location.href = AUTHOR.gameHref;
+      } else if (command === "matrix") {
+        matrixSpeed = 3.2;
+        append("matrix speed boosted for 5s");
+        setTimeout(() => matrixSpeed = themes[activeTheme]?.speed || 1, 5000);
+      } else if (command === "clear") log.textContent = "";
+      else if (command === "close") closeTerminal();
+      else append("unknown command");
+    }
+
+    function initHoverAudio() {
+      $$("button, a, input, textarea").forEach((node) => {
+        node.addEventListener("pointerenter", () => playSfx("hover"), { passive: true });
+        node.addEventListener("pointerdown", (event) => {
+          if (lowPower || prefersReduced) return;
+          const wave = document.createElement("span");
+          wave.className = "shockwave";
+          wave.style.setProperty("--wave-x", `${event.clientX}px`);
+          wave.style.setProperty("--wave-y", `${event.clientY}px`);
+          document.body.appendChild(wave);
+          setTimeout(() => wave.remove(), 820);
+        }, { passive: true });
+      });
+      let lastScrollSound = 0;
+      addEventListener("scroll", () => {
+        const now = performance.now();
+        if (now - lastScrollSound > 900) {
+          lastScrollSound = now;
+          playSfx("hover");
+        }
+      }, { passive: true });
+    }
+
+    async function main() {
+      bootLoader();
+      initAudioControls();
+      initScrollProgress();
+      initControls();
+      initEasterEggs();
+      initTerminal();
+
+      if (!lowPower) {
+        installConsoleArt();
+        initCursor();
+        const keywordMatrix = initKeywordMatrix();
+        initKineticLayer();
+        initEnergyLayer();
+        initSections(keywordMatrix);
+        initHoverAudio();
+        requestIdleCallback(primeMediaLoop, { timeout: 1600 });
+        requestIdleCallback(() => initGalaxy(), { timeout: 900 });
+      } else {
+        requestIdleCallback(installConsoleArt, { timeout: 4200 });
+      }
+
+      requestIdleCallback(() => {
+        initEditor();
+        initChallenge();
+        initMessages();
+        initAuthor();
+      }, { timeout: lowPower ? 3800 : 1200 });
+    }
+
+    main();
+  </script>
+</body>
+</html>

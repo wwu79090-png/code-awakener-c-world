@@ -70,7 +70,9 @@ scripts\deploy-auto.bat 你的用户名/仓库名 main create wait
 - `npm run deploy:gh-pages:wait`：同上，增加 `--wait` 参数
 
 ## 发布输出目录
-- `dist/programming-rpg-c-basics.production.html`
+- `dist/index.html`：官方网站首页（技术预告片式单页官网）
+- `dist/official-site.html`：官方网站首页的同内容备份入口
+- `dist/programming-rpg-c-basics.html`：玩家可直接进入的游戏链接
+- `dist/programming-rpg-c-basics.production.html`：游戏生产版备份入口
 - `dist/programming-rpg-c-basics.secure.html`
-- `dist/index.html`
 - `dist/.nojekyll`

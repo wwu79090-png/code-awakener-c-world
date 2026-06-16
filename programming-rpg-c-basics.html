@@ -11,7 +11,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; base-uri 'self'; object-src 'none'; frame-ancestors 'none'; script-src 'self' https://cdn.jsdelivr.net 'nonce-code-awakener-inline' 'sha256-EGXdqG8eCRFq4qMSxGbYnw9OzP0sDlV9koNYLRswLII='; style-src 'self' https://cdn.jsdelivr.net https://fonts.googleapis.com 'nonce-code-awakener-inline' 'sha256-W5aKxKqIat+1tkEJrv9V6xRgoHBoseUM2aidCFzPFds='; style-src-attr 'unsafe-inline'; font-src 'self' https://cdn.jsdelivr.net https://fonts.gstatic.com data:; img-src 'self' data: blob:; media-src 'self' data: blob:; worker-src 'self' blob:; child-src 'self' blob:; connect-src 'self' https://cdn.jsdelivr.net http://localhost:8000 http://127.0.0.1:8000;">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; base-uri 'self'; object-src 'none'; frame-ancestors 'none'; script-src 'self' https://cdn.jsdelivr.net 'nonce-code-awakener-inline' 'sha256-u6LyUOX9hy/TAODEPlmvh+VqDxT3A+UtZRL4Y5kvvBw='; style-src 'self' https://cdn.jsdelivr.net https://fonts.googleapis.com 'nonce-code-awakener-inline' 'sha256-NPjKNpV7x0cENrXJvvUQRYtXnjtK86M3UVpzbNYyTWg='; style-src-attr 'unsafe-inline'; font-src 'self' https://cdn.jsdelivr.net https://fonts.gstatic.com data:; img-src 'self' data: blob:; media-src 'self' data: blob:; worker-src 'self' blob:; child-src 'self' blob:; connect-src 'self' https://cdn.jsdelivr.net http://localhost:8000 http://127.0.0.1:8000;">
   <title>编程学习 RPG：C 语言启航村</title>
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%23020617'/%3E%3Cpath d='M22 20 10 32l12 12M42 20l12 12-12 12' fill='none' stroke='%2300ff88' stroke-width='6' stroke-linecap='round' stroke-linejoin='round'/%3E%3Cpath d='m36 16-8 32' stroke='%2300ccff' stroke-width='5' stroke-linecap='round'/%3E%3C/svg%3E">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/firacode@6.2.0/distr/fira_code.css">
@@ -9722,6 +9722,52 @@
         min-height: 44px;
       }
 
+      body.mobile-input .menu-screen {
+        position: fixed;
+        inset: 0;
+        width: 100vw;
+        height: 100dvh;
+        padding: max(10px, env(safe-area-inset-top)) max(10px, env(safe-area-inset-right)) max(10px, env(safe-area-inset-bottom)) max(10px, env(safe-area-inset-left));
+        overflow: hidden;
+      }
+
+      body.mobile-input .main-menu-card {
+        width: min(430px, calc(100vw - 20px));
+        max-width: calc(100vw - 20px);
+        max-height: calc(100dvh - 20px);
+        margin: 0 auto;
+        padding: 16px;
+        overflow: hidden;
+      }
+
+      body.mobile-input .main-menu-card .game-logo {
+        font-size: clamp(20px, 7vw, 30px);
+        line-height: 1.28;
+      }
+
+      body.mobile-input .main-menu-card .version-label {
+        font-size: 11px;
+      }
+
+      body.mobile-input .main-menu-card .boot-command,
+      body.mobile-input .main-menu-card .skin-picker,
+      body.mobile-input .main-menu-card .menu-list {
+        margin-top: 12px;
+      }
+
+      body.mobile-input .main-menu-card .menu-list {
+        max-height: min(48dvh, 390px);
+        overflow-y: auto;
+        padding-right: 2px;
+        overscroll-behavior: contain;
+        -webkit-overflow-scrolling: touch;
+      }
+
+      body.mobile-input .main-menu-card .menu-option {
+        min-height: 44px;
+        border-radius: 12px;
+      }
+
       body.mobile-input .absolute-guide-stack {
         left: max(84px, calc(env(safe-area-inset-left) + 84px));
         right: max(10px, env(safe-area-inset-right));
@@ -9942,7 +9988,7 @@
       <canvas id="menuFxCanvas" width="1280" height="720"></canvas>
       <div class="main-menu-card glass-panel">
         <h1 class="game-logo">CODE AWAKENER<br>C 语言启航村</h1>
-        <div class="version-label" id="versionLabel">World Build v1.0.20 · develop.fan C Basics</div>
+        <div class="version-label" id="versionLabel">World Build v1.0.22 · develop.fan C Basics</div>
         <label class="boot-command"><span>&gt;</span><input id="bootCommandInput" value="start_game.exe" autocomplete="off" spellcheck="false" aria-label="启动命令"></label>
         <label class="skin-picker">角色外观
           <select id="skinSelect" aria-label="选择主角外观">
@@ -9958,6 +10004,7 @@
           <button class="menu-option" type="button" data-menu-action="cards">技能卡册</button>
           <button class="menu-option" type="button" data-menu-action="codex">图鉴系统</button>
           <button class="menu-option" type="button" data-menu-action="settings">设置</button>
+          <button class="menu-option" type="button" data-menu-action="official">访问官方网站</button>
           <button class="menu-option" type="button" data-menu-action="credits">制作名单</button>
           <button class="menu-option" type="button" data-menu-action="exit">退出</button>
         </nav>
@@ -10770,17 +10817,17 @@ int main(void) {
       <button id="announcementCloseButton" class="announcement-close" type="button" aria-label="关闭公告">×</button>
       <h2 id="startupAnnouncementTitle" class="startup-announcement-title">> 消息 / 本次更新</h2>
       <div id="announcementPageBody" class="startup-announcement-body">
-        <p>// 本次更新：手机端石碑编译器完整适配。</p>
-        <p>// 输入区内置滚动，100+ 行代码也能滑动查看。</p>
-        <p>// 运行、重置、关闭按钮固定在底部，窄屏和平板不再溢出。</p>
-        <p>// 编辑器自动贴合安全区和软键盘可视区。</p>
-        <p>// 导师解析折叠后同步收缩，不再挤压代码区。</p>
+        <p>// 本次更新：游戏主菜单新增“访问官方网站”。</p>
+        <p>// 从游戏首页可一键打开代码觉醒者技术预告片官网。</p>
+        <p>// 官网继续展示 HTML/CSS/JS 沉浸特效，并保留进入本项目游戏的直达链接。</p>
+        <p>// 作者：杀戮，QQ：3424636983。</p>
+        <p>// 官方Q群：414374792。</p>
         <p>// 作者：杀戮</p>
         <p class="announcement-dismiss-hint">- 点击任意处关闭</p>
       </div>
       <div class="startup-announcement-pager" aria-label="公告分页">
         <button id="announcementPrevButton" class="announcement-page-button" type="button">上一页</button>
-        <span id="announcementPageIndicator" class="announcement-page-indicator">1/5</span>
+        <span id="announcementPageIndicator" class="announcement-page-indicator">1/6</span>
         <button id="announcementNextButton" class="announcement-page-button" type="button">下一页</button>
       </div>
     </aside>
@@ -11248,12 +11295,34 @@ int main() {
     const SAVE_SIGNATURE_SALT = "c-world-local-integrity";
     const SAVE_CLEAR_CONFIRM_MS = 3000;
     const STARTUP_ANNOUNCEMENT_AUTO_HIDE_MS = 3000;
-    const GAME_VERSION = "v1.0.20";
+    const GAME_VERSION = "v1.0.22";
+    const OFFICIAL_SITE_HREF = "./official-site.html";
     const UPDATE_ANNOUNCEMENT_PAGES = Object.freeze([
       {
         title: "> 消息 / 本次更新",
         lines: [
-          "// 本次更新：手机端石碑编译器完整适配。",
+          "// 本次更新：游戏主菜单新增“访问官方网站”。",
+          "// 从游戏首页可一键打开代码觉醒者技术预告片官网。",
+          "// 官网继续展示 HTML/CSS/JS 沉浸特效，并保留进入本项目游戏的直达链接。",
+          "// 作者：杀戮，QQ：3424636983。",
+          "// 官方Q群：414374792。",
+          "// 作者：杀戮"
+        ]
+      },
+      {
+        title: "> 更新内容 / 官网上线",
+        lines: [
+          "// 上次更新：官方网站已上线为技术预告片首页。",
+          "// GitHub Pages 首页展示 Three.js 星系、Canvas 关键词矩阵和终端光标。",
+          "// 官网包含在线编辑器、挑战小游戏、留言墙和作者档案互动区。",
+          "// 官网首页、制作人员名单和浮动按钮均展示作者杀戮、QQ与官方Q群。",
+          "// 作者：杀戮"
+        ]
+      },
+      {
+        title: "> 更新内容 / 移动编辑器",
+        lines: [
+          "// 上次更新：手机端石碑编译器完整适配。",
           "// 输入区内置滚动，100+ 行代码也能滑动查看。",
           "// 运行、重置、关闭按钮固定在底部，窄屏和平板不再溢出。",
           "// 编辑器自动贴合安全区、刘海屏和软键盘可视区。",
@@ -11262,7 +11331,7 @@ int main() {
         ]
       },
       {
-        title: "> 更新内容 / 上次重点",
+        title: "> 更新内容 / 判题规则",
         lines: [
           "// 本次更新：判题只看运行输出，空格换行不再卡关。",
           "// MP 门槛已移除，编译不会因为能量不足被判失败。",
@@ -11273,7 +11342,7 @@ int main() {
         ]
       },
       {
-        title: "> 更新内容 / 判题规则",
+        title: "> 更新内容 / 交互与提示",
         lines: [
           "// 通过条件改为：代码能正常编译，运行输出与任务预期一致。",
           "// 比对输出时忽略空格、换行、缩进和首尾空白。",
@@ -11282,21 +11351,12 @@ int main() {
         ]
       },
       {
-        title: "> 更新内容 / 交互与提示",
+        title: "> 项目信息",
         lines: [
           "// 手机设备会提示：触摸才是交互方式。",
           "// 手机虚拟交互按钮从 E 改为“触摸”，不再模拟键盘 E。",
           "// 移动摇杆、方向键和桌面键盘 E 都保留各自用途。",
-          "// 编译错误弹窗会显示真实错误位置，并支持点击或按键跳过。"
-        ]
-      },
-      {
-        title: "> 项目信息",
-        lines: [
-          "// 菜单历史更新会持续记录每个版本的详细内容。",
-          "// 致谢：感谢 花海 为本游戏提供宣传协力支持！",
-          "// 合作/咨询 QQ：2256713629，手机：13072295416",
-          "// 再次感谢花海的帮助与推广！🙏",
+          "// 编译错误弹窗会显示真实错误位置，并支持点击或按键跳过。",
           "// 官方Q群：414374792",
           "// 本项目永久免费对外开放，持续更新，助力每一个有编程梦的人。",
           "// 谢谢你的支持！"
@@ -11304,6 +11364,28 @@ int main() {
       }
     ]);
     const UPDATE_HISTORY = Object.freeze([
+      {
+        version: "v1.0.22",
+        date: "2026-06-17",
+        title: "主菜单新增官方网站入口",
+        details: [
+          "游戏主界面菜单新增“访问官方网站”按钮，点击后跳转到同目录 `official-site.html`，本地源码和 GitHub Pages 构建产物都可访问。",
+          "官网与游戏形成双向入口：官网可进入本项目游戏，游戏主菜单也可返回官方网站。",
+          "开屏公告同步记录本次更新，并继续展示作者杀戮、QQ 3424636983 和官方Q群 414374792。"
+        ]
+      },
+      {
+        version: "v1.0.21",
+        date: "2026-06-17",
+        title: "官方网站技术预告片上线",
+        details: [
+          "GitHub Pages 首页改为纯静态单页官方网站，首屏展示 Three.js 星系、Canvas 关键词矩阵和终端光标三层沉浸特效。",
+          "官网包含 6 个滚动叙事章节：英雄区、游戏特色、编程知识点、截图/挑战、作者档案和行动召唤。",
+          "新增在线 HTML 编辑器、iframe 实时预览、Prism.js 按需语法高亮、数字求和挑战、LocalStorage 留言墙和作者档案互动区。",
+          "作者信息已在官网首页终端、制作人员名单和浮动联系按钮三处展示：杀戮，QQ 3424636983，官方Q群 414374792。",
+          "构建产物改为官网首页 `dist/index.html`，游戏保留为 `dist/programming-rpg-c-basics.html`，官网提供进入本项目游戏的直达链接。"
+        ]
+      },
       {
         version: "v1.0.20",
         date: "2026-06-17",
@@ -12198,7 +12280,7 @@ return 0;`;
       directSaveAs: "reduced-by-inline-resources"
     });
     const SECURITY_CONFIG = Object.freeze({
-      expectedScriptHash: "5n8hDyEzb3F/knpCqpoKXpV86q7juxFGUj5s+EsL+TI=",
+      expectedScriptHash: "L55a+uq1qfK26kJB/aMQzGTJA680uq1K053EXBmghtI=",
       selfCheckIntervalMs: 45000,
       tamperRefreshMs: 5000,
       devToolsRefreshMs: 2000,
@@ -28618,6 +28700,12 @@ ${item.code}
       return worldSelectManager.show(focusWorldId);
     }
 
+    function openOfficialWebsite() {
+      audioManager.uiClick?.();
+      showReward("正在打开代码觉醒者官方网站...");
+      window.location.assign(OFFICIAL_SITE_HREF);
+    }
+
     function hasSaveData() {
       return gameState.progress.learned.length > 0 || gameState.progress.cleared.length > 0 || gameState.cards.length > 0;
     }
@@ -29009,6 +29097,7 @@ ${item.code}
         if (action === "cards") toggleCollectionOverlay("cards", true);
         if (action === "codex") openCodexCollection(true);
         if (action === "settings") this.openSettings("main");
+        if (action === "official") openOfficialWebsite();
         if (action === "credits") this.openCredits();
         if (action === "exit") playSystemShutdownLog();
       }

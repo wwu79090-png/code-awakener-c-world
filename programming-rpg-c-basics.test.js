@@ -126,6 +126,7 @@ function assert(condition, message) {
 
 const api = loadGameScript();
 const html = fs.readFileSync("programming-rpg-c-basics.html", "utf8");
+const officialSiteHtml = fs.existsSync("official-site.html") ? fs.readFileSync("official-site.html", "utf8") : "";
 const initialBodyMarkup = html.match(/<body[\s\S]*?<script\b/)?.[0] || "";
 const cspContent = html.match(/Content-Security-Policy" content="([^"]+)"/)?.[1] || "";
 const rawStyleContent = html.match(/<style[^>]*>([\s\S]*?)<\/style>/)?.[1] || "";
@@ -496,6 +497,7 @@ const menuMarkers = [
   "data-menu-action=\"start\"",
   "data-menu-action=\"continue\"",
   "data-menu-action=\"settings\"",
+  "data-menu-action=\"official\"",
   "id=\"hudProgressFill\"",
   "id=\"hudQuickSlots\"",
   "id=\"bottomHintBar\"",
@@ -521,6 +523,8 @@ assert(/\.theme-preview\s*\{[\s\S]*flex-wrap:\s*wrap/m.test(html), "theme cards 
 assert(/\.theme-swatch\s*\{[\s\S]*flex:\s*1\s+1\s+140px/m.test(html), "theme cards should have responsive flex basis");
 assert(/\.theme-swatch:not\(\.active\)/m.test(html), "unselected theme cards should be visually muted");
 assert(/@media\s*\(max-width:\s*640px\)[\s\S]*\.setting-row\s*\{[\s\S]*grid-template-columns:\s*1fr/m.test(html), "settings rows should collapse on narrow screens");
+assert(/body\.mobile-input \.menu-screen\s*\{[\s\S]*position:\s*fixed[\s\S]*width:\s*100vw[\s\S]*height:\s*100dvh/m.test(html), "mobile main menu overlay should be fixed to the viewport instead of the desktop game canvas");
+assert(/body\.mobile-input \.main-menu-card\s*\{[\s\S]*width:\s*min\(430px,\s*calc\(100vw - 20px\)\)[\s\S]*max-height:\s*calc\(100dvh - 20px\)/m.test(html), "mobile main menu card should fit within the visible viewport");
 assert(/\.settings-panel::before[\s\S]*CODE AWAKENER/m.test(html), "settings panel should use CODE AWAKENER as a subtle watermark");
 assert(/--neon-blue:[\s\S]*--neon-purple:/m.test(html), "UI should expose neon blue/purple theme colors");
 assert(/function createCodeRainLayer/m.test(html), "map should include a code rain atmosphere layer");
@@ -1256,14 +1260,35 @@ assert(/本项目永久免费对外开放/.test(html), "announcement should incl
 assert(/STARTUP_ANNOUNCEMENT_AUTO_HIDE_MS\s*=\s*3000/m.test(html), "announcement should auto-hide after 3 seconds");
 assert(/function showStartupAnnouncement/m.test(html), "announcement should be controlled by a startup function");
 assert(/id="announcementCloseButton"/m.test(html), "announcement should include a minimal close control");
-assert(/World Build v1\.0\.20/m.test(html) || /GAME_VERSION\s*=\s*"v1\.0\.20"/m.test(html), "game version should increment when shipping a new update");
+assert(/World Build v1\.0\.22/m.test(html) || /GAME_VERSION\s*=\s*"v1\.0\.22"/m.test(html), "game version should increment when shipping a new update");
 assert(/UPDATE_HISTORY\s*=\s*Object\.freeze\(\[[\s\S]*v1\.0\.1[\s\S]*零基础新手指引[\s\S]*v1\.0\.0[\s\S]*手机端适配/m.test(html), "update history should keep detailed previous release notes");
 assert(/id="updateHistoryList"/m.test(html) && /历史更新内容/m.test(html), "side menu should expose update history with detailed usage-visible notes");
-assert(/GAME_VERSION\s*=\s*"v1\.0\.20"/m.test(html), "game version should increment for the mobile stone compiler layout release");
-assert(/UPDATE_ANNOUNCEMENT_PAGES\s*=\s*Object\.freeze\(\[\s*\{\s*title:\s*"> 消息 \/ 本次更新"[\s\S]*手机端石碑编译器完整适配[\s\S]*100\+ 行代码[\s\S]*安全区[\s\S]*导师解析折叠/m.test(html), "collapsed startup announcement should show the latest mobile editor adaptation summary first, not only author text");
-assert(/id="announcementPageBody"[\s\S]*手机端石碑编译器完整适配[\s\S]*100\+ 行代码[\s\S]*安全区[\s\S]*导师解析折叠/m.test(initialBodyMarkup), "static startup announcement placeholder should match the latest mobile editor update before script hydration");
+assert(/GAME_VERSION\s*=\s*"v1\.0\.22"/m.test(html), "game version should increment for the official website menu entry release");
+assert(html.includes('const OFFICIAL_SITE_HREF = "./official-site.html";') && html.includes('data-menu-action="official">访问官方网站') && /action === "official"[\s\S]*openOfficialWebsite\(\)/m.test(html), "main menu should expose and handle an official website entry");
+assert(/UPDATE_ANNOUNCEMENT_PAGES\s*=\s*Object\.freeze\(\[\s*\{\s*title:\s*"> 消息 \/ 本次更新"[\s\S]*游戏主菜单新增“访问官方网站”[\s\S]*HTML\/CSS\/JS 沉浸特效[\s\S]*3424636983[\s\S]*414374792/m.test(html), "collapsed startup announcement should show the latest official website menu entry release first, not only author text");
+assert(/id="announcementPageBody"[\s\S]*游戏主菜单新增“访问官方网站”[\s\S]*HTML\/CSS\/JS 沉浸特效[\s\S]*3424636983[\s\S]*414374792/m.test(initialBodyMarkup), "static startup announcement placeholder should match the latest official website menu entry release before script hydration");
 assert(!/公告只保留关闭、课程锁定、自由模式通关后显示/m.test(initialBodyMarkup), "static startup announcement placeholder should not show stale update copy");
+assert(/UPDATE_HISTORY\s*=\s*Object\.freeze\(\[[\s\S]*v1\.0\.22[\s\S]*主菜单新增官方网站入口[\s\S]*official-site\.html[\s\S]*414374792/m.test(html), "update history should record the v1.0.22 official website menu entry release");
+assert(/UPDATE_HISTORY\s*=\s*Object\.freeze\(\[[\s\S]*v1\.0\.21[\s\S]*官方网站技术预告片上线[\s\S]*Three\.js 星系[\s\S]*Canvas 关键词矩阵[\s\S]*dist\/programming-rpg-c-basics\.html/m.test(html), "update history should record the v1.0.21 official website release");
 assert(/UPDATE_HISTORY\s*=\s*Object\.freeze\(\[[\s\S]*v1\.0\.20[\s\S]*手机端石碑编译器全屏适配[\s\S]*100\+ 行输入[\s\S]*visualViewport[\s\S]*导师解析折叠/m.test(html), "update history should record the v1.0.20 mobile stone compiler layout release");
+assert(officialSiteHtml.includes("<title>代码觉醒者官方网站"), "official static website should exist as a separate source page");
+assert(/id="galaxyLayer"[\s\S]*id="keywordLayer"[\s\S]*class="cursor"/m.test(officialSiteHtml), "official website should include the three-layer hero effects");
+assert(/import\("https:\/\/cdn\.jsdelivr\.net\/npm\/three@[\s\S]*three\.module\.js"\)/m.test(officialSiteHtml), "official website should dynamically import Three.js as an ES module");
+assert(/import\("https:\/\/esm\.sh\/gsap@[\s\S]*\?bundle"\)/m.test(officialSiteHtml), "official website should dynamically import GSAP as an ES module");
+assert(/import\("https:\/\/esm\.sh\/prismjs@[\s\S]*\?bundle"\)/m.test(officialSiteHtml), "official website should dynamically import Prism.js as an ES module");
+assert(/lowPower[\s\S]*document\.body\.classList\.add\("low-power"\)/m.test(officialSiteHtml), "official website should automatically degrade effects on low-power devices");
+assert(/<a class="primary-btn" href="\.\/programming-rpg-c-basics\.html">▶ 进入本项目游戏<\/a>/m.test(officialSiteHtml), "official website should expose a direct game link");
+assert(/作者：<\/span>杀戮[\s\S]*QQ：<\/span>3424636983[\s\S]*官方Q群：<\/span>414374792/m.test(officialSiteHtml), "official website homepage terminal should show author, QQ, and official group");
+assert(/制作人员名单[\s\S]*杀戮[\s\S]*3424636983[\s\S]*414374792/m.test(officialSiteHtml), "official website credits should show author, QQ, and official group");
+assert(/float-contact[\s\S]*杀戮 · QQ 3424636983[\s\S]*官方Q群 414374792/m.test(officialSiteHtml), "official website floating contact button should show author, QQ, and official group");
+assert(/Ctrl\+Shift|hidden-terminal|Konami|triggerKillMode|launchFireworks|drawCodeRain/m.test(officialSiteHtml), "official website should include the requested easter egg systems");
+assert(/id="kineticLayer"/m.test(officialSiteHtml) && /class="reactor-stage"/m.test(officialSiteHtml) && /class="code-ribbon"/m.test(officialSiteHtml), "official website should include the extreme desktop visual layers");
+assert(/id="overloadButton"[\s\S]*MAX/m.test(officialSiteHtml) && /extreme-overload/m.test(officialSiteHtml), "official website should include a desktop overload visual mode");
+assert(/const AUDIO_MASTER_GAIN\s*=\s*0\.16/m.test(officialSiteHtml) && /audio\.master\.gain\.value\s*=\s*AUDIO_MASTER_GAIN/m.test(officialSiteHtml) && /playStartupFanfare/m.test(officialSiteHtml) && /长段落背景音乐已启动/m.test(officialSiteHtml), "official website music should use a quieter controlled startup path");
+assert(/const AUDIO_MEDIA_VOLUME\s*=\s*0\.18/m.test(officialSiteHtml) && /buildWavLoopDataUri/m.test(officialSiteHtml) && /new Audio\(buildWavLoopDataUri\(\)\)/m.test(officialSiteHtml) && /const seconds\s*=\s*28\.8/m.test(officialSiteHtml), "official website music should include a longer quieter cinematic HTMLAudio WAV loop");
+assert(/playResult\.then\(\(\)\s*=>\s*stopFallbackMusic\(\)\)/m.test(officialSiteHtml) && !/audio\.ctx\.resume\?\.\(\);\s*startMusic\(\);/m.test(officialSiteHtml), "official website should not layer WebAudio background music over the WAV loop");
+assert(/if \(!audio\.started && kind === "hover"\) return/m.test(officialSiteHtml), "official website hover feedback should not pre-start audio before the MUS button click");
+assert(/id="energyLayer"/m.test(officialSiteHtml) && /class="mission-stack"/m.test(officialSiteHtml) && /class="systems-deck"/m.test(officialSiteHtml) && /class="max-decor"/m.test(officialSiteHtml), "official website should include dense desktop-only visual modules");
 assert(/UPDATE_HISTORY\s*=\s*Object\.freeze\(\[[\s\S]*v1\.0\.19[\s\S]*输出判题、MP移除与手机触摸交互[\s\S]*运行输出与任务预期一致[\s\S]*虚拟交互按钮显示“触摸”[\s\S]*感谢花海为本游戏提供宣传协力支持/m.test(html), "update history should record the v1.0.19 judge, MP, mobile touch, and credits release");
 assert(/UPDATE_HISTORY\s*=\s*Object\.freeze\(\[[\s\S]*v1\.0\.18[\s\S]*启动诊断、离线缓存降噪与移动端性能保护[\s\S]*无效 blob Service Worker[\s\S]*低功耗特效预算/m.test(html), "update history should record the v1.0.18 startup diagnostic and mobile performance cleanup");
 assert(/UPDATE_HISTORY\s*=\s*Object\.freeze\(\[[\s\S]*v1\.0\.17[\s\S]*智能判题与编译失败恢复[\s\S]*终端输出作为通关标准[\s\S]*连续三次失败/m.test(html), "update history should record the v1.0.17 intelligent judge and failure recovery fixes");

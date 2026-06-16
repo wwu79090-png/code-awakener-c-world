@@ -4,8 +4,11 @@ const crypto = require("crypto");
 
 const root = __dirname;
 const sourcePath = path.join(root, "programming-rpg-c-basics.html");
+const officialSitePath = path.join(root, "official-site.html");
 const outDir = path.join(root, "dist");
 const outPath = path.join(outDir, "programming-rpg-c-basics.production.html");
+const gamePagePath = path.join(outDir, "programming-rpg-c-basics.html");
+const officialSiteOutPath = path.join(outDir, "official-site.html");
 const indexPath = path.join(outDir, "index.html");
 const nojekyllPath = path.join(outDir, ".nojekyll");
 
@@ -54,10 +57,16 @@ function refreshSecurityHashes(html) {
 
 fs.mkdirSync(outDir, { recursive: true });
 const html = fs.readFileSync(sourcePath, "utf8");
-const output = createInlineProductionBundle(html);
-fs.writeFileSync(outPath, output);
-fs.writeFileSync(indexPath, output);
+const gameOutput = createInlineProductionBundle(html);
+const officialSite = fs.readFileSync(officialSitePath, "utf8");
+const officialOutput = createInlineProductionBundle(officialSite);
+fs.writeFileSync(outPath, gameOutput);
+fs.writeFileSync(gamePagePath, gameOutput);
+fs.writeFileSync(officialSiteOutPath, officialOutput);
+fs.writeFileSync(indexPath, officialOutput);
 fs.writeFileSync(nojekyllPath, "");
 
-console.log(`built ${path.relative(root, outPath)} (${output.length} bytes)`);
-console.log(`built ${path.relative(root, indexPath)} (${output.length} bytes)`);
+console.log(`built ${path.relative(root, outPath)} (${gameOutput.length} bytes)`);
+console.log(`built ${path.relative(root, gamePagePath)} (${gameOutput.length} bytes)`);
+console.log(`built ${path.relative(root, officialSiteOutPath)} (${officialOutput.length} bytes)`);
+console.log(`built ${path.relative(root, indexPath)} (${officialOutput.length} bytes)`);
