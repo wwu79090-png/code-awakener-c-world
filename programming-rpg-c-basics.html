@@ -11,7 +11,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; base-uri 'self'; object-src 'none'; frame-ancestors 'none'; script-src 'self' https://cdn.jsdelivr.net 'nonce-code-awakener-inline' 'sha256-0XMIleG4UFuDwNLi0bKEEANf53iPdHtGvyq5U2W5d/c='; style-src 'self' https://cdn.jsdelivr.net https://fonts.googleapis.com 'nonce-code-awakener-inline' 'sha256-E7Raqs1QDAkN1vxCIl+MwiYL7QNS7PwXHeBsM7qO5Gg='; font-src 'self' https://cdn.jsdelivr.net https://fonts.gstatic.com data:; img-src 'self' data: blob:; media-src 'self' data: blob:; worker-src 'self' blob:; child-src 'self' blob:; connect-src 'self' https://cdn.jsdelivr.net;">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; base-uri 'self'; object-src 'none'; frame-ancestors 'none'; script-src 'self' https://cdn.jsdelivr.net 'nonce-code-awakener-inline' 'sha256-CAzNluhMlU5zwU3q7gJUR7/LIeTWxbJwcksO8iFW61k='; style-src 'self' https://cdn.jsdelivr.net https://fonts.googleapis.com 'nonce-code-awakener-inline' 'sha256-9iFWHQLrVC/3AwWgqKkZXougx/xneS/QX09IDjYMNNg='; font-src 'self' https://cdn.jsdelivr.net https://fonts.gstatic.com data:; img-src 'self' data: blob:; media-src 'self' data: blob:; worker-src 'self' blob:; child-src 'self' blob:; connect-src 'self' https://cdn.jsdelivr.net;">
   <title>编程学习 RPG：C 语言启航村</title>
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%23020617'/%3E%3Cpath d='M22 20 10 32l12 12M42 20l12 12-12 12' fill='none' stroke='%2300ff88' stroke-width='6' stroke-linecap='round' stroke-linejoin='round'/%3E%3Cpath d='m36 16-8 32' stroke='%2300ccff' stroke-width='5' stroke-linecap='round'/%3E%3C/svg%3E">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/firacode@6.2.0/distr/fira_code.css">
@@ -2361,6 +2361,8 @@
     /* 中央游戏画面不再承载常驻 HUD；所有持续信息收纳进左上角信息菜单。 */
     #hud .hud-top,
     #hud .hud-bottom,
+    #keymapGlassBar,
+    #bottomHintBar,
     #hud #progressChip,
     #hud #bottomHintBar,
     #hud #hudQuickSlots,
@@ -2377,6 +2379,12 @@
     #inputModeChip,
     #worldWeatherChip,
     #systemClock {
+      display: none !important;
+      pointer-events: none !important;
+    }
+
+    #keymapGlassBar,
+    #bottomHintBar {
       display: none !important;
       pointer-events: none !important;
     }
@@ -2429,7 +2437,7 @@
       pointer-events: auto;
       opacity: 0;
       transform: translateX(-18px) scale(0.98);
-      transition: transform 220ms cubic-bezier(.2,.9,.2,1), opacity 220ms ease;
+      transition: transform 350ms cubic-bezier(0.2, 0.9, 0.4, 1), opacity 350ms cubic-bezier(0.2, 0.9, 0.4, 1);
     }
 
     .info-side-menu:not(.active) {
@@ -2501,6 +2509,32 @@
       gap: 8px;
     }
 
+    .difficulty-button-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 8px;
+    }
+
+    .difficulty-button-grid .pixel-button {
+      min-width: 0;
+      padding-inline: 8px;
+      border-radius: 16px;
+      white-space: nowrap;
+    }
+
+    .difficulty-button-grid .pixel-button.active {
+      color: #031712;
+      border-color: rgba(250, 204, 21, 0.9);
+      background: linear-gradient(135deg, rgba(250, 204, 21, 0.92), rgba(52, 211, 153, 0.9));
+      box-shadow: 0 0 26px rgba(250, 204, 21, 0.22);
+    }
+
+    .difficulty-hint {
+      min-height: 36px;
+      color: #bfdbfe;
+      white-space: pre-line;
+    }
+
     .info-menu-actions .pixel-button,
     .info-menu-section .setting-row select {
       min-height: 48px;
@@ -2525,6 +2559,47 @@
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 8px;
+    }
+
+    .hero-avatar-panel {
+      display: grid;
+      grid-template-columns: 96px 1fr;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .hero-avatar-panel canvas {
+      width: 96px;
+      height: 96px;
+      border: 1px solid rgba(125, 211, 252, 0.34);
+      border-radius: 24px;
+      background: radial-gradient(circle at 50% 20%, rgba(56, 189, 248, 0.18), rgba(2, 6, 23, 0.86));
+      box-shadow: 0 0 28px rgba(56, 189, 248, 0.14);
+      image-rendering: auto;
+    }
+
+    .chronicle-list,
+    .achievement-list {
+      max-height: 156px;
+      overflow: auto;
+      display: grid;
+      gap: 6px;
+      padding-right: 4px;
+      color: #cbd5e1;
+    }
+
+    .chronicle-entry,
+    .achievement-entry {
+      padding: 8px 10px;
+      border: 1px solid rgba(125, 211, 252, 0.16);
+      border-radius: 14px;
+      background: rgba(2, 6, 23, 0.28);
+    }
+
+    .achievement-entry.unlocked {
+      color: #fef3c7;
+      border-color: rgba(250, 204, 21, 0.34);
+      box-shadow: inset 0 0 16px rgba(250, 204, 21, 0.08);
     }
 
     .world-evolution-a11y {
@@ -3331,7 +3406,7 @@
       backdrop-filter: blur(18px) saturate(1.18);
       opacity: 0;
       transform: translateY(18px);
-      transition: transform 220ms cubic-bezier(.2,.9,.2,1), opacity 220ms ease-out;
+      transition: transform 250ms cubic-bezier(0.2, 0.9, 0.4, 1), opacity 250ms cubic-bezier(0.2, 0.9, 0.4, 1);
       pointer-events: auto;
     }
 
@@ -4181,7 +4256,7 @@
       opacity: 0;
       pointer-events: auto;
       backdrop-filter: blur(18px) saturate(1.2);
-      transition: transform 200ms cubic-bezier(.2,.9,.2,1), opacity 200ms ease-out;
+      transition: transform 300ms cubic-bezier(0.2, 0.9, 0.4, 1), opacity 300ms cubic-bezier(0.2, 0.9, 0.4, 1);
       transform: translate(-50%, -18px);
     }
 
@@ -7717,6 +7792,15 @@
       <div id="keymapGlassBar" class="keymap-glass-bar" aria-label="当前游戏键位映射"></div>
       <aside id="infoSideMenu" class="info-side-menu" aria-label="局内信息菜单" aria-hidden="true">
         <h2 class="info-menu-title">&gt; OPERATOR_STATUS</h2>
+        <section id="worldEvolutionDifficultyGroup" class="info-menu-section">
+          <strong>难度选择</strong>
+          <div class="difficulty-button-grid" role="group" aria-label="世界进化难度">
+            <button class="pixel-button secondary" type="button" data-world-difficulty="easy">🌱 简单</button>
+            <button class="pixel-button secondary" type="button" data-world-difficulty="normal">⚡ 普通</button>
+            <button class="pixel-button secondary" type="button" data-world-difficulty="hard">🔥 困难</button>
+          </div>
+          <div id="worldEvolutionDifficultyHint" class="difficulty-hint">// 普通：完成度 +6%~14%，碎片 +1~3，MP -10。</div>
+        </section>
         <section class="info-menu-section">
           <strong>世界进化</strong>
           <div class="info-menu-row"><span>完成度</span><span id="infoWorldEvolutionText">0%</span></div>
@@ -7768,12 +7852,20 @@
         </section>
         <section class="info-menu-section">
           <strong>主角外观</strong>
+          <div class="hero-avatar-panel">
+            <canvas id="heroAvatarCanvas" width="128" height="128" aria-label="主角高清头像"></canvas>
+            <button id="regenerateHeroAvatarButton" class="pixel-button secondary" type="button">重新生成头像</button>
+          </div>
           <div class="hero-style-grid">
             <button id="heroCustomizeButton" class="pixel-button secondary" type="button">随机外观</button>
             <button class="pixel-button secondary" type="button" data-hero-preset="neonBlue">霓虹蓝</button>
             <button class="pixel-button secondary" type="button" data-hero-preset="hackerGreen">黑客绿</button>
             <button class="pixel-button secondary" type="button" data-hero-preset="shadowPurple">暗影紫</button>
           </div>
+        </section>
+        <section class="info-menu-section">
+          <strong>📜 编年史</strong>
+          <div id="worldEvolutionChronicleText" class="chronicle-list">// 尚未记录编译历史。</div>
         </section>
         <section class="info-menu-section">
           <strong>存档槽</strong>
@@ -7839,6 +7931,7 @@
         <section class="info-menu-section">
           <strong>成就 / 分享</strong>
           <div id="worldEvolutionAchievementText">成就: 0/0</div>
+          <div id="worldEvolutionAchievementList" class="achievement-list">// 成就等待解锁。</div>
           <div class="info-menu-actions">
             <button id="worldEvolutionShareButton" class="pixel-button secondary" type="button">生成分享卡</button>
             <button id="worldEvolutionCopyShareButton" class="pixel-button secondary" type="button">复制文案</button>
@@ -7864,6 +7957,7 @@
             <button id="manualSaveButton" class="pixel-button secondary" type="button">手动保存</button>
             <button id="testIslandToastButton" class="pixel-button secondary" type="button">测试弹窗</button>
             <button id="randomDialogueButton" class="pixel-button secondary" type="button">随机对话</button>
+            <button id="resetWorldEvolutionButton" class="pixel-button secondary" type="button">重置世界</button>
           </div>
         </section>
       </aside>
@@ -8544,23 +8638,23 @@ int main(void) {
         title: "> 消息 / 本次更新",
         lines: [
           "// 作者：杀戮",
-          "// 本次更新：加入编译失败惩罚、代码敌人和角色成长系统。",
-          "// 编译失败会扣除关卡生命，生命归零会回到出生点并重置当前关卡进度。",
-          "// 完成关卡、记忆小屋休息、出生点停留都可以恢复生命。"
+          "// 本次更新：补齐世界进化核心法则与无遮挡UI铁律。",
+          "// 主画面常驻信息继续收纳到左侧毛玻璃菜单，只保留汉堡按钮和编译按钮。",
+          "// 新增 简单 / 普通 / 困难 难度参数，并让编译收益、碎片、MP消耗即时变化。"
         ]
       },
       {
-        title: "> 更新内容 / 对抗与成长",
+        title: "> 更新内容 / 世界进化",
         lines: [
-          "// 关卡完成后会出现代码Bug或逻辑守卫，修复后才会稳定下一段路径。",
-          "// 成功编译和修复敌人会获得经验，等级提升会增强移动速度、生命上限和角色光效。",
-          "// 失败次数过多时，系统会建议复习当前章节，避免无意义反复试错。"
+          "// 困难模式会随机出现时空裂隙，需在底部动作条快速修复。",
+          "// 世界层新增古老石塔、浮空岛群、巨大光柱、星穹漩涡等完成度地标。",
+          "// NPC自动评语扩充至30句，成就补齐为初啼、旅人、收藏家、觉醒等完整列表。"
         ]
       },
       {
         title: "> 项目信息",
         lines: [
-          "// C语言世界内容保持完整可游玩，后续会继续补充其他语言世界。",
+          "// 新增编年史、主角高清头像、直接localStorage键值恢复与重置世界入口。",
           "// 官方Q群：414374792",
           "// 本项目永久免费对外开放，持续更新，助力每一个有编程梦的人。",
           "// 谢谢你的支持！"
@@ -8980,7 +9074,7 @@ int main(void) {
       directSaveAs: "reduced-by-inline-resources"
     });
     const SECURITY_CONFIG = Object.freeze({
-      expectedScriptHash: "JX0ZdkcQRrCEhHCdx4YlZLHmn10/bAk976lQiOA1AU8=",
+      expectedScriptHash: "c3dv9NWVQaxoioJo/XzlFHp1i/J0EgfK2XBFFSPtIZs=",
       selfCheckIntervalMs: 45000,
       tamperRefreshMs: 5000,
       devToolsRefreshMs: 2000,
@@ -11792,15 +11886,19 @@ int main(void) {
       fragmentCount: 0,
       worldEvolutionCompletion: 0,
       worldEvolutionFragments: 0,
+      worldEvolutionDifficulty: "normal",
       worldEvolutionMilestones: [],
       worldEvolutionNarrativeSeen: [],
       worldEvolutionTalents: { efficiency: 0, vitality: 0, spectacle: 0 },
       worldEvolutionEquipped: "",
       worldEvolutionCompileCount: 0,
+      worldEvolutionAvatarSeed: "hero-default",
       worldEvolutionHeroStyle: { hair: "neonBlue", color: "#38bdf8", outfit: "#0f172a" },
       worldEvolutionSeason: "green",
       worldEvolutionGuardian: null,
       worldEvolutionWeather: "dust",
+      worldEvolutionWeatherSeen: [],
+      worldEvolutionCreationCount: 0,
       worldEvolutionDayPhase: 0,
       worldEvolutionBranch: "kind",
       worldEvolutionChoices: [],
@@ -12056,6 +12154,43 @@ int main(void) {
         collectedFragmentKeys: Array.isArray(savedProgress.collectedFragmentKeys) ? savedProgress.collectedFragmentKeys : [],
         collectedFragments: Array.isArray(savedProgress.collectedFragments) ? savedProgress.collectedFragments : [],
         fragmentCount: Number(savedProgress.fragmentCount) || 0,
+        worldEvolutionCompletion: Number.isFinite(Number(savedProgress.worldEvolutionCompletion)) ? Number(savedProgress.worldEvolutionCompletion) : 0,
+        worldEvolutionFragments: Number.isFinite(Number(savedProgress.worldEvolutionFragments)) ? Number(savedProgress.worldEvolutionFragments) : 0,
+        worldEvolutionDifficulty: savedProgress.worldEvolutionDifficulty || "normal",
+        worldEvolutionMilestones: Array.isArray(savedProgress.worldEvolutionMilestones) ? savedProgress.worldEvolutionMilestones : [],
+        worldEvolutionNarrativeSeen: Array.isArray(savedProgress.worldEvolutionNarrativeSeen) ? savedProgress.worldEvolutionNarrativeSeen : [],
+        worldEvolutionTalents: savedProgress.worldEvolutionTalents && typeof savedProgress.worldEvolutionTalents === "object" ? savedProgress.worldEvolutionTalents : { efficiency: 0, vitality: 0, spectacle: 0 },
+        worldEvolutionEquipped: savedProgress.worldEvolutionEquipped || "",
+        worldEvolutionCompileCount: Number(savedProgress.worldEvolutionCompileCount) || 0,
+        worldEvolutionAvatarSeed: savedProgress.worldEvolutionAvatarSeed || "hero-default",
+        worldEvolutionHeroStyle: savedProgress.worldEvolutionHeroStyle && typeof savedProgress.worldEvolutionHeroStyle === "object" ? savedProgress.worldEvolutionHeroStyle : { hair: "neonBlue", color: "#38bdf8", outfit: "#0f172a" },
+        worldEvolutionSeason: savedProgress.worldEvolutionSeason || "green",
+        worldEvolutionGuardian: savedProgress.worldEvolutionGuardian || null,
+        worldEvolutionWeather: savedProgress.worldEvolutionWeather || "dust",
+        worldEvolutionWeatherSeen: Array.isArray(savedProgress.worldEvolutionWeatherSeen) ? savedProgress.worldEvolutionWeatherSeen : [],
+        worldEvolutionCreationCount: Number(savedProgress.worldEvolutionCreationCount) || 0,
+        worldEvolutionDayPhase: Number(savedProgress.worldEvolutionDayPhase) || 0,
+        worldEvolutionBranch: savedProgress.worldEvolutionBranch || "kind",
+        worldEvolutionChoices: Array.isArray(savedProgress.worldEvolutionChoices) ? savedProgress.worldEvolutionChoices : [],
+        worldEvolutionDiary: Array.isArray(savedProgress.worldEvolutionDiary) ? savedProgress.worldEvolutionDiary : [],
+        worldEvolutionMails: Array.isArray(savedProgress.worldEvolutionMails) ? savedProgress.worldEvolutionMails : [],
+        worldEvolutionAchievements: Array.isArray(savedProgress.worldEvolutionAchievements) ? savedProgress.worldEvolutionAchievements : [],
+        worldEvolutionPoems: Array.isArray(savedProgress.worldEvolutionPoems) ? savedProgress.worldEvolutionPoems : [],
+        worldEvolutionEndingsSeen: Array.isArray(savedProgress.worldEvolutionEndingsSeen) ? savedProgress.worldEvolutionEndingsSeen : [],
+        worldEvolutionRegion: savedProgress.worldEvolutionRegion || "village",
+        worldEvolutionUnlockedRegions: Array.isArray(savedProgress.worldEvolutionUnlockedRegions) ? savedProgress.worldEvolutionUnlockedRegions : ["village"],
+        worldEvolutionRandomEventsSeen: Array.isArray(savedProgress.worldEvolutionRandomEventsSeen) ? savedProgress.worldEvolutionRandomEventsSeen : [],
+        worldEvolutionMemoryFragments: Array.isArray(savedProgress.worldEvolutionMemoryFragments) ? savedProgress.worldEvolutionMemoryFragments : [],
+        worldEvolutionNewGamePlus: Number(savedProgress.worldEvolutionNewGamePlus) || 0,
+        worldEvolutionBlessingUntil: Number(savedProgress.worldEvolutionBlessingUntil) || 0,
+        worldEvolutionLastMirrorTrace: savedProgress.worldEvolutionLastMirrorTrace || "",
+        worldEvolutionHiddenNpcUnlocked: Boolean(savedProgress.worldEvolutionHiddenNpcUnlocked),
+        worldEvolutionPostPerfectCompiles: Number(savedProgress.worldEvolutionPostPerfectCompiles) || 0,
+        worldEvolutionGlobalContribution: Number(savedProgress.worldEvolutionGlobalContribution) || 0,
+        worldEvolutionBrokenObjects: Array.isArray(savedProgress.worldEvolutionBrokenObjects) ? savedProgress.worldEvolutionBrokenObjects : [],
+        worldEvolutionNoHeadMode: Boolean(savedProgress.worldEvolutionNoHeadMode),
+        worldEvolutionZenMode: Boolean(savedProgress.worldEvolutionZenMode),
+        worldEvolutionInfiniteMode: Boolean(savedProgress.worldEvolutionInfiniteMode),
         chapterFragmentGuideSeen: savedProgress.chapterFragmentGuideSeen && typeof savedProgress.chapterFragmentGuideSeen === "object" ? savedProgress.chapterFragmentGuideSeen : {},
         exp: Number(savedProgress.exp) || 0,
         compileLives: Number.isFinite(Number(savedProgress.compileLives)) ? Number(savedProgress.compileLives) : COMPILE_LIFE_RULES.initialLives,
@@ -14123,6 +14258,7 @@ int main(void) {
       infoWorldEvolutionText: document.getElementById("infoWorldEvolutionText"),
       infoWorldEvolutionFill: document.getElementById("infoWorldEvolutionFill"),
       infoWorldEvolutionHint: document.getElementById("infoWorldEvolutionHint"),
+      worldEvolutionDifficultyHint: document.getElementById("worldEvolutionDifficultyHint"),
       worldAdvanceButton: document.getElementById("worldAdvanceButton"),
       fragmentStarChartButton: document.getElementById("fragmentStarChartButton"),
       fragmentStarChartPanel: document.getElementById("fragmentStarChartPanel"),
@@ -14131,6 +14267,8 @@ int main(void) {
       useHpShardButton: document.getElementById("useHpShardButton"),
       useMpShardButton: document.getElementById("useMpShardButton"),
       heroCustomizeButton: document.getElementById("heroCustomizeButton"),
+      heroAvatarCanvas: document.getElementById("heroAvatarCanvas"),
+      regenerateHeroAvatarButton: document.getElementById("regenerateHeroAvatarButton"),
       worldEvolutionLanguageSelect: document.getElementById("worldEvolutionLanguageSelect"),
       worldEvolutionA11y: document.getElementById("worldEvolutionA11y"),
       guardianQteChip: document.getElementById("guardianQteChip"),
@@ -14151,6 +14289,8 @@ int main(void) {
       worldEvolutionTimePauseButton: document.getElementById("worldEvolutionTimePauseButton"),
       worldEvolutionMirrorText: document.getElementById("worldEvolutionMirrorText"),
       worldEvolutionCodexText: document.getElementById("worldEvolutionCodexText"),
+      worldEvolutionChronicleText: document.getElementById("worldEvolutionChronicleText"),
+      worldEvolutionAchievementList: document.getElementById("worldEvolutionAchievementList"),
       worldEvolutionMicToggle: document.getElementById("worldEvolutionMicToggle"),
       worldEvolutionCameraToggle: document.getElementById("worldEvolutionCameraToggle"),
       worldEvolutionDevConsole: document.getElementById("worldEvolutionDevConsole"),
@@ -14174,6 +14314,7 @@ int main(void) {
       manualSaveButton: document.getElementById("manualSaveButton"),
       testIslandToastButton: document.getElementById("testIslandToastButton"),
       randomDialogueButton: document.getElementById("randomDialogueButton"),
+      resetWorldEvolutionButton: document.getElementById("resetWorldEvolutionButton"),
       taskGoal: document.getElementById("taskGoal"),
       taskTarget: document.getElementById("taskTarget"),
       taskExample: document.getElementById("taskExample"),
@@ -16368,6 +16509,41 @@ int main(void) {
       { id: "world_blessing", label: "世界祝福", weight: 0.35 },
       { id: "void_rift", label: "虚空裂隙", weight: 0.2 }
     ]);
+    const WORLD_EVOLUTION_DIFFICULTY_CONFIG = Object.freeze({
+      easy: {
+        label: "🌱 简单",
+        completion: [12, 20],
+        fragments: [2, 5],
+        mpCost: 0,
+        internalMpCost: 0,
+        particleScale: 0.5,
+        shakeScale: 0.55,
+        riftChance: 0,
+        hint: "// 简单：完成度 +12%~20%，碎片 +2~5，MP 不消耗，粒子减半。"
+      },
+      normal: {
+        label: "⚡ 普通",
+        completion: [6, 14],
+        fragments: [1, 3],
+        mpCost: 10,
+        internalMpCost: 1,
+        particleScale: 1,
+        shakeScale: 1,
+        riftChance: 0,
+        hint: "// 普通：完成度 +6%~14%，碎片 +1~3，MP -10。"
+      },
+      hard: {
+        label: "🔥 困难",
+        completion: [2, 6],
+        fragments: [0, 2],
+        mpCost: 20,
+        internalMpCost: 2,
+        particleScale: 2,
+        shakeScale: 1.75,
+        riftChance: 0.24,
+        hint: "// 困难：完成度 +2%~6%，碎片 +0~2，MP -20，偶发时空裂隙。"
+      }
+    });
     const WORLD_EVOLUTION_UI_THEMES = Object.freeze({
       deepStar: { label: "深邃星空", accent: "#38bdf8" },
       amberGold: { label: "琥珀流金", accent: "#facc15" },
@@ -16381,18 +16557,22 @@ int main(void) {
       { id: "thanks", unlockAt: 20, title: "修复完成", text: "谢谢你，修复了我。" }
     ]);
     const WORLD_EVOLUTION_NPCS = Object.freeze([
-      { id: "archivist", name: "档案员岚", voice: 0.86, lines: ["我记录的不是数字，是你修复世界的脚步。", "今天的风比昨天更像一段函数。"] },
-      { id: "gardener", name: "苔藓园丁", voice: 1.02, lines: ["你每推进一次，地面就少一条伤口。", "如果下雨，请别急着躲开，那是世界在清洗缓存。"] },
-      { id: "smith", name: "星核匠", voice: 0.72, lines: ["碎片可以点亮星盘，也可以救你一次。", "真正的华丽不是光多，是光知道该落在哪里。"] },
-      { id: "pilot", name: "浮岛引航员", voice: 1.14, lines: ["到 70% 时抬头看，云端会出现新的轮廓。", "别把路线看成地图，它其实是一段正在运行的代码。"] },
-      { id: "echo", name: "回声", voice: 0.64, lines: ["你不是唯一一个打开这个世界的人。", "如果另一个标签页也在编译，我会听见微弱的回声。"] }
+      { id: "archivist", name: "档案员岚", voice: 0.86, lines: ["我记录的不是数字，是你修复世界的脚步。", "今天的风比昨天更像一段函数。", "旧星穹还很暗，但它已经开始回应你。", "每次编译都会留下可见的年轮。", "别急，世界正在学会重新呼吸。", "我会把这些变化写进编年史。"] },
+      { id: "gardener", name: "苔藓园丁", voice: 1.02, lines: ["你每推进一次，地面就少一条伤口。", "如果下雨，请别急着躲开，那是世界在清洗缓存。", "枯枝听见了变量的名字。", "苔藓会沿着你写下的路径生长。", "花不是奖励，是世界说谢谢的方式。", "今天的土壤比刚才更柔软了。"] },
+      { id: "smith", name: "星核匠", voice: 0.72, lines: ["碎片可以点亮星盘，也可以救你一次。", "真正的华丽不是光多，是光知道该落在哪里。", "困难模式的裂隙会考验你的手速。", "金色不是胜利，它只是秩序的颜色。", "如果碎片满了，就去看看成就墙。", "我听见星核在低声重启。"] },
+      { id: "pilot", name: "浮岛引航员", voice: 1.14, lines: ["到 70% 时抬头看，云端会出现新的轮廓。", "别把路线看成地图，它其实是一段正在运行的代码。", "浮岛不是飞起来的石头，是被相信的坐标。", "远山背后有一束光正在等待权限。", "当星穹旋转，你就接近终点了。", "下一阵风会把你推向更亮的地方。"] },
+      { id: "echo", name: "回声", voice: 0.64, lines: ["你不是唯一一个打开这个世界的人。", "如果另一个标签页也在编译，我会听见微弱的回声。", "有些脚步会留在看不见的地方。", "你刚刚修复的，不止是画面。", "系统说这是数据，我觉得这是记忆。", "当世界完成后，别忘了给自己一个结尾。"] }
     ]);
     const WORLD_EVOLUTION_ACHIEVEMENTS = Object.freeze([
-      { id: "first_compile", name: "第一次世界编译", test: () => (Number(gameState.progress.worldEvolutionCompileCount) || 0) >= 1 },
-      { id: "stage_50", name: "古树醒来", test: () => (Number(gameState.progress.worldEvolutionCompletion) || 0) >= 50 },
-      { id: "fragment_master", name: "碎片收集大师", test: () => (Number(gameState.progress.worldEvolutionFragments) || 0) >= 20 },
-      { id: "qte_guardian", name: "守护者稳定者", test: () => gameState.progress.worldEvolutionAchievements?.includes?.("qte_guardian_flag") },
-      { id: "perfect_world", name: "创世完成", test: () => (Number(gameState.progress.worldEvolutionCompletion) || 0) >= 100 }
+      { id: "first_compile", name: "初啼", test: () => (Number(gameState.progress.worldEvolutionCompileCount) || 0) >= 1 },
+      { id: "traveler", name: "旅人", test: () => (Number(gameState.progress.worldEvolutionCompileCount) || 0) >= 10 },
+      { id: "collector", name: "收藏家", test: () => (Number(gameState.progress.worldEvolutionFragments) || 0) >= 20 },
+      { id: "awakening", name: "觉醒", test: () => (Number(gameState.progress.worldEvolutionCompletion) || 0) >= 50 },
+      { id: "creator", name: "创世者", test: () => (Number(gameState.progress.worldEvolutionCompletion) || 0) >= 100 },
+      { id: "fearless", name: "无畏", test: () => (gameState.progress.worldEvolutionDifficulty || "normal") === "hard" && (Number(gameState.progress.worldEvolutionCompletion) || 0) >= 100 },
+      { id: "artist", name: "艺术家", test: () => (Number(gameState.progress.worldEvolutionCreationCount) || 0) >= 50 },
+      { id: "timewalker", name: "时空行者", test: () => new Set(gameState.progress.worldEvolutionWeatherSeen || []).size >= WORLD_EVOLUTION_WEATHER_THRESHOLDS.length },
+      { id: "qte_guardian", name: "守护者稳定者", test: () => gameState.progress.worldEvolutionAchievements?.includes?.("qte_guardian_flag") }
     ]);
     const WORLD_EVOLUTION_QUANTUM_BRANCHES = Object.freeze({
       kind: { label: "善良", tint: 0x22c55e, line: "温柔路径正在被观测。" },
@@ -16403,6 +16583,123 @@ int main(void) {
     function tWorldEvolution(key) {
       const locale = gameState.settings.worldEvolutionLanguage || gameState.settings.language || "zh-CN";
       return WORLD_EVOLUTION_I18N[locale]?.[key] || WORLD_EVOLUTION_I18N["zh-CN"][key] || key;
+    }
+
+    function getWorldEvolutionDifficultyConfig(difficulty = gameState.progress.worldEvolutionDifficulty || "normal") {
+      const id = WORLD_EVOLUTION_DIFFICULTY_CONFIG[difficulty] ? difficulty : "normal";
+      return WORLD_EVOLUTION_DIFFICULTY_CONFIG[id];
+    }
+
+    function getWorldEvolutionDifficultyId() {
+      return WORLD_EVOLUTION_DIFFICULTY_CONFIG[gameState.progress.worldEvolutionDifficulty]
+        ? gameState.progress.worldEvolutionDifficulty
+        : "normal";
+    }
+
+    function updateWorldEvolutionDifficultyUi() {
+      const difficulty = getWorldEvolutionDifficultyId();
+      const config = getWorldEvolutionDifficultyConfig(difficulty);
+      document.querySelectorAll("[data-world-difficulty]").forEach((button) => {
+        button.classList.toggle("active", button.dataset.worldDifficulty === difficulty);
+        button.setAttribute("aria-pressed", String(button.dataset.worldDifficulty === difficulty));
+      });
+      if (dom.worldEvolutionDifficultyHint) dom.worldEvolutionDifficultyHint.textContent = config.hint;
+      return difficulty;
+    }
+
+    function saveWorldEvolutionLocalKeys() {
+      try {
+        localStorage.setItem("completion", String(Math.round(Number(gameState.progress.worldEvolutionCompletion) || 0)));
+        localStorage.setItem("fragments", String(Math.max(0, Math.min(20, Number(gameState.progress.worldEvolutionFragments) || 0))));
+        localStorage.setItem("compileCount", String(Number(gameState.progress.worldEvolutionCompileCount) || 0));
+        localStorage.setItem("achievements", JSON.stringify(gameState.progress.worldEvolutionAchievements || []));
+        localStorage.setItem("diary", JSON.stringify((gameState.progress.worldEvolutionDiary || []).slice(-50)));
+        localStorage.setItem("textSpeed", String(Number(gameState.settings.textSpeed ?? 55)));
+        localStorage.setItem("difficulty", getWorldEvolutionDifficultyId());
+        localStorage.setItem("avatarSeed", String(gameState.progress.worldEvolutionAvatarSeed || "hero-default"));
+        return true;
+      } catch (error) {
+        reportSoftError(error, ERROR_LEVELS.recoverable, { source: "save-world-evolution-local-keys" });
+        return false;
+      }
+    }
+
+    function loadWorldEvolutionLocalKeys() {
+      try {
+        const directCompletion = localStorage.getItem("completion");
+        const directFragments = localStorage.getItem("fragments");
+        const directCompileCount = localStorage.getItem("compileCount");
+        const directAchievements = sanitizeImportedJson(localStorage.getItem("achievements"), null);
+        const directDiary = sanitizeImportedJson(localStorage.getItem("diary"), null);
+        const directTextSpeed = localStorage.getItem("textSpeed");
+        const directDifficulty = localStorage.getItem("difficulty");
+        const directAvatarSeed = localStorage.getItem("avatarSeed");
+        if (directCompletion !== null) gameState.progress.worldEvolutionCompletion = Math.max(0, Math.min(100, Number(directCompletion) || 0));
+        if (directFragments !== null) gameState.progress.worldEvolutionFragments = Math.max(0, Math.min(20, Number(directFragments) || 0));
+        if (directCompileCount !== null) gameState.progress.worldEvolutionCompileCount = Math.max(0, Number(directCompileCount) || 0);
+        if (Array.isArray(directAchievements)) gameState.progress.worldEvolutionAchievements = directAchievements;
+        if (Array.isArray(directDiary)) gameState.progress.worldEvolutionDiary = directDiary.slice(-50);
+        if (directTextSpeed !== null) gameState.settings.textSpeed = Math.max(0, Math.min(100, Number(directTextSpeed) || 55));
+        if (WORLD_EVOLUTION_DIFFICULTY_CONFIG[directDifficulty]) gameState.progress.worldEvolutionDifficulty = directDifficulty;
+        if (directAvatarSeed) gameState.progress.worldEvolutionAvatarSeed = sanitizePlayerInput(directAvatarSeed, 64);
+        return true;
+      } catch (error) {
+        reportSoftError(error, ERROR_LEVELS.recoverable, { source: "load-world-evolution-local-keys" });
+        return false;
+      }
+    }
+
+    function setWorldEvolutionDifficulty(difficulty = "normal") {
+      if (!WORLD_EVOLUTION_DIFFICULTY_CONFIG[difficulty]) difficulty = "normal";
+      gameState.progress.worldEvolutionDifficulty = difficulty;
+      localStorage.setItem("difficulty", difficulty);
+      updateWorldEvolutionDifficultyUi();
+      saveWorldEvolutionLocalKeys();
+      saveProgress();
+      showReward(`难度已切换：${WORLD_EVOLUTION_DIFFICULTY_CONFIG[difficulty].label}`);
+      return difficulty;
+    }
+
+    function resetWorldEvolutionProgress() {
+      const preservedAchievements = Array.isArray(gameState.progress.worldEvolutionAchievements) ? [...gameState.progress.worldEvolutionAchievements] : [];
+      const preservedDifficulty = getWorldEvolutionDifficultyId();
+      const preservedAvatarSeed = gameState.progress.worldEvolutionAvatarSeed || "hero-default";
+      const applyReset = () => {
+        gameState.progress.worldEvolutionCompletion = 0;
+        gameState.progress.worldEvolutionFragments = 0;
+        gameState.progress.worldEvolutionCompileCount = 0;
+        gameState.progress.worldEvolutionMilestones = [];
+        gameState.progress.worldEvolutionNarrativeSeen = [];
+        gameState.progress.worldEvolutionDiary = [];
+        gameState.progress.worldEvolutionMails = [];
+        gameState.progress.worldEvolutionPoems = [];
+        gameState.progress.worldEvolutionEndingsSeen = [];
+        gameState.progress.worldEvolutionRandomEventsSeen = [];
+        gameState.progress.worldEvolutionMemoryFragments = [];
+        gameState.progress.worldEvolutionBrokenObjects = [];
+        gameState.progress.worldEvolutionWeatherSeen = [];
+        gameState.progress.worldEvolutionCreationCount = 0;
+        gameState.progress.worldEvolutionSeason = "green";
+        gameState.progress.worldEvolutionWeather = "overcast";
+        gameState.progress.worldEvolutionDayPhase = 0;
+        gameState.progress.worldEvolutionRegion = "village";
+        gameState.progress.worldEvolutionUnlockedRegions = ["village"];
+        gameState.progress.worldEvolutionAchievements = preservedAchievements;
+        gameState.progress.worldEvolutionDifficulty = preservedDifficulty;
+        gameState.progress.worldEvolutionAvatarSeed = preservedAvatarSeed;
+        gameState.progress.worldEvolutionPostPerfectCompiles = 0;
+        normalizeWorldEvolutionState();
+        updateWorldEvolutionLayer(gameState.scene, true);
+        updateInfoSideMenu();
+        saveWorldEvolutionLocalKeys();
+        saveProgress();
+        showReward("世界进化已重置；成就和难度已保留。");
+      };
+      openBottomActionBar("确认重置世界进化进度？成就与当前难度会保留。", applyReset, {
+        confirmLabel: "重置世界",
+        cancelLabel: "取消"
+      });
+      return true;
     }
 
     function announceWorldEvolutionA11y(message) {
@@ -16433,7 +16730,8 @@ int main(void) {
       if (!text) return false;
       gameState.progress.worldEvolutionDiary ||= [];
       gameState.progress.worldEvolutionDiary.push({ time: new Date().toISOString(), text });
-      gameState.progress.worldEvolutionDiary = gameState.progress.worldEvolutionDiary.slice(-60);
+      gameState.progress.worldEvolutionDiary = gameState.progress.worldEvolutionDiary.slice(-50);
+      renderWorldEvolutionChronicle();
       return true;
     }
 
@@ -16509,6 +16807,7 @@ int main(void) {
     function maybeTriggerWorldEvolutionRandomEvent(forceEventId = "") {
       if (!forceEventId && Math.random() >= 0.1) return null;
       const event = WORLD_EVOLUTION_RANDOM_EVENTS.find((item) => item.id === forceEventId) || pickWeightedWorldEvolutionEvent();
+      if (event.id === "void_rift" && getWorldEvolutionDifficultyId() !== "hard" && !forceEventId) return null;
       gameState.progress.worldEvolutionRandomEventsSeen ||= [];
       gameState.progress.worldEvolutionRandomEventsSeen.push({ id: event.id, at: Date.now() });
       gameState.progress.worldEvolutionRandomEventsSeen = gameState.progress.worldEvolutionRandomEventsSeen.slice(-30);
@@ -16539,6 +16838,40 @@ int main(void) {
       updateInfoSideMenu();
       saveProgress();
       return event.id;
+    }
+
+    let activeHardModeTimeRiftTimer = null;
+
+    function resolveHardModeTimeRift(success = true) {
+      if (activeHardModeTimeRiftTimer) {
+        timerTracker.clear(activeHardModeTimeRiftTimer);
+        activeHardModeTimeRiftTimer = null;
+      }
+      closeBottomActionBar();
+      if (success) {
+        gameState.progress.worldEvolutionFragments = Math.min(20, (Number(gameState.progress.worldEvolutionFragments) || 0) + 1);
+        showReward("时空裂隙已修复，稀有碎片 +1。");
+      } else {
+        gameState.progress.worldEvolutionCompletion = Math.max(0, (Number(gameState.progress.worldEvolutionCompletion) || 0) - 2);
+        showReward("时空裂隙未及时修复，完成度 -2%。");
+        gameState.scene?.cameras?.main?.shake?.(180, 0.004);
+      }
+      addWorldEvolutionDiary(success ? "困难裂隙：你及时修复了时空裂隙。" : "困难裂隙：世界完成度被短暂撕裂。");
+      updateWorldEvolutionUi();
+      updateWorldEvolutionLayer(gameState.scene, true);
+      saveProgress();
+      return success;
+    }
+
+    function spawnHardModeTimeRift() {
+      if (getWorldEvolutionDifficultyId() !== "hard" || activeHardModeTimeRiftTimer) return false;
+      showReward("困难模式：时空裂隙正在生成。");
+      openBottomActionBar("🔥 时空裂隙出现：3秒内点击修复，否则完成度 -2%。", () => resolveHardModeTimeRift(true), {
+        confirmLabel: "快速修复",
+        cancelLabel: "放弃"
+      });
+      activeHardModeTimeRiftTimer = trackedSetTimeout(() => resolveHardModeTimeRift(false), 3000, "hard-mode-time-rift");
+      return true;
     }
 
     function playWorldEvolutionCompileSound() {
@@ -16766,6 +17099,10 @@ int main(void) {
     function updateWorldEvolutionWeather(completion = normalizeWorldEvolutionState()) {
       const weather = getWorldEvolutionWeatherThreshold(completion);
       gameState.progress.worldEvolutionWeather = weather.id;
+      gameState.progress.worldEvolutionWeatherSeen ||= [];
+      if (!gameState.progress.worldEvolutionWeatherSeen.includes(weather.id)) {
+        gameState.progress.worldEvolutionWeatherSeen.push(weather.id);
+      }
       return gameState.progress.worldEvolutionWeather;
     }
 
@@ -16800,11 +17137,10 @@ int main(void) {
       if (completion < 100) return { id: "unfinished", title: "世界仍在编译", text: "继续推进完成度，结局尚未坍缩。" };
       const fragments = Number(gameState.progress.worldEvolutionFragments) || 0;
       const compiles = Number(gameState.progress.worldEvolutionCompileCount) || 0;
-      const branch = gameState.progress.worldEvolutionBranch || "kind";
       if (gameState.progress.worldEvolutionPostPerfectCompiles >= 100) return { id: "beyond", title: "超越完美", text: "世界炸裂成宇宙尘埃，又重组成一份新的 HTML 梦境。" };
-      if (branch === "machine") return { id: "fusion", title: "融合结局", text: "自然与机器达成协议，世界成为会呼吸的程序。" };
-      if (fragments >= 18 && compiles <= 24) return { id: "ascension", title: "飞升结局", text: "碎片在天空排成星门，世界向更高语言迁移。" };
-      return { id: "rebirth", title: "重生结局", text: "破碎世界被完整修复，新的春天从代码中醒来。" };
+      if (fragments >= 18) return { id: "wisdom", title: "智慧结局", text: "文明重现：金色粒子把知识碎片重新编成星穹。" };
+      if (compiles >= 25) return { id: "power", title: "力量结局", text: "秩序重铸：红色脉冲让破碎法则重新归位。" };
+      return { id: "ordinary", title: "平凡结局", text: "世界归于宁静：蓝色光雨轻轻落下，谢谢你来到这里。" };
     }
 
     function showWorldEvolutionEnding() {
@@ -16997,12 +17333,14 @@ int main(void) {
         return false;
       }
       gameState.progress.worldEvolutionFragments = Math.max(0, (Number(gameState.progress.worldEvolutionFragments) || 0) - 1);
+      gameState.progress.worldEvolutionCreationCount = (Number(gameState.progress.worldEvolutionCreationCount) || 0) + 1;
       gameState.progress.worldEvolutionBrokenObjects ||= [];
       gameState.progress.worldEvolutionBrokenObjects.push({ x: Math.round(pointer.worldX), y: Math.round(pointer.worldY), at: Date.now() });
       spawnPixelShatter(scene, pointer.worldX, pointer.worldY, WORLD_EVOLUTION_QUANTUM_BRANCHES[gameState.progress.worldEvolutionBranch || "kind"].tint);
       spawnCodeParticles(scene, pointer.worldX, pointer.worldY - 18, ["break", "rebuild", "seed", "++"]);
       addWorldEvolutionDiary(`你在 (${Math.round(pointer.worldX)}, ${Math.round(pointer.worldY)}) 重建了一处世界伤口。`);
       updateInfoSideMenu();
+      checkWorldEvolutionAchievements();
       saveProgress();
       return true;
     }
@@ -17106,6 +17444,8 @@ int main(void) {
         ? { hair: `random-${Date.now() % 999}`, color: palette[Math.floor(Math.random() * palette.length)], outfit: palette[Math.floor(Math.random() * palette.length)] }
         : (presets[preset] || presets.neonBlue);
       if (gameState.progress.worldEvolutionHeroStyle.hair in PLAYER_SKIN_PRESETS) updateSetting("playerSkin", gameState.progress.worldEvolutionHeroStyle.hair);
+      drawHeroAvatarCanvas();
+      saveWorldEvolutionLocalKeys();
       saveProgress();
       showReward("主角外观已更新。");
       return gameState.progress.worldEvolutionHeroStyle;
@@ -17117,10 +17457,14 @@ int main(void) {
         savedAt: new Date().toISOString(),
         completion: gameState.progress.worldEvolutionCompletion,
         fragments: gameState.progress.worldEvolutionFragments,
+        difficulty: gameState.progress.worldEvolutionDifficulty,
         talents: gameState.progress.worldEvolutionTalents,
         equipped: gameState.progress.worldEvolutionEquipped,
+        avatarSeed: gameState.progress.worldEvolutionAvatarSeed,
         season: gameState.progress.worldEvolutionSeason,
         weather: gameState.progress.worldEvolutionWeather,
+        weatherSeen: gameState.progress.worldEvolutionWeatherSeen,
+        creationCount: gameState.progress.worldEvolutionCreationCount,
         dayPhase: gameState.progress.worldEvolutionDayPhase,
         branch: gameState.progress.worldEvolutionBranch,
         choices: gameState.progress.worldEvolutionChoices,
@@ -17151,10 +17495,14 @@ int main(void) {
       }
       gameState.progress.worldEvolutionCompletion = Math.max(0, Math.min(100, Number(data.completion) || 0));
       gameState.progress.worldEvolutionFragments = Math.max(0, Math.min(20, Number(data.fragments) || 0));
+      gameState.progress.worldEvolutionDifficulty = WORLD_EVOLUTION_DIFFICULTY_CONFIG[data.difficulty] ? data.difficulty : "normal";
       gameState.progress.worldEvolutionTalents = data.talents || { efficiency: 0, vitality: 0, spectacle: 0 };
       gameState.progress.worldEvolutionEquipped = data.equipped || "";
+      gameState.progress.worldEvolutionAvatarSeed = data.avatarSeed || "hero-default";
       gameState.progress.worldEvolutionSeason = data.season || "green";
       gameState.progress.worldEvolutionWeather = data.weather || "dust";
+      gameState.progress.worldEvolutionWeatherSeen = Array.isArray(data.weatherSeen) ? data.weatherSeen : [];
+      gameState.progress.worldEvolutionCreationCount = Number(data.creationCount) || 0;
       gameState.progress.worldEvolutionDayPhase = Number(data.dayPhase) || 0;
       gameState.progress.worldEvolutionBranch = data.branch || "kind";
       gameState.progress.worldEvolutionChoices = Array.isArray(data.choices) ? data.choices : [];
@@ -17193,13 +17541,15 @@ int main(void) {
       return canvas;
     }
 
-    function playWorldEvolutionRandomEffect(scene = gameState.scene) {
+    function playWorldEvolutionRandomEffect(scene = gameState.scene, difficultyConfig = getWorldEvolutionDifficultyConfig()) {
       if (!scene?.add) return false;
       const center = scene.player || { x: GAME_DATA.map.width / 2, y: GAME_DATA.map.height / 2 };
       const effects = ["spark", "ripple", "season", "shake"];
       const effect = effects[(Number(gameState.progress.worldEvolutionCompileCount) || 0) % effects.length];
       if (effect === "spark") {
-        spawnCodeParticles(scene, center.x, center.y - 28, ["++", "int", "光", "fix"]);
+        const particleWords = ["++", "int", "光", "fix", "return", "星穹", "compile", "seed"];
+        const count = Math.max(2, Math.min(particleWords.length, Math.round(4 * difficultyConfig.particleScale)));
+        spawnCodeParticles(scene, center.x, center.y - 28, particleWords.slice(0, count));
       } else if (effect === "ripple") {
         const ripple = scene.add.circle(center.x, center.y, 8, 0x38bdf8, 0.04).setDepth(11).setStrokeStyle(2, 0x38bdf8, 0.62);
         scene.tweens?.add?.({
@@ -17216,7 +17566,7 @@ int main(void) {
         gameState.progress.worldEvolutionSeason = seasons[(currentIndex + 1 + seasons.length) % seasons.length];
         updateWorldEvolutionLayer(scene, true);
       } else if (gameState.settings.shake) {
-        scene.cameras?.main?.shake?.(90, 0.0015);
+        scene.cameras?.main?.shake?.(90 * difficultyConfig.shakeScale, 0.0015 * difficultyConfig.shakeScale);
       }
       return effect;
     }
@@ -17313,6 +17663,8 @@ int main(void) {
       if (!Array.isArray(gameState.progress.worldEvolutionMilestones)) gameState.progress.worldEvolutionMilestones = [];
       if (!Array.isArray(gameState.progress.worldEvolutionNarrativeSeen)) gameState.progress.worldEvolutionNarrativeSeen = [];
       gameState.progress.worldEvolutionTalents ||= { efficiency: 0, vitality: 0, spectacle: 0 };
+      if (!WORLD_EVOLUTION_DIFFICULTY_CONFIG[gameState.progress.worldEvolutionDifficulty]) gameState.progress.worldEvolutionDifficulty = "normal";
+      if (!gameState.progress.worldEvolutionAvatarSeed) gameState.progress.worldEvolutionAvatarSeed = "hero-default";
       if (!["green", "gold", "aurora"].includes(gameState.progress.worldEvolutionSeason)) gameState.progress.worldEvolutionSeason = "green";
       if (!Object.keys(WORLD_EVOLUTION_QUANTUM_BRANCHES).includes(gameState.progress.worldEvolutionBranch)) gameState.progress.worldEvolutionBranch = "kind";
       if (!Array.isArray(gameState.progress.worldEvolutionChoices)) gameState.progress.worldEvolutionChoices = [];
@@ -17325,6 +17677,8 @@ int main(void) {
       if (!Array.isArray(gameState.progress.worldEvolutionRandomEventsSeen)) gameState.progress.worldEvolutionRandomEventsSeen = [];
       if (!Array.isArray(gameState.progress.worldEvolutionMemoryFragments)) gameState.progress.worldEvolutionMemoryFragments = [];
       if (!Array.isArray(gameState.progress.worldEvolutionBrokenObjects)) gameState.progress.worldEvolutionBrokenObjects = [];
+      if (!Array.isArray(gameState.progress.worldEvolutionWeatherSeen)) gameState.progress.worldEvolutionWeatherSeen = [];
+      gameState.progress.worldEvolutionCreationCount = Math.max(0, Number(gameState.progress.worldEvolutionCreationCount) || 0);
       if (!WORLD_EVOLUTION_REGIONS.some((region) => region.id === gameState.progress.worldEvolutionRegion)) gameState.progress.worldEvolutionRegion = "village";
       if (!["overcast", "dust", "rain", "cloud", "aurora", "stars", "rainbow", "sunlight", "auroraGold"].includes(gameState.progress.worldEvolutionWeather)) gameState.progress.worldEvolutionWeather = "overcast";
       const clearedCompletion = Math.round(((gameState.progress.cleared?.length || 0) / Math.max(1, chapters.length)) * 100);
@@ -17347,6 +17701,7 @@ int main(void) {
     function updateWorldEvolutionUi() {
       const completion = normalizeWorldEvolutionState();
       const fragments = gameState.progress.worldEvolutionFragments;
+      updateWorldEvolutionDifficultyUi();
       if (dom.infoWorldEvolutionText) dom.infoWorldEvolutionText.textContent = `${Math.round(completion)}%`;
       if (dom.infoWorldEvolutionFill) dom.infoWorldEvolutionFill.style.width = `${Math.round(completion)}%`;
       if (dom.infoWorldEvolutionHint) dom.infoWorldEvolutionHint.textContent = `${getWorldEvolutionHint(completion)}\n进化碎片: ${fragments}/20`;
@@ -17367,6 +17722,9 @@ int main(void) {
         const visibleAchievements = (gameState.progress.worldEvolutionAchievements || []).filter((id) => WORLD_EVOLUTION_ACHIEVEMENTS.some((item) => item.id === id));
         dom.worldEvolutionAchievementText.textContent = `成就: ${visibleAchievements.length}/${WORLD_EVOLUTION_ACHIEVEMENTS.length}`;
       }
+      drawHeroAvatarCanvas();
+      renderWorldEvolutionChronicle();
+      renderWorldEvolutionAchievements();
       if (dom.worldAdvanceButton) {
         dom.worldAdvanceButton.classList.toggle("complete", completion >= 100);
         dom.worldAdvanceButton.textContent = completion >= 100 ? "世界已完成" : "编译 / 推进";
@@ -17392,6 +17750,7 @@ int main(void) {
 
     function advanceWorldEvolution(chargeMultiplier = 1) {
       normalizeWorldEvolutionState();
+      const config = getWorldEvolutionDifficultyConfig();
       const previous = gameState.progress.worldEvolutionCompletion;
       if (previous >= 100) {
         gameState.progress.worldEvolutionPostPerfectCompiles = (Number(gameState.progress.worldEvolutionPostPerfectCompiles) || 0) + 1;
@@ -17401,13 +17760,13 @@ int main(void) {
         saveProgress();
         return false;
       }
-      if (!spendWorldEvolutionMp(1)) return false;
+      if (!spendWorldEvolutionMp(config.internalMpCost)) return false;
       const efficiency = Number(gameState.progress.worldEvolutionTalents?.efficiency) || 0;
       const equippedBonus = gameState.progress.worldEvolutionEquipped ? 2 : 0;
       const blessingBonus = Date.now() < (Number(gameState.progress.worldEvolutionBlessingUntil) || 0) ? 3 : 0;
       const chargeBonus = Math.max(1, Math.min(3, Number(chargeMultiplier) || 1));
-      const gain = Math.min(100 - previous, Math.round((Phaser.Math.Between(5, 15) + efficiency * 2 + equippedBonus + blessingBonus) * chargeBonus));
-      const fragmentGain = Math.min(20 - gameState.progress.worldEvolutionFragments, Phaser.Math.Between(1, 3));
+      const gain = Math.min(100 - previous, Math.round((Phaser.Math.Between(config.completion[0], config.completion[1]) + efficiency * 2 + equippedBonus + blessingBonus) * chargeBonus));
+      const fragmentGain = Math.min(20 - gameState.progress.worldEvolutionFragments, Phaser.Math.Between(config.fragments[0], config.fragments[1]));
       playWorldEvolutionCompileSound();
       gameState.progress.worldEvolutionCompletion = Math.min(100, previous + gain);
       gameState.progress.worldEvolutionFragments = Math.min(20, gameState.progress.worldEvolutionFragments + fragmentGain);
@@ -17425,13 +17784,14 @@ int main(void) {
       updateWorldEvolutionUi();
       saveProgress();
       updateWorldEvolutionLayer(gameState.scene, true);
-      showReward(`${tWorldEvolution("advanced")} +${gain}% · 进化碎片 +${fragmentGain}`);
+      showReward(`${config.label} ${tWorldEvolution("advanced")} +${gain}% · 进化碎片 +${fragmentGain} · MP -${config.mpCost}`);
       announceWorldEvolutionA11y(`${tWorldEvolution("advanced")} ${Math.round(gameState.progress.worldEvolutionCompletion)}%`);
       updateWorldEvolutionMusicMood();
-      playWorldEvolutionRandomEffect(gameState.scene);
+      playWorldEvolutionRandomEffect(gameState.scene, config);
       triggerWorldEvolutionNarrative(previous, gameState.progress.worldEvolutionCompletion);
       triggerWorldEvolutionMilestoneEffects(previous, gameState.progress.worldEvolutionCompletion, gameState.scene);
       maybeSpawnWorldGuardianQte();
+      if (config.riftChance > 0 && Math.random() < config.riftChance) spawnHardModeTimeRift();
       triggerWorldEvolutionNpcComment();
       checkWorldEvolutionAchievements();
       broadcastWorldEvolutionSync();
@@ -18599,6 +18959,7 @@ int main(void) {
         gameState.progress.codeLog = clonePlainData(gameState.codeLog || []);
       }
       writeStorage(STORAGE.progress, gameState.progress);
+      if (typeof saveWorldEvolutionLocalKeys === "function") saveWorldEvolutionLocalKeys();
     }
 
     function saveCollections() {
@@ -20827,7 +21188,7 @@ int main(void) {
       closeButton?.addEventListener("click", closeIslandToast, { once: true });
       dom.reward.classList.remove("closing");
       dom.reward.classList.add("show");
-      islandToastTimer = window.setTimeout(closeIslandToast, 2000);
+      islandToastTimer = window.setTimeout(closeIslandToast, 2500);
       return true;
     }
 
@@ -22071,6 +22432,95 @@ int main(void) {
       ctx.strokeStyle = "rgba(125, 211, 252, 0.34)";
       ctx.strokeRect(10.5, 10.5, 107, 107);
       return canvas.toDataURL("image/png");
+    }
+
+    function drawHeroAvatarCanvas(seed = gameState.progress.worldEvolutionAvatarSeed || "hero-default") {
+      const canvas = dom.heroAvatarCanvas;
+      const ctx = canvas?.getContext?.("2d");
+      if (!ctx || typeof ctx.clearRect !== "function") return false;
+      let hash = 0;
+      String(seed).split("").forEach((char) => { hash = ((hash << 5) - hash + char.charCodeAt(0)) | 0; });
+      const rand = () => {
+        hash = (hash * 1103515245 + 12345) | 0;
+        return ((hash >>> 0) % 10000) / 10000;
+      };
+      const style = gameState.progress.worldEvolutionHeroStyle || {};
+      const accent = style.color || ["#38bdf8", "#22c55e", "#a855f7", "#facc15"][Math.floor(rand() * 4)];
+      const outfit = style.outfit || "#0f172a";
+      ctx.clearRect(0, 0, 128, 128);
+      const bg = ctx.createRadialGradient(64, 34, 4, 64, 64, 82);
+      bg.addColorStop(0, "rgba(255,255,255,0.18)");
+      bg.addColorStop(0.45, "rgba(15,23,42,0.92)");
+      bg.addColorStop(1, "rgba(2,6,23,1)");
+      ctx.fillStyle = bg;
+      ctx.fillRect(0, 0, 128, 128);
+      ctx.shadowBlur = 20;
+      ctx.shadowColor = accent;
+      ctx.fillStyle = accent;
+      ctx.beginPath();
+      ctx.arc(64, 44, 24, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.fillStyle = "rgba(2,6,23,0.78)";
+      ctx.fillRect(43, 36, 16, 5);
+      ctx.fillRect(70, 36, 16, 5);
+      ctx.strokeStyle = "rgba(255,255,255,0.86)";
+      ctx.lineWidth = 3;
+      ctx.lineCap = "round";
+      ctx.beginPath();
+      ctx.moveTo(54, 58);
+      ctx.quadraticCurveTo(64, 64, 74, 58);
+      ctx.stroke();
+      ctx.fillStyle = outfit;
+      ctx.beginPath();
+      ctx.roundRect?.(36, 70, 56, 40, 12);
+      if (typeof ctx.roundRect !== "function") ctx.rect(36, 70, 56, 40);
+      ctx.fill();
+      ctx.strokeStyle = accent;
+      ctx.lineWidth = 4;
+      ctx.strokeRect(42, 76, 44, 28);
+      ctx.globalAlpha = 0.72;
+      ctx.beginPath();
+      ctx.arc(64, 64, 46 + rand() * 6, Math.PI * 0.08, Math.PI * 1.92);
+      ctx.stroke();
+      ctx.globalAlpha = 1;
+      ctx.shadowBlur = 0;
+      ctx.strokeStyle = "rgba(125,211,252,0.46)";
+      ctx.strokeRect(10.5, 10.5, 107, 107);
+      return true;
+    }
+
+    function regenerateHeroAvatar() {
+      gameState.progress.worldEvolutionAvatarSeed = `hero-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
+      drawHeroAvatarCanvas();
+      saveWorldEvolutionLocalKeys();
+      saveProgress();
+      showReward("主角头像已重新生成。");
+      return gameState.progress.worldEvolutionAvatarSeed;
+    }
+
+    function renderWorldEvolutionChronicle() {
+      if (!dom.worldEvolutionChronicleText) return false;
+      const diary = (gameState.progress.worldEvolutionDiary || []).slice(-50).reverse();
+      if (!diary.length) {
+        dom.worldEvolutionChronicleText.textContent = "// 尚未记录编译历史。";
+        return false;
+      }
+      dom.worldEvolutionChronicleText.innerHTML = diary.map((entry) => {
+        const time = new Date(entry.time || Date.now());
+        const label = Number.isFinite(time.getTime()) ? time.toLocaleTimeString("zh-CN", { hour: "2-digit", minute: "2-digit" }) : "--:--";
+        return `<div class="chronicle-entry"><strong>${escapeHtml(label)}</strong><br>${escapeHtml(entry.text || "")}</div>`;
+      }).join("");
+      return true;
+    }
+
+    function renderWorldEvolutionAchievements() {
+      if (!dom.worldEvolutionAchievementList) return false;
+      const unlocked = new Set(gameState.progress.worldEvolutionAchievements || []);
+      dom.worldEvolutionAchievementList.innerHTML = WORLD_EVOLUTION_ACHIEVEMENTS.map((achievement) => {
+        const isUnlocked = unlocked.has(achievement.id);
+        return `<div class="achievement-entry ${isUnlocked ? "unlocked" : "locked"}">${isUnlocked ? "✦" : "·"} ${escapeHtml(achievement.name)}</div>`;
+      }).join("");
+      return true;
     }
 
     function showDialog(lines, onComplete) {
@@ -27896,6 +28346,30 @@ int main(void) {
         }
       }
 
+      if (completion >= 25) {
+        const towerX = worldWidth * 0.18;
+        const towerY = 330;
+        g.fillStyle(0x111827, 0.28 + progress * 0.2);
+        g.fillRect(towerX - 24, towerY - 126, 48, 126);
+        g.fillStyle(0x38bdf8, 0.16 + progress * 0.16);
+        for (let i = 0; i < 5; i += 1) g.fillRect(towerX - 18, towerY - 112 + i * 20, 36, 5);
+        g.lineStyle(3, 0xfacc15, 0.2 + progress * 0.18);
+        g.strokeTriangle(towerX - 36, towerY - 126, towerX + 36, towerY - 126, towerX, towerY - 178);
+      }
+
+      if (completion >= 50) {
+        for (let i = 0; i < 5; i += 1) {
+          const x = 640 + i * 270;
+          const y = 180 + Math.sin(scene.frameTick * 0.018 + i) * 12 + (i % 2) * 42;
+          g.fillStyle(0x0f172a, 0.34);
+          g.fillEllipse(x, y, 150, 38);
+          g.fillStyle(0x22c55e, 0.18 + progress * 0.12);
+          g.fillEllipse(x, y - 13, 118, 26);
+          g.lineStyle(2, 0x67e8f9, 0.14 + progress * 0.12);
+          g.strokeEllipse(x, y, 154, 42);
+        }
+      }
+
       if (completion >= 60) {
         const beamCount = Math.floor(completion / 20);
         for (let i = 0; i < beamCount; i += 1) {
@@ -27906,6 +28380,27 @@ int main(void) {
           g.fillTriangle(x - 32, y, x + 32, y, x - 72, y - 260);
           g.lineStyle(2, 0xfacc15, 0.22 + progress * 0.18);
           g.strokeCircle(x, y, 38 + Math.sin(scene.frameTick * 0.03 + i) * 6);
+        }
+      }
+
+      if (completion >= 75) {
+        const beamX = worldWidth * 0.72;
+        g.fillStyle(0xfef3c7, 0.07 + progress * 0.12);
+        g.fillTriangle(beamX - 80, worldHeight, beamX + 80, worldHeight, beamX + 20, 80);
+        g.fillTriangle(beamX - 80, worldHeight, beamX + 80, worldHeight, beamX - 20, 80);
+        g.lineStyle(4, 0xfacc15, 0.18 + Math.sin(scene.frameTick * 0.04) * 0.05);
+        g.strokeCircle(beamX, worldHeight * 0.58, 72 + Math.sin(scene.frameTick * 0.035) * 10);
+      }
+
+      if (completion >= 90) {
+        const vortexX = worldWidth * 0.5;
+        const vortexY = 160;
+        for (let i = 0; i < 5; i += 1) {
+          g.lineStyle(2 + i, i % 2 ? 0xa855f7 : 0x38bdf8, 0.16 - i * 0.016);
+          g.beginPath();
+          const radius = 42 + i * 24 + Math.sin(scene.frameTick * 0.02 + i) * 6;
+          g.arc(vortexX, vortexY, radius, scene.frameTick * 0.01 + i * 0.5, Math.PI * 1.35 + scene.frameTick * 0.01 + i * 0.5);
+          g.strokePath();
         }
       }
 
@@ -29735,6 +30230,7 @@ int main(void) {
     });
 
     monitorFontLoadFallback();
+    loadWorldEvolutionLocalKeys();
     applySettings();
     preloadTutorialAnimationResources();
     applyPerformanceMode(gameState.settings.performanceMode || "high", "启动配置", { runtimeOnly: true, silent: true });
@@ -30042,6 +30538,7 @@ int main(void) {
       gameState.settings.textSpeed = value;
       if (dom.textSpeedValue) dom.textSpeedValue.textContent = value;
       saveSettings();
+      saveWorldEvolutionLocalKeys();
     });
     dom.manualSaveButton?.addEventListener("click", () => {
       const saved = saveGame();
@@ -30072,6 +30569,10 @@ int main(void) {
     dom.useHpShardButton?.addEventListener("click", () => useWorldEvolutionFragmentItem("hp"));
     dom.useMpShardButton?.addEventListener("click", () => useWorldEvolutionFragmentItem("mp"));
     dom.heroCustomizeButton?.addEventListener("click", () => applyHeroStylePreset("random"));
+    dom.regenerateHeroAvatarButton?.addEventListener("click", regenerateHeroAvatar);
+    document.querySelectorAll("[data-world-difficulty]").forEach((button) => {
+      button.addEventListener("click", () => setWorldEvolutionDifficulty(button.dataset.worldDifficulty));
+    });
     document.querySelectorAll("[data-hero-preset]").forEach((button) => {
       button.addEventListener("click", () => applyHeroStylePreset(button.dataset.heroPreset));
     });
@@ -30141,6 +30642,7 @@ int main(void) {
       "随机NPC：我只是路过，但这段对话会逐字显示。",
       "如果你调快文本速度，我会说得更利索。"
     ]));
+    dom.resetWorldEvolutionButton?.addEventListener("click", resetWorldEvolutionProgress);
     dom.resetKeymapButton?.addEventListener("click", () => shortcutManager.reset());
     dom.shortcutConfigList?.addEventListener("click", (event) => {
       const action = event.target?.closest?.("[data-shortcut-action]")?.dataset?.shortcutAction;
@@ -30356,7 +30858,9 @@ int main(void) {
     safeRunEffect("startupProgressHud", () => updateProgressHud());
     safeRunEffect("startupCardAlbum", () => renderCardAlbum());
     safeRunEffect("startupAchievements", () => renderAchievements());
+    safeRunEffect("startupWorldEvolutionLocalKeys", () => loadWorldEvolutionLocalKeys());
     safeRunEffect("startupWorldEvolutionGestures", () => installWorldEvolutionTouchGestures());
+    safeRunEffect("startupWorldEvolutionUi", () => updateWorldEvolutionUi());
     safeRunEffect("startupWorldEvolutionMirror", () => renderWorldEvolutionMirror());
     safeRunEffect("startupWorldEvolutionCodex", () => renderWorldEvolutionCodex());
     safeRunEffect("startupWorldEvolutionTheme", () => applyWorldEvolutionUiTheme(gameState.settings.worldEvolutionTheme || "deepStar"));
