@@ -11,6 +11,8 @@ const gamePagePath = path.join(outDir, "programming-rpg-c-basics.html");
 const officialSiteOutPath = path.join(outDir, "official-site.html");
 const indexPath = path.join(outDir, "index.html");
 const nojekyllPath = path.join(outDir, ".nojekyll");
+const vendorDir = path.join(root, "vendor");
+const vendorOutDir = path.join(outDir, "vendor");
 
 function createInlineProductionBundle(htmlSource) {
   const compact = String(htmlSource)
@@ -65,8 +67,12 @@ fs.writeFileSync(gamePagePath, gameOutput);
 fs.writeFileSync(officialSiteOutPath, officialOutput);
 fs.writeFileSync(indexPath, officialOutput);
 fs.writeFileSync(nojekyllPath, "");
+if (fs.existsSync(vendorDir)) {
+  fs.cpSync(vendorDir, vendorOutDir, { recursive: true, force: true });
+}
 
 console.log(`built ${path.relative(root, outPath)} (${gameOutput.length} bytes)`);
 console.log(`built ${path.relative(root, gamePagePath)} (${gameOutput.length} bytes)`);
 console.log(`built ${path.relative(root, officialSiteOutPath)} (${officialOutput.length} bytes)`);
 console.log(`built ${path.relative(root, indexPath)} (${officialOutput.length} bytes)`);
+if (fs.existsSync(vendorOutDir)) console.log(`copied ${path.relative(root, vendorOutDir)}`);

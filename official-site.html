@@ -846,6 +846,14 @@
       display: grid;
       align-items: center;
       isolation: isolate;
+      content-visibility: auto;
+      contain-intrinsic-size: 900px;
+      contain: layout style paint;
+    }
+
+    .hero {
+      content-visibility: visible;
+      contain-intrinsic-size: auto;
     }
 
     .section::before {
@@ -2085,10 +2093,12 @@
       .section {
         min-height: auto;
         padding-top: 6.8rem;
+        contain-intrinsic-size: 760px;
       }
 
       .hero {
         min-height: 100svh;
+        contain-intrinsic-size: auto;
       }
 
       .top-actions .text-btn {
@@ -2482,11 +2492,46 @@
     const $$ = (selector, root = document) => Array.from(root.querySelectorAll(selector));
     const prefersReduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
     const pointerFine = matchMedia("(pointer: fine)").matches;
-    const lowPower = prefersReduced || innerWidth <= 880 || screen.width <= 880 || /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent) || (navigator.hardwareConcurrency || 8) <= 4 || (navigator.deviceMemory || 8) <= 4;
+    const networkInfo = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
+    const slowNetwork = Boolean(networkInfo?.saveData) || ["slow-2g", "2g", "3g"].includes(networkInfo?.effectiveType || "") || (networkInfo?.downlink && networkInfo.downlink < 1.5) || (networkInfo?.rtt && networkInfo.rtt > 520);
+    const lowPower = prefersReduced || slowNetwork || innerWidth <= 880 || screen.width <= 880 || /Mobi|Android|iPhone|iPad|iPod/i.test(navigator.userAgent) || (navigator.hardwareConcurrency || 8) <= 4 || (navigator.deviceMemory || 8) <= 4;
     const supportsAudio = Boolean(window.AudioContext || window.webkitAudioContext);
+    const CDN_MODULES = Object.freeze({
+      three: [
+        "https://fastly.jsdelivr.net/npm/three@0.179.1/build/three.module.js",
+        "https://cdn.jsdelivr.net/npm/three@0.179.1/build/three.module.js"
+      ],
+      gsap: [
+        "https://esm.run/gsap@3.13.0",
+        "https://esm.sh/gsap@3.13.0?bundle"
+      ],
+      prism: [
+        "https://esm.run/prismjs@1.30.0",
+        "https://esm.sh/prismjs@1.30.0?bundle"
+      ]
+    });
 
     if (prefersReduced) document.body.classList.add("reduced-motion");
     if (lowPower) document.body.classList.add("low-power");
+
+    function timeoutPromise(promise, ms, label) {
+      let timer = 0;
+      return Promise.race([
+        promise,
+        new Promise((_, reject) => {
+          timer = setTimeout(() => reject(new Error(`${label} timeout`)), ms);
+        })
+      ]).finally(() => clearTimeout(timer));
+    }
+
+    async function importFromCdn(urls, label, timeoutMs = 1200) {
+      for (const url of urls) {
+        try {
+          return await timeoutPromise(import(url), timeoutMs, label);
+        } catch {}
+      }
+      throw new Error(`${label} unavailable`);
+    }
 
     const themes = {
       hero: { keywords: ["HTML", "CSS", "JavaScript", "Canvas", "Three.js", "Web Audio", "iframe", "srcdoc", "DOM", "GPU"], speed: 1 },
@@ -2762,7 +2807,7 @@
     async function initGalaxy() {
       if (lowPower || innerWidth <= 880 || !HTMLCanvasElement.prototype.getContext) return;
       try {
-        const THREE = await import("https://cdn.jsdelivr.net/npm/three@0.179.1/build/three.module.js");
+        const THREE = await importFromCdn(CDN_MODULES.three, "three", 950);
         const canvas = $("#galaxyLayer");
         const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: false, powerPreference: "high-performance" });
         const scene = new THREE.Scene();
@@ -2872,7 +2917,7 @@
       if (!prefersReduced && !lowPower) {
         requestIdleCallback(async () => {
           try {
-            const mod = await import("https://esm.sh/gsap@3.13.0?bundle");
+            const mod = await importFromCdn(CDN_MODULES.gsap, "gsap", 900);
             const gsap = mod.gsap || mod.default?.gsap || mod.default || window.gsap;
             gsap?.to(".brand-mark", { rotate: 360, duration: 18, repeat: -1, ease: "none" });
           } catch {}
@@ -2911,7 +2956,7 @@
     async function loadPrism() {
       if (prismRef) return prismRef;
       try {
-        const mod = await import("https://esm.sh/prismjs@1.30.0?bundle");
+        const mod = await importFromCdn(CDN_MODULES.prism, "prism", 1400);
         prismRef = mod.default || mod.Prism || window.Prism;
         return prismRef;
       } catch {
@@ -3571,18 +3616,26 @@ commands: help, qq, group, game, matrix, clear, close
         initEnergyLayer();
         initSections(keywordMatrix);
         initHoverAudio();
-        requestIdleCallback(primeMediaLoop, { timeout: 1600 });
         requestIdleCallback(() => initGalaxy(), { timeout: 900 });
       } else {
         requestIdleCallback(installConsoleArt, { timeout: 4200 });
       }
 
-      requestIdleCallback(() => {
+      const initBelowFold = () => {
+        if (initBelowFold.done) return;
+        initBelowFold.done = true;
         initEditor();
         initChallenge();
         initMessages();
         initAuthor();
-      }, { timeout: lowPower ? 3800 : 1200 });
+      };
+      if (lowPower) {
+        addEventListener("scroll", initBelowFold, { once: true, passive: true });
+        addEventListener("pointerdown", initBelowFold, { once: true, passive: true });
+        requestIdleCallback(initBelowFold, { timeout: 8000 });
+      } else {
+        requestIdleCallback(initBelowFold, { timeout: 1200 });
+      }
     }
 
     main();

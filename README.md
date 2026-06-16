@@ -74,5 +74,11 @@ scripts\deploy-auto.bat 你的用户名/仓库名 main create wait
 - `dist/official-site.html`：官方网站首页的同内容备份入口
 - `dist/programming-rpg-c-basics.html`：玩家可直接进入的游戏链接
 - `dist/programming-rpg-c-basics.production.html`：游戏生产版备份入口
+- `dist/vendor/phaser.min.js`：本地 Phaser 运行库，避免国内首屏依赖外部 CDN
 - `dist/programming-rpg-c-basics.secure.html`
 - `dist/.nojekyll`
+
+## 国内加载优化
+- 游戏页不再加载 Google Fonts、jsDelivr 字体或远程 Phaser，首屏运行库随 `dist/vendor/` 一起发布。
+- 官网在慢网、省流量、移动端或低性能设备上自动进入低功耗模式，跳过 Three.js/GSAP 重特效。
+- 官网外部 ES Module 都带超时回退，CDN 慢时保留 Canvas/CSS 基础内容，不阻塞首页。

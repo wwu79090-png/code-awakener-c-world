@@ -11,15 +11,10 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; base-uri 'self'; object-src 'none'; frame-ancestors 'none'; script-src 'self' https://cdn.jsdelivr.net 'nonce-code-awakener-inline' 'sha256-u6LyUOX9hy/TAODEPlmvh+VqDxT3A+UtZRL4Y5kvvBw='; style-src 'self' https://cdn.jsdelivr.net https://fonts.googleapis.com 'nonce-code-awakener-inline' 'sha256-NPjKNpV7x0cENrXJvvUQRYtXnjtK86M3UVpzbNYyTWg='; style-src-attr 'unsafe-inline'; font-src 'self' https://cdn.jsdelivr.net https://fonts.gstatic.com data:; img-src 'self' data: blob:; media-src 'self' data: blob:; worker-src 'self' blob:; child-src 'self' blob:; connect-src 'self' https://cdn.jsdelivr.net http://localhost:8000 http://127.0.0.1:8000;">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; base-uri 'self'; object-src 'none'; frame-ancestors 'none'; script-src 'self' 'nonce-code-awakener-inline' 'sha256-I4ZacIr+jp49nHajVDw2aaG76vdbKcvUkO0PUyNBXdM='; style-src 'self' 'nonce-code-awakener-inline' 'sha256-NPjKNpV7x0cENrXJvvUQRYtXnjtK86M3UVpzbNYyTWg='; style-src-attr 'unsafe-inline'; font-src 'self' data:; img-src 'self' data: blob:; media-src 'self' data: blob:; worker-src 'self' blob:; child-src 'self' blob:; connect-src 'self' http://localhost:8000 http://127.0.0.1:8000;">
   <title>编程学习 RPG：C 语言启航村</title>
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%23020617'/%3E%3Cpath d='M22 20 10 32l12 12M42 20l12 12-12 12' fill='none' stroke='%2300ff88' stroke-width='6' stroke-linecap='round' stroke-linejoin='round'/%3E%3Cpath d='m36 16-8 32' stroke='%2300ccff' stroke-width='5' stroke-linecap='round'/%3E%3C/svg%3E">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/firacode@6.2.0/distr/fira_code.css">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap">
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&display=swap">
-  <script src="https://cdn.jsdelivr.net/npm/phaser@3.80.1/dist/phaser.min.js" integrity="sha384-Fi7F0CYQBHYa+s2vvYJeiqvOQf3tuZ28vafRGXvMt7ijxNTVf3+eXPkNRIUi9JD2" crossorigin="anonymous"></script>
+  <script src="./vendor/phaser.min.js" integrity="sha384-Fi7F0CYQBHYa+s2vvYJeiqvOQf3tuZ28vafRGXvMt7ijxNTVf3+eXPkNRIUi9JD2"></script>
   <style nonce="code-awakener-inline">
     :root {
       --bg: #070a12;
@@ -9988,7 +9983,7 @@
       <canvas id="menuFxCanvas" width="1280" height="720"></canvas>
       <div class="main-menu-card glass-panel">
         <h1 class="game-logo">CODE AWAKENER<br>C 语言启航村</h1>
-        <div class="version-label" id="versionLabel">World Build v1.0.22 · develop.fan C Basics</div>
+        <div class="version-label" id="versionLabel">World Build v1.0.23 · develop.fan C Basics</div>
         <label class="boot-command"><span>&gt;</span><input id="bootCommandInput" value="start_game.exe" autocomplete="off" spellcheck="false" aria-label="启动命令"></label>
         <label class="skin-picker">角色外观
           <select id="skinSelect" aria-label="选择主角外观">
@@ -10817,9 +10812,9 @@ int main(void) {
       <button id="announcementCloseButton" class="announcement-close" type="button" aria-label="关闭公告">×</button>
       <h2 id="startupAnnouncementTitle" class="startup-announcement-title">> 消息 / 本次更新</h2>
       <div id="announcementPageBody" class="startup-announcement-body">
-        <p>// 本次更新：游戏主菜单新增“访问官方网站”。</p>
-        <p>// 从游戏首页可一键打开代码觉醒者技术预告片官网。</p>
-        <p>// 官网继续展示 HTML/CSS/JS 沉浸特效，并保留进入本项目游戏的直达链接。</p>
+        <p>// 本次更新：官方网站与游戏页国内加载优化。</p>
+        <p>// 游戏改为本地加载 Phaser，移除 Google Fonts 与远程字体阻塞。</p>
+        <p>// 官网慢网会自动降级，CDN 超时不再卡住首屏。</p>
         <p>// 作者：杀戮，QQ：3424636983。</p>
         <p>// 官方Q群：414374792。</p>
         <p>// 作者：杀戮</p>
@@ -10827,7 +10822,7 @@ int main(void) {
       </div>
       <div class="startup-announcement-pager" aria-label="公告分页">
         <button id="announcementPrevButton" class="announcement-page-button" type="button">上一页</button>
-        <span id="announcementPageIndicator" class="announcement-page-indicator">1/6</span>
+        <span id="announcementPageIndicator" class="announcement-page-indicator">1/7</span>
         <button id="announcementNextButton" class="announcement-page-button" type="button">下一页</button>
       </div>
     </aside>
@@ -11295,11 +11290,22 @@ int main() {
     const SAVE_SIGNATURE_SALT = "c-world-local-integrity";
     const SAVE_CLEAR_CONFIRM_MS = 3000;
     const STARTUP_ANNOUNCEMENT_AUTO_HIDE_MS = 3000;
-    const GAME_VERSION = "v1.0.22";
+    const GAME_VERSION = "v1.0.23";
     const OFFICIAL_SITE_HREF = "./official-site.html";
     const UPDATE_ANNOUNCEMENT_PAGES = Object.freeze([
       {
         title: "> 消息 / 本次更新",
+        lines: [
+          "// 本次更新：官方网站与游戏页国内加载优化。",
+          "// 游戏改为本地加载 Phaser，移除 Google Fonts 与远程字体阻塞。",
+          "// 官网慢网、省流量和移动端自动降级，不再等 Three.js/GSAP 才显示内容。",
+          "// 官网外部 ES Module 带超时回退，CDN 慢时保留 Canvas/CSS 基础体验。",
+          "// 官方Q群：414374792。",
+          "// 作者：杀戮"
+        ]
+      },
+      {
+        title: "> 更新内容 / 官网入口",
         lines: [
           "// 本次更新：游戏主菜单新增“访问官方网站”。",
           "// 从游戏首页可一键打开代码觉醒者技术预告片官网。",
@@ -11364,6 +11370,18 @@ int main() {
       }
     ]);
     const UPDATE_HISTORY = Object.freeze([
+      {
+        version: "v1.0.23",
+        date: "2026-06-17",
+        title: "国内加载速度优化",
+        details: [
+          "游戏页改为本地加载 `vendor/phaser.min.js`，构建时同步复制到 `dist/vendor/`，不再依赖 jsDelivr 远程 Phaser。",
+          "移除 Google Fonts、gstatic 和 jsDelivr 字体 CSS，改用系统字体栈，减少国内首屏外链阻塞。",
+          "官网新增慢网、省流量和低带宽检测，自动进入低功耗模式，跳过 Three.js、GSAP 等桌面重特效。",
+          "官网外部 ES Module 改为带超时的 CDN 列表导入，CDN 慢时自动保留 Canvas/CSS 基础内容。",
+          "官网音频不再首屏空闲预生成，只有玩家点击 MUS 后才生成长段落背景音乐。"
+        ]
+      },
       {
         version: "v1.0.22",
         date: "2026-06-17",
@@ -12280,13 +12298,13 @@ return 0;`;
       directSaveAs: "reduced-by-inline-resources"
     });
     const SECURITY_CONFIG = Object.freeze({
-      expectedScriptHash: "L55a+uq1qfK26kJB/aMQzGTJA680uq1K053EXBmghtI=",
+      expectedScriptHash: "RkBCiE2DiaEKAd76vlAFghj+7rfVw+iAV32BE842wgA=",
       selfCheckIntervalMs: 45000,
       tamperRefreshMs: 5000,
       devToolsRefreshMs: 2000,
       devToolsThresholdPx: 160,
       backendJudgeEndpoint: BACKEND_JUDGE_ENDPOINT,
-      allowedScriptHosts: Object.freeze(["cdn.jsdelivr.net"])
+      allowedScriptHosts: Object.freeze([])
     });
     const JUDGE_GUARD_PACK = Object.freeze(["Q09ERV9BV0FLRU5FUg==", "Q19XT1JMRA==", "Y19qdWRnZV9ndWFyZA=="]);
     const ERROR_LEVELS = Object.freeze({
