@@ -1597,6 +1597,20 @@ assert(/WORLD_EVOLUTION_UI_THEMES\s*=\s*Object\.freeze/m.test(html) && /function
 assert(/function renderWorldEvolutionMirror/m.test(html) && /id="worldEvolutionMirrorText"/m.test(html), "world evolution should render async multiplayer traces and mirror stats");
 assert(/WORLD_EVOLUTION_MEMORY_FRAGMENTS\s*=\s*Object\.freeze/m.test(html) && /function unlockWorldEvolutionMemoryFragment/m.test(html), "world evolution should collect story fragments into a codex");
 assert(/function beginWorldEvolutionNewGamePlus/m.test(html) && /worldEvolutionNewGamePlus/m.test(html), "world evolution should include ending and new-game-plus lifecycle");
+assert(/COMPILE_LIFE_RULES\s*=\s*Object\.freeze/m.test(html), "compile failure penalty should centralize life and failure threshold rules");
+assert(/compileLives:\s*3/m.test(html) && /compileLifeMax:\s*3/m.test(html), "save progress should start each player with three compile lives");
+assert(/function handleCompileFailurePenalty/m.test(html), "compile failures should deduct compile life through a dedicated handler");
+assert(/function triggerCompileLifeZeroPenalty/m.test(html), "life reaching zero should trigger teleport and current-level reset");
+assert(/function restoreCompileLife/m.test(html) && /interactWithRoomBed[\s\S]*restoreCompileLife\("full"/m.test(html), "room bed rest should restore compile lives");
+assert(/function updateSpawnStoneLifeRecovery/m.test(html), "standing near the spawn stone should recover life after ten seconds");
+assert(/ENEMY_ENCOUNTER_RULES\s*=\s*Object\.freeze/m.test(html), "enemy encounter rules should describe Bug and logic guard progression");
+assert(/class CodeEnemyEncounterManager/m.test(html), "code enemies should be managed through a dedicated encounter system");
+assert(/function spawnCodeBugEnemy/m.test(html) && /function spawnLogicGuardEnemy/m.test(html), "battle layer should spawn code Bug and logic guard enemies");
+assert(/function resolveCodeEnemyRepair/m.test(html) && /Fix Complete/m.test(html), "successful repair should resolve enemies with Fix Complete feedback");
+assert(/function grantGrowthExperience/m.test(html) && /function getPlayerGrowthLevel/m.test(html), "growth system should grant experience and derive player level");
+assert(/function applyPlayerGrowthVisuals/m.test(html), "player visuals should evolve by level");
+assert(/function showLevelUpFeedback/m.test(html), "level-up should show a gold pulse feedback");
+assert(/infoExpText/m.test(html) && /infoCompileLivesText/m.test(html), "side info menu should show experience and compile lives");
 
 console.log(`validated ${expectedIds.length} C tutorial chapters and quality systems`);
 assert(/event\.key\s*===\s*"Tab"[\s\S]{0,220}toggleInfoSideMenu\(\)/m.test(html), "Tab should toggle the in-game function info menu without using browser focus traversal");

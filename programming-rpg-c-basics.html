@@ -11,7 +11,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; base-uri 'self'; object-src 'none'; frame-ancestors 'none'; script-src 'self' https://cdn.jsdelivr.net 'nonce-code-awakener-inline' 'sha256-Zo6QL54JC+OaqfUmESK/Q9+VNYJiooi36qgJZOdkP0A='; style-src 'self' https://cdn.jsdelivr.net https://fonts.googleapis.com 'nonce-code-awakener-inline' 'sha256-QkHjH3TEFUT/5iWTdOIm2lIbHOm7SxQ9/6W5TWq1ZBM='; font-src 'self' https://cdn.jsdelivr.net https://fonts.gstatic.com data:; img-src 'self' data: blob:; media-src 'self' data: blob:; worker-src 'self' blob:; child-src 'self' blob:; connect-src 'self' https://cdn.jsdelivr.net;">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; base-uri 'self'; object-src 'none'; frame-ancestors 'none'; script-src 'self' https://cdn.jsdelivr.net 'nonce-code-awakener-inline' 'sha256-0XMIleG4UFuDwNLi0bKEEANf53iPdHtGvyq5U2W5d/c='; style-src 'self' https://cdn.jsdelivr.net https://fonts.googleapis.com 'nonce-code-awakener-inline' 'sha256-E7Raqs1QDAkN1vxCIl+MwiYL7QNS7PwXHeBsM7qO5Gg='; font-src 'self' https://cdn.jsdelivr.net https://fonts.gstatic.com data:; img-src 'self' data: blob:; media-src 'self' data: blob:; worker-src 'self' blob:; child-src 'self' blob:; connect-src 'self' https://cdn.jsdelivr.net;">
   <title>编程学习 RPG：C 语言启航村</title>
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%23020617'/%3E%3Cpath d='M22 20 10 32l12 12M42 20l12 12-12 12' fill='none' stroke='%2300ff88' stroke-width='6' stroke-linecap='round' stroke-linejoin='round'/%3E%3Cpath d='m36 16-8 32' stroke='%2300ccff' stroke-width='5' stroke-linecap='round'/%3E%3C/svg%3E">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/firacode@6.2.0/distr/fira_code.css">
@@ -4226,6 +4226,51 @@
       transform: translateY(-50%) scale(1.04);
     }
 
+    .compile-life-float,
+    .level-up-feedback {
+      position: absolute;
+      left: 50%;
+      z-index: 34;
+      pointer-events: none;
+      transform: translateX(-50%);
+      font-family: var(--font-code);
+      font-weight: 800;
+      letter-spacing: 0.04em;
+      text-align: center;
+    }
+
+    .compile-life-float {
+      bottom: max(92px, calc(env(safe-area-inset-bottom) + 92px));
+      color: #fecaca;
+      text-shadow: 0 0 18px rgba(239, 68, 68, 0.78);
+      animation: compileLifeFloat 820ms cubic-bezier(0.22, 1, 0.36, 1) forwards;
+    }
+
+    .level-up-feedback {
+      top: 48%;
+      padding: 12px 24px;
+      border: 1px solid rgba(250, 204, 21, 0.48);
+      border-radius: 999px;
+      background: rgba(24, 18, 5, 0.58);
+      color: #fef3c7;
+      box-shadow: 0 0 42px rgba(250, 204, 21, 0.28);
+      animation: levelUpPulse 1200ms ease-out forwards;
+      backdrop-filter: blur(12px);
+    }
+
+    @keyframes compileLifeFloat {
+      0% { opacity: 0; transform: translate(-50%, 16px) scale(0.88); }
+      18% { opacity: 1; transform: translate(-50%, 0) scale(1.08); }
+      100% { opacity: 0; transform: translate(-50%, -34px) scale(0.96); }
+    }
+
+    @keyframes levelUpPulse {
+      0% { opacity: 0; transform: translate(-50%, 12px) scale(0.86); }
+      22% { opacity: 1; transform: translate(-50%, 0) scale(1.08); }
+      68% { opacity: 1; transform: translate(-50%, 0) scale(1); }
+      100% { opacity: 0; transform: translate(-50%, -22px) scale(1.12); }
+    }
+
     .bottom-action-bar {
       position: absolute;
       left: 50%;
@@ -7710,6 +7755,14 @@
           </div>
         </section>
         <section class="info-menu-section">
+          <strong>成长 / 惩罚</strong>
+          <div class="info-menu-row"><span>关卡生命</span><span id="infoCompileLivesText">3/3</span></div>
+          <div class="info-menu-meter"><span id="infoCompileLivesFill"></span></div>
+          <div class="info-menu-row"><span>等级经验</span><span id="infoExpText">Lv.1 · 0/100</span></div>
+          <div class="info-menu-meter"><span id="infoExpFill"></span></div>
+          <div id="infoGrowthHint">// 编译失败会扣 1 点关卡生命；归零会回到出生点。</div>
+        </section>
+        <section class="info-menu-section">
           <strong>装配碎片说明</strong>
           <div id="infoEquipText">// 暂无装配。打开卡牌册可配置快捷碎片。</div>
         </section>
@@ -8447,6 +8500,40 @@ int main(void) {
     const FRAGMENT_COLLECT_RADIUS = 40; // px，玩家进入该半径后自动吸附收集。
     const FRAGMENT_MAGNET_RADIUS = 96; // px，提前放大与抖动，提示即将收集。
     const FRAGMENT_GUIDE_TEXT = "发现知识碎片！靠近它会自动收集，用来解锁技能卡提示。";
+    const COMPILE_LIFE_RULES = Object.freeze({
+      initialLives: 3,
+      initialMax: 3,
+      maxCap: 8,
+      spawnRecoveryMs: 10000,
+      earlyFailureHintLimit: 3,
+      lateFailureHintLimit: 5,
+      lateChapterIndex: 3,
+      successExp: 10,
+      enemyExp: 20,
+      expPerLevel: 100,
+      maxGrowthLevel: 10
+    });
+    const ENEMY_ENCOUNTER_RULES = Object.freeze({
+      codeBug: {
+        type: "codeBug",
+        label: "代码Bug",
+        color: 0xef4444,
+        repairHint: "用 for 循环或 if 判断修复它。",
+        projectile: "错误代码弹"
+      },
+      logicGuard: {
+        type: "logicGuard",
+        label: "逻辑守卫",
+        color: 0x60a5fa,
+        repairHint: "用嵌套循环稳定代码锁链。",
+        projectile: "代码锁链"
+      },
+      byChapterIndex: [
+        { enemies: [{ type: "codeBug", hp: 1, repair: "一次循环" }] },
+        { enemies: [{ type: "codeBug", hp: 2, repair: "循环+条件" }, { type: "codeBug", hp: 2, repair: "循环+条件" }] },
+        { enemies: [{ type: "logicGuard", hp: 3, repair: "嵌套循环" }] }
+      ]
+    });
     const SAVE_RITUAL_TEXT = "> Saved.";
     const SAVE_SCHEMA_VERSION = 3;
     const SAVE_SIGNATURE_SALT = "c-world-local-integrity";
@@ -8457,17 +8544,17 @@ int main(void) {
         title: "> 消息 / 本次更新",
         lines: [
           "// 作者：杀戮",
-          "// 本次更新：修复手机输入法在编辑器里“输入一个字自动变很多个”的问题。",
-          "// 输入法候选中间态现在只记录不写入，composition 结束后只提交一次正式字符。",
-          "// 关卡编辑器和代码创世终端都已加入同样的防重复输入保护。"
+          "// 本次更新：加入编译失败惩罚、代码敌人和角色成长系统。",
+          "// 编译失败会扣除关卡生命，生命归零会回到出生点并重置当前关卡进度。",
+          "// 完成关卡、记忆小屋休息、出生点停留都可以恢复生命。"
         ]
       },
       {
-        title: "> 更新内容 / 手机布局",
+        title: "> 更新内容 / 对抗与成长",
         lines: [
-          "// 手机编辑器改为单列代码优先布局，隐藏侧栏、任务面板和解释面板，减少遮挡。",
-          "// 创角界面在手机上改为单列终端布局，输入区域固定在底部并保持 16px 字号防止 iOS 自动缩放。",
-          "// 手机端进入编辑器或创角时自动隐藏虚拟摇杆，并禁用 Pointer Lock 请求。"
+          "// 关卡完成后会出现代码Bug或逻辑守卫，修复后才会稳定下一段路径。",
+          "// 成功编译和修复敌人会获得经验，等级提升会增强移动速度、生命上限和角色光效。",
+          "// 失败次数过多时，系统会建议复习当前章节，避免无意义反复试错。"
         ]
       },
       {
@@ -8893,7 +8980,7 @@ int main(void) {
       directSaveAs: "reduced-by-inline-resources"
     });
     const SECURITY_CONFIG = Object.freeze({
-      expectedScriptHash: "oswGDx/LEPWDnYQKfqIrEoG1kTLmuu4kn5p0inU/NlA=",
+      expectedScriptHash: "JX0ZdkcQRrCEhHCdx4YlZLHmn10/bAk976lQiOA1AU8=",
       selfCheckIntervalMs: 45000,
       tamperRefreshMs: 5000,
       devToolsRefreshMs: 2000,
@@ -11742,6 +11829,12 @@ int main(void) {
       codeLog: [],
       fragmentGuideSeen: false,
       exp: 0,
+      compileLives: 3,
+      compileLifeMax: 3,
+      compileFailureStreak: 0,
+      chapterFailureCounts: {},
+      defeatedCodeEnemies: [],
+      activeCodeEnemies: [],
       unlockedSkins: ["neonBlue"],
       questCodeBlocks: [],
       redScarfHermitFound: false,
@@ -11965,6 +12058,12 @@ int main(void) {
         fragmentCount: Number(savedProgress.fragmentCount) || 0,
         chapterFragmentGuideSeen: savedProgress.chapterFragmentGuideSeen && typeof savedProgress.chapterFragmentGuideSeen === "object" ? savedProgress.chapterFragmentGuideSeen : {},
         exp: Number(savedProgress.exp) || 0,
+        compileLives: Number.isFinite(Number(savedProgress.compileLives)) ? Number(savedProgress.compileLives) : COMPILE_LIFE_RULES.initialLives,
+        compileLifeMax: Number.isFinite(Number(savedProgress.compileLifeMax)) ? Number(savedProgress.compileLifeMax) : COMPILE_LIFE_RULES.initialMax,
+        compileFailureStreak: Number(savedProgress.compileFailureStreak) || 0,
+        chapterFailureCounts: savedProgress.chapterFailureCounts && typeof savedProgress.chapterFailureCounts === "object" ? savedProgress.chapterFailureCounts : {},
+        defeatedCodeEnemies: Array.isArray(savedProgress.defeatedCodeEnemies) ? savedProgress.defeatedCodeEnemies : [],
+        activeCodeEnemies: Array.isArray(savedProgress.activeCodeEnemies) ? savedProgress.activeCodeEnemies : [],
         unlockedSkins: Array.isArray(savedProgress.unlockedSkins) ? savedProgress.unlockedSkins : ["neonBlue"],
         questCodeBlocks: Array.isArray(savedProgress.questCodeBlocks) ? savedProgress.questCodeBlocks : [],
         redScarfHermitFound: Boolean(savedProgress.redScarfHermitFound),
@@ -14064,6 +14163,11 @@ int main(void) {
       infoHpFill: document.getElementById("infoHpFill"),
       infoMpText: document.getElementById("infoMpText"),
       infoMpFill: document.getElementById("infoMpFill"),
+      infoCompileLivesText: document.getElementById("infoCompileLivesText"),
+      infoCompileLivesFill: document.getElementById("infoCompileLivesFill"),
+      infoExpText: document.getElementById("infoExpText"),
+      infoExpFill: document.getElementById("infoExpFill"),
+      infoGrowthHint: document.getElementById("infoGrowthHint"),
       infoEquipText: document.getElementById("infoEquipText"),
       textSpeedSlider: document.getElementById("textSpeedSlider"),
       textSpeedValue: document.getElementById("textSpeedValue"),
@@ -17347,6 +17451,9 @@ int main(void) {
       const hp = Math.max(0, Math.min(hpMax, Number(gameState.codeAccuracy) || 0));
       const mpMax = getWorldEvolutionMpMax();
       const mp = Math.max(0, Math.min(mpMax, Number(gameState.hintsLeft) || 0));
+      const lifeState = normalizeCompileLifeState();
+      const growthLevel = getPlayerGrowthLevel();
+      const growthExp = getPlayerGrowthExpIntoLevel();
       updateWorldEvolutionUi();
       if (dom.infoTaskText) dom.infoTaskText.textContent = getInfoMenuTaskText();
       if (dom.infoFragmentText) dom.infoFragmentText.textContent = `碎片: ${getCourseFragmentProgressText()}`;
@@ -17354,6 +17461,11 @@ int main(void) {
       if (dom.infoMpText) dom.infoMpText.textContent = `${mp}/${mpMax}`;
       if (dom.infoHpFill) dom.infoHpFill.style.width = `${Math.min(100, (hp / hpMax) * 100)}%`;
       if (dom.infoMpFill) dom.infoMpFill.style.width = `${Math.min(100, (mp / mpMax) * 100)}%`;
+      if (dom.infoCompileLivesText) dom.infoCompileLivesText.textContent = `${lifeState.lives}/${lifeState.max}`;
+      if (dom.infoCompileLivesFill) dom.infoCompileLivesFill.style.width = `${Math.min(100, (lifeState.lives / lifeState.max) * 100)}%`;
+      if (dom.infoExpText) dom.infoExpText.textContent = `Lv.${growthLevel} · ${growthExp}/${COMPILE_LIFE_RULES.expPerLevel}`;
+      if (dom.infoExpFill) dom.infoExpFill.style.width = `${Math.min(100, (growthExp / COMPILE_LIFE_RULES.expPerLevel) * 100)}%`;
+      if (dom.infoGrowthHint) dom.infoGrowthHint.textContent = `// 移动速度 +${Math.round((getPlayerMoveSpeedMultiplier() - 1) * 100)}%，导师提示等级 ${getCompilerHintDetailLevel()}。`;
       if (dom.infoEquipText) dom.infoEquipText.textContent = getEquippedFragmentDescription();
       if (dom.textSpeedSlider) dom.textSpeedSlider.value = gameState.settings.textSpeed ?? 55;
       if (dom.textSpeedValue) dom.textSpeedValue.textContent = gameState.settings.textSpeed ?? 55;
@@ -17824,6 +17936,392 @@ int main(void) {
       }
       updateInfoSideMenu();
     }
+
+    function getPlayerGrowthLevel(exp = gameState.progress.exp) {
+      const level = Math.floor((Number(exp) || 0) / COMPILE_LIFE_RULES.expPerLevel) + 1;
+      return Math.max(1, Math.min(COMPILE_LIFE_RULES.maxGrowthLevel, level));
+    }
+
+    function getPlayerGrowthExpIntoLevel(exp = gameState.progress.exp) {
+      if (getPlayerGrowthLevel(exp) >= COMPILE_LIFE_RULES.maxGrowthLevel) return COMPILE_LIFE_RULES.expPerLevel;
+      return Math.max(0, (Number(exp) || 0) % COMPILE_LIFE_RULES.expPerLevel);
+    }
+
+    function getPlayerMoveSpeedMultiplier() {
+      return 1 + (getPlayerGrowthLevel() - 1) * 0.02;
+    }
+
+    function getCompilerHintDetailLevel() {
+      return Math.floor(getPlayerGrowthLevel() / 3);
+    }
+
+    function getCompileLifeMax() {
+      const growthBonus = Math.floor(getPlayerGrowthLevel() / 2);
+      const stored = Number(gameState.progress.compileLifeMax) || COMPILE_LIFE_RULES.initialMax;
+      const next = Math.max(COMPILE_LIFE_RULES.initialMax + growthBonus, stored);
+      return Math.min(COMPILE_LIFE_RULES.maxCap, next);
+    }
+
+    function normalizeCompileLifeState() {
+      const max = getCompileLifeMax();
+      gameState.progress.compileLifeMax = max;
+      gameState.progress.compileLives = Math.max(0, Math.min(max, Number(gameState.progress.compileLives ?? max)));
+      gameState.progress.chapterFailureCounts ||= {};
+      gameState.progress.defeatedCodeEnemies ||= [];
+      gameState.progress.activeCodeEnemies ||= [];
+      return { lives: gameState.progress.compileLives, max };
+    }
+
+    function showCompileLifeLossFloat(amount = 1) {
+      const node = document.createElement("div");
+      node.className = "compile-life-float";
+      node.textContent = `-${amount} HP`;
+      document.getElementById("game-shell")?.appendChild(node);
+      trackedSetTimeout(() => node.remove(), 900, "compile-life-float-remove");
+      return node;
+    }
+
+    function showLevelUpFeedback(level = getPlayerGrowthLevel()) {
+      const node = document.createElement("div");
+      node.className = "level-up-feedback";
+      node.textContent = `等级提升 · Lv.${level}`;
+      document.getElementById("game-shell")?.appendChild(node);
+      trackedSetTimeout(() => node.remove(), 1250, "level-up-feedback-remove");
+      showTerminalBurst(`level = ${level};`);
+      audioManager.success?.();
+      return node;
+    }
+
+    function grantGrowthExperience(amount = 10, reason = "compile") {
+      const beforeLevel = getPlayerGrowthLevel();
+      gameState.progress.exp = Math.max(0, Number(gameState.progress.exp) || 0) + Math.max(0, Number(amount) || 0);
+      const afterLevel = getPlayerGrowthLevel();
+      normalizeCompileLifeState();
+      if (afterLevel > beforeLevel) {
+        showLevelUpFeedback(afterLevel);
+        if (afterLevel % 2 === 0) restoreCompileLife(1, "level-up-max");
+        showReward(`等级提升：Lv.${afterLevel} · 移动速度 +${Math.round((getPlayerMoveSpeedMultiplier() - 1) * 100)}%`);
+      } else if (amount > 0) {
+        showReward(`经验 +${amount}${reason === "enemy" ? "（修复敌人）" : ""}`);
+      }
+      applyPlayerGrowthVisuals(gameState.scene);
+      updateInfoSideMenu();
+      saveProgress();
+      return { level: afterLevel, exp: gameState.progress.exp };
+    }
+
+    function restoreCompileLife(amount = 1, source = "system") {
+      const state = normalizeCompileLifeState();
+      const next = amount === "full" ? state.max : Math.min(state.max, state.lives + Math.max(1, Number(amount) || 1));
+      if (next === state.lives) return false;
+      gameState.progress.compileLives = next;
+      updateInfoSideMenu();
+      saveProgress();
+      if (source !== "silent") showReward(amount === "full" ? "关卡生命已完全恢复。" : `关卡生命恢复：${next}/${state.max}`);
+      return true;
+    }
+
+    function resetCurrentChallengeProgress(chapterId = gameState.activeChallengeId) {
+      const chapter = chapterById[chapterId];
+      if (!chapter) return false;
+      gameState.progress.learned = gameState.progress.learned.filter((id) => id !== chapterId);
+      gameState.progress.cleared = gameState.progress.cleared.filter((id) => id !== chapterId);
+      gameState.progress.completedLevels = ensureCompletedLevelsShape().map((done, index) => index === getChapterLevelIndex(chapterId) ? false : done);
+      gameState.progress.currentLevel = Math.max(0, Math.min(getChapterLevelIndex(chapterId), chapters.length - 1));
+      const objects = gameState.scene?.chapterObjects?.[chapterId];
+      if (objects?.gate) {
+        objects.gate.disableBody(true, true);
+        objects.gate.setActive(true).setVisible(true).setAlpha(0.34).setTint(0x64748b);
+        objects.gateHintText?.setText?.("先修复石碑");
+        objects.gateHintText?.setColor?.("#bfdbfe");
+      }
+      updateProgressHud();
+      updateDataBusProgress(gameState.scene);
+      saveProgress();
+      return true;
+    }
+
+    function teleportPlayerToSpawn(scene = gameState.scene) {
+      if (!scene?.player) return false;
+      scene.player.setPosition(180, 348);
+      scene.player.setVelocity?.(0, 0);
+      scene.cameras?.main?.pan?.(180, 348, 480, "Sine.easeInOut");
+      showSpawnIntro();
+      return true;
+    }
+
+    function triggerCompileLifeZeroPenalty(chapterId = gameState.activeChallengeId) {
+      triggerErrorGlitch();
+      dom.errorGlitchOverlay?.classList.add("active");
+      gameState.scene && (gameState.scene.playerFrozen = true);
+      showReward("生命归零：系统正在把你传送回出生点，当前关卡进度重置。");
+      trackedSetTimeout(() => {
+        dom.errorGlitchOverlay?.classList.remove("active");
+        closeEditor(false);
+        resetCurrentChallengeProgress(chapterId);
+        teleportPlayerToSpawn(gameState.scene);
+        if (gameState.scene) gameState.scene.playerFrozen = false;
+        updateInfoSideMenu();
+      }, 2000, "compile-life-zero-teleport");
+      return true;
+    }
+
+    function handleCompileFailurePenalty(chapterId = gameState.activeChallengeId, detail = {}) {
+      normalizeCompileLifeState();
+      recordCompileFailure();
+      const key = chapterId || "unknown";
+      gameState.progress.chapterFailureCounts[key] = (Number(gameState.progress.chapterFailureCounts[key]) || 0) + 1;
+      gameState.progress.compileFailureStreak = (Number(gameState.progress.compileFailureStreak) || 0) + 1;
+      gameState.progress.compileLives = Math.max(0, Number(gameState.progress.compileLives) - 1);
+      triggerErrorGlitch();
+      flashHpDamage?.(1);
+      showCompileLifeLossFloat(1);
+      const scene = gameState.scene;
+      scene?.player?.setTint?.(0xff4444);
+      trackedSetTimeout(() => scene?.player?.clearTint?.(), 260, "compile-life-player-red");
+      const index = getChapterLevelIndex(key);
+      const limit = index >= COMPILE_LIFE_RULES.lateChapterIndex ? COMPILE_LIFE_RULES.lateFailureHintLimit : COMPILE_LIFE_RULES.earlyFailureHintLimit;
+      if (gameState.progress.chapterFailureCounts[key] >= limit) {
+        showReward("建议重新复习一下当前章节的知识。");
+      }
+      updateInfoSideMenu();
+      saveProgress();
+      if (gameState.progress.compileLives <= 0) triggerCompileLifeZeroPenalty(key);
+      return { lives: gameState.progress.compileLives, limit, detail };
+    }
+
+    function updateSpawnStoneLifeRecovery(scene = gameState.scene) {
+      if (!scene?.player) return false;
+      const state = normalizeCompileLifeState();
+      if (state.lives >= state.max) {
+        scene.spawnStoneLifeRecoveryStartedAt = 0;
+        return false;
+      }
+      const anchor = scene.chapterObjects?.hello?.stone || { x: 180, y: 348 };
+      const near = Phaser.Math.Distance.Between(scene.player.x, scene.player.y, anchor.x, anchor.y) < 92;
+      if (!near) {
+        scene.spawnStoneLifeRecoveryStartedAt = 0;
+        return false;
+      }
+      scene.spawnStoneLifeRecoveryStartedAt ||= performance.now();
+      if (performance.now() - scene.spawnStoneLifeRecoveryStartedAt >= COMPILE_LIFE_RULES.spawnRecoveryMs) {
+        scene.spawnStoneLifeRecoveryStartedAt = performance.now();
+        restoreCompileLife(1, "spawn-stone");
+        showTerminalBurst("hp_recover_at_spawn();");
+        return true;
+      }
+      return false;
+    }
+
+    function applyPlayerGrowthVisuals(scene = gameState.scene) {
+      if (!scene?.player || !scene.add) return false;
+      const level = getPlayerGrowthLevel();
+      if (!scene.playerGrowthHalo) {
+        scene.playerGrowthHalo = scene.add.circle(scene.player.x, scene.player.y, 18, 0x38bdf8, 0.1).setDepth(9).setStrokeStyle(2, 0x38bdf8, 0.28);
+        scene.playerGrowthCore = scene.add.text(scene.player.x, scene.player.y - 34, "{}", {
+          fontFamily: "JetBrains Mono, monospace",
+          fontSize: "12px",
+          color: "#fde68a",
+          stroke: "#020617",
+          strokeThickness: 3
+        }).setOrigin(0.5).setDepth(12).setAlpha(0);
+      }
+      scene.playerGrowthHalo
+        .setVisible(level >= 1)
+        .setFillStyle(level >= 5 ? 0xfacc15 : 0x38bdf8, level >= 5 ? 0.16 : 0.1)
+        .setStrokeStyle(level >= 5 ? 3 : 2, level >= 5 ? 0xfacc15 : 0x38bdf8, level >= 3 ? 0.54 : 0.28)
+        .setScale(level >= 10 ? 1.72 : level >= 7 ? 1.42 : level >= 5 ? 1.22 : 1);
+      scene.playerGrowthCore.setAlpha(level >= 7 ? 0.82 : 0);
+      return true;
+    }
+
+    function updatePlayerGrowthAura(scene = gameState.scene) {
+      if (!scene?.playerGrowthHalo || !scene.player) return false;
+      const level = getPlayerGrowthLevel();
+      const bob = Math.sin(performance.now() / 260) * 3;
+      scene.playerGrowthHalo.setPosition(scene.player.x, scene.player.y + 6).setAlpha(level >= 3 ? 0.32 : 0.18);
+      scene.playerGrowthCore?.setPosition(scene.player.x, scene.player.y - 34 + bob).setAngle((performance.now() / 60) % 360);
+      if (level >= 10 && scene.frameTick % 36 === 0) spawnCodeParticles(scene, scene.player.x, scene.player.y - 22, ["Lv10", "code", "++"]);
+      return true;
+    }
+
+    function spawnCodeBugEnemy(scene, x, y, enemyData = {}) {
+      if (!scene?.add) return null;
+      const body = scene.add.rectangle(0, 0, 30, 30, 0x7f1d1d, 0.86).setStrokeStyle(2, 0xff5f6d, 0.92);
+      const eye = scene.add.text(0, -1, "!", {
+        fontFamily: "JetBrains Mono, monospace",
+        fontSize: "20px",
+        color: "#fecaca",
+        stroke: "#020617",
+        strokeThickness: 3
+      }).setOrigin(0.5);
+      const label = scene.add.text(0, -34, "代码Bug", {
+        fontFamily: "JetBrains Mono, monospace",
+        fontSize: "11px",
+        color: "#fecaca",
+        stroke: "#020617",
+        strokeThickness: 3
+      }).setOrigin(0.5);
+      const container = scene.add.container(x, y, [body, eye, label]).setDepth(11);
+      container.enemyId = enemyData.id;
+      scene.tweens?.add({ targets: container, y: y - 8, duration: 900, yoyo: true, repeat: -1, ease: "Sine.easeInOut" });
+      scene.tweens?.add({ targets: body, angle: 9, duration: 140, yoyo: true, repeat: -1, ease: "Steps" });
+      return container;
+    }
+
+    function spawnLogicGuardEnemy(scene, x, y, enemyData = {}) {
+      if (!scene?.add) return null;
+      const ring = scene.add.circle(0, 0, 24, 0x1e3a8a, 0.28).setStrokeStyle(2, 0x93c5fd, 0.78);
+      const body = scene.add.text(0, 0, "{ if }", {
+        fontFamily: "JetBrains Mono, monospace",
+        fontSize: "13px",
+        color: "#dbeafe",
+        stroke: "#020617",
+        strokeThickness: 3
+      }).setOrigin(0.5);
+      const label = scene.add.text(0, -38, "逻辑守卫", {
+        fontFamily: "JetBrains Mono, monospace",
+        fontSize: "11px",
+        color: "#bfdbfe",
+        stroke: "#020617",
+        strokeThickness: 3
+      }).setOrigin(0.5);
+      const container = scene.add.container(x, y, [ring, body, label]).setDepth(11);
+      container.enemyId = enemyData.id;
+      scene.tweens?.add({ targets: ring, scale: 1.18, alpha: 0.72, duration: 1100, yoyo: true, repeat: -1, ease: "Sine.easeInOut" });
+      scene.tweens?.add({ targets: body, angle: 360, duration: 3600, repeat: -1, ease: "Linear" });
+      return container;
+    }
+
+    function resolveCodeEnemyRepair(enemyId = gameState.pendingEnemyRepairId, success = true) {
+      return codeEnemyEncounterManager?.resolve(enemyId, success);
+    }
+
+    class CodeEnemyEncounterManager {
+      constructor() {
+        this.visuals = new Map();
+      }
+
+      getRuleForChapter(chapterId) {
+        const index = getChapterLevelIndex(chapterId);
+        return ENEMY_ENCOUNTER_RULES.byChapterIndex[index] || {
+          enemies: [
+            { type: index >= 3 ? "logicGuard" : "codeBug", hp: Math.min(5, index + 1), repair: index >= 3 ? "嵌套循环" : "循环+条件" }
+          ]
+        };
+      }
+
+      getActiveData() {
+        gameState.progress.activeCodeEnemies ||= [];
+        return gameState.progress.activeCodeEnemies;
+      }
+
+      hasActiveForChapter(chapterId) {
+        return this.getActiveData().some((enemy) => enemy.chapterId === chapterId && !enemy.defeated);
+      }
+
+      spawnAfterChapter(chapterId, scene = gameState.scene) {
+        const index = getChapterLevelIndex(chapterId);
+        if (index < 0 || index >= chapters.length - 1 || !scene?.add) return false;
+        if (this.hasActiveForChapter(chapterId)) return true;
+        const rule = this.getRuleForChapter(chapterId);
+        const currentGate = scene.chapterObjects?.[chapterId]?.gate;
+        const nextChapter = chapters[index + 1];
+        const nextStone = scene.chapterObjects?.[nextChapter.id]?.stone;
+        const baseX = currentGate && nextStone ? (currentGate.x + nextStone.x) / 2 : (scene.player?.x || 180) + 160;
+        const baseY = currentGate && nextStone ? (currentGate.y + nextStone.y) / 2 : (scene.player?.y || 348);
+        const created = rule.enemies.map((enemy, offset) => ({
+          id: `${chapterId}:${enemy.type}:${offset}`,
+          chapterId,
+          repairChapterId: nextChapter.id,
+          type: enemy.type,
+          hp: enemy.hp,
+          repair: enemy.repair,
+          x: Math.round(baseX + (offset - (rule.enemies.length - 1) / 2) * 54),
+          y: Math.round(baseY + Math.sin(offset + index) * 28),
+          spawnedAt: Date.now(),
+          nextAttackAt: Date.now() + 30000 + offset * 4000,
+          defeated: false
+        })).filter((enemy) => !gameState.progress.defeatedCodeEnemies?.includes(enemy.id));
+        if (!created.length) return false;
+        gameState.progress.activeCodeEnemies.push(...created);
+        created.forEach((enemy) => this.renderEnemy(scene, enemy));
+        saveProgress();
+        showReward("代码Bug出现：修复它们后，下一关路径会稳定。");
+        return true;
+      }
+
+      rebuildFromProgress(scene = gameState.scene) {
+        this.getActiveData().forEach((enemy) => {
+          if (!enemy.defeated && !this.visuals.has(enemy.id)) this.renderEnemy(scene, enemy);
+        });
+        return this.visuals.size;
+      }
+
+      renderEnemy(scene, enemy) {
+        if (!scene?.add || !enemy || this.visuals.has(enemy.id)) return null;
+        const visual = enemy.type === "logicGuard"
+          ? spawnLogicGuardEnemy(scene, enemy.x, enemy.y, enemy)
+          : spawnCodeBugEnemy(scene, enemy.x, enemy.y, enemy);
+        if (visual) this.visuals.set(enemy.id, visual);
+        return visual;
+      }
+
+      getNearestInteraction(scene = gameState.scene) {
+        if (!scene?.player) return null;
+        return this.getActiveData().find((enemy) => !enemy.defeated
+          && Phaser.Math.Distance.Between(scene.player.x, scene.player.y, enemy.x, enemy.y) < 82) || null;
+      }
+
+      beginRepair(enemyId) {
+        const enemy = this.getActiveData().find((item) => item.id === enemyId && !item.defeated);
+        if (!enemy) return false;
+        gameState.pendingEnemyRepairId = enemy.id;
+        showReward(`${enemy.type === "logicGuard" ? "逻辑守卫" : "代码Bug"}需要修复：${enemy.repair}`);
+        openEditor(enemy.repairChapterId || enemy.chapterId);
+        return true;
+      }
+
+      update(scene = gameState.scene) {
+        const now = Date.now();
+        this.getActiveData().forEach((enemy) => {
+          if (enemy.defeated || now < enemy.nextAttackAt || gameState.pendingEnemyRepairId === enemy.id) return;
+          if (!scene?.player || Phaser.Math.Distance.Between(scene.player.x, scene.player.y, enemy.x, enemy.y) > 260) return;
+          enemy.nextAttackAt = now + 12000;
+          showCodeCombatLine(enemy.type === "logicGuard" ? "lock(player);" : "error_code();", window.innerWidth / 2, window.innerHeight * 0.42);
+          triggerErrorGlitch();
+          handleCompileFailurePenalty(enemy.repairChapterId || enemy.chapterId, { source: "enemy", enemyId: enemy.id });
+        });
+      }
+
+      resolve(enemyId, success = true) {
+        const enemy = this.getActiveData().find((item) => item.id === enemyId);
+        if (!enemy) return false;
+        if (!success) {
+          handleCompileFailurePenalty(enemy.repairChapterId || enemy.chapterId, { source: "enemy-repair", enemyId });
+          return false;
+        }
+        enemy.defeated = true;
+        gameState.progress.defeatedCodeEnemies ||= [];
+        if (!gameState.progress.defeatedCodeEnemies.includes(enemy.id)) gameState.progress.defeatedCodeEnemies.push(enemy.id);
+        gameState.progress.activeCodeEnemies = this.getActiveData().filter((item) => item.id !== enemy.id);
+        const visual = this.visuals.get(enemy.id);
+        if (visual) {
+          spawnCodeParticles(gameState.scene, visual.x, visual.y - 12, ["Fix", "Complete", "return 0"]);
+          spawnPixelShatter(gameState.scene, visual.x, visual.y, 0xfacc15);
+          visual.destroy?.();
+          this.visuals.delete(enemy.id);
+        }
+        gameState.pendingEnemyRepairId = "";
+        grantGrowthExperience(COMPILE_LIFE_RULES.enemyExp, "enemy");
+        showCodeCombatLine("Fix Complete", window.innerWidth / 2, window.innerHeight * 0.38);
+        showReward("Fix Complete：敌人已修复，路径重新稳定。");
+        saveProgress();
+        return true;
+      }
+    }
+
+    const codeEnemyEncounterManager = new CodeEnemyEncounterManager();
 
     function updateHudNumericRoll(element, targetValue) {
       if (!element) return;
@@ -20269,6 +20767,7 @@ int main(void) {
       if (interaction.type === "developerRoom") return "E 进入不存在的门";
       if (interaction.type === "mazeLayer") return "E 进入迷宫层";
       if (interaction.type === "terminalGuess") return "E 启动伪随机双向推演";
+      if (interaction.type === "codeEnemy") return `E 修复${interaction.enemy?.type === "logicGuard" ? "逻辑守卫" : "代码Bug"}（${interaction.enemy?.repair || "补全代码"}）`;
       if (interaction.type === "regionPortal") return interaction.portal?.unlocked ? `E 进入${interaction.portal.label}` : `完成前一区域后解锁：${interaction.portal.label}`;
       if (interaction.type === "locked") {
         if (!isLearned(interaction.chapter.id)) return `E 查看（先完成 ${interaction.chapter.stoneLabel}）`;
@@ -23269,6 +23768,13 @@ int main(void) {
           setOutput(`Compilation complete.\n${worldCommand.message}\n输出：${worldCommand.output}`, "success");
           audioManager.success();
           triggerMusicCompilePass();
+          grantGrowthExperience(COMPILE_LIFE_RULES.successExp, "compile");
+          if (gameState.pendingEnemyRepairId) {
+            resolveCodeEnemyRepair(gameState.pendingEnemyRepairId, true);
+            closeEditor(false);
+            if (gameState.scene) resumeSceneAfterEditor(gameState.scene);
+            return;
+          }
           triggerStoryCinematicBars("代码已注入世界，场景正在响应你的指令。", 1700);
           if (worldCommand.complete) window.setTimeout(() => completeChallenge(), 500);
           return;
@@ -23281,6 +23787,14 @@ int main(void) {
           updateStatusBars();
           audioManager.success();
           triggerMusicCompilePass();
+          grantGrowthExperience(COMPILE_LIFE_RULES.successExp, "compile");
+          if (gameState.pendingEnemyRepairId) {
+            setOutput(`Compilation complete.\nFix Complete：${result.output || "enemy repaired"}`, "success");
+            resolveCodeEnemyRepair(gameState.pendingEnemyRepairId, true);
+            closeEditor(false);
+            if (gameState.scene) resumeSceneAfterEditor(gameState.scene);
+            return;
+          }
           setOutput(`Compilation complete.\n通过：程序输出为 ${result.output}\n获得 ${chapter.skill}！`, "success");
           triggerCinematicCompileBurst();
           triggerStoryCinematicBars("编译通过：知识圣殿的一块裂痕被修复。", 1900);
@@ -23290,7 +23804,7 @@ int main(void) {
           tutorialAnimationManager.trigger("T07_COMPILE_SUCCESS", { scene: gameState.scene, chapter }).then(() => completeChallenge());
         } else {
           gameState.codeAccuracy = Math.max(20, gameState.codeAccuracy - 14);
-          recordCompileFailure();
+          handleCompileFailurePenalty(chapter?.id, { source: "compile", message: result.message });
           updateCompanionAiEvolution();
           flashHpDamage(14);
           updateStatusBars();
@@ -23302,7 +23816,7 @@ int main(void) {
         }
       } catch (error) {
         gameState.codeAccuracy = Math.max(20, gameState.codeAccuracy - 18);
-        recordCompileFailure();
+        handleCompileFailurePenalty(chapter?.id, { source: "exception", message: error.message });
         updateCompanionAiEvolution();
         flashHpDamage(18);
         updateStatusBars();
@@ -24012,6 +24526,9 @@ int main(void) {
           showCompanionHint(gameState.scene, "编译成功！");
         }
         const levelResult = LevelManager.CompleteCurrentLevel(chapter.id, { scene: gameState.scene });
+        restoreCompileLife(1, "chapter-complete");
+        applyPlayerGrowthVisuals(gameState.scene);
+        codeEnemyEncounterManager.spawnAfterChapter(chapter.id, gameState.scene);
         questManager?.refreshAll();
         showReward(`获得奖励：${chapter.skill} + 代码勋章。${chapter.gateLabel}已解除！`);
         announceA11yEvent(`任务完成：${chapter.title}`, "✅");
@@ -28135,6 +28652,7 @@ int main(void) {
       dom.playerRoomWindow?.animate([{ filter: "brightness(1.4)" }, { filter: "brightness(0.86)" }, { filter: "brightness(1)" }], { duration: 2600, easing: "ease-in-out" });
       showTerminalBurst("sleep(3);");
       audioManager.tone(220, 0.18, "sine", 0.018);
+      restoreCompileLife("full", "room-bed");
     }
 
     function openDeskCodeReview(showStatus = true) {
@@ -28562,6 +29080,8 @@ int main(void) {
         createWarmthStation(this);
         createDecorativeLever(this);
         createCBattleEncounter(this);
+        codeEnemyEncounterManager.rebuildFromProgress(this);
+        applyPlayerGrowthVisuals(this);
         createAmbientCodeMotes(this);
         createFloatingDustMotes(this);
         createEnvironmentalMicroAnimations(this);
@@ -28660,6 +29180,9 @@ int main(void) {
           updateWorldEvolutionLayer(this);
           updateSafeSceneFx(this, null);
           updateInteractionHalo(this, null);
+          updateSpawnStoneLifeRecovery(this);
+          updatePlayerGrowthAura(this);
+          codeEnemyEncounterManager.update(this);
           updateGuidanceLine(this);
           updatePathGuidePulse(this);
           updateDataBusProgress(this);
@@ -28671,7 +29194,7 @@ int main(void) {
           return;
         }
 
-        const speed = 170;
+        const speed = Math.round(170 * getPlayerMoveSpeedMultiplier());
         const input = new Phaser.Math.Vector2(0, 0);
         if (this.cursors.left.isDown) input.x = -1;
         if (this.cursors.right.isDown) input.x = 1;
@@ -28697,6 +29220,9 @@ int main(void) {
         updateWorldEvolutionLayer(this);
         updateSafeSceneFx(this, null);
         updateAiCompanion(this);
+        updateSpawnStoneLifeRecovery(this);
+        updatePlayerGrowthAura(this);
+        codeEnemyEncounterManager.update(this);
         updateNpcGazeTracking(this);
         spawnGroundMicroFeedback(this, this.player);
         updateDynamicNarrativeHooks(this);
@@ -28741,6 +29267,8 @@ int main(void) {
             triggerInteractionRipple(this, this.mazeLayerGlitch.x, this.mazeLayerGlitch.y);
           } else if (interaction?.type === "terminalGuess") {
             triggerInteractionRipple(this, this.terminalGuessStone.x, this.terminalGuessStone.y);
+          } else if (interaction?.type === "codeEnemy") {
+            triggerInteractionRipple(this, interaction.enemy.x, interaction.enemy.y);
           } else if (interaction?.chapter) {
             const target = interaction.type === "challenge" ? this.chapterObjects[interaction.chapter.id]?.gate : this.chapterObjects[interaction.chapter.id]?.stone;
             if (target) triggerInteractionRipple(this, target.x, target.y);
@@ -28755,6 +29283,7 @@ int main(void) {
           if (interaction?.type === "developerRoom") enterDeveloperRoom();
           if (interaction?.type === "mazeLayer") enterMazeLayer();
           if (interaction?.type === "terminalGuess") openTerminalGuessMiniGame();
+          if (interaction?.type === "codeEnemy") codeEnemyEncounterManager.beginRepair(interaction.enemy.id);
           if (interaction?.type === "regionPortal") teleportToRegion(this, interaction.portal);
           if (interaction?.type === "mossyStone") openNpcCodeWindow("长满苔藓的断碑", [
             "亲爱的玩家：",
@@ -28968,6 +29497,8 @@ int main(void) {
             return unlocked ? { type: "challenge", chapter } : { type: "locked", chapter };
           }
         }
+        const codeEnemy = codeEnemyEncounterManager.getNearestInteraction(this);
+        if (codeEnemy) return { type: "codeEnemy", enemy: codeEnemy };
         const npc = getNearestNpcInteraction(this);
         if (npc) return { type: "npc", npc };
         return null;
@@ -28976,7 +29507,8 @@ int main(void) {
       isChapterUnlocked(chapterId) {
         const index = chapters.findIndex((chapter) => chapter.id === chapterId);
         if (index <= 0) return true;
-        return isCleared(chapters[index - 1].id);
+        const previousChapterId = chapters[index - 1].id;
+        return isCleared(previousChapterId) && !codeEnemyEncounterManager.hasActiveForChapter(previousChapterId);
       }
 
       startLesson(chapterId, fromCodeFill = false) {
