@@ -1024,6 +1024,11 @@ assert(/function playSoftSceneWash/m.test(html), "high stability effects should 
 assert(!/cameras?\.main\.flash|cameras\?\.main\?\.flash|\.flash\?\.\(/m.test(html), "Phaser camera flash should not be used because it causes white-screen flicker at high stability");
 const questFlashBlock = html.match(/#questFlash\s*\{([\s\S]*?)\n\s*\}/)?.[1] || "";
 assert(!/background:\s*white/i.test(questFlashBlock), "quest feedback flash should not use an opaque white overlay");
+const crtNoiseBlock = html.match(/function drawCrtNoise\(\)\s*\{([\s\S]*?)\n\s*\}/)?.[1] || "";
+assert(!/createImageData/.test(crtNoiseBlock) && !/Math\.random\(\)\s*\*\s*255/.test(crtNoiseBlock), "CRT noise must not fill the whole viewport with high-density white pixels");
+assert(/frameScheduler\.register\("crtNoise",\s*drawCrtNoise,\s*\{\s*frameInterval:\s*6\s*\}\)/m.test(html), "CRT noise should update slowly enough to avoid visible white-dot flicker");
+assert(/fillStyle\s*=\s*"rgba\(125, 211, 252, 0\.055\)"/m.test(html), "CRT noise specks should be dark cyan rather than white");
+assert(/filmGrain:\s*0\.018/m.test(html) && /grainCount\s*=\s*Math\.max\(6,\s*Math\.round\(18/m.test(html), "film grain should be capped to a sparse low-alpha budget");
 assert(/function staticFallbackSignal/m.test(html), "disabled animations should keep non-motion feedback");
 assert(/class TimelineAnimation/m.test(html), "animations should use serializable timeline objects");
 assert(/MAX_ANIMATION_DELTA_MS\s*=\s*200/m.test(html), "animation delta time should be capped after tab refocus");
@@ -1105,12 +1110,13 @@ assert(/本项目永久免费对外开放/.test(html), "announcement should incl
 assert(/STARTUP_ANNOUNCEMENT_AUTO_HIDE_MS\s*=\s*3000/m.test(html), "announcement should auto-hide after 3 seconds");
 assert(/function showStartupAnnouncement/m.test(html), "announcement should be controlled by a startup function");
 assert(/id="announcementCloseButton"/m.test(html), "announcement should include a minimal close control");
-assert(/World Build v1\.0\.10/m.test(html) || /GAME_VERSION\s*=\s*"v1\.0\.10"/m.test(html), "game version should increment when shipping a new update");
+assert(/World Build v1\.0\.11/m.test(html) || /GAME_VERSION\s*=\s*"v1\.0\.11"/m.test(html), "game version should increment when shipping a new update");
 assert(/UPDATE_HISTORY\s*=\s*Object\.freeze\(\[[\s\S]*v1\.0\.1[\s\S]*零基础新手指引[\s\S]*v1\.0\.0[\s\S]*手机端适配/m.test(html), "update history should keep detailed previous release notes");
 assert(/id="updateHistoryList"/m.test(html) && /历史更新内容/m.test(html), "side menu should expose update history with detailed usage-visible notes");
-assert(/GAME_VERSION\s*=\s*"v1\.0\.10"/m.test(html), "game version should increment for the anti-white-flash stability release");
+assert(/GAME_VERSION\s*=\s*"v1\.0\.11"/m.test(html), "game version should increment for the anti-white-noise stability release");
+assert(/UPDATE_HISTORY\s*=\s*Object\.freeze\(\[[\s\S]*v1\.0\.11[\s\S]*防白屏高档位白色噪点闪烁修复[\s\S]*CRT 噪声[\s\S]*每6帧[\s\S]*最多18个/m.test(html), "update history should record the v1.0.11 anti-white-noise release");
+assert(/UPDATE_ANNOUNCEMENT_PAGES\s*=\s*Object\.freeze\(\[[\s\S]*满屏白色小点[\s\S]*稀疏暗青扫描线[\s\S]*雪花屏/m.test(html), "startup announcement should describe the v1.0.11 white-noise flicker fix");
 assert(/UPDATE_HISTORY\s*=\s*Object\.freeze\(\[[\s\S]*v1\.0\.10[\s\S]*防白屏高档位白色闪烁修复[\s\S]*camera\.flash[\s\S]*纯白背景/m.test(html), "update history should record the v1.0.10 anti-white-flash release");
-assert(/UPDATE_ANNOUNCEMENT_PAGES\s*=\s*Object\.freeze\(\[[\s\S]*防白屏[\s\S]*白闪[\s\S]*青金扫光[\s\S]*不会再像白屏一样频繁闪烁/m.test(html), "startup announcement should describe the v1.0.10 white-flicker fix");
 assert(/UPDATE_HISTORY\s*=\s*Object\.freeze\(\[[\s\S]*v1\.0\.9[\s\S]*官网课程路径对齐[\s\S]*develop\.fan[\s\S]*弹窗收起后显示具体折叠对象名称[\s\S]*手机软键盘/m.test(html), "update history should record the v1.0.9 course path and UI stability release");
 assert(/UPDATE_HISTORY\s*=\s*Object\.freeze\(\[[\s\S]*v1\.0\.8[\s\S]*性能保护降噪、透明引导[\s\S]*12秒滚动窗口[\s\S]*15秒无操作/m.test(html), "update history should record the v1.0.8 guidance and performance quieting release");
 assert(/UPDATE_HISTORY\s*=\s*Object\.freeze\(\[[\s\S]*v1\.0\.7[\s\S]*稳定档位移除中档[\s\S]*renderQuality=medium/m.test(html), "update history should record the v1.0.7 stable quality cleanup");

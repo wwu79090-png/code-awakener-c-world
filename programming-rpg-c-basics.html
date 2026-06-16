@@ -11,7 +11,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; base-uri 'self'; object-src 'none'; frame-ancestors 'none'; script-src 'self' https://cdn.jsdelivr.net 'nonce-code-awakener-inline' 'sha256-YnWIywSUQ5YLodqj+sZeZ82VxDyWYjLOVrdXslYY8wU='; style-src 'self' https://cdn.jsdelivr.net https://fonts.googleapis.com 'nonce-code-awakener-inline' 'sha256-2eOe5/hsIEBqNF690nc9mHyaJLSByaaT7YhrpgRsEHQ='; style-src-attr 'unsafe-inline'; font-src 'self' https://cdn.jsdelivr.net https://fonts.gstatic.com data:; img-src 'self' data: blob:; media-src 'self' data: blob:; worker-src 'self' blob:; child-src 'self' blob:; connect-src 'self' https://cdn.jsdelivr.net http://localhost:8000 http://127.0.0.1:8000;">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; base-uri 'self'; object-src 'none'; frame-ancestors 'none'; script-src 'self' https://cdn.jsdelivr.net 'nonce-code-awakener-inline' 'sha256-ro/c1B1+L2QwZiXRXOPX0Dx10183Z9FXaZrho4g5UyE='; style-src 'self' https://cdn.jsdelivr.net https://fonts.googleapis.com 'nonce-code-awakener-inline' 'sha256-nbDx0rXHwoSfjL4lvmHlyc73DeJwM/IVRrEROYSRIMk='; style-src-attr 'unsafe-inline'; font-src 'self' https://cdn.jsdelivr.net https://fonts.gstatic.com data:; img-src 'self' data: blob:; media-src 'self' data: blob:; worker-src 'self' blob:; child-src 'self' blob:; connect-src 'self' https://cdn.jsdelivr.net http://localhost:8000 http://127.0.0.1:8000;">
   <title>编程学习 RPG：C 语言启航村</title>
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%23020617'/%3E%3Cpath d='M22 20 10 32l12 12M42 20l12 12-12 12' fill='none' stroke='%2300ff88' stroke-width='6' stroke-linecap='round' stroke-linejoin='round'/%3E%3Cpath d='m36 16-8 32' stroke='%2300ccff' stroke-width='5' stroke-linecap='round'/%3E%3C/svg%3E">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/firacode@6.2.0/distr/fira_code.css">
@@ -523,8 +523,19 @@
 
     #crtNoiseCanvas {
       z-index: 3;
-      opacity: 0.13;
+      opacity: 0.035;
       mix-blend-mode: screen;
+      filter: saturate(0.72) brightness(0.7);
+      image-rendering: auto;
+    }
+
+    body[data-render-quality="high"] #crtNoiseCanvas {
+      opacity: 0.026;
+    }
+
+    body[data-render-quality="low"] #crtNoiseCanvas,
+    body.safe-mode #crtNoiseCanvas {
+      opacity: 0.012;
     }
 
     #compileMatrixCanvas {
@@ -9823,7 +9834,7 @@
       <canvas id="menuFxCanvas" width="1280" height="720"></canvas>
       <div class="main-menu-card glass-panel">
         <h1 class="game-logo">CODE AWAKENER<br>C 语言启航村</h1>
-        <div class="version-label" id="versionLabel">World Build v1.0.10 · develop.fan C Basics</div>
+        <div class="version-label" id="versionLabel">World Build v1.0.11 · develop.fan C Basics</div>
         <label class="boot-command"><span>&gt;</span><input id="bootCommandInput" value="start_game.exe" autocomplete="off" spellcheck="false" aria-label="启动命令"></label>
         <label class="skin-picker">角色外观
           <select id="skinSelect" aria-label="选择主角外观">
@@ -11182,16 +11193,16 @@ int main() {
     const SAVE_SIGNATURE_SALT = "c-world-local-integrity";
     const SAVE_CLEAR_CONFIRM_MS = 3000;
     const STARTUP_ANNOUNCEMENT_AUTO_HIDE_MS = 3000;
-    const GAME_VERSION = "v1.0.10";
+    const GAME_VERSION = "v1.0.11";
     const UPDATE_ANNOUNCEMENT_PAGES = Object.freeze([
       {
         title: "> 消息 / 本次更新",
         lines: [
           "// 作者：杀戮",
-          "// 本次更新：修复防白屏/稳定档位越高越白闪的问题。",
-          "// 高档位不再调用 Phaser 全屏白色 flash，改为低透明青金扫光。",
-          "// 任务完成、基础碎片脉冲、编译铺路与终章庆祝都降低闪光强度。",
-          "// 画面仍有反馈，但不会再像白屏一样频繁闪烁。"
+          "// 本次更新：修复防白屏/稳定档位越高，满屏白色小点越闪的问题。",
+          "// CRT 噪声层不再逐像素铺满白点，改为稀疏暗青扫描线。",
+          "// 电影颗粒从白点改为低透明蓝绿微粒，并大幅降低数量。",
+          "// 高档位保留氛围感，但不会再像雪花屏一样闪烁。"
         ]
       },
       {
@@ -11199,8 +11210,8 @@ int main() {
         lines: [
           "// 防白屏稳定档位仍保留低/高两档，不再通过白色闪屏提示状态。",
           "// DOM 白闪层改为半透明玻璃光波，透明度大幅降低。",
-          "// 新增回归测试，禁止再直接使用 camera.flash 导致整屏刷白。",
-          "// 保留上一版 develop.fan C 语言路径、手机编辑器和弹窗折叠修复。"
+          "// 新增回归测试，禁止再直接使用 camera.flash 或高密度白噪点。",
+          "// 保留 develop.fan C 语言路径、手机编辑器和弹窗折叠修复。"
         ]
       },
       {
@@ -11223,6 +11234,18 @@ int main() {
       }
     ]);
     const UPDATE_HISTORY = Object.freeze([
+      {
+        version: "v1.0.11",
+        date: "2026-06-16",
+        title: "防白屏高档位白色噪点闪烁修复",
+        details: [
+          "修复防白屏/稳定档位调高后，画面出现大量白色小点持续闪烁的问题。",
+          "CRT 噪声层取消逐像素白噪声，改为低透明暗青扫描线和少量微粒。",
+          "CRT 噪声刷新频率从每2帧降低为每6帧，减少闪烁感和性能开销。",
+          "电影级 film grain 从白色颗粒改为蓝绿色微粒，数量从48个降到最多18个。",
+          "新增测试约束，后续不得重新引入高密度白噪点。"
+        ]
+      },
       {
         version: "v1.0.10",
         date: "2026-06-16",
@@ -12001,7 +12024,7 @@ return 0;`;
       directSaveAs: "reduced-by-inline-resources"
     });
     const SECURITY_CONFIG = Object.freeze({
-      expectedScriptHash: "KOxd8C4xTirG+XIgLy5gKrO/GIllfQ9PS1DUxIFS/rI=",
+      expectedScriptHash: "4vRbNq4YGZKlTmecxX3CELqCkSeN0xMk1+eNd8aeLP4=",
       selfCheckIntervalMs: 45000,
       tamperRefreshMs: 5000,
       devToolsRefreshMs: 2000,
@@ -24906,10 +24929,10 @@ ${item.code}
       const quality = getEffectiveCinematicQuality();
       const runtime = gameState.runtimeRenderDowngrade || {};
       const budget = {
-        high: { grass: CINEMATIC_RENDER_BUDGET.maxProceduralGrass, fog: 0.92, ssr: true, shadows: true, filmGrain: 0.14 },
-        medium: { grass: CINEMATIC_RENDER_BUDGET.mediumProceduralGrass, fog: 0.58, ssr: true, shadows: true, filmGrain: 0.08 },
-        low: { grass: CINEMATIC_RENDER_BUDGET.lowProceduralGrass, fog: 0.26, ssr: false, shadows: true, filmGrain: 0.02 }
-      }[quality] || { grass: CINEMATIC_RENDER_BUDGET.maxProceduralGrass, fog: 0.92, ssr: true, shadows: true, filmGrain: 0.14 };
+        high: { grass: CINEMATIC_RENDER_BUDGET.maxProceduralGrass, fog: 0.92, ssr: true, shadows: true, filmGrain: 0.018 },
+        medium: { grass: CINEMATIC_RENDER_BUDGET.mediumProceduralGrass, fog: 0.58, ssr: true, shadows: true, filmGrain: 0.012 },
+        low: { grass: CINEMATIC_RENDER_BUDGET.lowProceduralGrass, fog: 0.26, ssr: false, shadows: true, filmGrain: 0.004 }
+      }[quality] || { grass: CINEMATIC_RENDER_BUDGET.maxProceduralGrass, fog: 0.92, ssr: true, shadows: true, filmGrain: 0.018 };
       return {
         ...budget,
         grass: Math.round(budget.grass * (runtime.particleScale || 1)),
@@ -25103,12 +25126,13 @@ ${item.code}
     function drawCinematicFilmGrain(scene, frame) {
       if (!frame) return false;
       const budget = getCinematicFeatureBudget();
-      if (budget.filmGrain <= 0.025) return false;
+      if (budget.filmGrain <= 0.006) return false;
       const { ctx, canvas, time } = frame;
       ctx.save();
       ctx.globalAlpha = budget.filmGrain;
-      ctx.fillStyle = "rgba(255,255,255,0.12)";
-      for (let i = 0; i < 48; i += 1) {
+      ctx.fillStyle = "rgba(125, 211, 252, 0.08)";
+      const grainCount = Math.max(6, Math.round(18 * Math.min(1, budget.filmGrain / 0.018)));
+      for (let i = 0; i < grainCount; i += 1) {
         const x = (Math.sin(time * 0.013 + i * 78.233) * 0.5 + 0.5) * canvas.width;
         const y = (Math.cos(time * 0.017 + i * 31.171) * 0.5 + 0.5) * canvas.height;
         ctx.fillRect(x, y, 1, 1);
@@ -27368,19 +27392,33 @@ ${item.code}
     function drawCrtNoise() {
       const canvas = dom.crtNoiseCanvas;
       const ctx = canvas?.getContext?.("2d");
-      if (!ctx || !ctx.createImageData) return;
-      const image = ctx.createImageData(canvas.width, canvas.height);
-      for (let i = 0; i < image.data.length; i += 4) {
-        const value = Math.random() * 255;
-        image.data[i] = value;
-        image.data[i + 1] = value;
-        image.data[i + 2] = value + 18;
-        image.data[i + 3] = Math.random() > 0.72 ? 32 : 0;
+      if (!ctx) return;
+      const width = canvas.width || 320;
+      const height = canvas.height || 180;
+      const renderQuality = normalizeRenderQuality(gameState.settings.renderQuality || "high");
+      const lowPower = renderSafetyManager?.safeMode || renderQuality === "low" || gameState.settings.animationQuality === ANIMATION_QUALITY.reduced;
+      const speckCount = lowPower ? 18 : 54;
+      ctx.clearRect(0, 0, width, height);
+      ctx.save();
+      ctx.globalCompositeOperation = "source-over";
+      ctx.strokeStyle = "rgba(56, 189, 248, 0.045)";
+      ctx.lineWidth = 1;
+      for (let y = (performance.now() / 90) % 18; y < height; y += 18) {
+        ctx.beginPath();
+        ctx.moveTo(0, y);
+        ctx.lineTo(width, y);
+        ctx.stroke();
       }
-      ctx.putImageData(image, 0, 0);
+      ctx.fillStyle = "rgba(125, 211, 252, 0.055)";
+      for (let i = 0; i < speckCount; i += 1) {
+        const x = Math.random() * width;
+        const y = Math.random() * height;
+        ctx.fillRect(x, y, 1, 1);
+      }
+      ctx.restore();
     }
 
-    frameScheduler.register("crtNoise", drawCrtNoise, { frameInterval: 2 });
+    frameScheduler.register("crtNoise", drawCrtNoise, { frameInterval: 6 });
 
     function triggerCompileTransition() {
       const canvas = dom.compileMatrixCanvas;
