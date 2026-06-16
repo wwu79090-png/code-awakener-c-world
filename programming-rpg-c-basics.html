@@ -11,7 +11,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; base-uri 'self'; object-src 'none'; frame-ancestors 'none'; script-src 'self' https://cdn.jsdelivr.net 'nonce-code-awakener-inline' 'sha256-UVzPYexUpGdkfsfGy1fLB6mHI9YdKdk0SPAVQz/fFwA='; style-src 'self' https://cdn.jsdelivr.net https://fonts.googleapis.com 'nonce-code-awakener-inline' 'sha256-h9HBc2293Ig2IRcdBVmvWiory5GdJIOiSUR793omWO0='; style-src-attr 'unsafe-inline'; font-src 'self' https://cdn.jsdelivr.net https://fonts.gstatic.com data:; img-src 'self' data: blob:; media-src 'self' data: blob:; worker-src 'self' blob:; child-src 'self' blob:; connect-src 'self' https://cdn.jsdelivr.net http://localhost:8000 http://127.0.0.1:8000;">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; base-uri 'self'; object-src 'none'; frame-ancestors 'none'; script-src 'self' https://cdn.jsdelivr.net 'nonce-code-awakener-inline' 'sha256-P+RnK47Io5GOVB+NbxxpvUwacYiP/NZXrJQrXcnVCQc='; style-src 'self' https://cdn.jsdelivr.net https://fonts.googleapis.com 'nonce-code-awakener-inline' 'sha256-1YEgJ7r0RcH461ieLd7PZ2CXaBXqUfYKREdiaVcru2o='; style-src-attr 'unsafe-inline'; font-src 'self' https://cdn.jsdelivr.net https://fonts.gstatic.com data:; img-src 'self' data: blob:; media-src 'self' data: blob:; worker-src 'self' blob:; child-src 'self' blob:; connect-src 'self' https://cdn.jsdelivr.net http://localhost:8000 http://127.0.0.1:8000;">
   <title>编程学习 RPG：C 语言启航村</title>
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%23020617'/%3E%3Cpath d='M22 20 10 32l12 12M42 20l12 12-12 12' fill='none' stroke='%2300ff88' stroke-width='6' stroke-linecap='round' stroke-linejoin='round'/%3E%3Cpath d='m36 16-8 32' stroke='%2300ccff' stroke-width='5' stroke-linecap='round'/%3E%3C/svg%3E">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/firacode@6.2.0/distr/fira_code.css">
@@ -5291,13 +5291,6 @@
       opacity: 1;
     }
 
-    body.novice-guide-active .info-menu-toggle,
-    body.novice-guide-active .info-side-menu,
-    body.novice-guide-active .world-evolution-button,
-    body.novice-guide-active #hud button:not(.novice-guide-control) {
-      pointer-events: none;
-    }
-
     body.novice-guide-active .world-evolution-button.novice-guide-compile-ready {
       pointer-events: auto;
       box-shadow: 0 0 0 4px rgba(250, 204, 21, 0.2), 0 0 44px rgba(250, 204, 21, 0.42);
@@ -5370,10 +5363,14 @@
     }
 
     .novice-guide-overlay[data-step="guidedCode"] .novice-guide-run,
-    .novice-guide-overlay[data-step="compileFeedback"] .novice-guide-run {
+    .novice-guide-overlay[data-step="compileFeedback"] .novice-guide-run,
+    .novice-guide-overlay[data-step="freeTry"] .novice-guide-run {
       display: inline-flex;
     }
 
+    .novice-guide-overlay[data-step="interface"] .novice-guide-next,
+    .novice-guide-overlay[data-step="compileFeedback"] .novice-guide-next,
+    .novice-guide-overlay[data-step="freeTry"] .novice-guide-next,
     .novice-guide-overlay[data-step="demoVideo"] .novice-guide-next {
       display: inline-flex;
     }
@@ -8820,7 +8817,7 @@
       <canvas id="menuFxCanvas" width="1280" height="720"></canvas>
       <div class="main-menu-card glass-panel">
         <h1 class="game-logo">CODE AWAKENER<br>C 语言启航村</h1>
-        <div class="version-label" id="versionLabel">World Build v1.0.4 · develop.fan C Basics</div>
+        <div class="version-label" id="versionLabel">World Build v1.0.5 · develop.fan C Basics</div>
         <label class="boot-command"><span>&gt;</span><input id="bootCommandInput" value="start_game.exe" autocomplete="off" spellcheck="false" aria-label="启动命令"></label>
         <label class="skin-picker">角色外观
           <select id="skinSelect" aria-label="选择主角外观">
@@ -10150,23 +10147,23 @@ int main() {
     const SAVE_SIGNATURE_SALT = "c-world-local-integrity";
     const SAVE_CLEAR_CONFIRM_MS = 3000;
     const STARTUP_ANNOUNCEMENT_AUTO_HIDE_MS = 3000;
-    const GAME_VERSION = "v1.0.4";
+    const GAME_VERSION = "v1.0.5";
     const UPDATE_ANNOUNCEMENT_PAGES = Object.freeze([
       {
         title: "> 消息 / 本次更新",
         lines: [
           "// 作者：杀戮",
-          "// 本次更新：新增零基础友好模式与虚拟导师小C。",
-          "// 游戏会先用生活比喻讲清楚指令、变量、输入输出、条件和循环。",
-          "// 菜单功能增加图标和用途说明，一眼能看懂每个入口是干嘛的。"
+          "// 本次更新：紧急修复新手教程卡死、按钮缺失和跳过失效问题。",
+          "// 教程现在会直接显示“运行这段代码”和“完成指引”，不用再找角落按钮。",
+          "// 完成或跳过教程后会自动恢复游戏输入，不会把玩家卡在对话层。"
         ]
       },
       {
-        title: "> 更新内容 / 零基础学习",
+        title: "> 更新内容 / 教程稳定性",
         lines: [
-          "// 新增5个“不写代码”的思维启蒙练习，先学思维再写代码。",
-          "// 新增前10课代码积木模式，可点积木自动拼出第一个C程序。",
-          "// 新增小C跟读、代码故事书、奖励花园、家长说明和儿童友好成就。"
+          "// 缩短模拟演示等待时间，减少新手教程“卡住很久才出现”的感觉。",
+          "// 教程不再全局禁用HUD和编辑器按钮，真实编辑器运行按钮也能响应。",
+          "// 默认关闭自动TTS请求，避免本地 ttsfm 服务未开启时拖慢教程。"
         ]
       },
       {
@@ -10180,6 +10177,19 @@ int main() {
       }
     ]);
     const UPDATE_HISTORY = Object.freeze([
+      {
+        version: "v1.0.5",
+        date: "2026-06-16",
+        title: "新手教程热修复：不卡死、按钮可见、跳过可用",
+        details: [
+          "修复新手教程最后一步指向不可见编译按钮的问题，卡片内直接显示“运行这段代码 / 运行修改后的代码”。",
+          "修复跳过指引后二次确认会被排队动画覆盖的问题，点击跳过后会清理教程定时器。",
+          "修复教程完成后底部对话栏和编辑器状态残留导致游戏无法点击/移动的问题。",
+          "缩短模拟视频与界面介绍等待时间，避免教程流程显得卡顿。",
+          "新手教程不再全局禁用HUD和编辑器按钮，真实编辑器的“运行代码”按钮会正确走教程运行流程。",
+          "默认关闭自动TTS请求，避免本地 ttsfm 服务未开启时产生连接失败和卡顿。"
+        ]
+      },
       {
         version: "v1.0.4",
         date: "2026-06-16",
@@ -10836,7 +10846,7 @@ return 0;`;
       directSaveAs: "reduced-by-inline-resources"
     });
     const SECURITY_CONFIG = Object.freeze({
-      expectedScriptHash: "IB5Uk8ZMT8SCbv+OZk4r+ih7ufL4U9c0WYU4EpReRa0=",
+      expectedScriptHash: "dElQ025wnN+KoJ4wvXMTiF98/wr4FCsdTMG7bd8Vp9M=",
       selfCheckIntervalMs: 45000,
       tamperRefreshMs: 5000,
       devToolsRefreshMs: 2000,
@@ -10857,6 +10867,8 @@ return 0;`;
     });
     const MOBILE_PARTICLE_LIMIT = 150;
     const NOVICE_GUIDE_HELLO_CODE = `#include <stdio.h>\nint main() {\n    printf("Hello C!");\n    return 0;\n}`;
+    const NOVICE_GUIDE_VIDEO_MS = 6500;
+    const NOVICE_GUIDE_TOUR_STEP_MS = 1800;
     const NOVICE_GUIDE_STEPS = Object.freeze([
       {
         id: "interface",
@@ -10874,13 +10886,13 @@ return 0;`;
         id: "guidedCode",
         target: "compile",
         title: "手把手写第一段 C 程序",
-        text: "这段代码已经为你准备好。旁边的气泡解释每一行的作用，现在看向右下角的编译按钮。"
+        text: "真正的编辑器已经打开。先不用找角落按钮，直接点这张指引卡里的“运行这段代码”。"
       },
       {
         id: "compileFeedback",
         target: "dialog",
         title: "编译与反馈",
-        text: "点击右下角“编译 / 推进”，系统会播放内存、执行轨迹和中文解释。"
+        text: "系统会播放内存、执行轨迹和中文解释。你也可以继续点“运行这段代码”再看一次。"
       },
       {
         id: "freeTry",
@@ -13796,6 +13808,7 @@ return 0;`;
       editorFontSize: 14,
       language: "zh-CN",
       worldEvolutionLanguage: "zh-CN",
+      voiceEnabled: false,
       ttsfmEndpoint: TTSFM_CONFIG.endpoint,
       browserSpeechFallback: false,
       worldEvolutionTheme: "deepStar",
@@ -25094,7 +25107,9 @@ ${item.code}
     function showNoviceGuideDialogue(text = "") {
       if (!dom.dialog || !dom.dialogText) return false;
       window.clearInterval(typingTimer);
-      gameState.dialogOpen = true;
+      const wasDialogOpen = gameState.dialogOpen;
+      gameState.dialogOpen = false;
+      dom.dialog.dataset.noviceGuide = "true";
       dom.dialog.classList.add("active");
       dom.dialogOptions?.classList?.remove("visible");
       if (dom.dialogSpeaker) dom.dialogSpeaker.textContent = "基础导师";
@@ -25112,6 +25127,19 @@ ${item.code}
         }
       }, Math.max(16, getDialogTextDelay()));
       speakNoviceGuideLine(currentDialogText);
+      if (wasDialogOpen) gameState.dialogOpen = true;
+      return true;
+    }
+
+    function closeNoviceGuideDialogue() {
+      if (dom.dialog?.dataset?.noviceGuide !== "true") return false;
+      window.clearInterval(typingTimer);
+      isTyping = false;
+      dom.dialog.classList.remove("active");
+      dom.dialogOptions?.classList?.remove("visible");
+      delete dom.dialog.dataset.noviceGuide;
+      gameState.dialogOpen = false;
+      if (gameState.scene) gameState.scene.playerFrozen = false;
       return true;
     }
 
@@ -25178,7 +25206,7 @@ ${item.code}
     function tickNoviceGuideVideo() {
       if (!noviceGuideVideoPlaying) return false;
       const elapsed = performance.now() - noviceGuideVideoStartedAt;
-      noviceGuideVideoPausedProgress = Math.max(0, Math.min(1, elapsed / 15000));
+      noviceGuideVideoPausedProgress = Math.max(0, Math.min(1, elapsed / NOVICE_GUIDE_VIDEO_MS));
       drawNoviceGuideVideoFrame(noviceGuideVideoPausedProgress);
       if (noviceGuideVideoPausedProgress >= 1) {
         noviceGuideVideoPlaying = false;
@@ -25192,7 +25220,7 @@ ${item.code}
     function startNoviceGuideVideoPlayback(reset = false) {
       if (reset) noviceGuideVideoPausedProgress = 0;
       noviceGuideVideoPlaying = true;
-      noviceGuideVideoStartedAt = performance.now() - noviceGuideVideoPausedProgress * 15000;
+      noviceGuideVideoStartedAt = performance.now() - noviceGuideVideoPausedProgress * NOVICE_GUIDE_VIDEO_MS;
       if (dom.noviceGuideVideoPlayButton) dom.noviceGuideVideoPlayButton.textContent = "暂停";
       if (noviceGuideVideoRaf) cancelAnimationFrame(noviceGuideVideoRaf);
       noviceGuideVideoRaf = requestAnimationFrame(tickNoviceGuideVideo);
@@ -25225,9 +25253,9 @@ ${item.code}
           if (dom.noviceGuideTitle) dom.noviceGuideTitle.textContent = item.title;
           if (dom.noviceGuideText) dom.noviceGuideText.textContent = item.text;
           showNoviceGuideDialogue(item.text);
-        }, index * 2700, `novice-interface-${index}`);
+        }, index * NOVICE_GUIDE_TOUR_STEP_MS, `novice-interface-${index}`);
       });
-      scheduleNoviceGuide(() => advanceNoviceGuideStep(), tour.length * 2700 + 500, "novice-interface-next");
+      scheduleNoviceGuide(() => advanceNoviceGuideStep(), tour.length * NOVICE_GUIDE_TOUR_STEP_MS + 350, "novice-interface-next");
       return true;
     }
 
@@ -25242,6 +25270,8 @@ ${item.code}
       if (dom.noviceGuideKicker) dom.noviceGuideKicker.textContent = `> 新手指引 ${noviceGuideStepIndex + 1}/${NOVICE_GUIDE_STEPS.length}`;
       if (dom.noviceGuideTitle) dom.noviceGuideTitle.textContent = step.title;
       if (dom.noviceGuideText) dom.noviceGuideText.textContent = step.text;
+      if (dom.noviceGuideRunButton) dom.noviceGuideRunButton.textContent = step.id === "freeTry" ? "运行修改后的代码" : "运行这段代码";
+      if (dom.noviceGuideNextButton) dom.noviceGuideNextButton.textContent = step.id === "freeTry" ? "完成指引" : "下一步";
       dom.worldAdvanceButton?.classList.toggle("novice-guide-compile-ready", step.id === "guidedCode" || step.id === "compileFeedback");
       showNoviceGuideDialogue(step.text);
       clearNoviceGuideTimers();
@@ -25249,13 +25279,10 @@ ${item.code}
       if (step.id === "demoVideo") {
         drawNoviceGuideVideoFrame(0);
         startNoviceGuideVideoPlayback(true);
-        scheduleNoviceGuide(() => advanceNoviceGuideStep(), 15500, "novice-video-next");
+        scheduleNoviceGuide(() => advanceNoviceGuideStep(), NOVICE_GUIDE_VIDEO_MS + 400, "novice-video-next");
       }
       if (step.id === "guidedCode") {
         openNoviceGuideRealEditor();
-      }
-      if (step.id === "freeTry") {
-        scheduleNoviceGuide(() => completeNoviceGuide(false), 4600, "novice-free-try-complete");
       }
       return true;
     }
@@ -25274,6 +25301,9 @@ ${item.code}
     }
 
     function advanceNoviceGuideStep() {
+      if (NOVICE_GUIDE_STEPS[noviceGuideStepIndex]?.id === "freeTry" || noviceGuideStepIndex >= NOVICE_GUIDE_STEPS.length - 1) {
+        return completeNoviceGuide(false);
+      }
       noviceGuideStepIndex = Math.min(NOVICE_GUIDE_STEPS.length - 1, noviceGuideStepIndex + 1);
       return renderNoviceGuideStep();
     }
@@ -25285,6 +25315,11 @@ ${item.code}
       dom.worldAdvanceButton?.classList.remove("novice-guide-compile-ready");
       dom.noviceGuideOverlay?.classList.remove("active");
       dom.noviceGuideOverlay?.setAttribute("aria-hidden", "true");
+      closeNoviceGuideDialogue();
+      if (gameState.editorOpen) closeEditor(true);
+      inputManager.setMode(INPUT_MODES.game);
+      gameState.dialogOpen = false;
+      gameState.paused = false;
       localStorage.setItem("noviceGuideCompleted", "true");
       saveCTutorialLocalKeys();
       saveProgress();
@@ -25294,6 +25329,7 @@ ${item.code}
 
     function confirmSkipNoviceGuide() {
       if (!gameState.noviceGuideActive) return false;
+      clearNoviceGuideTimers();
       dom.noviceGuideOverlay?.classList.add("confirming-skip");
       if (dom.noviceGuideTitle) dom.noviceGuideTitle.textContent = "确定跳过指引吗？";
       if (dom.noviceGuideText) {
@@ -25386,7 +25422,7 @@ ${item.code}
     function handleNoviceGuideCompile() {
       if (!gameState.noviceGuideActive) return false;
       const step = NOVICE_GUIDE_STEPS[noviceGuideStepIndex]?.id;
-      if (step !== "guidedCode" && step !== "compileFeedback") {
+      if (step !== "guidedCode" && step !== "compileFeedback" && step !== "freeTry") {
         showReward("先跟着指引看完当前步骤，再编译。");
         return true;
       }
@@ -25406,7 +25442,11 @@ ${item.code}
       });
       gameState.progress.worldEvolutionCompileCount = Math.max(1, Number(gameState.progress.worldEvolutionCompileCount) || 0);
       unlockWorldEvolutionAchievement("first_compile");
-      showReward("🎉 你成功运行了第一个C程序！");
+      showReward(step === "freeTry" ? "已运行你的修改。准备好后点“完成指引”。" : "🎉 你成功运行了第一个C程序！");
+      if (step === "freeTry") {
+        showNoviceGuideDialogue("你已经会用编辑器运行代码了。点“完成指引”回到游戏世界，之后可以随时在菜单里重新观看。");
+        return true;
+      }
       noviceGuideStepIndex = NOVICE_GUIDE_STEPS.findIndex((item) => item.id === "compileFeedback");
       renderNoviceGuideStep();
       scheduleNoviceGuide(() => {
@@ -34636,7 +34676,10 @@ ${item.code}
       item.addEventListener("click", () => selectFile(item.dataset.file));
     });
 
-    dom.runButton.addEventListener("click", runChallenge);
+    dom.runButton.addEventListener("click", () => {
+      if (gameState.noviceGuideActive) return handleNoviceGuideCompile();
+      return runChallenge();
+    });
     dom.resetCodeButton.addEventListener("click", resetCurrentCode);
     dom.closeEditorButton.addEventListener("click", () => closeEditor(true));
     dom.codeExplainToggleButton?.addEventListener("click", () => dom.codeExplainPanel?.classList.toggle("is-collapsed"));

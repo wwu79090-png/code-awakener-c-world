@@ -1061,10 +1061,12 @@ assert(/本项目永久免费对外开放/.test(html), "announcement should incl
 assert(/STARTUP_ANNOUNCEMENT_AUTO_HIDE_MS\s*=\s*3000/m.test(html), "announcement should auto-hide after 3 seconds");
 assert(/function showStartupAnnouncement/m.test(html), "announcement should be controlled by a startup function");
 assert(/id="announcementCloseButton"/m.test(html), "announcement should include a minimal close control");
-assert(/World Build v1\.0\.4/m.test(html) || /GAME_VERSION\s*=\s*"v1\.0\.4"/m.test(html), "game version should increment when shipping a new update");
+assert(/World Build v1\.0\.5/m.test(html) || /GAME_VERSION\s*=\s*"v1\.0\.5"/m.test(html), "game version should increment when shipping a new update");
 assert(/UPDATE_HISTORY\s*=\s*Object\.freeze\(\[[\s\S]*v1\.0\.1[\s\S]*零基础新手指引[\s\S]*v1\.0\.0[\s\S]*手机端适配/m.test(html), "update history should keep detailed previous release notes");
 assert(/id="updateHistoryList"/m.test(html) && /历史更新内容/m.test(html), "side menu should expose update history with detailed usage-visible notes");
-assert(/GAME_VERSION\s*=\s*"v1\.0\.4"/m.test(html), "game version should increment for the zero-basis friendly release");
+assert(/GAME_VERSION\s*=\s*"v1\.0\.5"/m.test(html), "game version should increment for the novice guide hotfix release");
+assert(/UPDATE_HISTORY\s*=\s*Object\.freeze\(\[[\s\S]*v1\.0\.5[\s\S]*新手教程热修复[\s\S]*不卡死[\s\S]*跳过可用/m.test(html), "update history should record the v1.0.5 novice guide hotfix");
+assert(/UPDATE_ANNOUNCEMENT_PAGES\s*=\s*Object\.freeze\(\[[\s\S]*新手教程卡死[\s\S]*按钮缺失[\s\S]*跳过失效/m.test(html), "startup announcement should describe the current v1.0.5 update");
 assert(/UPDATE_HISTORY\s*=\s*Object\.freeze\(\[[\s\S]*v1\.0\.3[\s\S]*手机横屏全屏[\s\S]*触摸对话/m.test(html), "update history should record the v1.0.3 mobile landscape release");
 assert(/UPDATE_HISTORY\s*=\s*Object\.freeze\(\[[\s\S]*v1\.0\.3[\s\S]*信息菜单新增图标和一句话用途标签/m.test(html), "update history should record side menu icon and purpose labels");
 assert(/UPDATE_HISTORY\s*=\s*Object\.freeze\(\[[\s\S]*v1\.0\.2[\s\S]*第一行代码仪式[\s\S]*编程护照/m.test(html), "update history should record the v1.0.2 learning-assist release");
@@ -1667,7 +1669,8 @@ assert(/isStartupOverlayBlockingNoviceGuide[\s\S]*dom\.mainMenu[\s\S]*dom\.world
 assert(/maybeStartNoviceGuide[\s\S]*hasCompletedCodeGenesisCharacter\(\)/m.test(html), "novice guide should not auto-start before a character exists");
 assert(/id="noviceGuideRunButton"/m.test(html) && /bindFastTouchAction\(dom\.noviceGuideRunButton[\s\S]*handleNoviceGuideCompile/m.test(html), "novice guide should provide an in-panel run button beside the starter editor");
 assert(/id="noviceGuideConfirmSkipButton"/m.test(html) && /bindFastTouchAction\(dom\.noviceGuideConfirmSkipButton[\s\S]*completeNoviceGuide\(true\)/m.test(html), "novice guide skip confirmation should be actionable inside the guide overlay");
-assert(/novice-guide-active[\s\S]*pointer-events:\s*none/m.test(html), "novice guide should lock unrelated world interactions during forced guidance");
+assert(!/body\.novice-guide-active[\s\S]*#hud button:not\(\.novice-guide-control\)[\s\S]*pointer-events:\s*none/m.test(html), "novice guide should not globally lock HUD/editor buttons");
+assert(/data-step="freeTry"[\s\S]*novice-guide-run/m.test(html), "free-try guide step should keep a visible run button");
 assert(/novice-guide-spotlight/m.test(html) && /novice-guide-arrow/m.test(html), "novice guide should visually highlight targets with arrows");
 assert(/novice-guide-hand-cursor/m.test(html), "guided code step should show an animated hand cursor");
 assert(/bindFastTouchAction\(dom\.noviceGuideVideoPlayButton[\s\S]*toggleNoviceGuideVideoPlayback/m.test(html), "novice guide simulated video should support touch play/pause");
@@ -1681,6 +1684,7 @@ assert(/runCodeGenesisEditor[\s\S]*const source = dom\.codeGenesisInput\.value[\
 assert(/function pickPreferredSpeechVoice/m.test(html) && /function applyPreferredSpeechVoice/m.test(html), "TTS should prefer softer local browser voices instead of forcing the default voice");
 assert(/TTSFM_CONFIG\s*=\s*Object\.freeze[\s\S]*http:\/\/localhost:8000\/v1\/audio\/speech[\s\S]*voice:\s*"nova"/m.test(html), "TTS should default to the requested ttsfm local OpenAI-compatible endpoint and female-style voice");
 assert(/function speakWithTtsfmFemale/m.test(html) && /fetch\(endpoint[\s\S]*\/v1\/audio\/speech/m.test(html), "TTS should include a ttsfm connector before browser speech fallback");
+assert(/voiceEnabled:\s*false/m.test(html), "TTS should be opt-in so a missing local ttsfm server cannot slow the tutorial");
 assert(/browserSpeechFallback:\s*false/m.test(html), "browser robot TTS fallback should be disabled by default");
 assert(/function shouldUseBrowserSpeechFallback/m.test(html), "browser speech fallback should require explicit opt-in");
 assert(/speakGameText[\s\S]*shouldUseBrowserSpeechFallback\(options\)[\s\S]*speakWithBrowserFemale/m.test(html), "game speech should not fall back to browser robot voices unless explicitly enabled");
@@ -1688,6 +1692,10 @@ assert(/ttsfm不可用时不会播放浏览器机器人声/m.test(html), "announ
 assert(/function openNoviceGuideRealEditor/m.test(html), "novice guide should open the real VS Code-style editor for hands-on code");
 assert(/renderNoviceGuideStep[\s\S]*step\.id === "guidedCode"[\s\S]*openNoviceGuideRealEditor/m.test(html), "guided code step should bring up the normal editor");
 assert(/handleNoviceGuideCompile[\s\S]*dom\.codeInput\?\.value[\s\S]*NOVICE_GUIDE_HELLO_CODE/m.test(html), "novice guide compile should read code from the real editor first");
+assert(/handleNoviceGuideCompile[\s\S]*step !== "guidedCode" && step !== "compileFeedback" && step !== "freeTry"/m.test(html), "novice guide compile should allow the final free-try step to run");
+assert(/function confirmSkipNoviceGuide[\s\S]*clearNoviceGuideTimers\(\)/m.test(html), "skip confirmation should clear queued guide timers so it cannot be overwritten");
+assert(/function completeNoviceGuide[\s\S]*closeNoviceGuideDialogue\(\)[\s\S]*closeEditor\(true\)/m.test(html), "finishing or skipping the guide should restore dialogue and editor input state");
+assert(/dom\.runButton\.addEventListener\("click", \(\) => \{[\s\S]*gameState\.noviceGuideActive[\s\S]*handleNoviceGuideCompile/m.test(html), "real editor run button should route through novice guide while active");
 assert(/INFO_MENU_SECTION_ICON_MAP\s*=\s*Object\.freeze/m.test(html), "side menu should have a centralized icon and purpose map");
 ["课程进度", "知识碎片", "HP / MP", "存档槽", "学习辅助"].forEach((title) => {
   assert(new RegExp(`${title}[\\s\\S]*icon[\\s\\S]*purpose`).test(html), `side menu icon map should explain ${title}`);
