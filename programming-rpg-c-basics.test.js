@@ -474,6 +474,17 @@ for (const marker of qualityMarkers) {
 assert(/<button id="closeEditorButton" class="close-button">关闭编辑器<\/button>/m.test(html), "editor should expose an explicit close-editor button");
 assert(/event\.key === "Escape" && gameState\.editorOpen[\s\S]*closeEditor\(true\)/m.test(html), "Esc should always close the editor while it is open");
 assert(/editorErrorLinePulse 620ms steps\(2, end\) 1/m.test(html), "compile error line should flash once when highlighted");
+assert(/--editor-safe-top:[\s\S]*env\(safe-area-inset-top\)[\s\S]*--editor-safe-bottom:[\s\S]*env\(safe-area-inset-bottom\)/m.test(html), "mobile editor should expose safe-area CSS variables for notched screens");
+assert(/function applyEditorSafeArea\(\)[\s\S]*visualViewport[\s\S]*--mobile-visual-height[\s\S]*--mobile-visual-offset-top/m.test(html), "mobile editor should recalculate safe area and visual viewport dimensions");
+assert(/window\.addEventListener\("orientationchange",\s*applyEditorSafeArea\)/m.test(html), "mobile editor should refresh layout when device orientation changes");
+assert(/body\.mobile-input\.is-editor-open #editorOverlay\s*\{[\s\S]*position:\s*fixed[\s\S]*padding:\s*max\(6px,\s*var\(--editor-safe-top\)\)\s+max\(8px,\s*var\(--editor-safe-right\)\)\s+max\(6px,\s*var\(--editor-safe-bottom\)\)\s+max\(8px,\s*var\(--editor-safe-left\)\)/m.test(html), "mobile editor overlay should stay inside the safe visual area");
+assert(/body\.mobile-input \.vscode-window\s*\{[\s\S]*grid-template-rows:\s*minmax\(38px,\s*auto\)\s+minmax\(0,\s*1fr\)\s+minmax\(118px,\s*26dvh\)[\s\S]*min-height:\s*0/m.test(html), "mobile editor panel should use top, flexible editor, and fixed console rows");
+assert(/@media\s*\(max-width:\s*1100px\),\s*\(pointer:\s*coarse\)\s*\{[\s\S]*body\.mobile-input \.vscode-window/m.test(html), "tablet-sized editor viewports should share the compact single-column editor layout");
+assert(/body\.mobile-input \.console-actions\s*\{[\s\S]*display:\s*grid[\s\S]*grid-template-areas:\s*"run reset close"[\s\S]*"label status status"/m.test(html), "mobile editor action buttons should remain visible in a fixed bottom grid");
+assert(/body\.mobile-input #codeInput\s*\{[\s\S]*overflow:\s*auto[\s\S]*-webkit-overflow-scrolling:\s*touch[\s\S]*overscroll-behavior:\s*contain/m.test(html), "mobile editor code input should be an internally scrollable input viewport");
+assert(/const active = Boolean\(narrow \|\| coarse \|\| touch\)/m.test(html), "narrow editor viewports should use the mobile editor layout even when touch detection is unavailable");
+assert(/\.vscode-window\.code-explain-collapsed \.editor-main\s*\{[\s\S]*grid-template-columns:\s*210px minmax\(0,\s*1fr\) 260px 46px/m.test(html), "collapsing the mentor analysis panel should shrink its grid column instead of reserving the full desktop width");
+assert(/function setCodeExplainCollapsed[\s\S]*code-explain-collapsed[\s\S]*dom\.codeExplainToggleButton\?\.addEventListener\("click",\s*\(\)\s*=>\s*setCodeExplainCollapsed\(\)\)/m.test(html), "mentor analysis collapse button should update the editor window layout class");
 
 const menuMarkers = [
   "id=\"mainMenuOverlay\"",
@@ -1245,13 +1256,14 @@ assert(/本项目永久免费对外开放/.test(html), "announcement should incl
 assert(/STARTUP_ANNOUNCEMENT_AUTO_HIDE_MS\s*=\s*3000/m.test(html), "announcement should auto-hide after 3 seconds");
 assert(/function showStartupAnnouncement/m.test(html), "announcement should be controlled by a startup function");
 assert(/id="announcementCloseButton"/m.test(html), "announcement should include a minimal close control");
-assert(/World Build v1\.0\.19/m.test(html) || /GAME_VERSION\s*=\s*"v1\.0\.19"/m.test(html), "game version should increment when shipping a new update");
+assert(/World Build v1\.0\.20/m.test(html) || /GAME_VERSION\s*=\s*"v1\.0\.20"/m.test(html), "game version should increment when shipping a new update");
 assert(/UPDATE_HISTORY\s*=\s*Object\.freeze\(\[[\s\S]*v1\.0\.1[\s\S]*零基础新手指引[\s\S]*v1\.0\.0[\s\S]*手机端适配/m.test(html), "update history should keep detailed previous release notes");
 assert(/id="updateHistoryList"/m.test(html) && /历史更新内容/m.test(html), "side menu should expose update history with detailed usage-visible notes");
-assert(/GAME_VERSION\s*=\s*"v1\.0\.19"/m.test(html), "game version should increment for the output judge, MP removal, and mobile touch release");
-assert(/UPDATE_ANNOUNCEMENT_PAGES\s*=\s*Object\.freeze\(\[\s*\{\s*title:\s*"> 消息 \/ 本次更新"[\s\S]*判题只看运行输出[\s\S]*MP 门槛已移除[\s\S]*手机端改为触摸交互/m.test(html), "collapsed startup announcement should show the latest judge and touch interaction summary first, not only author text");
-assert(/id="announcementPageBody"[\s\S]*判题只看运行输出[\s\S]*MP 门槛已移除[\s\S]*手机端改为触摸交互/m.test(initialBodyMarkup), "static startup announcement placeholder should match the latest update before script hydration");
+assert(/GAME_VERSION\s*=\s*"v1\.0\.20"/m.test(html), "game version should increment for the mobile stone compiler layout release");
+assert(/UPDATE_ANNOUNCEMENT_PAGES\s*=\s*Object\.freeze\(\[\s*\{\s*title:\s*"> 消息 \/ 本次更新"[\s\S]*手机端石碑编译器完整适配[\s\S]*100\+ 行代码[\s\S]*安全区[\s\S]*导师解析折叠/m.test(html), "collapsed startup announcement should show the latest mobile editor adaptation summary first, not only author text");
+assert(/id="announcementPageBody"[\s\S]*手机端石碑编译器完整适配[\s\S]*100\+ 行代码[\s\S]*安全区[\s\S]*导师解析折叠/m.test(initialBodyMarkup), "static startup announcement placeholder should match the latest mobile editor update before script hydration");
 assert(!/公告只保留关闭、课程锁定、自由模式通关后显示/m.test(initialBodyMarkup), "static startup announcement placeholder should not show stale update copy");
+assert(/UPDATE_HISTORY\s*=\s*Object\.freeze\(\[[\s\S]*v1\.0\.20[\s\S]*手机端石碑编译器全屏适配[\s\S]*100\+ 行输入[\s\S]*visualViewport[\s\S]*导师解析折叠/m.test(html), "update history should record the v1.0.20 mobile stone compiler layout release");
 assert(/UPDATE_HISTORY\s*=\s*Object\.freeze\(\[[\s\S]*v1\.0\.19[\s\S]*输出判题、MP移除与手机触摸交互[\s\S]*运行输出与任务预期一致[\s\S]*虚拟交互按钮显示“触摸”[\s\S]*感谢花海为本游戏提供宣传协力支持/m.test(html), "update history should record the v1.0.19 judge, MP, mobile touch, and credits release");
 assert(/UPDATE_HISTORY\s*=\s*Object\.freeze\(\[[\s\S]*v1\.0\.18[\s\S]*启动诊断、离线缓存降噪与移动端性能保护[\s\S]*无效 blob Service Worker[\s\S]*低功耗特效预算/m.test(html), "update history should record the v1.0.18 startup diagnostic and mobile performance cleanup");
 assert(/UPDATE_HISTORY\s*=\s*Object\.freeze\(\[[\s\S]*v1\.0\.17[\s\S]*智能判题与编译失败恢复[\s\S]*终端输出作为通关标准[\s\S]*连续三次失败/m.test(html), "update history should record the v1.0.17 intelligent judge and failure recovery fixes");

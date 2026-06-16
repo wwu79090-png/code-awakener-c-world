@@ -11,7 +11,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; base-uri 'self'; object-src 'none'; frame-ancestors 'none'; script-src 'self' https://cdn.jsdelivr.net 'nonce-code-awakener-inline' 'sha256-+35vsLHs43W58Qz+jha8n7GlmAeHNF0AWxkZbLjOUDE='; style-src 'self' https://cdn.jsdelivr.net https://fonts.googleapis.com 'nonce-code-awakener-inline' 'sha256-RDVi0bEr6y7zS4ecVgcjVoN7VTSEZLryIHHUDpv+g/w='; style-src-attr 'unsafe-inline'; font-src 'self' https://cdn.jsdelivr.net https://fonts.gstatic.com data:; img-src 'self' data: blob:; media-src 'self' data: blob:; worker-src 'self' blob:; child-src 'self' blob:; connect-src 'self' https://cdn.jsdelivr.net http://localhost:8000 http://127.0.0.1:8000;">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; base-uri 'self'; object-src 'none'; frame-ancestors 'none'; script-src 'self' https://cdn.jsdelivr.net 'nonce-code-awakener-inline' 'sha256-EGXdqG8eCRFq4qMSxGbYnw9OzP0sDlV9koNYLRswLII='; style-src 'self' https://cdn.jsdelivr.net https://fonts.googleapis.com 'nonce-code-awakener-inline' 'sha256-W5aKxKqIat+1tkEJrv9V6xRgoHBoseUM2aidCFzPFds='; style-src-attr 'unsafe-inline'; font-src 'self' https://cdn.jsdelivr.net https://fonts.gstatic.com data:; img-src 'self' data: blob:; media-src 'self' data: blob:; worker-src 'self' blob:; child-src 'self' blob:; connect-src 'self' https://cdn.jsdelivr.net http://localhost:8000 http://127.0.0.1:8000;">
   <title>编程学习 RPG：C 语言启航村</title>
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%23020617'/%3E%3Cpath d='M22 20 10 32l12 12M42 20l12 12-12 12' fill='none' stroke='%2300ff88' stroke-width='6' stroke-linecap='round' stroke-linejoin='round'/%3E%3Cpath d='m36 16-8 32' stroke='%2300ccff' stroke-width='5' stroke-linecap='round'/%3E%3C/svg%3E">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/firacode@6.2.0/distr/fira_code.css">
@@ -54,6 +54,14 @@
       --cinematic-lut-saturate: 1.16;
       --cinematic-lut-brightness: 1;
       --cinematic-lut-hue: 0deg;
+      --editor-safe-top: max(0px, env(safe-area-inset-top));
+      --editor-safe-right: max(0px, env(safe-area-inset-right));
+      --editor-safe-bottom: max(0px, env(safe-area-inset-bottom));
+      --editor-safe-left: max(0px, env(safe-area-inset-left));
+      --mobile-visual-height: 100dvh;
+      --mobile-visual-offset-top: 0px;
+      --mobile-visual-offset-left: 0px;
+      --mobile-visual-width: 100vw;
     }
 
     * {
@@ -4645,6 +4653,10 @@
       min-height: 0;
     }
 
+    .vscode-window.code-explain-collapsed .editor-main {
+      grid-template-columns: 210px minmax(0, 1fr) 260px 46px;
+    }
+
     .file-tree {
       background: var(--editor);
       border-right: 1px solid #303030;
@@ -8500,7 +8512,7 @@
       box-shadow: 0 1px 0 rgba(0, 0, 0, 0.45);
     }
 
-    @media (max-width: 768px), (pointer: coarse) {
+    @media (max-width: 1100px), (pointer: coarse) {
       body.mobile-input .file-tree,
       body.mobile-input .task-panel,
       body.mobile-input .code-explain-panel,
@@ -8516,8 +8528,10 @@
       body.mobile-input .vscode-window {
         width: calc(100vw - 18px);
         height: calc(100dvh - 18px);
-        grid-template-rows: 42px minmax(0, 1fr) minmax(104px, 22dvh);
+        grid-template-rows: minmax(38px, auto) minmax(0, 1fr) minmax(118px, 26dvh);
+        min-height: 0;
         border-radius: 14px;
+        overflow: hidden;
       }
 
       body.mobile-input .titlebar {
@@ -8595,11 +8609,29 @@
         line-height: calc(max(16px, var(--editor-font-size, 14px)) + 8px);
       }
 
+      body.mobile-input .code-layer {
+        min-height: 0;
+        overflow: hidden;
+      }
+
       body.mobile-input #highlightLayer,
       body.mobile-input #codeInput {
         padding: 12px 10px;
         font-size: max(16px, var(--editor-font-size, 14px));
         line-height: calc(max(16px, var(--editor-font-size, 14px)) + 8px);
+      }
+
+      body.mobile-input #highlightLayer {
+        padding-bottom: 84px;
+      }
+
+      body.mobile-input #codeInput {
+        overflow: auto;
+        -webkit-overflow-scrolling: touch;
+        overscroll-behavior: contain;
+        touch-action: pan-x pan-y;
+        padding-bottom: 84px;
+        scroll-padding-bottom: 84px;
       }
 
       body.mobile-input #lineNumbers {
@@ -8623,6 +8655,75 @@
       body.mobile-input .editor-actions .pixel-button {
         min-height: 48px;
         padding-inline: 8px;
+      }
+
+      body.mobile-input .console {
+        grid-template-rows: auto minmax(0, 1fr) auto;
+        overflow: hidden;
+      }
+
+      body.mobile-input .console-actions {
+        display: grid;
+        grid-template-columns: minmax(0, 1.08fr) minmax(0, 0.82fr) minmax(78px, 0.7fr);
+        grid-template-areas:
+          "run reset close"
+          "label status status";
+        gap: 6px;
+        align-items: center;
+        min-height: 76px;
+        padding: 6px;
+      }
+
+      body.mobile-input .run-button {
+        grid-area: run;
+      }
+
+      body.mobile-input .reset-button {
+        grid-area: reset;
+      }
+
+      body.mobile-input .close-button {
+        grid-area: close;
+        margin-left: 0;
+      }
+
+      body.mobile-input .run-button,
+      body.mobile-input .close-button,
+      body.mobile-input .reset-button {
+        width: 100%;
+        min-width: 0;
+        min-height: 44px;
+        padding: 0 8px;
+        white-space: normal;
+        overflow-wrap: anywhere;
+        font-size: clamp(11px, 3vw, 13px);
+        line-height: 1.22;
+      }
+
+      body.mobile-input .console-label {
+        grid-area: label;
+        min-width: 0;
+        overflow: hidden;
+        color: #cbd5e1;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+
+      body.mobile-input #editorStatusText {
+        grid-area: status;
+        min-width: 0;
+      }
+
+      body.mobile-input #consoleOutput {
+        min-height: 0;
+        padding: 8px 10px;
+      }
+
+      body.mobile-input .editor-rich-console {
+        min-height: 44px;
+        max-height: 72px;
+        overflow: auto;
+        -webkit-overflow-scrolling: touch;
       }
 
       body.mobile-input .mobile-editor-keyboard-button {
@@ -9600,7 +9701,7 @@
       line-height: 1.45;
     }
 
-    @media (max-width: 820px), (pointer: coarse) {
+    @media (max-width: 1100px), (pointer: coarse) {
       .info-side-menu {
         width: min(85vw, 340px);
         border-radius: 0 var(--ui-radius-lg) var(--ui-radius-lg) 0;
@@ -9655,23 +9756,25 @@
 
       body.mobile-input.is-editor-open #editorOverlay {
         position: fixed;
-        inset: var(--mobile-visual-offset-top, 0px) 0 auto 0;
+        inset: var(--mobile-visual-offset-top, 0px) 0 auto var(--mobile-visual-offset-left, 0px);
         height: var(--mobile-visual-height, 100dvh);
         min-height: var(--mobile-visual-height, 100dvh);
-        padding: max(6px, env(safe-area-inset-top)) 8px max(6px, env(safe-area-inset-bottom));
-        align-items: flex-start;
-        justify-content: center;
+        width: var(--mobile-visual-width, 100vw);
+        padding: max(6px, var(--editor-safe-top)) max(8px, var(--editor-safe-right)) max(6px, var(--editor-safe-bottom)) max(8px, var(--editor-safe-left));
+        align-items: stretch;
+        justify-content: stretch;
         overflow: hidden;
       }
 
       body.mobile-input.is-editor-open .vscode-window {
-        width: calc(100vw - 16px);
-        height: calc(var(--mobile-visual-height, 100dvh) - 14px);
-        max-height: calc(var(--mobile-visual-height, 100dvh) - 14px);
+        width: 100%;
+        height: 100%;
+        max-width: 100%;
+        max-height: 100%;
       }
 
       body.mobile-input.mobile-keyboard-open .vscode-window {
-        grid-template-rows: 38px minmax(0, 1fr) minmax(70px, 15vh);
+        grid-template-rows: minmax(38px, auto) minmax(0, 1fr) minmax(86px, 18dvh);
       }
 
       body.mobile-input.mobile-keyboard-open .editor-statusbar {
@@ -9839,7 +9942,7 @@
       <canvas id="menuFxCanvas" width="1280" height="720"></canvas>
       <div class="main-menu-card glass-panel">
         <h1 class="game-logo">CODE AWAKENER<br>C 语言启航村</h1>
-        <div class="version-label" id="versionLabel">World Build v1.0.19 · develop.fan C Basics</div>
+        <div class="version-label" id="versionLabel">World Build v1.0.20 · develop.fan C Basics</div>
         <label class="boot-command"><span>&gt;</span><input id="bootCommandInput" value="start_game.exe" autocomplete="off" spellcheck="false" aria-label="启动命令"></label>
         <label class="skin-picker">角色外观
           <select id="skinSelect" aria-label="选择主角外观">
@@ -10667,17 +10770,17 @@ int main(void) {
       <button id="announcementCloseButton" class="announcement-close" type="button" aria-label="关闭公告">×</button>
       <h2 id="startupAnnouncementTitle" class="startup-announcement-title">> 消息 / 本次更新</h2>
       <div id="announcementPageBody" class="startup-announcement-body">
-        <p>// 本次更新：判题只看运行输出，空格换行不再卡关。</p>
-        <p>// MP 门槛已移除，编译不会因为能量不足被判失败。</p>
-        <p>// 手机端改为触摸交互，移动摇杆和方向键保留。</p>
-        <p>// 编译错误弹窗可点击或按键快速跳过。</p>
-        <p>// 制作名单新增花海宣传协力致谢。</p>
+        <p>// 本次更新：手机端石碑编译器完整适配。</p>
+        <p>// 输入区内置滚动，100+ 行代码也能滑动查看。</p>
+        <p>// 运行、重置、关闭按钮固定在底部，窄屏和平板不再溢出。</p>
+        <p>// 编辑器自动贴合安全区和软键盘可视区。</p>
+        <p>// 导师解析折叠后同步收缩，不再挤压代码区。</p>
         <p>// 作者：杀戮</p>
         <p class="announcement-dismiss-hint">- 点击任意处关闭</p>
       </div>
       <div class="startup-announcement-pager" aria-label="公告分页">
         <button id="announcementPrevButton" class="announcement-page-button" type="button">上一页</button>
-        <span id="announcementPageIndicator" class="announcement-page-indicator">1/4</span>
+        <span id="announcementPageIndicator" class="announcement-page-indicator">1/5</span>
         <button id="announcementNextButton" class="announcement-page-button" type="button">下一页</button>
       </div>
     </aside>
@@ -10832,7 +10935,7 @@ int main(void) {
             <button id="runButton" class="run-button">运行代码</button>
             <button id="resetCodeButton" class="reset-button" type="button">重置代码</button>
             <span id="runSpinner" class="spinner" aria-hidden="true"></span>
-            <span>输出控制台</span>
+            <span class="console-label">输出控制台</span>
             <span id="editorStatusText">导师提示：先读任务，再运行小步验证。</span>
             <button id="closeEditorButton" class="close-button">关闭编辑器</button>
           </div>
@@ -11145,10 +11248,21 @@ int main() {
     const SAVE_SIGNATURE_SALT = "c-world-local-integrity";
     const SAVE_CLEAR_CONFIRM_MS = 3000;
     const STARTUP_ANNOUNCEMENT_AUTO_HIDE_MS = 3000;
-    const GAME_VERSION = "v1.0.19";
+    const GAME_VERSION = "v1.0.20";
     const UPDATE_ANNOUNCEMENT_PAGES = Object.freeze([
       {
         title: "> 消息 / 本次更新",
+        lines: [
+          "// 本次更新：手机端石碑编译器完整适配。",
+          "// 输入区内置滚动，100+ 行代码也能滑动查看。",
+          "// 运行、重置、关闭按钮固定在底部，窄屏和平板不再溢出。",
+          "// 编辑器自动贴合安全区、刘海屏和软键盘可视区。",
+          "// 导师解析折叠后同步收缩，不再挤压代码区。",
+          "// 作者：杀戮"
+        ]
+      },
+      {
+        title: "> 更新内容 / 上次重点",
         lines: [
           "// 本次更新：判题只看运行输出，空格换行不再卡关。",
           "// MP 门槛已移除，编译不会因为能量不足被判失败。",
@@ -11190,6 +11304,19 @@ int main() {
       }
     ]);
     const UPDATE_HISTORY = Object.freeze([
+      {
+        version: "v1.0.20",
+        date: "2026-06-17",
+        title: "手机端石碑编译器全屏适配",
+        details: [
+          "石碑编译器在窄屏、长屏和平板横屏下改为安全区内的顶部栏、弹性代码区和固定底部按钮布局，面板不再超出屏幕。",
+          "代码输入区保留原生 textarea 编辑能力，并强制作为内部滚动视口，100+ 行输入可以上下滑动查看。",
+          "运行、重置和关闭按钮在移动端固定到控制台工具栏网格内，避免关闭按钮或编译按钮跑到屏幕外。",
+          "编辑器会根据 visualViewport、orientationchange 和安全区变量刷新尺寸，降低刘海屏、状态栏、导航栏和软键盘遮挡风险。",
+          "导师解析折叠按钮会同步收缩编辑器 grid 列宽，解决折叠后仍占用空间、挤压代码区的问题。",
+          "编译严格校验和切换石碑清空输入框逻辑保持不变，并新增对应布局回归断言。"
+        ]
+      },
       {
         version: "v1.0.19",
         date: "2026-06-17",
@@ -12071,7 +12198,7 @@ return 0;`;
       directSaveAs: "reduced-by-inline-resources"
     });
     const SECURITY_CONFIG = Object.freeze({
-      expectedScriptHash: "tE3Z16PQJdl6ATvmyeiiePvNAJS6iKSsIezsKeFFbJw=",
+      expectedScriptHash: "5n8hDyEzb3F/knpCqpoKXpV86q7juxFGUj5s+EsL+TI=",
       selfCheckIntervalMs: 45000,
       tamperRefreshMs: 5000,
       devToolsRefreshMs: 2000,
@@ -18488,7 +18615,7 @@ int main(void) {
       const coarse = globalThis.matchMedia?.("(pointer: coarse)")?.matches;
       const narrow = window.innerWidth <= 768;
       const touch = "ontouchstart" in window || (globalThis.navigator?.maxTouchPoints || 0) > 0;
-      const active = Boolean((narrow && touch) || coarse);
+      const active = Boolean(narrow || coarse || touch);
       document.body.classList.toggle("mobile-input", active);
       applyMobileEditorLayout(active);
       if (active) showMobileTouchInteractionNotice();
@@ -18535,20 +18662,32 @@ int main(void) {
       return Boolean(force);
     }
 
+    function applyEditorSafeArea() {
+      const viewport = window.visualViewport;
+      const height = Math.max(320, Math.floor(viewport?.height || window.innerHeight || 640));
+      const width = Math.max(320, Math.floor(viewport?.width || window.innerWidth || 360));
+      const offsetTop = Math.max(0, Math.floor(viewport?.offsetTop || 0));
+      const offsetLeft = Math.max(0, Math.floor(viewport?.offsetLeft || 0));
+      document.documentElement.style.setProperty("--mobile-visual-height", `${height}px`);
+      document.documentElement.style.setProperty("--mobile-visual-width", `${width}px`);
+      document.documentElement.style.setProperty("--mobile-visual-offset-top", `${offsetTop}px`);
+      document.documentElement.style.setProperty("--mobile-visual-offset-left", `${offsetLeft}px`);
+      return { height, width, offsetTop, offsetLeft };
+    }
+
     function updateMobileEditorViewport() {
       const viewport = window.visualViewport;
       const isMobileEditor = document.body.classList.contains("mobile-input") && gameState?.editorOpen;
       if (!isMobileEditor) {
         document.body.classList.remove("mobile-keyboard-open");
         document.documentElement.style.removeProperty("--mobile-visual-height");
+        document.documentElement.style.removeProperty("--mobile-visual-width");
         document.documentElement.style.removeProperty("--mobile-visual-offset-top");
+        document.documentElement.style.removeProperty("--mobile-visual-offset-left");
         return false;
       }
-      const height = Math.max(320, Math.floor(viewport?.height || window.innerHeight || 640));
-      const offsetTop = Math.max(0, Math.floor(viewport?.offsetTop || 0));
-      const keyboardOpen = viewport ? height < window.innerHeight * 0.82 : false;
-      document.documentElement.style.setProperty("--mobile-visual-height", `${height}px`);
-      document.documentElement.style.setProperty("--mobile-visual-offset-top", `${offsetTop}px`);
+      const safeArea = applyEditorSafeArea();
+      const keyboardOpen = viewport ? safeArea.height < window.innerHeight * 0.82 : false;
       document.body.classList.toggle("mobile-keyboard-open", keyboardOpen);
       if (keyboardOpen && dom.codeInput) {
         trackedSetTimeout(() => {
@@ -30820,6 +30959,13 @@ ${item.code}
       }
     }
 
+    function setCodeExplainCollapsed(collapsed = !dom.codeExplainPanel?.classList.contains("is-collapsed")) {
+      const active = Boolean(collapsed);
+      dom.codeExplainPanel?.classList.toggle("is-collapsed", active);
+      dom.codeExplainPanel?.closest?.(".vscode-window")?.classList.toggle("code-explain-collapsed", active);
+      return active;
+    }
+
     function getKeywordAtIndex(code = "", index = 0) {
       const text = String(code || "");
       let start = clampEditorIndex(text, index);
@@ -37857,7 +38003,7 @@ ${item.code}
     });
     dom.resetCodeButton.addEventListener("click", resetCurrentCode);
     dom.closeEditorButton.addEventListener("click", () => closeEditor(true));
-    dom.codeExplainToggleButton?.addEventListener("click", () => dom.codeExplainPanel?.classList.toggle("is-collapsed"));
+    dom.codeExplainToggleButton?.addEventListener("click", () => setCodeExplainCollapsed());
     dom.editorGuideCloseButton?.addEventListener("click", () => closeEditorGuide(true));
     document.addEventListener("keydown", (event) => {
       if (gameState.editorOpen) handleEditorGuideKey(event);
@@ -38305,7 +38451,11 @@ ${item.code}
       event.preventDefault();
       handleMetaFinaleCommand();
     });
-    window.addEventListener("resize", detectMobileInputMode);
+    window.addEventListener("resize", () => {
+      applyEditorSafeArea();
+      detectMobileInputMode();
+    });
+    window.addEventListener("orientationchange", applyEditorSafeArea);
     window.visualViewport?.addEventListener?.("resize", updateMobileEditorViewport);
     window.visualViewport?.addEventListener?.("scroll", updateMobileEditorViewport);
 

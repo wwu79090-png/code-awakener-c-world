@@ -2,6 +2,15 @@
 
 ## Unreleased
 
+## v1.0.20 - 2026-06-17
+
+- Fixed the mobile stone compiler layout so the editor stays inside the visible safe area on narrow phones, tall phones, and tablet landscape viewports.
+- Made the code input an internally scrollable viewport for 100+ line submissions while keeping the native textarea editing flow.
+- Pinned run, reset, and close actions into a fixed bottom console grid so critical buttons remain tappable.
+- Added visual viewport, orientation, and safe-area refresh logic for soft keyboards, notches, status bars, and navigation bars.
+- Fixed the mentor analysis collapse control so the editor grid column shrinks instead of continuing to reserve desktop width.
+- Added regression checks for mobile editor safe-area layout, scroll behavior, tablet compact layout, and mentor-analysis collapse.
+
 ## v1.0.19 - 2026-06-17
 
 - Judge rule now passes only when C code compiles and normalized runtime output matches the task expectation.
