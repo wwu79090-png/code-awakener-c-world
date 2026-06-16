@@ -11,7 +11,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; base-uri 'self'; object-src 'none'; frame-ancestors 'none'; script-src 'self' https://cdn.jsdelivr.net 'nonce-code-awakener-inline' 'sha256-ro/c1B1+L2QwZiXRXOPX0Dx10183Z9FXaZrho4g5UyE='; style-src 'self' https://cdn.jsdelivr.net https://fonts.googleapis.com 'nonce-code-awakener-inline' 'sha256-nbDx0rXHwoSfjL4lvmHlyc73DeJwM/IVRrEROYSRIMk='; style-src-attr 'unsafe-inline'; font-src 'self' https://cdn.jsdelivr.net https://fonts.gstatic.com data:; img-src 'self' data: blob:; media-src 'self' data: blob:; worker-src 'self' blob:; child-src 'self' blob:; connect-src 'self' https://cdn.jsdelivr.net http://localhost:8000 http://127.0.0.1:8000;">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; base-uri 'self'; object-src 'none'; frame-ancestors 'none'; script-src 'self' https://cdn.jsdelivr.net 'nonce-code-awakener-inline' 'sha256-TAQQh71VX8SJ+LqiJSLwFh2nJF7QzGL54TFWrnHsOuA='; style-src 'self' https://cdn.jsdelivr.net https://fonts.googleapis.com 'nonce-code-awakener-inline' 'sha256-bWjnDFITNd4s2beAeEL57slQf+CaoupB3vTOayWE1xg='; style-src-attr 'unsafe-inline'; font-src 'self' https://cdn.jsdelivr.net https://fonts.gstatic.com data:; img-src 'self' data: blob:; media-src 'self' data: blob:; worker-src 'self' blob:; child-src 'self' blob:; connect-src 'self' https://cdn.jsdelivr.net http://localhost:8000 http://127.0.0.1:8000;">
   <title>编程学习 RPG：C 语言启航村</title>
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%23020617'/%3E%3Cpath d='M22 20 10 32l12 12M42 20l12 12-12 12' fill='none' stroke='%2300ff88' stroke-width='6' stroke-linecap='round' stroke-linejoin='round'/%3E%3Cpath d='m36 16-8 32' stroke='%2300ccff' stroke-width='5' stroke-linecap='round'/%3E%3C/svg%3E">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/firacode@6.2.0/distr/fira_code.css">
@@ -337,9 +337,8 @@
         radial-gradient(circle at 50% 48%, transparent 0 38%, rgba(2, 6, 23, calc(0.22 + var(--cinematic-vignette) * 0.22)) 74%, rgba(2, 6, 23, 0.78) 100%),
         radial-gradient(circle at 50% 50%, rgba(0, 204, 255, calc(0.12 + var(--cinematic-bloom) * 0.2)), transparent 38%),
         radial-gradient(circle at 64% 30%, rgba(251, 191, 36, calc(var(--cinematic-warmth) * 0.12)), transparent 34%),
-        radial-gradient(ellipse at 50% 88%, rgba(255, 255, 255, calc(var(--cinematic-ssr) * 0.08)), transparent 36%),
-        linear-gradient(135deg, rgba(59, 130, 246, 0.13), rgba(168, 85, 247, calc(0.08 + var(--cinematic-bloom) * 0.08)) 50%, rgba(2, 6, 23, 0.2)),
-        repeating-linear-gradient(0deg, rgba(255,255,255,0.025) 0 1px, transparent 1px 4px);
+        radial-gradient(ellipse at 50% 88%, rgba(56, 189, 248, calc(var(--cinematic-ssr) * 0.035)), transparent 36%),
+        linear-gradient(135deg, rgba(59, 130, 246, 0.13), rgba(168, 85, 247, calc(0.08 + var(--cinematic-bloom) * 0.08)) 50%, rgba(2, 6, 23, 0.2));
       mix-blend-mode: screen;
       opacity: 0.58;
       transition: opacity 900ms ease-in-out, filter 900ms ease-in-out;
@@ -362,8 +361,7 @@
         radial-gradient(circle at 50% 48%, transparent 0 38%, rgba(0, 16, 36, calc(0.24 + var(--cinematic-vignette) * 0.22)) 74%, rgba(0, 10, 24, 0.8) 100%),
         radial-gradient(circle at 50% 50%, rgba(0, 191, 255, calc(0.12 + var(--cinematic-bloom) * 0.22)), transparent 38%),
         radial-gradient(circle at 70% 28%, rgba(125, 211, 252, calc(var(--cinematic-fog) * 0.14)), transparent 34%),
-        linear-gradient(135deg, rgba(14, 165, 233, 0.15), rgba(99, 102, 241, calc(0.1 + var(--cinematic-bloom) * 0.08)) 50%, rgba(2, 6, 23, 0.22)),
-        repeating-linear-gradient(0deg, rgba(255,255,255,0.025) 0 1px, transparent 1px 4px);
+        linear-gradient(135deg, rgba(14, 165, 233, 0.15), rgba(99, 102, 241, calc(0.1 + var(--cinematic-bloom) * 0.08)) 50%, rgba(2, 6, 23, 0.22));
     }
 
     body[data-lut="retroFilm"] .post-process-overlay {
@@ -371,8 +369,7 @@
         radial-gradient(circle at 50% 48%, transparent 0 38%, rgba(28, 18, 12, calc(0.22 + var(--cinematic-vignette) * 0.2)) 74%, rgba(20, 12, 8, 0.72) 100%),
         radial-gradient(circle at 48% 52%, rgba(255, 183, 77, calc(0.1 + var(--cinematic-bloom) * 0.15)), transparent 42%),
         radial-gradient(circle at 68% 24%, rgba(251, 191, 36, calc(var(--cinematic-warmth) * 0.16)), transparent 36%),
-        linear-gradient(135deg, rgba(217, 119, 6, 0.1), rgba(124, 58, 237, calc(0.06 + var(--cinematic-bloom) * 0.06)) 56%, rgba(2, 6, 23, 0.26)),
-        repeating-linear-gradient(0deg, rgba(255, 245, 210,0.028) 0 1px, transparent 1px 4px);
+        linear-gradient(135deg, rgba(217, 119, 6, 0.1), rgba(124, 58, 237, calc(0.06 + var(--cinematic-bloom) * 0.06)) 56%, rgba(2, 6, 23, 0.26));
     }
 
     #cinematicFxCanvas {
@@ -523,19 +520,20 @@
 
     #crtNoiseCanvas {
       z-index: 3;
-      opacity: 0.035;
+      display: none;
+      opacity: 0;
       mix-blend-mode: screen;
       filter: saturate(0.72) brightness(0.7);
       image-rendering: auto;
     }
 
     body[data-render-quality="high"] #crtNoiseCanvas {
-      opacity: 0.026;
+      opacity: 0;
     }
 
     body[data-render-quality="low"] #crtNoiseCanvas,
     body.safe-mode #crtNoiseCanvas {
-      opacity: 0.012;
+      opacity: 0;
     }
 
     #compileMatrixCanvas {
@@ -6780,7 +6778,7 @@
     }
 
     .startup-announcement-title {
-      margin: 0 46px 10px 0;
+      margin: 0 58px 10px 0;
       color: #86efac;
       font-size: 16px;
       line-height: 1.2;
@@ -6803,9 +6801,9 @@
     }
 
     .startup-announcement-pager {
-      display: flex;
+      display: grid;
+      grid-template-columns: auto auto 1fr auto;
       align-items: center;
-      justify-content: space-between;
       gap: 10px;
       margin-top: 12px;
       padding-top: 10px;
@@ -6831,14 +6829,20 @@
     .announcement-page-indicator {
       color: rgba(187, 247, 208, 0.78);
       font: 800 11px/1 var(--font-code);
+      justify-self: center;
     }
 
     .announcement-close {
       position: absolute;
-      top: 12px;
-      right: 14px;
-      border: 0;
-      background: transparent;
+      top: 10px;
+      right: 12px;
+      display: grid;
+      place-items: center;
+      width: 34px;
+      height: 34px;
+      border: 1px solid rgba(125, 211, 252, 0.24);
+      border-radius: 999px;
+      background: rgba(3, 7, 18, 0.32);
       color: rgba(226, 232, 240, 0.78);
       font: 700 12px/1 var(--font-code);
       text-shadow: 0 0 8px rgba(0, 204, 255, 0.35);
@@ -9555,12 +9559,14 @@
 
     .announcement-expand {
       min-height: 30px;
+      min-width: 68px;
       border: 1px solid rgba(125, 211, 252, 0.3);
       border-radius: 999px;
       padding: 0 12px;
       background: rgba(3, 7, 18, 0.34);
       color: #dffbff;
       font: 800 11px/1 var(--font-code);
+      justify-self: end;
     }
 
     .absolute-guide-tag {
@@ -9834,7 +9840,7 @@
       <canvas id="menuFxCanvas" width="1280" height="720"></canvas>
       <div class="main-menu-card glass-panel">
         <h1 class="game-logo">CODE AWAKENER<br>C 语言启航村</h1>
-        <div class="version-label" id="versionLabel">World Build v1.0.11 · develop.fan C Basics</div>
+        <div class="version-label" id="versionLabel">World Build v1.0.13 · develop.fan C Basics</div>
         <label class="boot-command"><span>&gt;</span><input id="bootCommandInput" value="start_game.exe" autocomplete="off" spellcheck="false" aria-label="启动命令"></label>
         <label class="skin-picker">角色外观
           <select id="skinSelect" aria-label="选择主角外观">
@@ -9972,13 +9978,6 @@
                   <option value="high">高</option>
                 </select>
                 <span>铺路</span>
-              </label>
-              <label class="setting-row">稳定档位
-                <select id="renderQualitySelect">
-                  <option value="high">高</option>
-                  <option value="low">低</option>
-                </select>
-                <span>防白屏</span>
               </label>
               <label class="setting-row">性能模式
                 <select id="performanceModeSelect">
@@ -10427,9 +10426,10 @@
         </section>
         <section class="info-menu-section">
           <strong>学习辅助</strong>
-          <p class="menu-help">这里保留安全的学习操作：手动保存、重看新手指引、主动和导师对话、重置世界进化。</p>
+          <p class="menu-help">这里保留安全的学习操作：手动保存、打开游戏设置、重看新手指引、主动和导师对话、重置世界进化。</p>
           <div class="info-menu-actions">
             <button id="manualSaveButton" class="pixel-button secondary" type="button">手动保存</button>
+            <button id="openGameSettingsButton" class="pixel-button secondary" type="button">游戏设置</button>
             <button id="replayNoviceGuideButton" class="pixel-button secondary" type="button">重新观看指引</button>
             <button id="randomDialogueButton" class="pixel-button secondary" type="button">导师对话</button>
             <button id="resetWorldEvolutionButton" class="pixel-button secondary" type="button">重置世界</button>
@@ -10719,14 +10719,14 @@ int main(void) {
       <button id="announcementCloseButton" class="announcement-close" type="button" aria-label="关闭公告">[ x ]</button>
       <h2 id="startupAnnouncementTitle" class="startup-announcement-title">> 消息</h2>
       <div id="announcementPageBody" class="startup-announcement-body">
-        <p>// 更新内容载入中...</p>
+        <p>// 本次更新：手机版菜单新增“游戏设置”，虚拟摇杆 + E 键不再误开菜单。</p>
         <p class="announcement-dismiss-hint">- 点击任意处关闭</p>
       </div>
       <div class="startup-announcement-pager" aria-label="公告分页">
         <button id="announcementPrevButton" class="announcement-page-button" type="button">上一页</button>
         <span id="announcementPageIndicator" class="announcement-page-indicator">1/1</span>
-        <button id="announcementExpandButton" class="announcement-expand" type="button">详情</button>
         <button id="announcementNextButton" class="announcement-page-button" type="button">下一页</button>
+        <button id="announcementExpandButton" class="announcement-expand" type="button">详情</button>
       </div>
     </aside>
 
@@ -11193,30 +11193,32 @@ int main() {
     const SAVE_SIGNATURE_SALT = "c-world-local-integrity";
     const SAVE_CLEAR_CONFIRM_MS = 3000;
     const STARTUP_ANNOUNCEMENT_AUTO_HIDE_MS = 3000;
-    const GAME_VERSION = "v1.0.11";
+    const GAME_VERSION = "v1.0.13";
     const UPDATE_ANNOUNCEMENT_PAGES = Object.freeze([
       {
         title: "> 消息 / 本次更新",
         lines: [
-          "// 作者：杀戮",
-          "// 本次更新：修复防白屏/稳定档位越高，满屏白色小点越闪的问题。",
-          "// CRT 噪声层不再逐像素铺满白点，改为稀疏暗青扫描线。",
-          "// 电影颗粒从白点改为低透明蓝绿微粒，并大幅降低数量。",
-          "// 高档位保留氛围感，但不会再像雪花屏一样闪烁。"
+          "// 本次更新：手机版菜单新增“游戏设置”，虚拟摇杆 + E 键不再误开菜单。",
+          "// 公告折叠时会优先显示更新摘要，不再只显示作者信息。",
+          "// 公告关闭按钮和详情/收起按钮已分离，避免挤在一起误触。",
+          "// 防白屏手动档位已移除，高画质拉满不再启用白色雪花噪声。",
+          "// CRT 雪花噪声层保持关闭，电影颗粒预算保持为 0。",
+          "// 作者：杀戮"
         ]
       },
       {
         title: "> 更新内容 / 稳定性",
         lines: [
-          "// 防白屏稳定档位仍保留低/高两档，不再通过白色闪屏提示状态。",
-          "// DOM 白闪层改为半透明玻璃光波，透明度大幅降低。",
-          "// 新增回归测试，禁止再直接使用 camera.flash 或高密度白噪点。",
-          "// 保留 develop.fan C 语言路径、手机编辑器和弹窗折叠修复。"
+          "// 后处理 overlay 移除白色扫描线，保留低调色调和光效。",
+          "// 新增回归测试，禁止再次出现 renderQualitySelect 防白屏手动开关。",
+          "// 新增回归测试，禁止 CRT 噪声层显示或 film grain 重新产出白点。",
+          "// 新增移动端触控隔离：摇杆、E键、对话按钮不会触发侧滑菜单。"
         ]
       },
       {
         title: "> 更新内容 / 学习体验",
         lines: [
+          "// 游戏内信息菜单加入“游戏设置”入口，手机端不用再找 ESC 面板。",
           "// 公告改为紧凑摘要，点击“详情”才展开，减少开屏遮挡。",
           "// 关卡数据增加课程来源编号，任务说明会标注对应学习路径。",
           "// 编辑器说明与错误提示继续保留导师口吻，帮助零基础玩家定位问题。",
@@ -11234,6 +11236,30 @@ int main() {
       }
     ]);
     const UPDATE_HISTORY = Object.freeze([
+      {
+        version: "v1.0.13",
+        date: "2026-06-16",
+        title: "手机版设置入口、触控冲突与公告摘要修复",
+        details: [
+          "信息菜单新增“游戏设置”按钮，手机端打开 ☰ 后即可进入完整设置。",
+          "移动端虚拟摇杆、E 交互键和对话继续键的触摸事件会隔离菜单手势，避免一边移动一边交互时误开菜单。",
+          "公告折叠状态改为优先显示本次更新摘要，不再只显示作者信息。",
+          "公告关闭按钮与详情/收起按钮分离排版，减少误触和视觉拥挤。",
+          "继续保持防白屏手动档位移除、CRT 雪花层关闭和电影颗粒为 0，避免高画质白色闪点。"
+        ]
+      },
+      {
+        version: "v1.0.12",
+        date: "2026-06-16",
+        title: "移除防白屏手动选项并彻底关闭白色噪点层",
+        details: [
+          "移除设置界面里的“稳定档位 / 防白屏”手动选择项，防白屏改为内部自动保护逻辑。",
+          "CRT 雪花噪声 canvas 默认隐藏，不再覆盖游戏画面。",
+          "电影颗粒 filmGrain 预算设为 0，避免高画质下产生持续闪烁小点。",
+          "后处理 overlay 移除白色扫描线渐变，防止高画质下出现细密闪纹。",
+          "新增测试约束，后续不得重新暴露防白屏手动选项，也不得重新启用白色噪点层。"
+        ]
+      },
       {
         version: "v1.0.11",
         date: "2026-06-16",
@@ -12024,7 +12050,7 @@ return 0;`;
       directSaveAs: "reduced-by-inline-resources"
     });
     const SECURITY_CONFIG = Object.freeze({
-      expectedScriptHash: "4vRbNq4YGZKlTmecxX3CELqCkSeN0xMk1+eNd8aeLP4=",
+      expectedScriptHash: "NMFUBZ2L2h3FB1vYpNp7VgRnfofB29gsAFl4RlMmMss=",
       selfCheckIntervalMs: 45000,
       tamperRefreshMs: 5000,
       devToolsRefreshMs: 2000,
@@ -17553,6 +17579,7 @@ int main(void) {
       textSpeedSlider: document.getElementById("textSpeedSlider"),
       textSpeedValue: document.getElementById("textSpeedValue"),
       manualSaveButton: document.getElementById("manualSaveButton"),
+      openGameSettingsButton: document.getElementById("openGameSettingsButton"),
       replayNoviceGuideButton: document.getElementById("replayNoviceGuideButton"),
       randomDialogueButton: document.getElementById("randomDialogueButton"),
       resetWorldEvolutionButton: document.getElementById("resetWorldEvolutionButton"),
@@ -22386,6 +22413,14 @@ ${item.code}
       let lastCanvasTouchCreationAt = 0;
       let drawerDragStyle = null;
 
+      function isMobileControlTouchTarget(target) {
+        return Boolean(target?.closest?.("#mobileControls,#virtualJoystick,#mobileInteractButton,#mobileDialogAdvanceButton,#infoMenuToggle"));
+      }
+
+      function touchesStartedOnMobileControls(touchList) {
+        return Array.from(touchList || []).some((touch) => isMobileControlTouchTarget(touch.target));
+      }
+
       function setInfoMenuDragStyle(cssText = "") {
         if (!drawerDragStyle) {
           drawerDragStyle = document.createElement("style");
@@ -22435,11 +22470,16 @@ ${item.code}
 
       document.addEventListener("touchstart", (event) => {
         const firstTouch = event.touches?.[0];
-        if (event.touches.length === 2) {
+        const controlTouch = touchesStartedOnMobileControls(event.touches);
+        if (controlTouch) {
+          twoFingerStartAt = 0;
+          drawerGesture = null;
+        }
+        if (event.touches.length === 2 && !controlTouch) {
           twoFingerStartX = (event.touches[0].clientX + event.touches[1].clientX) / 2;
           twoFingerStartAt = Date.now();
         }
-        if (event.touches.length === 1 && firstTouch) {
+        if (event.touches.length === 1 && firstTouch && !controlTouch) {
           const menuActive = dom.infoSideMenu?.classList.contains("active");
           if (!menuActive && firstTouch.clientX <= 26) {
             drawerGesture = { mode: "leftEdgeSwipe", startX: firstTouch.clientX, progress: 0 };
@@ -22458,6 +22498,7 @@ ${item.code}
         }
       }, { passive: true });
       document.addEventListener("touchmove", (event) => {
+        if (touchesStartedOnMobileControls(event.touches)) return;
         if (drawerGesture && event.touches.length === 1) {
           const deltaX = event.touches[0].clientX - drawerGesture.startX;
           drawerGesture.progress = updateInfoMenuDragProgress(deltaX, drawerGesture.mode);
@@ -22477,7 +22518,7 @@ ${item.code}
           finishInfoMenuDragProgress(drawerGesture.progress, drawerGesture.mode);
           drawerGesture = null;
         }
-        if (event.changedTouches.length >= 1 && twoFingerStartAt) {
+        if (event.changedTouches.length >= 1 && twoFingerStartAt && !touchesStartedOnMobileControls(event.changedTouches)) {
           const endX = event.changedTouches[0].clientX;
           if (Date.now() - twoFingerStartAt < 900 && Math.abs(endX - twoFingerStartX) > 80) {
             toggleInfoSideMenu(true);
@@ -22486,6 +22527,14 @@ ${item.code}
           twoFingerStartAt = 0;
         }
       }, { passive: true });
+      return true;
+    }
+
+    function triggerMobileInteractButton() {
+      if (gameState.scene?.keyE) {
+        gameState.scene.keyE.isDown = true;
+        trackedSetTimeout(() => { if (gameState.scene?.keyE) gameState.scene.keyE.isDown = false; }, 80, "mobile-interact-release");
+      }
       return true;
     }
 
@@ -24929,10 +24978,10 @@ ${item.code}
       const quality = getEffectiveCinematicQuality();
       const runtime = gameState.runtimeRenderDowngrade || {};
       const budget = {
-        high: { grass: CINEMATIC_RENDER_BUDGET.maxProceduralGrass, fog: 0.92, ssr: true, shadows: true, filmGrain: 0.018 },
-        medium: { grass: CINEMATIC_RENDER_BUDGET.mediumProceduralGrass, fog: 0.58, ssr: true, shadows: true, filmGrain: 0.012 },
-        low: { grass: CINEMATIC_RENDER_BUDGET.lowProceduralGrass, fog: 0.26, ssr: false, shadows: true, filmGrain: 0.004 }
-      }[quality] || { grass: CINEMATIC_RENDER_BUDGET.maxProceduralGrass, fog: 0.92, ssr: true, shadows: true, filmGrain: 0.018 };
+        high: { grass: CINEMATIC_RENDER_BUDGET.maxProceduralGrass, fog: 0.92, ssr: true, shadows: true, filmGrain: 0 },
+        medium: { grass: CINEMATIC_RENDER_BUDGET.mediumProceduralGrass, fog: 0.58, ssr: true, shadows: true, filmGrain: 0 },
+        low: { grass: CINEMATIC_RENDER_BUDGET.lowProceduralGrass, fog: 0.26, ssr: false, shadows: true, filmGrain: 0 }
+      }[quality] || { grass: CINEMATIC_RENDER_BUDGET.maxProceduralGrass, fog: 0.92, ssr: true, shadows: true, filmGrain: 0 };
       return {
         ...budget,
         grass: Math.round(budget.grass * (runtime.particleScale || 1)),
@@ -27392,7 +27441,7 @@ ${item.code}
     function drawCrtNoise() {
       const canvas = dom.crtNoiseCanvas;
       const ctx = canvas?.getContext?.("2d");
-      if (!ctx) return;
+      if (!ctx || getComputedStyle(canvas).display === "none") return false;
       const width = canvas.width || 320;
       const height = canvas.height || 180;
       const renderQuality = normalizeRenderQuality(gameState.settings.renderQuality || "high");
@@ -37009,7 +37058,6 @@ ${item.code}
     dom.tutorialAnimationToggle?.addEventListener("change", (event) => updateSetting("tutorialAnimationsEnabled", event.target.checked));
     dom.musicComplexitySelect.addEventListener("change", (event) => updateSetting("musicComplexity", event.target.value));
     dom.unlockEffectLevelSelect?.addEventListener("change", (event) => updateSetting("unlockEffectLevel", event.target.value));
-    dom.renderQualitySelect?.addEventListener("change", (event) => updateSetting("renderQuality", event.target.value));
     dom.performanceModeSelect?.addEventListener("change", (event) => updateSetting("performanceMode", event.target.value));
     dom.editorGuideModeSelect?.addEventListener("change", (event) => updateSetting("editorGuideMode", event.target.value));
     dom.resetEditorGuideButton?.addEventListener("click", resetEditorGuideCompletion);
@@ -37088,6 +37136,14 @@ ${item.code}
     dom.manualSaveButton?.addEventListener("click", () => {
       const saved = saveGame();
       showReward(saved ? "进度已手动保存。" : "保存失败，请稍后再试。");
+    });
+    bindFastTouchAction(dom.openGameSettingsButton, () => {
+      toggleInfoSideMenu(false);
+      if (typeof menuManager?.openSettings === "function") {
+        menuManager.openSettings("game");
+      } else {
+        showReward("游戏设置正在加载，请稍后再试。");
+      }
     });
     bindFastTouchAction(dom.codeGenesisExampleButton, () => {
       fillCodeGenesisBeginnerTemplate(true);
@@ -37315,10 +37371,9 @@ ${item.code}
       updateVirtualJoystick(event);
     });
     ["pointerup", "pointercancel", "pointerleave"].forEach((type) => dom.virtualJoystick?.addEventListener(type, resetVirtualJoystick));
-    dom.mobileInteractButton?.addEventListener("click", () => {
-      gameState.scene?.keyE && (gameState.scene.keyE.isDown = true);
-      trackedSetTimeout(() => { if (gameState.scene?.keyE) gameState.scene.keyE.isDown = false; }, 80, "mobile-interact-release");
-    });
+    dom.mobileControls?.addEventListener("touchstart", (event) => event.stopPropagation(), { passive: true });
+    dom.mobileControls?.addEventListener("touchmove", (event) => event.stopPropagation(), { passive: true });
+    bindFastTouchAction(dom.mobileInteractButton, triggerMobileInteractButton);
     dom.closeCodexCollectionButton?.addEventListener("click", () => openCodexCollection(false));
     dom.sandboxPlaceButton?.addEventListener("click", () => addSandboxObjectFromCode());
     dom.sandboxShareButton?.addEventListener("click", generateSandboxShareCard);
