@@ -11,7 +11,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; base-uri 'self'; object-src 'none'; frame-ancestors 'none'; script-src 'self' https://cdn.jsdelivr.net 'nonce-code-awakener-inline' 'sha256-BM5RY2CDie+j2idpZG059WQLA7aAPU/wERx05swuPL4='; style-src 'self' https://cdn.jsdelivr.net https://fonts.googleapis.com 'nonce-code-awakener-inline' 'sha256-FqUOXMftslySn/KHpQS9FcURJrSTdhIRtQJkfe0FxaQ='; style-src-attr 'unsafe-inline'; font-src 'self' https://cdn.jsdelivr.net https://fonts.gstatic.com data:; img-src 'self' data: blob:; media-src 'self' data: blob:; worker-src 'self' blob:; child-src 'self' blob:; connect-src 'self' https://cdn.jsdelivr.net http://localhost:8000 http://127.0.0.1:8000;">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; base-uri 'self'; object-src 'none'; frame-ancestors 'none'; script-src 'self' https://cdn.jsdelivr.net 'nonce-code-awakener-inline' 'sha256-9Ku0aZJKdo/OVsfLLfx1jU0S+QPcblHSRJeXU4WhkdM='; style-src 'self' https://cdn.jsdelivr.net https://fonts.googleapis.com 'nonce-code-awakener-inline' 'sha256-FqUOXMftslySn/KHpQS9FcURJrSTdhIRtQJkfe0FxaQ='; style-src-attr 'unsafe-inline'; font-src 'self' https://cdn.jsdelivr.net https://fonts.gstatic.com data:; img-src 'self' data: blob:; media-src 'self' data: blob:; worker-src 'self' blob:; child-src 'self' blob:; connect-src 'self' https://cdn.jsdelivr.net http://localhost:8000 http://127.0.0.1:8000;">
   <title>编程学习 RPG：C 语言启航村</title>
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%23020617'/%3E%3Cpath d='M22 20 10 32l12 12M42 20l12 12-12 12' fill='none' stroke='%2300ff88' stroke-width='6' stroke-linecap='round' stroke-linejoin='round'/%3E%3Cpath d='m36 16-8 32' stroke='%2300ccff' stroke-width='5' stroke-linecap='round'/%3E%3C/svg%3E">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/firacode@6.2.0/distr/fira_code.css">
@@ -9843,7 +9843,7 @@
       <canvas id="menuFxCanvas" width="1280" height="720"></canvas>
       <div class="main-menu-card glass-panel">
         <h1 class="game-logo">CODE AWAKENER<br>C 语言启航村</h1>
-        <div class="version-label" id="versionLabel">World Build v1.0.15 · develop.fan C Basics</div>
+        <div class="version-label" id="versionLabel">World Build v1.0.16 · develop.fan C Basics</div>
         <label class="boot-command"><span>&gt;</span><input id="bootCommandInput" value="start_game.exe" autocomplete="off" spellcheck="false" aria-label="启动命令"></label>
         <label class="skin-picker">角色外观
           <select id="skinSelect" aria-label="选择主角外观">
@@ -10666,14 +10666,18 @@ int main(void) {
 
     <aside id="startupAnnouncement" class="startup-announcement-island" role="status" aria-live="polite" aria-label="消息">
       <button id="announcementCloseButton" class="announcement-close" type="button" aria-label="关闭公告">×</button>
-      <h2 id="startupAnnouncementTitle" class="startup-announcement-title">> 消息</h2>
+      <h2 id="startupAnnouncementTitle" class="startup-announcement-title">> 消息 / 本次更新</h2>
       <div id="announcementPageBody" class="startup-announcement-body">
-        <p>// 本次更新：公告只保留关闭、课程锁定、自由模式通关后显示。</p>
+        <p>// 本次更新：石碑编译器新增空代码和乱码前置拦截。</p>
+        <p>// 编译错误会保留输入框原文，方便直接修改，不会自动清空。</p>
+        <p>// 切换到新石碑时 main.c 会强制清空，上一关代码不再串关。</p>
+        <p>// 编译前会核对当前任务ID，避免旧任务输入误推进新任务。</p>
+        <p>// 作者：杀戮</p>
         <p class="announcement-dismiss-hint">- 点击任意处关闭</p>
       </div>
       <div class="startup-announcement-pager" aria-label="公告分页">
         <button id="announcementPrevButton" class="announcement-page-button" type="button">上一页</button>
-        <span id="announcementPageIndicator" class="announcement-page-indicator">1/1</span>
+        <span id="announcementPageIndicator" class="announcement-page-indicator">1/4</span>
         <button id="announcementNextButton" class="announcement-page-button" type="button">下一页</button>
       </div>
     </aside>
@@ -11141,35 +11145,35 @@ int main() {
     const SAVE_SIGNATURE_SALT = "c-world-local-integrity";
     const SAVE_CLEAR_CONFIRM_MS = 3000;
     const STARTUP_ANNOUNCEMENT_AUTO_HIDE_MS = 3000;
-    const GAME_VERSION = "v1.0.15";
+    const GAME_VERSION = "v1.0.16";
     const UPDATE_ANNOUNCEMENT_PAGES = Object.freeze([
       {
         title: "> 消息 / 本次更新",
         lines: [
-          "// 本次更新：公告删除详情/收起按钮，只保留关闭。",
-          "// 100%后空格和演示按钮不会再重复触发创世大爆炸。",
-          "// 课程进度按真实学习进度锁定，未学章节不可点击。",
-          "// 自由模式编辑器通关前不再出现在菜单里。",
-          "// 继续修复中/高画质后处理白点闪烁。",
+          "// 本次更新：石碑编译器新增空代码和乱码前置拦截。",
+          "// 编译错误会保留输入框原文，方便直接修改，不会自动清空。",
+          "// 切换到新石碑时 main.c 会强制清空，上一关代码不再串关。",
+          "// 编译前会核对当前任务ID，避免旧任务输入误推进新任务。",
+          "// 公告历史已记录本次修复并同步提升版本号。",
           "// 作者：杀戮"
         ]
       },
       {
-        title: "> 更新内容 / 稳定性",
+        title: "> 更新内容 / 编译器",
         lines: [
-          "// 后处理管线改为整组稳定绘制：低频更新时保留上一帧，不再一帧清空一帧绘制。",
-          "// 中画质不再作为可选项出现，避免进入最容易闪烁的过渡档。",
-          "// 高画质继续保留光照、雾层和反射，但去掉会持续闪的白色噪点类层。",
-          "// 旧存档和自动检测产生的 medium 会被兜底转为 high。"
+          "// 空文本会立即提示“编译错误：代码不能为空”，不会扣掉流程进度。",
+          "// 不含 int main(void) 的乱码会在沙箱启动前被拦截。",
+          "// unlock_gate 等世界命令也必须先通过当前石碑的编译前校验。",
+          "// 编译失败路径会回写玩家原始输入，保留现场给玩家修正。"
         ]
       },
       {
-        title: "> 更新内容 / 学习体验",
+        title: "> 更新内容 / 石碑切换",
         lines: [
-          "// 收集碎片后，引导会显示“下一步已高亮”，而不是继续要求靠近同一碎片。",
-          "// 旧存档如果卡在 fragment 引导阶段，会自动回到跟随光带的下一步。",
-          "// 公告不再提供缩小/详情按钮，避免和关闭按钮重合。",
-          "// 本版重点是修复开屏公告、100%重复触发、课程锁定和自由模式暴露问题。"
+          "// 打开新石碑时跳过旧文件自动保存，防止上一关输入被写回新关 main.c。",
+          "// 新任务生命周期会显式执行 clearEditorSourceForTask(chapterId)。",
+          "// README 和任务说明仍保留，只有可编辑的 main.c 被清空。",
+          "// 重置按钮仍可恢复本关初始模板，方便需要模板的玩家。"
         ]
       },
       {
@@ -11183,6 +11187,17 @@ int main() {
       }
     ]);
     const UPDATE_HISTORY = Object.freeze([
+      {
+        version: "v1.0.16",
+        date: "2026-06-16",
+        title: "石碑编译校验与输入框串关修复",
+        details: [
+          "编译按钮新增非空、语法入口和当前任务ID前置校验，空代码、乱码和旧任务输入都会提示“编译错误”并阻止流程推进。",
+          "编译失败时保留玩家输入框内的原始错误文本，方便就地修改，不再误清空。",
+          "打开新石碑时跳过旧文件自动保存，并强制清空 main.c，避免上一关代码通过内存文件状态带到新关卡。",
+          "公告与历史更新同步记录本次修复，版本号提升到 v1.0.16。"
+        ]
+      },
       {
         version: "v1.0.15",
         date: "2026-06-16",
@@ -12018,7 +12033,7 @@ return 0;`;
       directSaveAs: "reduced-by-inline-resources"
     });
     const SECURITY_CONFIG = Object.freeze({
-      expectedScriptHash: "vndB3FLNBXrzf18RT9BMSIvKPuQJqJeyj4U6QKfJ+AY=",
+      expectedScriptHash: "p9SC9WTlrj+nYz3a2LGodZOJqYVab4dR7ZqY5rMKF88=",
       selfCheckIntervalMs: 45000,
       tamperRefreshMs: 5000,
       devToolsRefreshMs: 2000,
@@ -29230,6 +29245,50 @@ ${item.code}
       return false;
     }
 
+    function createEditorFilesForTask(chapter, options = {}) {
+      const nextFiles = { ...(chapter?.files || {}) };
+      if (options.clearMain) nextFiles["main.c"] = "";
+      return nextFiles;
+    }
+
+    function clearEditorSourceForTask(chapterId = gameState.activeChallengeId) {
+      files["main.c"] = "";
+      gameState.editorTaskSourceKey = chapterId;
+      if (currentFile === "main.c" && dom.codeInput) {
+        dom.codeInput.value = "";
+        dom.codeInput.readOnly = false;
+        editorHistory.lastValue = "";
+        resetEditorHistory("");
+        updateEditorVisuals();
+        renderAbsoluteGuideLineHints("");
+        renderCodeBlockMode();
+      }
+      return true;
+    }
+
+    function createCompilePreflightError(message, reason) {
+      return { ok: false, message: `编译错误：${message}`, reason };
+    }
+
+    function formatCompileErrorMessage(message = "未知错误") {
+      const text = String(message || "未知错误");
+      return text.startsWith("编译错误") ? text : `编译错误：${text}`;
+    }
+
+    function validateEditorSubmissionForCurrentTask(rawSource = "", chapter = null, expectedTaskId = "", activeTaskId = expectedTaskId) {
+      const source = String(rawSource ?? "");
+      const chapterId = chapter?.id || "";
+      if (!source.trim()) {
+        return createCompilePreflightError("代码不能为空。请在当前石碑输入 C 代码后再编译。", "empty-source");
+      }
+      if (!chapter || !chapterId || chapterId !== expectedTaskId || chapterId !== activeTaskId) {
+        return createCompilePreflightError(`任务ID不匹配。当前任务ID=${activeTaskId || "未知"}，代码绑定任务ID=${chapterId || expectedTaskId || "未知"}。请重新打开当前石碑后再编译。`, "task-id-mismatch");
+      }
+      const runnableIssue = inspectRunnableCBeforeRun(autoInjectStdIoHeader(source), chapter);
+      if (runnableIssue) return createCompilePreflightError(runnableIssue, "syntax-preflight");
+      return { ok: true, source, chapterId };
+    }
+
     function openEditor(chapterId) {
       if (isCleared(chapterId) || gameState.dialogOpen) return;
       loadChapterTask(chapterId);
@@ -29243,7 +29302,8 @@ ${item.code}
       audioManager.setEditorFocus(true);
       audioManager.playBgm("puzzle");
       adaptiveSymphonicAudioDirector?.setVerticalLayer("teaching");
-      selectFile("main.c");
+      selectFile("main.c", { skipSaveCurrent: true });
+      clearEditorSourceForTask(chapterId);
       codeBlockSelection = [];
       renderCodeBlockMode();
       tutorialAnimationManager.trigger("T06_EDITOR_OPEN", { scene: gameState.scene, chapterId });
@@ -29268,7 +29328,7 @@ ${item.code}
       const chapter = chapterById[chapterId];
       gameState.activeChallengeId = chapterId;
       Object.keys(files).forEach((fileName) => delete files[fileName]);
-      Object.assign(files, chapter.files);
+      Object.assign(files, createEditorFilesForTask(chapter, { clearMain: true }));
       dom.taskGoal.innerHTML = chapter.taskGoal;
       dom.taskTarget.innerHTML = chapter.taskTarget;
       dom.taskExample.innerHTML = chapter.taskExample;
@@ -29310,13 +29370,13 @@ ${item.code}
       }, 230, "editor-close-collapse");
     }
 
-    function selectFile(fileName) {
-      if (currentFile && currentFile !== "README.md" && dom.codeInput && !dom.codeInput.readOnly) {
+    function selectFile(fileName, options = {}) {
+      if (!options.skipSaveCurrent && currentFile && currentFile !== "README.md" && dom.codeInput && !dom.codeInput.readOnly) {
         files[currentFile] = dom.codeInput.value;
       }
       currentFile = fileName;
       dom.activeTab.textContent = fileName;
-      dom.codeInput.value = files[fileName];
+      dom.codeInput.value = files[fileName] ?? "";
       dom.codeInput.readOnly = fileName === "README.md";
       dom.codeInput.closest?.(".code-wrap")?.classList.toggle("readme-mode", fileName === "README.md");
       resetEditorHistory(dom.codeInput.value);
@@ -30676,8 +30736,23 @@ ${item.code}
       files[currentFile] = dom.codeInput.value;
       const rawCCode = files["main.c"];
       const userSourceBeforeRun = rawCCode;
-      const cCode = autoInjectStdIoHeader(rawCCode);
       const chapter = chapterById[gameState.activeChallengeId];
+      const preflight = validateEditorSubmissionForCurrentTask(rawCCode, chapter, gameState.activeChallengeId, gameState.activeChallengeId);
+      if (!preflight.ok) {
+        restoreEditorSourceAfterFailedRun(userSourceBeforeRun, preflight.reason);
+        gameState.codeAccuracy = Math.max(20, gameState.codeAccuracy - 8);
+        handleCompileFailurePenalty(chapter?.id, { source: "preflight", message: preflight.message });
+        updateCompanionAiEvolution();
+        updateStatusBars();
+        audioManager.error();
+        triggerMusicCompileError();
+        triggerStoryCinematicBars("编译错误：先修正当前石碑代码，再让世界响应。", 1400);
+        tutorialAnimationManager.trigger("T08_COMPILE_FAILURE", { scene: gameState.scene, chapter });
+        markAbsoluteGuideAction("compileError", { chapterId: chapter?.id, reason: preflight.reason });
+        setOutput(preflight.message, "error");
+        return;
+      }
+      const cCode = autoInjectStdIoHeader(rawCCode);
       if (!spendWorldEvolutionMp(1)) {
         setOutput("MP不足：已提示你在信息菜单中使用进化碎片回复MP。本次进入教学保护模式，仍继续运行代码。", "info");
       }
@@ -30736,8 +30811,9 @@ ${item.code}
           tutorialAnimationManager.trigger("T07_COMPILE_SUCCESS", { scene: gameState.scene, chapter }).then(() => completeChallenge());
         } else {
           restoreEditorSourceAfterFailedRun(userSourceBeforeRun, "validate-result");
+          const failureMessage = formatCompileErrorMessage(result.message);
           gameState.codeAccuracy = Math.max(20, gameState.codeAccuracy - 14);
-          handleCompileFailurePenalty(chapter?.id, { source: "compile", message: result.message });
+          handleCompileFailurePenalty(chapter?.id, { source: "compile", message: failureMessage });
           updateCompanionAiEvolution();
           flashHpDamage(14);
           updateStatusBars();
@@ -30745,19 +30821,20 @@ ${item.code}
           triggerMusicCompileError();
           triggerStoryCinematicBars("编译失败：错误不是惩罚，是世界给你的回声。", 1500);
           tutorialAnimationManager.trigger("T08_COMPILE_FAILURE", { scene: gameState.scene, chapter });
-          setOutput(result.message, "error");
+          setOutput(failureMessage, "error");
         }
       } catch (error) {
         restoreEditorSourceAfterFailedRun(userSourceBeforeRun, "exception");
+        const failureMessage = formatCompileErrorMessage(`[第1行] 运行超时或沙箱异常：${error.message}\n知识点提示：本关只需要写 C 的基本结构，不需要复杂循环或指针。`);
         gameState.codeAccuracy = Math.max(20, gameState.codeAccuracy - 18);
-        handleCompileFailurePenalty(chapter?.id, { source: "exception", message: error.message });
+        handleCompileFailurePenalty(chapter?.id, { source: "exception", message: failureMessage });
         updateCompanionAiEvolution();
         flashHpDamage(18);
         updateStatusBars();
         audioManager.error();
         triggerMusicCompileError();
         triggerStoryCinematicBars("沙箱异常：系统已保护现场，请修改后重试。", 1500);
-        setOutput(`[第1行] 运行超时或沙箱异常：${error.message}\n知识点提示：本关只需要写 C 的基本结构，不需要复杂循环或指针。`, "error");
+        setOutput(failureMessage, "error");
       } finally {
         setRunning(false);
       }
