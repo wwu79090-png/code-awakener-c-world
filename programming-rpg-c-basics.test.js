@@ -1020,6 +1020,10 @@ assert(/function updateLogicClouds/m.test(html), "logic clouds should drift over
 assert(/function updateCityHeartbeat/m.test(html), "building glow should contribute to a city heartbeat");
 assert(/ANIMATION_FLASH_LIMIT_HZ\s*=\s*3/m.test(html), "flash animations should be limited to 3Hz");
 assert(/function limitFlashFrequency/m.test(html), "animation manager should enforce flash frequency protection");
+assert(/function playSoftSceneWash/m.test(html), "high stability effects should use a soft transparent screen wash instead of a white camera flash");
+assert(!/cameras?\.main\.flash|cameras\?\.main\?\.flash|\.flash\?\.\(/m.test(html), "Phaser camera flash should not be used because it causes white-screen flicker at high stability");
+const questFlashBlock = html.match(/#questFlash\s*\{([\s\S]*?)\n\s*\}/)?.[1] || "";
+assert(!/background:\s*white/i.test(questFlashBlock), "quest feedback flash should not use an opaque white overlay");
 assert(/function staticFallbackSignal/m.test(html), "disabled animations should keep non-motion feedback");
 assert(/class TimelineAnimation/m.test(html), "animations should use serializable timeline objects");
 assert(/MAX_ANIMATION_DELTA_MS\s*=\s*200/m.test(html), "animation delta time should be capped after tab refocus");
@@ -1101,12 +1105,13 @@ assert(/本项目永久免费对外开放/.test(html), "announcement should incl
 assert(/STARTUP_ANNOUNCEMENT_AUTO_HIDE_MS\s*=\s*3000/m.test(html), "announcement should auto-hide after 3 seconds");
 assert(/function showStartupAnnouncement/m.test(html), "announcement should be controlled by a startup function");
 assert(/id="announcementCloseButton"/m.test(html), "announcement should include a minimal close control");
-assert(/World Build v1\.0\.9/m.test(html) || /GAME_VERSION\s*=\s*"v1\.0\.9"/m.test(html), "game version should increment when shipping a new update");
+assert(/World Build v1\.0\.10/m.test(html) || /GAME_VERSION\s*=\s*"v1\.0\.10"/m.test(html), "game version should increment when shipping a new update");
 assert(/UPDATE_HISTORY\s*=\s*Object\.freeze\(\[[\s\S]*v1\.0\.1[\s\S]*零基础新手指引[\s\S]*v1\.0\.0[\s\S]*手机端适配/m.test(html), "update history should keep detailed previous release notes");
 assert(/id="updateHistoryList"/m.test(html) && /历史更新内容/m.test(html), "side menu should expose update history with detailed usage-visible notes");
-assert(/GAME_VERSION\s*=\s*"v1\.0\.9"/m.test(html), "game version should increment for the course-path and UI stability release");
+assert(/GAME_VERSION\s*=\s*"v1\.0\.10"/m.test(html), "game version should increment for the anti-white-flash stability release");
+assert(/UPDATE_HISTORY\s*=\s*Object\.freeze\(\[[\s\S]*v1\.0\.10[\s\S]*防白屏高档位白色闪烁修复[\s\S]*camera\.flash[\s\S]*纯白背景/m.test(html), "update history should record the v1.0.10 anti-white-flash release");
+assert(/UPDATE_ANNOUNCEMENT_PAGES\s*=\s*Object\.freeze\(\[[\s\S]*防白屏[\s\S]*白闪[\s\S]*青金扫光[\s\S]*不会再像白屏一样频繁闪烁/m.test(html), "startup announcement should describe the v1.0.10 white-flicker fix");
 assert(/UPDATE_HISTORY\s*=\s*Object\.freeze\(\[[\s\S]*v1\.0\.9[\s\S]*官网课程路径对齐[\s\S]*develop\.fan[\s\S]*弹窗收起后显示具体折叠对象名称[\s\S]*手机软键盘/m.test(html), "update history should record the v1.0.9 course path and UI stability release");
-assert(/UPDATE_ANNOUNCEMENT_PAGES\s*=\s*Object\.freeze\(\[[\s\S]*develop\.fan[\s\S]*C 语言学习路径[\s\S]*编译失败不再清空玩家代码[\s\S]*软键盘/m.test(html), "startup announcement should describe the v1.0.9 course path and UI stability release");
 assert(/UPDATE_HISTORY\s*=\s*Object\.freeze\(\[[\s\S]*v1\.0\.8[\s\S]*性能保护降噪、透明引导[\s\S]*12秒滚动窗口[\s\S]*15秒无操作/m.test(html), "update history should record the v1.0.8 guidance and performance quieting release");
 assert(/UPDATE_HISTORY\s*=\s*Object\.freeze\(\[[\s\S]*v1\.0\.7[\s\S]*稳定档位移除中档[\s\S]*renderQuality=medium/m.test(html), "update history should record the v1.0.7 stable quality cleanup");
 assert(/UPDATE_HISTORY\s*=\s*Object\.freeze\(\[[\s\S]*性能保护[\s\S]*低于18FPS[\s\S]*是否需要帮助[\s\S]*手机版隐藏右下角“点击开始”音频按钮/m.test(html), "history should retain the v1.0.8 guidance and performance quieting release");

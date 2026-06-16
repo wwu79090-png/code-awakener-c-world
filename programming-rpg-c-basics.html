@@ -11,7 +11,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; base-uri 'self'; object-src 'none'; frame-ancestors 'none'; script-src 'self' https://cdn.jsdelivr.net 'nonce-code-awakener-inline' 'sha256-ZIFL55L8dDFG+a85E/i+wAkxGMqp8eX0jCPJo/J6RbQ='; style-src 'self' https://cdn.jsdelivr.net https://fonts.googleapis.com 'nonce-code-awakener-inline' 'sha256-2E0PXa3p7Q8cfymMbQ0Smheqy7U5qtJQUpH628ZJXuk='; style-src-attr 'unsafe-inline'; font-src 'self' https://cdn.jsdelivr.net https://fonts.gstatic.com data:; img-src 'self' data: blob:; media-src 'self' data: blob:; worker-src 'self' blob:; child-src 'self' blob:; connect-src 'self' https://cdn.jsdelivr.net http://localhost:8000 http://127.0.0.1:8000;">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; base-uri 'self'; object-src 'none'; frame-ancestors 'none'; script-src 'self' https://cdn.jsdelivr.net 'nonce-code-awakener-inline' 'sha256-YnWIywSUQ5YLodqj+sZeZ82VxDyWYjLOVrdXslYY8wU='; style-src 'self' https://cdn.jsdelivr.net https://fonts.googleapis.com 'nonce-code-awakener-inline' 'sha256-2eOe5/hsIEBqNF690nc9mHyaJLSByaaT7YhrpgRsEHQ='; style-src-attr 'unsafe-inline'; font-src 'self' https://cdn.jsdelivr.net https://fonts.gstatic.com data:; img-src 'self' data: blob:; media-src 'self' data: blob:; worker-src 'self' blob:; child-src 'self' blob:; connect-src 'self' https://cdn.jsdelivr.net http://localhost:8000 http://127.0.0.1:8000;">
   <title>编程学习 RPG：C 语言启航村</title>
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%23020617'/%3E%3Cpath d='M22 20 10 32l12 12M42 20l12 12-12 12' fill='none' stroke='%2300ff88' stroke-width='6' stroke-linecap='round' stroke-linejoin='round'/%3E%3Cpath d='m36 16-8 32' stroke='%2300ccff' stroke-width='5' stroke-linecap='round'/%3E%3C/svg%3E">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/firacode@6.2.0/distr/fira_code.css">
@@ -504,8 +504,11 @@
       inset: 0;
       z-index: 61;
       pointer-events: none;
-      background: white;
+      background:
+        radial-gradient(circle at 50% 46%, rgba(250, 204, 21, 0.16), transparent 38%),
+        linear-gradient(90deg, transparent, rgba(56, 189, 248, 0.18), transparent);
       opacity: 0;
+      mix-blend-mode: screen;
     }
 
     #questFlash.active {
@@ -514,7 +517,7 @@
 
     @keyframes questFlash {
       0% { opacity: 0; }
-      18% { opacity: 0.7; }
+      18% { opacity: 0.34; }
       100% { opacity: 0; }
     }
 
@@ -7094,7 +7097,10 @@
       inset: 0;
       z-index: 96;
       pointer-events: none;
-      background: #e5f7ff;
+      background:
+        radial-gradient(circle at 50% 50%, rgba(125, 211, 252, 0.28), transparent 44%),
+        rgba(2, 6, 23, 0.18);
+      mix-blend-mode: screen;
       opacity: 0;
     }
 
@@ -7338,7 +7344,7 @@
 
     @keyframes screenPowerFlash {
       0% { opacity: 0; }
-      32% { opacity: 0.82; }
+      32% { opacity: 0.36; }
       100% { opacity: 0; }
     }
 
@@ -9817,7 +9823,7 @@
       <canvas id="menuFxCanvas" width="1280" height="720"></canvas>
       <div class="main-menu-card glass-panel">
         <h1 class="game-logo">CODE AWAKENER<br>C 语言启航村</h1>
-        <div class="version-label" id="versionLabel">World Build v1.0.9 · develop.fan C Basics</div>
+        <div class="version-label" id="versionLabel">World Build v1.0.10 · develop.fan C Basics</div>
         <label class="boot-command"><span>&gt;</span><input id="bootCommandInput" value="start_game.exe" autocomplete="off" spellcheck="false" aria-label="启动命令"></label>
         <label class="skin-picker">角色外观
           <select id="skinSelect" aria-label="选择主角外观">
@@ -11176,25 +11182,25 @@ int main() {
     const SAVE_SIGNATURE_SALT = "c-world-local-integrity";
     const SAVE_CLEAR_CONFIRM_MS = 3000;
     const STARTUP_ANNOUNCEMENT_AUTO_HIDE_MS = 3000;
-    const GAME_VERSION = "v1.0.9";
+    const GAME_VERSION = "v1.0.10";
     const UPDATE_ANNOUNCEMENT_PAGES = Object.freeze([
       {
         title: "> 消息 / 本次更新",
         lines: [
           "// 作者：杀戮",
-          "// 本次更新：主线关卡严格对齐 develop.fan 的 C 语言学习路径。",
-          "// 新增 C语言概述、基础语法正式节点，后续章节按官网大纲顺序推进。",
-          "// 修复积木模式误套所有关卡的问题，非积木关卡恢复正常编辑器。",
-          "// 编译失败不再清空玩家代码，方便按提示继续修改。"
+          "// 本次更新：修复防白屏/稳定档位越高越白闪的问题。",
+          "// 高档位不再调用 Phaser 全屏白色 flash，改为低透明青金扫光。",
+          "// 任务完成、基础碎片脉冲、编译铺路与终章庆祝都降低闪光强度。",
+          "// 画面仍有反馈，但不会再像白屏一样频繁闪烁。"
         ]
       },
       {
-        title: "> 更新内容 / 视觉与手机",
+        title: "> 更新内容 / 稳定性",
         lines: [
-          "// 顶部绝对引导只保留一条当前步骤，不再三条并排遮挡画面。",
-          "// 所有可折叠弹窗收起后显示具体名称，并支持拖动到合适位置。",
-          "// 修复通用折叠样式导致弹窗定位错乱、画面元素跑到顶部的问题。",
-          "// 手机软键盘弹出时，编辑器会贴合可视区域，不再被输入法顶飞。"
+          "// 防白屏稳定档位仍保留低/高两档，不再通过白色闪屏提示状态。",
+          "// DOM 白闪层改为半透明玻璃光波，透明度大幅降低。",
+          "// 新增回归测试，禁止再直接使用 camera.flash 导致整屏刷白。",
+          "// 保留上一版 develop.fan C 语言路径、手机编辑器和弹窗折叠修复。"
         ]
       },
       {
@@ -11217,6 +11223,18 @@ int main() {
       }
     ]);
     const UPDATE_HISTORY = Object.freeze([
+      {
+        version: "v1.0.10",
+        date: "2026-06-16",
+        title: "防白屏高档位白色闪烁修复",
+        details: [
+          "修复防白屏/稳定档位调高后画面白色闪烁更强的问题。",
+          "移除 Phaser camera.flash 全屏白闪调用，统一改为低透明青金色柔和扫光。",
+          "任务完成、基础碎片脉冲和屏幕电源闪烁层不再使用纯白背景。",
+          "编译铺路、世界进化里程碑、编译之门通过反馈仍保留视觉确认，但不再刷白整个画面。",
+          "新增测试约束，后续代码不得重新引入全屏白色 camera.flash。"
+        ]
+      },
       {
         version: "v1.0.9",
         date: "2026-06-16",
@@ -11983,7 +12001,7 @@ return 0;`;
       directSaveAs: "reduced-by-inline-resources"
     });
     const SECURITY_CONFIG = Object.freeze({
-      expectedScriptHash: "RqfOwZVaNzpDyUo8ZJBXf3ZcG26/SOT02+VDC3a3nMI=",
+      expectedScriptHash: "KOxd8C4xTirG+XIgLy5gKrO/GIllfQ9PS1DUxIFS/rI=",
       selfCheckIntervalMs: 45000,
       tamperRefreshMs: 5000,
       devToolsRefreshMs: 2000,
@@ -24171,6 +24189,32 @@ ${item.code}
       return true;
     }
 
+    function playSoftSceneWash(scene, {
+      color = 0x38bdf8,
+      duration = 260,
+      alpha = 0.16,
+      label = "soft-scene-wash"
+    } = {}) {
+      if (!scene?.add || !limitFlashFrequency()) return false;
+      const camera = scene.cameras?.main;
+      const width = Math.max(1, camera?.width || scene.scale?.width || window.innerWidth || 1280);
+      const height = Math.max(1, camera?.height || scene.scale?.height || window.innerHeight || 720);
+      const softAlpha = gameState.settings.animationQuality === ANIMATION_QUALITY.reduced ? Math.min(alpha, 0.08) : alpha;
+      const wash = scene.add.rectangle(width / 2, height / 2, width, height, color, softAlpha)
+        .setDepth(999)
+        .setScrollFactor(0)
+        .setBlendMode(Phaser.BlendModes.ADD);
+      scene.tweens?.add?.({
+        targets: wash,
+        alpha: 0,
+        duration,
+        ease: "Sine.easeOut",
+        onComplete: () => wash.destroy()
+      });
+      trackedSetTimeout(() => wash?.destroy?.(), duration + 120, label);
+      return true;
+    }
+
     function syncAnimationAudioEvents(animation, percent, elapsedMs, deltaMs) {
       if (!animation?.audioEvents?.length) return;
       animation.audioEvents.forEach((event) => {
@@ -25750,7 +25794,7 @@ ${item.code}
       }
 
       playScreenPulse(scene, profile) {
-        if (profile.flash) scene?.cameras?.main?.flash?.(220, 250, 204, 21);
+        if (profile.flash) playSoftSceneWash(scene, { color: 0xfacc15, duration: 220, alpha: 0.12, label: "road-soft-wash" });
         audioManager.tone(128, 0.36, "triangle", profile.flash ? 0.06 : 0.035);
         return true;
       }
@@ -25763,7 +25807,7 @@ ${item.code}
         this.drawPathGraphics(scene, points, style, profile);
         this.drawRoadGlyphs(scene, points, style, profile);
         if (profile.particles) this.spawnRoadDust(scene, points, style);
-        if (profile.flash) scene.cameras?.main?.flash?.(220, 250, 204, 21);
+        if (profile.flash) playSoftSceneWash(scene, { color: 0xfacc15, duration: 220, alpha: 0.1, label: "road-draw-soft-wash" });
         return true;
       }
 
@@ -34814,7 +34858,7 @@ ${item.code}
         showTerminalBurst(`> ${cinematicStage.title}\n${cinematicStage.line}`);
       }
       if (safeMilestone >= 100 || options.replay) {
-        scene.cameras?.main?.flash?.(360, 250, 244, 170);
+        playSoftSceneWash(scene, { color: 0xfacc15, duration: 360, alpha: 0.14, label: "world-evolution-soft-wash" });
         if (gameState.settings.shake) scene.cameras?.main?.shake?.(260, 0.006);
       } else if (gameState.settings.shake) {
         scene.cameras?.main?.shake?.(90, 0.002);
@@ -36466,7 +36510,7 @@ ${item.code}
         if (!gate || !gate.active) return;
         gate.setTint(0x3be477);
         tutorialAnimationManager.trigger("T11_GATE_TRAVERSE", { scene: this, chapterId, gate });
-        this.cameras.main.flash(180, 104, 255, 171);
+        playSoftSceneWash(this, { color: 0x68ffab, duration: 180, alpha: 0.12, label: "gate-clear-soft-wash" });
         if (gameState.settings.shake) this.cameras.main.shake(190, 0.006);
         playGateTransitionTimeline(this, chapterId);
         const sx = (gate.x - this.cameras.main.worldView.x) * this.cameras.main.zoom;
