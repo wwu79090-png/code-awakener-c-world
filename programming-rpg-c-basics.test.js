@@ -807,9 +807,7 @@ assert(/ACCESSIBILITY_PROFILES\s*=\s*Object\.freeze/m.test(html), "accessibility
 assert(/function applyAccessibilityProfile/m.test(html), "accessibility mode should be applied at runtime");
 assert(/id="accessibilityModeSelect"/m.test(html), "settings should expose an accessibility mode selector");
 assert(/function showIdeTooltip/m.test(html), "tutorial hints should use IDE-like tooltips");
-assert(/class DevConsole/m.test(html), "developer console should support runtime debugging commands");
-assert(/id="devConsoleOverlay"/m.test(html), "developer console overlay should exist");
-assert(/function toggleDevConsole/m.test(html), "developer console should be toggleable");
+assert(!/id="devConsoleOverlay"|commands:[^\n]*set door_locked|commands:[^\n]*tp x y|commands:[^\n]*editor\.enable\(\)|commands:[^\n]*saveMapJson\(\)/m.test(html), "player build should not expose hidden developer console cheat commands");
 assert(/function loadWorldPack/m.test(html), "world registry should support lazy world-pack loading");
 assert(/worldPacks\s*:\s*new\s+Map/m.test(html), "world registry should track world packs independently");
 assert(/VISUAL_REGRESSION_TARGETS\s*=\s*Object\.freeze/m.test(html), "visual regression targets should be documented in code");
@@ -869,8 +867,7 @@ assert(/function toggleDebugOverlay/m.test(html), "F2 should toggle a debug over
 assert(/function captureDebugScreenshot/m.test(html), "F3 should capture and download a screenshot");
 assert(/id="debugOverlay"/m.test(html), "debug overlay should exist");
 assert(/class WorldEditor/m.test(html), "developer console should expose a world editor mode");
-assert(/editor\.enable\(\)/m.test(html), "developer console should support editor.enable()");
-assert(/function saveMapJson/m.test(html), "world editor should be able to export map JSON");
+assert(!/data-menu-action="skip"|跳关|一键通关/m.test(html), "player build should not expose skip-level or one-click-clear actions");
 assert(/class AnimationManager/m.test(html), "animations should be centrally registered and quality-aware");
 assert(/ANIMATION_QUALITY\s*=\s*Object\.freeze/m.test(html), "animation intensity should support full/reduced/off modes");
 assert(/id="animationQualitySelect"/m.test(html), "settings should expose animation intensity");
@@ -1064,6 +1061,9 @@ assert(/本项目永久免费对外开放/.test(html), "announcement should incl
 assert(/STARTUP_ANNOUNCEMENT_AUTO_HIDE_MS\s*=\s*3000/m.test(html), "announcement should auto-hide after 3 seconds");
 assert(/function showStartupAnnouncement/m.test(html), "announcement should be controlled by a startup function");
 assert(/id="announcementCloseButton"/m.test(html), "announcement should include a minimal close control");
+assert(/GAME_VERSION\s*=\s*"v1\.0\.1"/m.test(html), "game version should increment when shipping a new update");
+assert(/UPDATE_HISTORY\s*=\s*Object\.freeze\(\[[\s\S]*v1\.0\.1[\s\S]*零基础新手指引[\s\S]*v1\.0\.0[\s\S]*手机端适配/m.test(html), "update history should keep detailed previous release notes");
+assert(/id="updateHistoryList"/m.test(html) && /历史更新内容/m.test(html), "side menu should expose update history with detailed usage-visible notes");
 assert(/id="worldSelectOverlay"/m.test(html), "start game should open a world-select overlay");
 assert(/id="worldCardsGrid"/m.test(html), "world-select overlay should render world cards into a grid");
 assert(/WORLD_SELECT_CONFIG\s*=\s*Object\.freeze/m.test(html), "world select data should be centralized");
@@ -1607,7 +1607,7 @@ assert(/function generateWorldEvolutionShareCard/m.test(html) && /function copyW
 assert(/function requestWorldEvolutionMicrophone/m.test(html) && /function requestWorldEvolutionCamera/m.test(html), "privacy-gated microphone and camera hooks should exist");
 assert(/WORLD_EVOLUTION_QUANTUM_BRANCHES\s*=\s*Object\.freeze/m.test(html) && /function switchWorldEvolutionQuantumBranch/m.test(html), "world evolution should support quantum branch switching");
 assert(/function broadcastWorldEvolutionSync/m.test(html) && /function handleWorldEvolutionStorageSync/m.test(html), "world evolution should support cross-tab localStorage communication");
-assert(/function toggleWorldEvolutionDevConsole/m.test(html), "world evolution should include the developer console hook");
+assert(!/id="worldEvolutionDevConsole"|WORLD_DEV_CONSOLE|worldEvolutionDevCompletion|worldEvolutionDevFragments/m.test(html), "world evolution should not expose a value-editing developer console in the player build");
 assert(/WORLD_EVOLUTION_WEATHER_THRESHOLDS\s*=\s*Object\.freeze/m.test(html), "world evolution should define completion-driven weather thresholds");
 assert(/WORLD_EVOLUTION_REGIONS\s*=\s*Object\.freeze/m.test(html) && /function switchWorldEvolutionRegion/m.test(html), "world evolution should unlock regions and switch camera views");
 assert(/WORLD_EVOLUTION_RANDOM_EVENTS\s*=\s*Object\.freeze/m.test(html) && /function maybeTriggerWorldEvolutionRandomEvent/m.test(html), "compile should be able to trigger random world events");
@@ -1631,6 +1631,25 @@ assert(/function grantGrowthExperience/m.test(html) && /function getPlayerGrowth
 assert(/function applyPlayerGrowthVisuals/m.test(html), "player visuals should evolve by level");
 assert(/function showLevelUpFeedback/m.test(html), "level-up should show a gold pulse feedback");
 assert(/infoExpText/m.test(html) && /infoCompileLivesText/m.test(html), "side info menu should show experience and compile lives");
+assert(/id="noviceGuideOverlay"/m.test(html), "zero-basis novice guide overlay should exist");
+assert(/id="replayNoviceGuideButton"/m.test(html), "side menu should include a replay novice guide button");
+assert(/NOVICE_GUIDE_STEPS\s*=\s*Object\.freeze\(\[[\s\S]*interface[\s\S]*demoVideo[\s\S]*guidedCode[\s\S]*compileFeedback[\s\S]*freeTry/m.test(html), "novice guide should define the required five-step flow");
+assert(/NOVICE_GUIDE_HELLO_CODE[\s\S]*printf\("Hello C!"\)/m.test(html), "novice guide should prefill the first runnable C program");
+assert(/id="noviceGuideVideoCanvas"/m.test(html) && /id="noviceGuideVideoPlayButton"/m.test(html) && /id="noviceGuideVideoProgress"/m.test(html), "novice guide should include a Canvas simulated video with controls");
+assert(/function drawNoviceGuideVideoFrame/m.test(html) && /function toggleNoviceGuideVideoPlayback/m.test(html), "novice guide simulated video should be Canvas-driven and controllable");
+assert(/function startNoviceGuide/m.test(html) && /function advanceNoviceGuideStep/m.test(html), "novice guide should have explicit start and step progression functions");
+assert(/noviceGuideCompleted/m.test(html) && /localStorage\.setItem\("noviceGuideCompleted"/m.test(html), "novice guide completion should persist to localStorage");
+assert(/safeRunEffect\("startupNoviceGuide"[\s\S]*maybeStartNoviceGuide/m.test(html), "first load should automatically enter novice guide mode");
+assert(/novice-guide-active[\s\S]*pointer-events:\s*none/m.test(html), "novice guide should lock unrelated world interactions during forced guidance");
+assert(/novice-guide-spotlight/m.test(html) && /novice-guide-arrow/m.test(html), "novice guide should visually highlight targets with arrows");
+assert(/novice-guide-hand-cursor/m.test(html), "guided code step should show an animated hand cursor");
+assert(/bindFastTouchAction\(dom\.noviceGuideVideoPlayButton[\s\S]*toggleNoviceGuideVideoPlayback/m.test(html), "novice guide simulated video should support touch play/pause");
+assert(/bindFastTouchAction\(dom\.replayNoviceGuideButton[\s\S]*startNoviceGuide/m.test(html), "replay novice guide button should restart the guide");
+assert(/compileAndAdvanceWorld[\s\S]*if \(gameState\.noviceGuideActive/m.test(html), "compile button should route through novice guide feedback while guidance is active");
+assert((html.match(/class="menu-help"/g) || []).length >= 18, "side menu should explain each major function with usage notes");
+assert(!/id="worldEvolutionDevButton"|开发者面板|id="worldEvolutionDevConsole"|WORLD_DEV_CONSOLE/.test(html), "player-facing menu should not expose developer value-editing or cheat panels");
+assert(!/id="testIslandToastButton"|测试弹窗/.test(html), "player-facing menu should not expose test-only toast tools");
+assert(/<strong>学习辅助<\/strong>[\s\S]*手动保存[\s\S]*重新观看指引/m.test(html), "utility section should keep player-safe learning actions only");
 
 assert(api.C_TUTORIAL_COURSE, "C tutorial course data should be exported for tests");
 assert(Array.isArray(api.C_TUTORIAL_COURSE) && api.C_TUTORIAL_COURSE.length === 8, "C tutorial course should contain exactly eight structured chapters");
