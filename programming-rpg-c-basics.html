@@ -11,7 +11,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; base-uri 'self'; object-src 'none'; frame-ancestors 'none'; script-src 'self' 'nonce-code-awakener-inline' 'sha256-Gedq4qOTjto87egJ2k2+53uJu0k73xpTPjNKGngw0OY='; style-src 'self' 'nonce-code-awakener-inline' 'sha256-DlaE08OOi6AJKJSeQ0IDjOj1/4y4GVZY2mb18DK/rLU='; style-src-attr 'unsafe-inline'; font-src 'self' data:; img-src 'self' data: blob:; media-src 'self' data: blob:; worker-src 'self' blob:; child-src 'self' blob:; connect-src 'self' http://localhost:8000 http://127.0.0.1:8000;">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; base-uri 'self'; object-src 'none'; frame-ancestors 'none'; script-src 'self' 'nonce-code-awakener-inline' 'sha256-Ki5BVjXttt+ZdWx+z7jZVqUelhGQbxqYFUxAZNZVeUw='; style-src 'self' 'nonce-code-awakener-inline' 'sha256-DlaE08OOi6AJKJSeQ0IDjOj1/4y4GVZY2mb18DK/rLU='; style-src-attr 'unsafe-inline'; font-src 'self' data:; img-src 'self' data: blob:; media-src 'self' data: blob:; worker-src 'self' blob:; child-src 'self' blob:; connect-src 'self' http://localhost:8000 http://127.0.0.1:8000;">
   <title>编程学习 RPG：C 语言启航村</title>
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%23020617'/%3E%3Cpath d='M22 20 10 32l12 12M42 20l12 12-12 12' fill='none' stroke='%2300ff88' stroke-width='6' stroke-linecap='round' stroke-linejoin='round'/%3E%3Cpath d='m36 16-8 32' stroke='%2300ccff' stroke-width='5' stroke-linecap='round'/%3E%3C/svg%3E">
   <script src="./vendor/phaser.min.js" integrity="sha384-Fi7F0CYQBHYa+s2vvYJeiqvOQf3tuZ28vafRGXvMt7ijxNTVf3+eXPkNRIUi9JD2"></script>
@@ -10144,7 +10144,7 @@
       <canvas id="menuFxCanvas" width="1280" height="720"></canvas>
       <div class="main-menu-card glass-panel">
         <h1 class="game-logo">CODE AWAKENER<br>C 语言启航村</h1>
-        <div class="version-label" id="versionLabel">World Build v1.0.26 · develop.fan C Basics</div>
+        <div class="version-label" id="versionLabel">World Build v1.0.27 · develop.fan C Basics</div>
         <label class="boot-command"><span>&gt;</span><input id="bootCommandInput" value="start_game.exe" autocomplete="off" spellcheck="false" aria-label="启动命令"></label>
         <nav class="menu-list" id="mainMenuList" aria-label="主菜单选项">
           <span id="menuHighlight" class="menu-highlight"></span>
@@ -10787,9 +10787,9 @@ int main(void) {
       <button id="announcementCloseButton" class="announcement-close" type="button" aria-label="关闭公告">×</button>
       <h2 id="startupAnnouncementTitle" class="startup-announcement-title">> 消息 / 本次更新</h2>
       <div id="announcementPageBody" class="startup-announcement-body">
-        <p>// v1.0.26：音乐升级与音效降噪热修复。</p>
-        <p>// BGM 改为动态段落、和弦回应、事件乐句和更长变化周期。</p>
-        <p>// 修复移动时脚步/数据足迹/音频导演重复触发导致的持续吵叫。</p>
+        <p>// v1.0.27：启动白屏/遮罩卡住热修复。</p>
+        <p>// 启动终端增加硬兜底，计时器被降频也会自动释放菜单。</p>
+        <p>// 修复界面像白屏、黑屏或一直停在启动层的问题。</p>
         <p>// 作者：杀戮，QQ：3424636983。</p>
         <p>// 官方Q群：414374792。</p>
         <p>// 作者：杀戮</p>
@@ -11282,22 +11282,32 @@ int main() {
     const SAVE_SIGNATURE_SALT = "c-world-local-integrity";
     const SAVE_CLEAR_CONFIRM_MS = 3000;
     const STARTUP_ANNOUNCEMENT_AUTO_HIDE_MS = 14000;
-    const GAME_VERSION = "v1.0.26";
+    const SYSTEM_BOOT_FORCE_RELEASE_MS = 3200;
+    const GAME_VERSION = "v1.0.27";
     const OFFICIAL_SITE_HREF = "./official-site.html";
     const UPDATE_ANNOUNCEMENT_PAGES = Object.freeze([
       {
         title: "> 消息 / 本次更新",
         lines: [
-          "// v1.0.26：音乐升级与音效降噪热修复。",
-          "// BGM 改为动态段落：主旋律、低音、反旋律、和弦回应和事件乐句会按场景变化。",
-          "// 拾取、编译、夜晚、危险状态会插入短乐句，不再只有单调循环。",
-          "// 修复脚步声、数据足迹和音频导演重复触发，移动时不再持续吵叫。",
-          "// UI 悬停、打字、脚步、环境噪声全部加入冷却和限幅，音乐保留存在感，音效退到背景。",
+          "// v1.0.27：启动白屏/遮罩卡住热修复。",
+          "// 启动终端现在有硬兜底，低性能、切后台或计时器降频时也会自动释放菜单。",
+          "// 修复玩家看到游戏界面像白屏、黑屏或一直停在启动层的问题。",
+          "// 同步保留 v1.0.26 的音乐动态段落、事件乐句、音效限幅和降噪。",
           "// 作者：杀戮，QQ：3424636983，官方Q群：414374792。"
         ]
       }
     ]);
     const UPDATE_HISTORY = Object.freeze([
+      {
+        version: "v1.0.27",
+        date: "2026-06-17",
+        title: "启动白屏遮罩热修复",
+        details: [
+          "启动终端增加硬兜底释放时间，逐字动画被浏览器降频、切后台或低性能保护打断时，也会自动关闭遮罩并显示主菜单。",
+          "修复线上进入游戏时界面像白屏、黑屏或卡在启动层的问题，避免菜单和公告被长期盖住。官方Q群：414374792。",
+          "保留 v1.0.26 的音乐特色升级、事件乐句、音效限幅和降噪混音。"
+        ]
+      },
       {
         version: "v1.0.26",
         date: "2026-06-17",
@@ -12384,7 +12394,7 @@ return 0;`;
       directSaveAs: "reduced-by-inline-resources"
     });
     const SECURITY_CONFIG = Object.freeze({
-      expectedScriptHash: "ZOSj3LkA41eBRzBtfXLDWAM2kN5SJpjk7HSVqVeZkqk=",
+      expectedScriptHash: "0vmyNghwLBV4gNSLPBYUp+AIecMSv20qrEA8su00RIY=",
       selfCheckIntervalMs: 45000,
       tamperRefreshMs: 5000,
       devToolsRefreshMs: 2000,
@@ -26560,6 +26570,7 @@ ${item.code}
 
     let systemBootLogController = null;
     let systemBootLogFinished = false;
+    let systemBootFailsafeTimer = null;
     let activeSystemLogController = null;
 
     function typeSystemLine(target, line, onDone, controller = null) {
@@ -26632,14 +26643,24 @@ ${item.code}
     function playSystemBootLog() {
       if (!dom.systemBootOverlay || !dom.systemBootText) return showStartupAnnouncement();
       systemBootLogFinished = false;
+      if (systemBootFailsafeTimer) timerTracker.clear(systemBootFailsafeTimer);
       dom.systemBootOverlay.classList.add("active");
       systemBootLogController = typeSystemLogLines(dom.systemBootText, SYSTEM_BOOT_LOG_LINES, finishSystemBootLog);
+      systemBootFailsafeTimer = trackedSetTimeout(() => {
+        if (!systemBootLogFinished && dom.systemBootOverlay?.classList.contains("active")) {
+          finishSystemBootLog();
+        }
+      }, SYSTEM_BOOT_FORCE_RELEASE_MS, "system-boot-force-release");
       return true;
     }
 
     function finishSystemBootLog() {
       if (systemBootLogFinished) return false;
       systemBootLogFinished = true;
+      if (systemBootFailsafeTimer) {
+        timerTracker.clear(systemBootFailsafeTimer);
+        systemBootFailsafeTimer = null;
+      }
       if (systemBootLogController) systemBootLogController.cancelled = true;
       closeSystemOverlay(dom.systemBootOverlay, showStartupAnnouncement);
       return true;
