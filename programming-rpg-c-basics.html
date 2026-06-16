@@ -11,7 +11,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; base-uri 'self'; object-src 'none'; frame-ancestors 'none'; script-src 'self' 'nonce-code-awakener-inline' 'sha256-6LbwQw34V6pRWb7OEZUr+DglLEN4O0kwtggT2cLmHU0='; style-src 'self' 'nonce-code-awakener-inline' 'sha256-DlaE08OOi6AJKJSeQ0IDjOj1/4y4GVZY2mb18DK/rLU='; style-src-attr 'unsafe-inline'; font-src 'self' data:; img-src 'self' data: blob:; media-src 'self' data: blob:; worker-src 'self' blob:; child-src 'self' blob:; connect-src 'self' http://localhost:8000 http://127.0.0.1:8000;">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; base-uri 'self'; object-src 'none'; frame-ancestors 'none'; script-src 'self' 'nonce-code-awakener-inline' 'sha256-Gedq4qOTjto87egJ2k2+53uJu0k73xpTPjNKGngw0OY='; style-src 'self' 'nonce-code-awakener-inline' 'sha256-DlaE08OOi6AJKJSeQ0IDjOj1/4y4GVZY2mb18DK/rLU='; style-src-attr 'unsafe-inline'; font-src 'self' data:; img-src 'self' data: blob:; media-src 'self' data: blob:; worker-src 'self' blob:; child-src 'self' blob:; connect-src 'self' http://localhost:8000 http://127.0.0.1:8000;">
   <title>编程学习 RPG：C 语言启航村</title>
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%23020617'/%3E%3Cpath d='M22 20 10 32l12 12M42 20l12 12-12 12' fill='none' stroke='%2300ff88' stroke-width='6' stroke-linecap='round' stroke-linejoin='round'/%3E%3Cpath d='m36 16-8 32' stroke='%2300ccff' stroke-width='5' stroke-linecap='round'/%3E%3C/svg%3E">
   <script src="./vendor/phaser.min.js" integrity="sha384-Fi7F0CYQBHYa+s2vvYJeiqvOQf3tuZ28vafRGXvMt7ijxNTVf3+eXPkNRIUi9JD2"></script>
@@ -10144,7 +10144,7 @@
       <canvas id="menuFxCanvas" width="1280" height="720"></canvas>
       <div class="main-menu-card glass-panel">
         <h1 class="game-logo">CODE AWAKENER<br>C 语言启航村</h1>
-        <div class="version-label" id="versionLabel">World Build v1.0.25 · develop.fan C Basics</div>
+        <div class="version-label" id="versionLabel">World Build v1.0.26 · develop.fan C Basics</div>
         <label class="boot-command"><span>&gt;</span><input id="bootCommandInput" value="start_game.exe" autocomplete="off" spellcheck="false" aria-label="启动命令"></label>
         <nav class="menu-list" id="mainMenuList" aria-label="主菜单选项">
           <span id="menuHighlight" class="menu-highlight"></span>
@@ -10230,7 +10230,7 @@
           <div class="settings-content">
             <section class="settings-section active" data-settings-section="audio">
               <h3 class="settings-section-title">Audio Mix</h3>
-              <p class="settings-section-desc">音乐、音效和环境声会实时混音，拉满时会比旧版本明显更响。</p>
+              <p class="settings-section-desc">音乐保持清晰靠前，音效已做瞬态限幅，避免短音叠加刺耳。</p>
               <label class="setting-row">主音量 <input id="masterVolumeSlider" type="range" min="0" max="140" step="1"> <span id="masterVolumeValue">100</span></label>
               <label class="setting-row">音乐音量 <input id="musicVolumeSlider" type="range" min="0" max="140" step="1"> <span id="musicVolumeValue">100</span></label>
               <label class="setting-row">音效音量 <input id="sfxVolumeSlider" type="range" min="0" max="140" step="1"> <span id="sfxVolumeValue">100</span></label>
@@ -10787,9 +10787,9 @@ int main(void) {
       <button id="announcementCloseButton" class="announcement-close" type="button" aria-label="关闭公告">×</button>
       <h2 id="startupAnnouncementTitle" class="startup-announcement-title">> 消息 / 本次更新</h2>
       <div id="announcementPageBody" class="startup-announcement-body">
-        <p>// v1.0.25：主线引导、碎片定位、NPC交互和音乐系统重整。</p>
-        <p>// 菜单只保留主线需要的信息，难度和外观改为创建角色后选择。</p>
-        <p>// 知识碎片新增图像和具体坐标，世界进度由碎片收集与编译自动推进。</p>
+        <p>// v1.0.26：音乐升级与音效降噪热修复。</p>
+        <p>// BGM 改为动态段落、和弦回应、事件乐句和更长变化周期。</p>
+        <p>// 修复移动时脚步/数据足迹/音频导演重复触发导致的持续吵叫。</p>
         <p>// 作者：杀戮，QQ：3424636983。</p>
         <p>// 官方Q群：414374792。</p>
         <p>// 作者：杀戮</p>
@@ -11183,8 +11183,28 @@ int main() {
       mount.innerHTML = '<div style="display:grid;place-items:center;width:100%;height:100%;padding:24px;background:#020617;color:#bbf7d0;font:14px/1.8 JetBrains Mono,monospace;text-align:center;">Phaser 渲染核心未加载成功。请检查网络或刷新页面，学习进度不会丢失。</div>';
     }
 
-    if (!globalThis.Phaser) {
-      globalThis.Phaser = {
+    const runtimeRoot = typeof window !== "undefined" ? window : (typeof self !== "undefined" ? self : globalThis);
+    const globalRoot = typeof globalThis !== "undefined" ? globalThis : runtimeRoot;
+
+    function publishGlobal(name, value) {
+      for (const target of [runtimeRoot, globalRoot, typeof self !== "undefined" ? self : null]) {
+        if (!target || target === runtimeRoot && target === globalRoot) continue;
+        try {
+          target[name] = value;
+        } catch (error) {
+          void error;
+        }
+      }
+      try {
+        runtimeRoot[name] = value;
+      } catch (error) {
+        void error;
+      }
+    }
+
+    let PhaserRuntime = runtimeRoot.Phaser || globalRoot.Phaser;
+    if (!PhaserRuntime) {
+      PhaserRuntime = {
         WEBGL: 1,
         CANVAS: 2,
         Scale: { FIT: 0, CENTER_BOTH: 0 },
@@ -11198,7 +11218,11 @@ int main() {
         Scene: class {},
         Game: class { constructor() { setTimeout(showPhaserMissingFallback, 0); } }
       };
+      publishGlobal("Phaser", PhaserRuntime);
+    } else {
+      publishGlobal("Phaser", PhaserRuntime);
     }
+    const Phaser = PhaserRuntime;
 
     const QUALITY_GATE_THRESHOLDS = Object.freeze({
       maxFunctionLines: 30,
@@ -11219,7 +11243,7 @@ int main() {
         return this.Modules[name];
       }
     }))();
-    globalThis.Game = Game;
+    publishGlobal("Game", Game);
 
     const NEON_CYBER_BOOK_STYLE = "vector-flat-neon-cyber-code-book";
     const PET_CLICK_COOLDOWN_MS = 500;
@@ -11258,23 +11282,33 @@ int main() {
     const SAVE_SIGNATURE_SALT = "c-world-local-integrity";
     const SAVE_CLEAR_CONFIRM_MS = 3000;
     const STARTUP_ANNOUNCEMENT_AUTO_HIDE_MS = 14000;
-    const GAME_VERSION = "v1.0.25";
+    const GAME_VERSION = "v1.0.26";
     const OFFICIAL_SITE_HREF = "./official-site.html";
     const UPDATE_ANNOUNCEMENT_PAGES = Object.freeze([
       {
         title: "> 消息 / 本次更新",
         lines: [
-          "// v1.0.25：主线引导、碎片定位、NPC交互和音乐系统重整。",
-          "// 菜单只保留当前任务、碎片位置、手动保存和游戏设置；历史版本改到主菜单查看。",
-          "// 难度和外观改为创建角色后立即选择，不再塞在局内菜单里。",
-          "// 每个记忆碎片都有图像、关键词、章节和具体坐标，隐藏代码块不再靠猜。",
-          "// 世界进度由碎片收集与编译自动推进，空格键和菜单不再触发手动进化。",
-          "// NPC 交互先选择交流、任务、商店或线索，音乐加入分段主题和事件变奏。",
+          "// v1.0.26：音乐升级与音效降噪热修复。",
+          "// BGM 改为动态段落：主旋律、低音、反旋律、和弦回应和事件乐句会按场景变化。",
+          "// 拾取、编译、夜晚、危险状态会插入短乐句，不再只有单调循环。",
+          "// 修复脚步声、数据足迹和音频导演重复触发，移动时不再持续吵叫。",
+          "// UI 悬停、打字、脚步、环境噪声全部加入冷却和限幅，音乐保留存在感，音效退到背景。",
           "// 作者：杀戮，QQ：3424636983，官方Q群：414374792。"
         ]
       }
     ]);
     const UPDATE_HISTORY = Object.freeze([
+      {
+        version: "v1.0.26",
+        date: "2026-06-17",
+        title: "音乐特色升级与音效降噪",
+        details: [
+          "BGM 改为动态段落调度，主旋律、低音、反旋律、和弦回应和事件乐句会随探索、解谜、战斗、夜晚状态变化。",
+          "拾取碎片、编译成功、编译失败、昼夜切换会插入更完整的短乐句，减少固定循环造成的单调感。",
+          "修复移动时脚步声、数据足迹音效和音频导演石头脚步重复叠加的问题，解决音效一直吵叫。官方Q群：414374792。",
+          "UI 悬停、打字、脚步、环境噪声加入冷却和增益限幅，保留反馈但不再压过音乐。"
+        ]
+      },
       {
         version: "v1.0.25",
         date: "2026-06-17",
@@ -11750,6 +11784,10 @@ int main() {
     const BGM_DUCK_DB = -8;
     const BGM_SECTION_STEPS = 32;
     const BGM_VARIATION_QUEUE_MAX = 8;
+    const BGM_DYNAMIC_SWING_MS = 54;
+    const AUDIO_FOOTSTEP_COOLDOWN_MS = 420;
+    const AUDIO_HOVER_COOLDOWN_MS = 180;
+    const AUDIO_TYPE_COOLDOWN_MS = 42;
     const ADAPTIVE_BGM_THEMES = Object.freeze({
       town: Object.freeze([
         Object.freeze({
@@ -11784,6 +11822,17 @@ int main() {
           bassWave: "sine",
           counterEvery: 5,
           accentEvery: 4
+        }),
+        Object.freeze({
+          name: "html-skyline",
+          melody: [523, 587, 659, 784, 880, 784, 659, 587, 523, 494, 440, 494, 523, 659, 587, 523],
+          bass: [131, 165, 196, 147],
+          counter: [1047, 988, 880, 784, 659],
+          interval: 440,
+          wave: "sine",
+          bassWave: "triangle",
+          counterEvery: 4,
+          accentEvery: 7
         })
       ]),
       puzzle: Object.freeze([
@@ -11808,6 +11857,17 @@ int main() {
           bassWave: "triangle",
           counterEvery: 6,
           accentEvery: 5
+        }),
+        Object.freeze({
+          name: "pointer-maze",
+          melody: [196, 220, 247, 330, 294, 247, 220, 196, 165, 196, 247, 294, 330, 392, 330, 294],
+          bass: [49, 65, 73, 82],
+          counter: [392, 494, 587, 494],
+          interval: 360,
+          wave: "triangle",
+          bassWave: "sine",
+          counterEvery: 5,
+          accentEvery: 6
         })
       ]),
       battle: Object.freeze([
@@ -11821,6 +11881,17 @@ int main() {
           bassWave: "square",
           counterEvery: 3,
           accentEvery: 2
+        }),
+        Object.freeze({
+          name: "overflow-break",
+          melody: [392, 466, 587, 698, 587, 523, 466, 392, 330, 392, 466, 523, 659, 587, 466, 392],
+          bass: [73, 98, 82, 110],
+          counter: [784, 698, 659, 587],
+          interval: 285,
+          wave: "sawtooth",
+          bassWave: "triangle",
+          counterEvery: 4,
+          accentEvery: 3
         })
       ]),
       night: Object.freeze([
@@ -11834,6 +11905,17 @@ int main() {
           bassWave: "sine",
           counterEvery: 8,
           accentEvery: 9
+        }),
+        Object.freeze({
+          name: "star-array",
+          melody: [330, 392, 440, 523, 494, 440, 392, 330, 294, 330, 392, 440, 523, 587, 523, 440],
+          bass: [65, 82, 98, 73],
+          counter: [659, 587, 523, 494],
+          interval: 560,
+          wave: "sine",
+          bassWave: "sine",
+          counterEvery: 6,
+          accentEvery: 10
         })
       ])
     });
@@ -12302,7 +12384,7 @@ return 0;`;
       directSaveAs: "reduced-by-inline-resources"
     });
     const SECURITY_CONFIG = Object.freeze({
-      expectedScriptHash: "61AtoVrELtH7+9MRMPhvLq68xIE7m+KRiHSpzj+7BG4=",
+      expectedScriptHash: "ZOSj3LkA41eBRzBtfXLDWAM2kN5SJpjk7HSVqVeZkqk=",
       selfCheckIntervalMs: 45000,
       tamperRefreshMs: 5000,
       devToolsRefreshMs: 2000,
@@ -12720,6 +12802,42 @@ return 0;`;
         return fallback;
       }
     }
+
+    function createSafeLocalStorage() {
+      try {
+        if (typeof window !== "undefined" && window.localStorage) return window.localStorage;
+      } catch (error) {
+        void error;
+      }
+      try {
+        if (typeof globalThis !== "undefined" && globalThis.localStorage) return globalThis.localStorage;
+      } catch (error) {
+        void error;
+      }
+      const memoryStore = new Map();
+      return {
+        getItem(key) {
+          return memoryStore.has(String(key)) ? memoryStore.get(String(key)) : null;
+        },
+        setItem(key, value) {
+          memoryStore.set(String(key), String(value));
+        },
+        removeItem(key) {
+          memoryStore.delete(String(key));
+        },
+        key(index) {
+          return Array.from(memoryStore.keys())[index] ?? null;
+        },
+        clear() {
+          memoryStore.clear();
+        },
+        get length() {
+          return memoryStore.size;
+        }
+      };
+    }
+
+    const localStorage = createSafeLocalStorage();
 
     function enforceDomNodeLimit(container, maxNodes = QUALITY_GATE_THRESHOLDS.maxDomLogNodes) {
       if (!container?.children) return 0;
@@ -14513,7 +14631,7 @@ return 0;`;
       if (!scene?.player || config.particleScale <= 0 || !gameState.settings.particles) {
         return { enabled: false, particleScale: 0, alphaScale: 0, sizeScale: 0 };
       }
-      const distance = globalThis.Phaser?.Math?.Distance?.Between?.(scene.player.x, scene.player.y, x, y) ?? 0;
+      const distance = Phaser?.Math?.Distance?.Between?.(scene.player.x, scene.player.y, x, y) ?? 0;
       if (distance > 20 * 48) return { enabled: false, particleScale: 0, alphaScale: 0, sizeScale: 0 };
       if (distance > 10 * 48) return { enabled: true, particleScale: config.particleScale * 0.3, alphaScale: 0.3, sizeScale: 0.3 };
       return { enabled: true, particleScale: config.particleScale, alphaScale: 1, sizeScale: 1 };
@@ -15917,16 +16035,21 @@ return 0;`;
         this.noteIndex = 0;
         this.bgmSectionOffset = Math.floor(Math.random() * 3);
         this.bgmVariationQueue = [];
+        this.activeBgmVariation = null;
         this.lastStepAt = 0;
+        this.lastUiHoverAt = 0;
+        this.lastTypeAt = 0;
         this.lastBgmPingAt = 0;
         this.lastMusicResumeAt = 0;
         this.bufferPool = new AudioBufferPool();
         this.wantMusic = false;
         this.masterBaseGain = 0.52;
-        this.musicBusScale = 1.7;
-        this.sfxBusScale = 2;
-        this.musicEventGain = 1.5;
-        this.sfxEventGain = 2;
+        this.musicBusScale = 1.62;
+        this.sfxBusScale = 0.32;
+        this.musicEventGain = 1.05;
+        this.sfxEventGain = 0.38;
+        this.lastBrightSfxAt = 0;
+        this.lastNoiseSfxAt = 0;
         this.editorAudioFocus = false;
         this.audioDisabled = window.location?.search?.includes("noAudio=true") || Boolean(typeof navigator !== "undefined" && navigator.webdriver);
       }
@@ -15952,16 +16075,23 @@ return 0;`;
           this.ctx = new AudioContextClass();
           this.master = this.ctx.createGain();
           this.filter = this.ctx.createBiquadFilter();
+          this.limiter = this.ctx.createDynamicsCompressor();
           this.musicBus = this.ctx.createGain();
           this.sfxBus = this.ctx.createGain();
           this.filter.type = "lowpass";
-          this.filter.frequency.value = 3200;
+          this.filter.frequency.value = 3900;
+          this.limiter.threshold.value = -18;
+          this.limiter.knee.value = 18;
+          this.limiter.ratio.value = 12;
+          this.limiter.attack.value = 0.004;
+          this.limiter.release.value = 0.18;
           this.master.gain.value = this.masterBaseGain;
           this.musicBus.gain.value = 1;
           this.sfxBus.gain.value = 1;
           this.musicBus.connect(this.filter);
           this.sfxBus.connect(this.filter);
-          this.filter.connect(this.master);
+          this.filter.connect(this.limiter);
+          this.limiter.connect(this.master);
           this.master.connect(this.ctx.destination);
           this.createMusicLayers();
           this.applyVolumes();
@@ -15994,8 +16124,8 @@ return 0;`;
         const music = Math.max(0, Math.min(1.4, gameState.settings.musicVolume / 100));
         const sfx = Math.max(0, Math.min(1.4, gameState.settings.sfxVolume / 100));
         this.master.gain.value = this.masterBaseGain * master;
-        if (this.musicBus) this.musicBus.gain.value = Math.min(2.6, music * this.musicBusScale);
-        if (this.sfxBus) this.sfxBus.gain.value = Math.min(2.8, sfx * this.sfxBusScale);
+        if (this.musicBus) this.musicBus.gain.value = Math.min(2.1, music * this.musicBusScale);
+        if (this.sfxBus) this.sfxBus.gain.value = Math.min(0.46, sfx * this.sfxBusScale);
         this.applyMusicLayerMix(this.bgmMode, this.editorAudioFocus);
         this.proceduralMusic?.applyVolume?.();
       }
@@ -16038,7 +16168,15 @@ return 0;`;
         osc.frequency.setValueAtTime(frequency, ctx.currentTime);
         const levelScale = channel === "music" ? this.musicEventGain : this.sfxEventGain;
         const sliderScale = channel === "music" ? 1 : gameState.settings.sfxVolume / 100;
-        gain.gain.setValueAtTime(Math.min(0.99, gainValue * levelScale * sliderScale), ctx.currentTime);
+        let adjustedGain = gainValue * levelScale * sliderScale;
+        if (channel !== "music") {
+          const now = performance.now();
+          if (frequency >= 900 && now - this.lastBrightSfxAt < 120) return;
+          if (frequency >= 900) this.lastBrightSfxAt = now;
+          if (type === "sawtooth" || type === "square") adjustedGain *= 0.58;
+        }
+        const cap = channel === "music" ? 0.28 : 0.032;
+        gain.gain.setValueAtTime(Math.min(cap, adjustedGain), ctx.currentTime);
         gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + duration);
         osc.connect(gain);
         if (panner) {
@@ -16072,7 +16210,13 @@ return 0;`;
         source.buffer = buffer;
         const outputScale = outputChannel === "music" ? this.musicEventGain : this.sfxEventGain;
         const sliderScale = outputChannel === "music" ? 1 : gameState.settings.sfxVolume / 100;
-        gain.gain.setValueAtTime(Math.min(0.99, gainValue * outputScale * sliderScale), ctx.currentTime);
+        if (outputChannel !== "music") {
+          const now = performance.now();
+          if (now - this.lastNoiseSfxAt < 110) return;
+          this.lastNoiseSfxAt = now;
+        }
+        const cap = outputChannel === "music" ? 0.14 : 0.014;
+        gain.gain.setValueAtTime(Math.min(cap, gainValue * outputScale * sliderScale), ctx.currentTime);
         gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + duration);
         source.connect(gain);
         if (panner) {
@@ -16107,9 +16251,10 @@ return 0;`;
       }
 
       stopBgm() {
-        if (this.bgmTimer) window.clearInterval(this.bgmTimer);
+        if (this.bgmTimer) window.clearTimeout(this.bgmTimer);
         this.bgmTimer = null;
         this.wantMusic = false;
+        this.activeBgmVariation = null;
       }
 
       recoverMusicContext() {
@@ -16137,9 +16282,10 @@ return 0;`;
         const ctx = this.ensureContext();
         if (!ctx || !this.filter || !this.master) return;
         const clamped = Math.max(0, Math.min(1, intensity));
-        this.filter.frequency.setTargetAtTime(1800 + clamped * 2200, ctx.currentTime, 0.18);
+        this.filter.frequency.setTargetAtTime(2100 + clamped * 2600, ctx.currentTime, 0.18);
+        const master = Math.max(0, Math.min(1.4, gameState.settings.masterVolume / 100));
         this.master.gain.setTargetAtTime(
-          (0.24 + clamped * 0.08) * (gameState.settings.masterVolume / 100),
+          this.masterBaseGain * (0.9 + clamped * 0.18) * master,
           ctx.currentTime,
           0.18
         );
@@ -16153,9 +16299,30 @@ return 0;`;
       }
 
       getAdaptiveBgmSection(mode = this.bgmMode) {
+        if (this.activeBgmVariation?.remaining > 0) {
+          this.activeBgmVariation.remaining -= 1;
+          return this.activeBgmVariation.section;
+        }
+        this.activeBgmVariation = null;
+        const variation = this.bgmVariationQueue.shift();
+        if (variation) {
+          this.activeBgmVariation = {
+            section: variation,
+            remaining: Math.max(2, Math.min(8, (variation.melody?.length || 4) - 1))
+          };
+          return variation;
+        }
         const sections = ADAPTIVE_BGM_THEMES[mode] || ADAPTIVE_BGM_THEMES.town;
         const index = Math.floor(this.noteIndex / BGM_SECTION_STEPS + this.bgmSectionOffset) % sections.length;
-        return this.bgmVariationQueue.shift() || sections[index] || sections[0];
+        return sections[index] || sections[0];
+      }
+
+      getBgmTickInterval(section, mode = this.bgmMode) {
+        const base = Number(section?.interval) || 420;
+        const swing = Math.sin((this.noteIndex + this.bgmSectionOffset * 7) * 0.73) * BGM_DYNAMIC_SWING_MS;
+        const phraseRest = this.noteIndex % 16 === 15 ? 120 : this.noteIndex % 8 === 7 ? 58 : 0;
+        const floor = mode === "battle" ? 230 : mode === "puzzle" ? 300 : 330;
+        return Math.round(Math.max(floor, base + swing + phraseRest));
       }
 
       playBgm(mode = "town") {
@@ -16163,7 +16330,6 @@ return 0;`;
         if (!this.ensureBgmRunning(mode, true)) return;
         if (!this.ensureContext()) return;
         const themeSections = ADAPTIVE_BGM_THEMES[mode] || ADAPTIVE_BGM_THEMES.town;
-        const interval = Math.max(240, Math.min(...themeSections.map((section) => section.interval || 420)));
         const layers = this.createMusicLayers() || {};
         this.applyMusicLayerMix(mode, this.editorAudioFocus);
 
@@ -16182,18 +16348,24 @@ return 0;`;
           const bassNote = bass[this.noteIndex % bass.length];
           const counterEvery = section.counterEvery || 4;
           const accentEvery = section.accentEvery || 6;
-          this.tone(note, 0.12, section.wave || "triangle", mode === "battle" ? 0.16 : 0.13, layers.theme || "music", Math.sin(this.noteIndex * 0.7) * 0.24);
-          if (this.noteIndex % 2 === 0) this.tone(bassNote, 0.18, section.bassWave || "sine", mode === "puzzle" ? 0.11 : 0.1, layers.drone || "music", -0.18);
+          this.tone(note, 0.14, section.wave || "triangle", mode === "battle" ? 0.12 : 0.105, layers.theme || "music", Math.sin(this.noteIndex * 0.7) * 0.24);
+          if (this.noteIndex % 2 === 0) this.tone(bassNote, 0.22, section.bassWave || "sine", mode === "puzzle" ? 0.082 : 0.076, layers.drone || "music", -0.18);
           if (counter.length && this.noteIndex % counterEvery === 1) {
-            this.tone(counter[this.noteIndex % counter.length], 0.09, "sine", 0.055, layers.theme || "music", 0.22);
+            this.tone(counter[this.noteIndex % counter.length], 0.12, "sine", 0.034, layers.theme || "music", 0.22);
           }
-          if (this.noteIndex % accentEvery === 1) this.noise(0.016, mode === "battle" ? 0.024 : 0.015, 0, layers.ambience || null, "music");
+          if (this.noteIndex % 8 === 0) {
+            [1.25, 1.5].forEach((ratio, index) => {
+              window.setTimeout(() => this.tone(note * ratio, 0.18, "sine", 0.026, layers.theme || "music", 0.18), index * 58);
+            });
+          }
+          if (this.noteIndex % accentEvery === 1) this.noise(0.012, mode === "battle" ? 0.011 : 0.007, 0, layers.ambience || null, "music");
+          const nextInterval = this.getBgmTickInterval(section, mode);
           this.noteIndex += 1;
+          this.bgmTimer = window.setTimeout(tick, nextInterval);
         };
 
-        if (this.bgmTimer) window.clearInterval(this.bgmTimer);
+        if (this.bgmTimer) window.clearTimeout(this.bgmTimer);
         tick();
-        this.bgmTimer = window.setInterval(tick, interval);
         this.requestBgmHeartbeat();
       }
 
@@ -16211,8 +16383,11 @@ return 0;`;
       }
 
       type() {
-        this.noise(0.018, 0.024);
-        this.tone(680 + Math.random() * 90, 0.018, "triangle", 0.014);
+        const now = performance.now();
+        if (now - this.lastTypeAt < AUDIO_TYPE_COOLDOWN_MS) return;
+        this.lastTypeAt = now;
+        this.noise(0.012, 0.008);
+        this.tone(640 + Math.random() * 80, 0.014, "triangle", 0.007);
       }
 
       murmur(index) {
@@ -16252,22 +16427,25 @@ return 0;`;
 
       step(surface = "grass") {
         const now = performance.now();
-        if (now - this.lastStepAt < 180) return;
+        if (now - this.lastStepAt < AUDIO_FOOTSTEP_COOLDOWN_MS) return;
         this.lastStepAt = now;
         if (surface === "stone") {
-          this.tone(210 + Math.random() * 36, 0.036, "triangle", 0.034);
+          this.tone(190 + Math.random() * 28, 0.026, "triangle", 0.014);
           return;
         }
-        this.noise(0.05, 0.024);
+        this.noise(0.026, 0.01);
       }
 
       uiHover() {
-        this.tone(880, 0.035, "sine", 0.025);
+        const now = performance.now();
+        if (now - this.lastUiHoverAt < AUDIO_HOVER_COOLDOWN_MS) return;
+        this.lastUiHoverAt = now;
+        this.tone(880, 0.026, "sine", 0.01);
       }
 
       uiClick() {
-        this.tone(360, 0.045, "triangle", 0.04);
-        window.setTimeout(() => this.tone(520, 0.035, "triangle", 0.028), 38);
+        this.tone(360, 0.038, "triangle", 0.018);
+        window.setTimeout(() => this.tone(520, 0.03, "triangle", 0.012), 38);
       }
 
       run() {
@@ -16315,9 +16493,9 @@ return 0;`;
       if (ambientSoundTimer) return;
       ambientSoundTimer = window.setInterval(() => {
         if (gameState.menuOpen) return;
-        audioManager.noise(0.03, 0.01, 0, null, "music");
-        if (Math.random() > 0.58) audioManager.tone(72 + Math.random() * 16, 0.08, "sine", 0.014, "music");
-      }, 950);
+        audioManager.noise(0.02, 0.004, 0, null, "music");
+        if (Math.random() > 0.64) audioManager.tone(72 + Math.random() * 16, 0.1, "sine", 0.006, "music");
+      }, 2600);
     }
 
     function playLongCompileOvertone() {
@@ -16341,8 +16519,9 @@ return 0;`;
       if (!audioManager.master) return false;
       const ctx = audioManager.ensureContext();
       if (!ctx) return false;
-      const mutedGain = 0.11;
-      const ambientGain = 0.22;
+      const master = Math.max(0, Math.min(1.4, gameState.settings.masterVolume / 100));
+      const mutedGain = audioManager.masterBaseGain * 0.42 * master;
+      const ambientGain = audioManager.masterBaseGain * 0.96 * master;
       audioManager.master.gain.setTargetAtTime(active ? mutedGain : ambientGain, ctx.currentTime, 0.5);
       return true;
     }
@@ -18720,7 +18899,7 @@ int main(void) {
       return value;
     }
 
-    globalThis.i18n = Object.freeze({ t: tI18n, locales: I18N_LOCALES });
+    publishGlobal("i18n", Object.freeze({ t: tI18n, locales: I18N_LOCALES }));
 
     function updatePixelLoadingProgress(progress = 0, label = "") {
       const percent = Math.max(0, Math.min(100, Math.round(progress * 100)));
@@ -19103,10 +19282,10 @@ int main(void) {
         showGlobalErrorDialog(event.reason, { source: "unhandledrejection" });
         attemptSceneAutoRepair(event.reason);
       });
-      globalThis.triggerNullReferenceTest = () => {
+      publishGlobal("triggerNullReferenceTest", () => {
         const target = null;
         target.missing.property = true;
-      };
+      });
       return true;
     }
 
@@ -25469,8 +25648,11 @@ ${item.code}
     }
 
     function playMaterialFootstep(material = "stone") {
+      const now = performance.now();
+      if (now - (playMaterialFootstep.lastAt || 0) < 760) return material;
+      playMaterialFootstep.lastAt = now;
       const table = { grass: 360, stone: 280, wood: 420, sand: 220, water: 520 };
-      audioManager?.tone?.(table[material] || 300, 0.018, "triangle", 0.012, "sfx");
+      audioManager?.tone?.(table[material] || 300, 0.016, "triangle", 0.006, "sfx");
       return material;
     }
 
@@ -25502,7 +25684,7 @@ ${item.code}
       update(scene, interaction = null) {
         const layer = gameState.editorOpen ? "teaching" : interaction?.type === "challenge" ? "teaching" : "explore";
         this.setVerticalLayer(layer);
-        if (scene?.player?.body?.speed > 24 && scene.frameTick % 22 === 0) playMaterialFootstep("stone");
+        if (scene?.player?.body?.speed > 24) audioManager?.setExplorationIntensity?.(0.22);
       }
     }
 
@@ -27702,6 +27884,7 @@ ${item.code}
     let preferredSpeechVoiceCache = null;
     let ttsfmAudioElement = null;
     let ttsfmUnavailableUntil = 0;
+    const TTSFM_RETRY_DELAYS_MS = Object.freeze([120, 360]);
 
     function getTtsfmEndpoint() {
       try {
@@ -27722,43 +27905,58 @@ ${item.code}
       if (performance.now() < ttsfmUnavailableUntil) return false;
       const endpoint = options.endpoint || getTtsfmEndpoint();
       if (!/\/v1\/audio\/speech\/?$/.test(endpoint)) return false;
-      const controller = new AbortController();
-      const timeout = trackedSetTimeout(() => controller.abort(), options.timeoutMs || TTSFM_CONFIG.timeoutMs, "ttsfm-timeout");
-      try {
-        const response = await fetch(endpoint, {
-          // ttsfm exposes an OpenAI-compatible /v1/audio/speech endpoint.
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          signal: controller.signal,
-          body: JSON.stringify({
-            model: options.model || TTSFM_CONFIG.model,
-            input: phrase,
-            voice: options.voice || pickTtsfmFemaleVoice(options.lang || "zh-CN"),
-            response_format: options.responseFormat || TTSFM_CONFIG.responseFormat,
-            speed: options.speed || 1
-          })
-        });
-        timerTracker.clear(timeout);
-        if (!response.ok) throw new Error(`ttsfm ${response.status}`);
-        const audioBlob = await response.blob();
-        if (!audioBlob.size) throw new Error("ttsfm empty audio");
-        const url = URL.createObjectURL(audioBlob);
-        if (ttsfmAudioElement) {
-          ttsfmAudioElement.pause();
-          if (ttsfmAudioElement.dataset.url) URL.revokeObjectURL(ttsfmAudioElement.dataset.url);
+      const payload = {
+        model: options.model || TTSFM_CONFIG.model,
+        input: phrase,
+        voice: options.voice || pickTtsfmFemaleVoice(options.lang || "zh-CN"),
+        response_format: options.responseFormat || TTSFM_CONFIG.responseFormat,
+        speed: options.speed || 1
+      };
+      const trySpeakOnce = async () => {
+        const controller = new AbortController();
+        const timeout = trackedSetTimeout(() => controller.abort(), options.timeoutMs || TTSFM_CONFIG.timeoutMs, "ttsfm-timeout");
+        try {
+          const response = await fetch(endpoint, {
+            // ttsfm exposes an OpenAI-compatible /v1/audio/speech endpoint.
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            signal: controller.signal,
+            body: JSON.stringify(payload)
+          });
+          timerTracker.clear(timeout);
+          if (!response.ok) throw new Error(`ttsfm ${response.status}`);
+          const audioBlob = await response.blob();
+          if (!audioBlob.size) throw new Error("ttsfm empty audio");
+          const url = URL.createObjectURL(audioBlob);
+          if (ttsfmAudioElement) {
+            ttsfmAudioElement.pause();
+            if (ttsfmAudioElement.dataset.url) URL.revokeObjectURL(ttsfmAudioElement.dataset.url);
+          }
+          ttsfmAudioElement = new Audio(url);
+          ttsfmAudioElement.dataset.url = url;
+          ttsfmAudioElement.volume = Math.min(0.78, Math.max(0.08, (gameState.settings.sfxVolume || 80) / 130));
+          ttsfmAudioElement.onended = () => URL.revokeObjectURL(url);
+          await ttsfmAudioElement.play();
+          return true;
+        } catch (error) {
+          timerTracker.clear(timeout);
+          throw error;
         }
-        ttsfmAudioElement = new Audio(url);
-        ttsfmAudioElement.dataset.url = url;
-        ttsfmAudioElement.volume = Math.min(0.78, Math.max(0.08, (gameState.settings.sfxVolume || 80) / 130));
-        ttsfmAudioElement.onended = () => URL.revokeObjectURL(url);
-        await ttsfmAudioElement.play();
-        return true;
-      } catch (error) {
-        timerTracker.clear(timeout);
-        ttsfmUnavailableUntil = performance.now() + 60000;
-        reportSoftError?.(error, ERROR_LEVELS.recoverable, { source: "ttsfm-speech", endpoint });
-        return false;
+      };
+      let lastError = null;
+      for (let attempt = 0; attempt <= TTSFM_RETRY_DELAYS_MS.length; attempt += 1) {
+        try {
+          return await trySpeakOnce();
+        } catch (error) {
+          lastError = error;
+          const delay = TTSFM_RETRY_DELAYS_MS[attempt];
+          if (!delay) break;
+          await new Promise((resolve) => trackedSetTimeout(resolve, delay, "ttsfm-retry"));
+        }
       }
+      ttsfmUnavailableUntil = performance.now() + 60000;
+      reportSoftError?.(lastError || new Error("ttsfm unavailable"), ERROR_LEVELS.recoverable, { source: "ttsfm-speech", endpoint });
+      return false;
     }
 
     function pickPreferredSpeechVoice(lang = "zh-CN") {
@@ -33869,7 +34067,7 @@ ${item.code}
       }
     }
 
-    globalThis.CodeAwakenerSDK = CodeAwakenerSDK;
+    publishGlobal("CodeAwakenerSDK", CodeAwakenerSDK);
     Game.registerModule("sdk", { CodeAwakenerSDK, createCoursePack, validateCoursePack, mountCodeAwakenerCourse });
 
     function getStonePuzzleSpec(chapterId) {
@@ -34512,7 +34710,6 @@ ${item.code}
         duration: ANIM_CONFIG.footstepAddress.duration,
         easing: "easeOutCubic",
         priority: "direct",
-        audioEvents: [{ atMs: 0, type: "footstep", surface: scene.getTerrainSurface?.(player.x, player.y) || "stone" }],
         onStart: () => {},
         onProgress: (value) => {
           text.y = player.y + 20 - value * ANIM_CONFIG.footstepAddress.rise;
@@ -35336,13 +35533,24 @@ ${item.code}
         if (!ctx || this.timer || gameState.settings.musicComplexity === "off") return;
         this.motif = createSeededMotif(seed, 3 + new SeededRng(seed).int(0, 2));
         this.applyVolume();
-        this.timer = trackedSetInterval(() => this.tick(), this.getStepMs(), "proceduralMusic");
+        this.scheduleNextTick();
       }
 
       stop() {
         if (this.timer) timerTracker.clear(this.timer);
         this.timer = null;
         this.nodes.splice(0).forEach((node) => node.stop?.());
+      }
+
+      scheduleNextTick() {
+        if (this.timer) timerTracker.clear(this.timer);
+        this.timer = trackedSetTimeout(() => {
+          this.timer = null;
+          this.tick();
+          if (this.manager.hasMusicIntent?.() && gameState.settings.musicComplexity !== "off") {
+            this.scheduleNextTick();
+          }
+        }, this.getStepMs(), "proceduralMusic");
       }
 
       tick() {
@@ -35363,18 +35571,32 @@ ${item.code}
       playHarmony(ctx) {
         const harmony = MUSIC_HARMONY_PROGRESSION[Math.floor(this.step / 8) % 4];
         const root = harmony.root * (this.step % 32 > 24 && harmony.substitutes ? 0.9439 : 1);
-        this.playUnison(root, 0.34, this.waveType(), 0.018 + this.moodIntensity * 0.018);
+        this.playUnison(root, 0.36, this.waveType(), 0.01 + this.moodIntensity * 0.011);
+        if (this.step % 4 === 0) {
+          (harmony.chord || [0, 3, 7]).forEach((semi, index) => {
+            window.setTimeout(() => {
+              this.playUnison(root * midiRatio(semi + 12), 0.18, "sine", 0.004 + this.moodIntensity * 0.004);
+            }, index * 54);
+          });
+        }
+        if (this.step % 16 === 12 && harmony.substitutes) {
+          this.playUnison(root * midiRatio(-1), 0.28, "triangle", 0.007 + this.moodIntensity * 0.004);
+        }
       }
 
       playMotifNote(_ctx, frequency) {
-        const transform = this.step % 3 === 0 ? 0.5 : this.step % 3 === 1 ? 1 : 1.25;
-        this.playUnison(frequency * transform, 0.16, "triangle", 0.022);
-        window.setTimeout(() => this.playUnison(frequency * transform, 0.12, "triangle", 0.011), 500);
+        const transforms = [0.5, 1, 1.25, 1.5, 1];
+        const transform = transforms[this.step % transforms.length];
+        const gain = this.mood === WORLD_MOOD.battle ? 0.014 : 0.01;
+        this.playUnison(frequency * transform, 0.18, "triangle", gain);
+        if (this.step % 4 === 1) {
+          window.setTimeout(() => this.playUnison(frequency * transform * 1.5, 0.12, "sine", gain * 0.46), 360);
+        }
       }
 
       playNoisePulse(ctx) {
         if (gameState.settings.musicComplexity === "reduced") return;
-        this.manager.noise(0.018, this.mood === WORLD_MOOD.battle ? 0.018 : 0.008, Math.sin(this.step) * 0.6, null, "music");
+        this.manager.noise(0.012, this.mood === WORLD_MOOD.battle ? 0.007 : 0.003, Math.sin(this.step) * 0.6, null, "music");
         this.musicGain.gain.setTargetAtTime(this.targetGain() * 0.72, ctx.currentTime, 0.025);
         this.musicGain.gain.setTargetAtTime(this.targetGain(), ctx.currentTime + 0.08, 0.09);
       }
@@ -35410,7 +35632,7 @@ ${item.code}
       }
 
       targetGain() {
-        return 0.24 * (0.6 + this.moodIntensity * 0.7);
+        return 0.16 * (0.55 + this.moodIntensity * 0.55);
       }
 
       applyVolume() {
@@ -35443,7 +35665,10 @@ ${item.code}
       }
 
       getStepMs() {
-        return this.mood === WORLD_MOOD.tension || this.mood === WORLD_MOOD.battle ? 188 : 250;
+        const base = this.mood === WORLD_MOOD.tension || this.mood === WORLD_MOOD.battle ? 220 : 310;
+        const swing = Math.sin(this.step * 0.81) * 26;
+        const phraseRest = this.step % 16 === 15 ? 110 : this.step % 8 === 7 ? 52 : 0;
+        return Math.round(base + swing + phraseRest);
       }
 
       setMood(mood) {
@@ -39095,13 +39320,13 @@ ${item.code}
 
     function initializeGameSafely() {
       try {
-        if (!globalThis.Phaser) throw new Error("Phaser 未加载，无法启动 WebGL。");
+        if (!Phaser) throw new Error("Phaser 未加载，无法启动 WebGL。");
         renderSafetyManager?.applyInitialQuality?.();
         return new Phaser.Game(buildPrimaryGameConfig());
       } catch (error) {
         console.warn("[boot] WebGL 启动失败，正在回退到安全 Canvas 渲染。", error);
         enterSafeMode(error);
-        if (!globalThis.Phaser) return showStaticBootFallback(error);
+        if (!Phaser) return showStaticBootFallback(error);
         return new Phaser.Game(buildGameConfig(Phaser.CANVAS));
       }
     }

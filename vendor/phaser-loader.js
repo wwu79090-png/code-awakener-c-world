@@ -1,8 +1,20 @@
 (function () {
   "use strict";
 
-  if (globalThis.Phaser) {
-    globalThis.__phaserCoreStatus = { ok: true, source: "./vendor/phaser.min.js" };
+  var root = typeof window !== "undefined" ? window : (typeof self !== "undefined" ? self : globalThis);
+  var globalRoot = typeof globalThis !== "undefined" ? globalThis : root;
+
+  function publish(name, value) {
+    var targets = [root, globalRoot, typeof self !== "undefined" ? self : null];
+    for (var i = 0; i < targets.length; i += 1) {
+      var target = targets[i];
+      if (!target) continue;
+      try { target[name] = value; } catch (error) { void error; }
+    }
+  }
+
+  if (root.Phaser || globalRoot.Phaser) {
+    publish("__phaserCoreStatus", { ok: true, source: "./vendor/phaser.min.js" });
     return;
   }
 
@@ -17,12 +29,17 @@
     var scriptTag = [
       '<script src="' + escapedSrc + '"><\\/script>',
       '<script nonce="' + nonce + '">',
-      'if(globalThis.Phaser){globalThis.__phaserCoreStatus={ok:true,source:' + JSON.stringify(src) + '};}',
+      'var root=typeof window!=="undefined"?window:(typeof self!=="undefined"?self:globalThis);',
+      'var globalRoot=typeof globalThis!=="undefined"?globalThis:root;',
+      'if(root.Phaser||globalRoot.Phaser){(function(){try{root.__phaserCoreStatus={ok:true,source:' + JSON.stringify(src) + '};}catch(e){} try{globalRoot.__phaserCoreStatus={ok:true,source:' + JSON.stringify(src) + '};}catch(e){}}());}',
       '<\\/script>'
     ].join("");
     var inlineScript = [
-      "if(!globalThis.Phaser){",
-      "globalThis.__phaserCoreStatus={ok:false,source:" + JSON.stringify(src) + "};",
+      "var root=typeof window!=='undefined'?window:(typeof self!=='undefined'?self:globalThis);",
+      "var globalRoot=typeof globalThis!=='undefined'?globalThis:root;",
+      "if(!root.Phaser&&!globalRoot.Phaser){",
+      "try{root.__phaserCoreStatus={ok:false,source:" + JSON.stringify(src) + "};}catch(e){}",
+      "try{globalRoot.__phaserCoreStatus={ok:false,source:" + JSON.stringify(src) + "};}catch(e){}",
       "document.write(" + JSON.stringify(scriptTag) + ");",
       "}"
     ].join("");

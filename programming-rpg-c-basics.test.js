@@ -73,6 +73,10 @@ function loadGameScript() {
       Game: class {}
     }
   };
+  context.window.window = context.window;
+  context.window.self = context.window;
+  context.window.globalThis = context.window;
+  context.window.Phaser = context.Phaser;
   vm.createContext(context);
   vm.runInContext(`${script}
 globalThis.__gameApi = {
@@ -116,7 +120,9 @@ globalThis.__gameApi = {
   compressSavePayload: typeof compressSavePayload === "function" ? compressSavePayload : undefined,
   decompressSavePayload: typeof decompressSavePayload === "function" ? decompressSavePayload : undefined,
   escapeHtml: typeof escapeHtml === "function" ? escapeHtml : undefined
-};`, context);
+};
+if (typeof window !== "undefined") window.__gameApi = globalThis.__gameApi;
+if (typeof self !== "undefined") self.__gameApi = globalThis.__gameApi;`, context);
   return context.__gameApi;
 }
 
@@ -1269,14 +1275,15 @@ assert(/启动公告只提示当前版本|历史版本改到主菜单查看/.tes
 assert(/STARTUP_ANNOUNCEMENT_AUTO_HIDE_MS\s*=\s*14000/m.test(html), "announcement should remain visible long enough to read the current update");
 assert(/function showStartupAnnouncement/m.test(html), "announcement should be controlled by a startup function");
 assert(/id="announcementCloseButton"/m.test(html), "announcement should include a minimal close control");
-assert(/World Build v1\.0\.25/m.test(html) || /GAME_VERSION\s*=\s*"v1\.0\.25"/m.test(html), "game version should increment when shipping a new update");
+assert(/World Build v1\.0\.26/m.test(html) || /GAME_VERSION\s*=\s*"v1\.0\.26"/m.test(html), "game version should increment when shipping a new update");
 assert(/UPDATE_HISTORY\s*=\s*Object\.freeze\(\[[\s\S]*v1\.0\.1[\s\S]*零基础新手指引[\s\S]*v1\.0\.0[\s\S]*手机端适配/m.test(html), "update history should keep detailed previous release notes");
 assert(/data-menu-action="history">历史更新内容/.test(html) && /id="updateHistoryOverlay"/m.test(html) && /function renderUpdateHistoryList/m.test(html), "main menu should expose update history with detailed notes");
-assert(/GAME_VERSION\s*=\s*"v1\.0\.25"/m.test(html), "game version should increment for the mainline UX release");
+assert(/GAME_VERSION\s*=\s*"v1\.0\.26"/m.test(html), "game version should increment for the audio hotfix release");
 assert(html.includes('const OFFICIAL_SITE_HREF = "./official-site.html";') && html.includes('data-menu-action="official">访问官方网站') && /action === "official"[\s\S]*openOfficialWebsite\(\)/m.test(html), "main menu should expose and handle an official website entry");
-assert(/UPDATE_ANNOUNCEMENT_PAGES\s*=\s*Object\.freeze\(\[\s*\{\s*title:\s*"> 消息 \/ 本次更新"[\s\S]*v1\.0\.25[\s\S]*主线引导[\s\S]*碎片定位[\s\S]*NPC交互[\s\S]*音乐系统重整[\s\S]*414374792/m.test(html), "startup announcement should show only the current v1.0.25 update");
-assert(/id="announcementPageBody"[\s\S]*v1\.0\.25：主线引导、碎片定位、NPC交互和音乐系统重整[\s\S]*官方Q群：414374792/m.test(initialBodyMarkup), "static startup announcement placeholder should match the current v1.0.25 update before script hydration");
+assert(/UPDATE_ANNOUNCEMENT_PAGES\s*=\s*Object\.freeze\(\[\s*\{\s*title:\s*"> 消息 \/ 本次更新"[\s\S]*v1\.0\.26[\s\S]*音乐升级[\s\S]*音效降噪[\s\S]*持续吵叫[\s\S]*414374792/m.test(html), "startup announcement should show only the current v1.0.26 audio hotfix update");
+assert(/id="announcementPageBody"[\s\S]*v1\.0\.26：音乐升级与音效降噪热修复[\s\S]*官方Q群：414374792/m.test(initialBodyMarkup), "static startup announcement placeholder should match the current v1.0.26 update before script hydration");
 assert(!/公告只保留关闭、课程锁定、自由模式通关后显示/m.test(initialBodyMarkup), "static startup announcement placeholder should not show stale update copy");
+assert(/UPDATE_HISTORY\s*=\s*Object\.freeze\(\[[\s\S]*v1\.0\.26[\s\S]*音乐特色升级与音效降噪[\s\S]*动态段落调度[\s\S]*重复叠加/m.test(html), "update history should record the v1.0.26 music and audio hotfix release");
 assert(/UPDATE_HISTORY\s*=\s*Object\.freeze\(\[[\s\S]*v1\.0\.25[\s\S]*主线引导、碎片定位与音乐重整[\s\S]*菜单收敛[\s\S]*音乐系统加入多段主题/m.test(html), "update history should record the v1.0.25 mainline UX and music release");
 assert(/UPDATE_HISTORY\s*=\s*Object\.freeze\(\[[\s\S]*v1\.0\.24[\s\S]*旧电脑日期锁与手机编辑器热修复[\s\S]*prompt\(\) is not supported[\s\S]*390x844[\s\S]*414374792/m.test(html), "update history should record the v1.0.24 date lock and mobile editor hotfix release");
 assert(/UPDATE_HISTORY\s*=\s*Object\.freeze\(\[[\s\S]*v1\.0\.23[\s\S]*国内加载速度优化[\s\S]*vendor\/phaser\.min\.js[\s\S]*Google Fonts[\s\S]*Three\.js[\s\S]*MUS/m.test(html), "update history should record the v1.0.23 domestic loading optimization release");
@@ -1320,7 +1327,7 @@ assert(!/id="announcementExpandButton"/m.test(html) && !/announcementExpandButto
 assert(/UPDATE_HISTORY\s*=\s*Object\.freeze\(\[[\s\S]*v1\.0\.13[\s\S]*手机版设置入口[\s\S]*误开菜单[\s\S]*公告折叠状态/m.test(html), "update history should record the v1.0.13 mobile settings and announcement fix");
 assert(/UPDATE_HISTORY\s*=\s*Object\.freeze\(\[[\s\S]*v1\.0\.12[\s\S]*移除防白屏手动选项[\s\S]*CRT 雪花噪声 canvas 默认隐藏/m.test(html), "update history should record the v1.0.12 anti-white-screen option removal");
 assert(/UPDATE_HISTORY\s*=\s*Object\.freeze\(\[[\s\S]*v1\.0\.11[\s\S]*防白屏高档位白色噪点闪烁修复[\s\S]*CRT 噪声[\s\S]*每6帧[\s\S]*最多18个/m.test(html), "update history should record the v1.0.11 anti-white-noise release");
-assert(/UPDATE_ANNOUNCEMENT_PAGES\s*=\s*Object\.freeze\(\[[\s\S]*主线引导[\s\S]*碎片定位[\s\S]*NPC 交互先选择交流、任务、商店或线索[\s\S]*音乐加入分段主题/m.test(html), "startup announcement should describe the current mainline guidance and music update");
+assert(/UPDATE_ANNOUNCEMENT_PAGES\s*=\s*Object\.freeze\(\[[\s\S]*音乐升级[\s\S]*动态段落[\s\S]*持续吵叫[\s\S]*增益限幅/m.test(html), "startup announcement should describe the current music and audio hotfix update");
 assert(/id="announcementCloseButton"[\s\S]*>×<\/button>/m.test(html), "announcement close button should be a compact icon, not wrapping text");
 assert(/function isCTutorialChapterUnlocked/m.test(html) && /course-lesson-item[\s\S]*locked[\s\S]*disabled aria-disabled/m.test(html), "course progress should lock future chapters until the player reaches them");
 assert(/function isCTutorialFullyCompleted/m.test(html) && /const unlocked = isCTutorialFullyCompleted\(\)/m.test(html), "free mode editor should only unlock after full course completion");
@@ -1576,7 +1583,7 @@ assert(/class CodeAwakenerSDK/m.test(html), "game core should be embeddable thro
 assert(/function createCoursePack/m.test(html), "teachers should be able to create custom course packs");
 assert(/function validateCoursePack/m.test(html), "SDK should validate custom course content before mounting");
 assert(/function mountCodeAwakenerCourse/m.test(html), "SDK should mount custom course packs into a target container");
-assert(/CodeAwakenerSDK/m.test(html) && /globalThis\.CodeAwakenerSDK/m.test(html), "SDK should be published on globalThis for embeds");
+assert(/CodeAwakenerSDK/m.test(html) && /publishGlobal\("CodeAwakenerSDK"/m.test(html), "SDK should be published through the shared global bridge for embeds");
 assert(fs.existsSync("docs/SDK.md"), "SDK embedding guide should exist");
 assert(fs.existsSync("CONTRIBUTING.md"), "open-source contribution guide should exist");
 assert(fs.existsSync("CODE_OF_CONDUCT.md"), "community code of conduct should exist");
@@ -1720,7 +1727,7 @@ assert(/function announceA11yEvent/m.test(html), "important events should be ann
 assert(/id="a11yLiveRegion"/m.test(html), "game should include an ARIA live region");
 assert(/id="editorContrastToggle"/m.test(html), "editor should include a high contrast toggle");
 assert(/const I18N_LOCALES\s*=\s*Object\.freeze/m.test(html), "UI text should be routed through an i18n locale object");
-assert(/function tI18n/m.test(html) && /globalThis\.i18n/m.test(html), "i18n should expose a translation function");
+assert(/function tI18n/m.test(html) && /publishGlobal\("i18n"/m.test(html), "i18n should expose a translation function");
 assert(/anonymousTelemetryEnabled/m.test(html), "settings should store the optional anonymous telemetry flag");
 assert(/function recordTelemetryEvent/m.test(html), "optional telemetry should record local events");
 assert(/function flushTelemetryQueue/m.test(html), "optional telemetry should be able to POST when enabled");
