@@ -11,7 +11,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; base-uri 'self'; object-src 'none'; frame-ancestors 'none'; script-src 'self' https://cdn.jsdelivr.net 'nonce-code-awakener-inline' 'sha256-SdlV4JgM9/Ckpjy5qUqJSnaCuKoQWVYqy7cfVenh+Ls='; style-src 'self' https://cdn.jsdelivr.net https://fonts.googleapis.com 'nonce-code-awakener-inline' 'sha256-Zbtrhs0URyLU/+qcNIEb+Zltmxduh8krf/bn2X9UGt0='; style-src-attr 'unsafe-inline'; font-src 'self' https://cdn.jsdelivr.net https://fonts.gstatic.com data:; img-src 'self' data: blob:; media-src 'self' data: blob:; worker-src 'self' blob:; child-src 'self' blob:; connect-src 'self' https://cdn.jsdelivr.net http://localhost:8000 http://127.0.0.1:8000;">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; base-uri 'self'; object-src 'none'; frame-ancestors 'none'; script-src 'self' https://cdn.jsdelivr.net 'nonce-code-awakener-inline' 'sha256-+35vsLHs43W58Qz+jha8n7GlmAeHNF0AWxkZbLjOUDE='; style-src 'self' https://cdn.jsdelivr.net https://fonts.googleapis.com 'nonce-code-awakener-inline' 'sha256-RDVi0bEr6y7zS4ecVgcjVoN7VTSEZLryIHHUDpv+g/w='; style-src-attr 'unsafe-inline'; font-src 'self' https://cdn.jsdelivr.net https://fonts.gstatic.com data:; img-src 'self' data: blob:; media-src 'self' data: blob:; worker-src 'self' blob:; child-src 'self' blob:; connect-src 'self' https://cdn.jsdelivr.net http://localhost:8000 http://127.0.0.1:8000;">
   <title>编程学习 RPG：C 语言启航村</title>
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%23020617'/%3E%3Cpath d='M22 20 10 32l12 12M42 20l12 12-12 12' fill='none' stroke='%2300ff88' stroke-width='6' stroke-linecap='round' stroke-linejoin='round'/%3E%3Cpath d='m36 16-8 32' stroke='%2300ccff' stroke-width='5' stroke-linecap='round'/%3E%3C/svg%3E">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/firacode@6.2.0/distr/fira_code.css">
@@ -4223,10 +4223,6 @@
       transform-origin: left center;
       transition: transform 520ms cubic-bezier(0.22, 1, 0.36, 1);
       box-shadow: 0 0 16px rgba(56, 189, 248, 0.35);
-    }
-
-    #mpMeter {
-      background: linear-gradient(90deg, #38bdf8, #a855f7);
     }
 
     .meter-value {
@@ -9711,7 +9707,7 @@
     <section id="codeGenesisOverlay" class="code-genesis-overlay" aria-label="代码创世终端" aria-hidden="true">
       <div id="codeGenesisTerminal" class="code-genesis-terminal">
         <pre id="codeGenesisOutput" class="code-genesis-output"></pre>
-        <label class="code-genesis-input-row"><span>&gt;</span><textarea id="codeGenesisInput" class="code-genesis-input" rows="4" inputmode="text" enterkeyhint="enter" autocomplete="off" autocapitalize="none" autocorrect="off" spellcheck="false" aria-label="输入 C 语言创世代码" placeholder="照着右侧提示自己输入第一行：int hp = 88;"></textarea></label>
+        <label class="code-genesis-input-row"><span>&gt;</span><textarea id="codeGenesisInput" class="code-genesis-input" rows="4" inputmode="text" enterkeyhint="enter" autocomplete="off" autocapitalize="none" autocorrect="off" spellcheck="false" aria-label="输入 C 语言创世代码" placeholder="下一行：int hp = 88;"></textarea></label>
         <div class="code-genesis-helper" aria-label="零基础创角说明">
           <strong class="code-genesis-helper-title">&gt; 零基础说明：跟着一行一行打</strong>
           <pre id="codeGenesisHelperText">// 先别急着全写完。
@@ -9750,7 +9746,7 @@
     <button id="audioStartButton" class="audio-start-button" type="button" aria-label="点击开始并启用音频">点击开始</button>
     <div id="mobileControls" class="mobile-controls" aria-label="移动端虚拟控制">
       <div id="virtualJoystick" class="virtual-joystick" role="application" aria-label="虚拟摇杆"><span id="virtualJoystickKnob" class="virtual-joystick-knob"></span></div>
-      <button id="mobileInteractButton" class="mobile-interact-button" type="button" aria-label="交互">E</button>
+      <button id="mobileInteractButton" class="mobile-interact-button" type="button" aria-label="触摸交互">触摸</button>
     </div>
     <section id="mobileFullscreenPrompt" class="mobile-fullscreen-prompt" aria-live="polite" aria-hidden="true">
       <div class="mobile-fullscreen-card">
@@ -9843,7 +9839,7 @@
       <canvas id="menuFxCanvas" width="1280" height="720"></canvas>
       <div class="main-menu-card glass-panel">
         <h1 class="game-logo">CODE AWAKENER<br>C 语言启航村</h1>
-        <div class="version-label" id="versionLabel">World Build v1.0.18 · develop.fan C Basics</div>
+        <div class="version-label" id="versionLabel">World Build v1.0.19 · develop.fan C Basics</div>
         <label class="boot-command"><span>&gt;</span><input id="bootCommandInput" value="start_game.exe" autocomplete="off" spellcheck="false" aria-label="启动命令"></label>
         <label class="skin-picker">角色外观
           <select id="skinSelect" aria-label="选择主角外观">
@@ -10092,6 +10088,7 @@
               <p class="settings-section-desc">制作信息与联系方式。</p>
               <ul class="control-help-list">
                 <li><code>制作</code> 杀戮</li>
+                <li><code>致谢</code> 花海 · 宣传协力支持</li>
                 <li><code>QQ</code> 3424636983</li>
                 <li><code>微信</code> Lookkiitylou</li>
                 <li><code>官方Q群</code> 414374792</li>
@@ -10114,6 +10111,12 @@
         <p>联系方式：QQ 3424636983</p>
         <p>微信：Lookkiitylou</p>
         <p>官方Q群：414374792</p>
+        <h3>致谢</h3>
+        <p>感谢 花海 为本游戏提供宣传协力支持！</p>
+        <p>如有合作或咨询需求，欢迎联系：</p>
+        <p>QQ：2256713629</p>
+        <p>手机：13072295416</p>
+        <p>再次感谢花海的帮助与推广！🙏</p>
         <div class="menu-actions"><button id="creditsBackButton" class="pixel-button" type="button">返回</button></div>
       </div>
     </section>
@@ -10153,13 +10156,13 @@
         </section>
         <section id="worldEvolutionDifficultyGroup" class="info-menu-section">
           <strong>难度选择</strong>
-          <p class="menu-help">选择编译推进的节奏。新手建议用“简单”；想正常学习用“普通”；困难会消耗更多MP并可能出现时空裂隙。</p>
+          <p class="menu-help">选择编译推进的节奏。新手建议用“简单”；想正常学习用“普通”；困难推进更慢并可能出现时空裂隙。</p>
           <div class="difficulty-button-grid" role="group" aria-label="世界进化难度">
             <button class="pixel-button secondary" type="button" data-world-difficulty="easy">🌱 简单</button>
             <button class="pixel-button secondary" type="button" data-world-difficulty="normal">⚡ 普通</button>
             <button class="pixel-button secondary" type="button" data-world-difficulty="hard">🔥 困难</button>
           </div>
-          <div id="worldEvolutionDifficultyHint" class="difficulty-hint">// 普通：完成度 +6%~14%，碎片 +1~3，MP -10。</div>
+          <div id="worldEvolutionDifficultyHint" class="difficulty-hint">// 普通：完成度 +6%~14%，碎片 +1~3。</div>
         </section>
         <section id="courseProgressPanel" class="info-menu-section">
           <strong>课程进度</strong>
@@ -10236,16 +10239,16 @@
           <p class="menu-help">这里仅展示世界修复状态。世界会随着主线课程编译自动推进，不需要手动演示。</p>
           <div class="info-menu-row"><span>完成度</span><span id="infoWorldEvolutionText">0%</span></div>
           <div class="info-menu-meter"><span id="infoWorldEvolutionFill"></span></div>
-          <div id="infoWorldEvolutionHint">// 主线学习：靠近石碑按 E，再在编辑器里运行代码。</div>
+          <div id="infoWorldEvolutionHint">// 主线学习：手机触摸石碑；键盘靠近后按 E，再在编辑器里运行代码。</div>
           <div class="info-menu-actions world-evolution-actions">
             <button id="fragmentStarChartButton" class="pixel-button secondary" type="button">打开碎片星盘</button>
           </div>
           <div id="fragmentStarChartPanel" class="world-evolution-panel" aria-label="碎片星盘">
-            <p class="menu-help">星盘会消耗进化碎片来增强学习体验：提升编译效率、增加HP/MP上限或强化特效表现。</p>
+            <p class="menu-help">星盘会消耗进化碎片来增强学习体验：提升编译效率、增加容错上限或强化特效表现。</p>
             <div class="info-menu-row"><span>可用进化碎片</span><span id="starChartFragmentText">0</span></div>
             <div class="star-node-grid">
               <button class="pixel-button secondary" type="button" data-star-node="efficiency">编译效率</button>
-              <button class="pixel-button secondary" type="button" data-star-node="vitality">HP/MP上限</button>
+              <button class="pixel-button secondary" type="button" data-star-node="vitality">容错上限</button>
               <button class="pixel-button secondary" type="button" data-star-node="spectacle">特效华丽度</button>
               <button id="equipEvolutionShardButton" class="pixel-button secondary" type="button">装配星核</button>
             </div>
@@ -10262,15 +10265,12 @@
           <div id="infoFragmentText">碎片: 0/14</div>
         </section>
         <section class="info-menu-section">
-          <strong>HP / MP</strong>
-          <p class="menu-help">HP是容错生命，MP是编译能量。普通/困难编译会消耗MP；碎片按钮用于紧急恢复。</p>
+          <strong>容错状态</strong>
+          <p class="menu-help">HP是调试容错生命。编译不会消耗能量；碎片按钮只用于紧急恢复容错状态。</p>
           <div class="info-menu-row"><span>HP</span><span id="infoHpText">100</span></div>
           <div class="info-menu-meter"><span id="infoHpFill"></span></div>
-          <div class="info-menu-row"><span>MP</span><span id="infoMpText">3</span></div>
-          <div class="info-menu-meter"><span id="infoMpFill"></span></div>
           <div class="info-menu-actions">
             <button id="useHpShardButton" class="pixel-button secondary" type="button">碎片回复HP</button>
-            <button id="useMpShardButton" class="pixel-button secondary" type="button">碎片回复MP</button>
           </div>
         </section>
         <section class="info-menu-section">
@@ -10401,7 +10401,6 @@
         <div id="characterProfileButton" class="meter-row character-profile-button" role="button" tabindex="0" aria-label="打开角色属性菜单">
           <span id="hudGenesisAvatar" class="hud-genesis-avatar" aria-label="角色缩微头像"></span>
           <span>HP</span><div class="meter code-meter"><span id="hpMeter"></span></div><span id="hpValue" class="meter-value">100</span>
-          <span>MP</span><div class="meter code-meter"><span id="mpMeter"></span></div><span id="mpValue" class="meter-value">3</span>
         </div>
       </div>
       <div id="variableWatchPanel" class="variable-watch-panel" aria-label="变量监控窗口">
@@ -10668,10 +10667,11 @@ int main(void) {
       <button id="announcementCloseButton" class="announcement-close" type="button" aria-label="关闭公告">×</button>
       <h2 id="startupAnnouncementTitle" class="startup-announcement-title">> 消息 / 本次更新</h2>
       <div id="announcementPageBody" class="startup-announcement-body">
-        <p>// 本次更新：启动诊断、离线缓存和移动端性能保护完成清理。</p>
-        <p>// 离线缓存不再尝试无效 blob Service Worker，启动控制台保持干净。</p>
-        <p>// 手机端先使用低功耗特效预算，避免先掉帧再紧急降级。</p>
-        <p>// 桌面端仍保留高画质默认值和核心玩法流程。</p>
+        <p>// 本次更新：判题只看运行输出，空格换行不再卡关。</p>
+        <p>// MP 门槛已移除，编译不会因为能量不足被判失败。</p>
+        <p>// 手机端改为触摸交互，移动摇杆和方向键保留。</p>
+        <p>// 编译错误弹窗可点击或按键快速跳过。</p>
+        <p>// 制作名单新增花海宣传协力致谢。</p>
         <p>// 作者：杀戮</p>
         <p class="announcement-dismiss-hint">- 点击任意处关闭</p>
       </div>
@@ -10732,7 +10732,7 @@ int main(void) {
         </article>
         <article id="absoluteGuideTarget" class="absolute-guide-chip target">
           <span class="absolute-guide-tag">目标</span>
-          <strong>按 E 与石碑交互</strong>
+          <strong>手机触摸 / 键盘按 E 与石碑交互</strong>
         </article>
         <article id="absoluteGuideFeedback" class="absolute-guide-chip feedback">
           <span class="absolute-guide-tag">反馈</span>
@@ -11145,40 +11145,44 @@ int main() {
     const SAVE_SIGNATURE_SALT = "c-world-local-integrity";
     const SAVE_CLEAR_CONFIRM_MS = 3000;
     const STARTUP_ANNOUNCEMENT_AUTO_HIDE_MS = 3000;
-    const GAME_VERSION = "v1.0.18";
+    const GAME_VERSION = "v1.0.19";
     const UPDATE_ANNOUNCEMENT_PAGES = Object.freeze([
       {
         title: "> 消息 / 本次更新",
         lines: [
-          "// 本次更新：启动诊断、离线缓存和移动端性能保护完成清理。",
-          "// 离线缓存不再尝试无效 blob Service Worker，启动控制台保持干净。",
-          "// 手机端先使用低功耗特效预算，避免先掉帧再紧急降级。",
-          "// 桌面端仍保留高画质默认值和核心玩法流程。",
+          "// 本次更新：判题只看运行输出，空格换行不再卡关。",
+          "// MP 门槛已移除，编译不会因为能量不足被判失败。",
+          "// 手机端改为触摸交互，移动摇杆和方向键保留。",
+          "// 编译错误弹窗可点击或按键快速跳过。",
+          "// 制作名单新增花海宣传协力致谢。",
           "// 作者：杀戮"
         ]
       },
       {
-        title: "> 更新内容 / 启动诊断",
+        title: "> 更新内容 / 判题规则",
         lines: [
-          "// 旧的 blob Service Worker 注册路径已移除，避免浏览器每次启动都打印警告。",
-          "// 离线缓存保留显式同源注册入口，未来有独立 sw 文件时再启用。",
-          "// 启动烟测覆盖主菜单、开始按钮、移动端代码创世终端和控制台健康。",
-          "// 存档、编译、任务、碎片和编辑器既有流程未改变。"
+          "// 通过条件改为：代码能正常编译，运行输出与任务预期一致。",
+          "// 比对输出时忽略空格、换行、缩进和首尾空白。",
+          "// 源码里的变量名、注释、顺序和不影响输出的多余代码不再卡关。",
+          "// 没有输出或输出文字不同仍会失败，标点和内容仍按结果判断。"
         ]
       },
       {
-        title: "> 更新内容 / 移动端性能",
+        title: "> 更新内容 / 交互与提示",
         lines: [
-          "// 手机和触控视口会先跳过 SSAO、程序化草地、深度雾和高频粒子更新。",
-          "// 低功耗预算由现有电影化调度器执行，不新增菜单，也不改变桌面默认高画质。",
-          "// 目标是减少 10fps 以下的后处理悬崖和紧急降级提示。",
-          "// 性能保护仍会在极端低帧率时兜底降级，避免卡死。"
+          "// 手机设备会提示：触摸才是交互方式。",
+          "// 手机虚拟交互按钮从 E 改为“触摸”，不再模拟键盘 E。",
+          "// 移动摇杆、方向键和桌面键盘 E 都保留各自用途。",
+          "// 编译错误弹窗会显示真实错误位置，并支持点击或按键跳过。"
         ]
       },
       {
         title: "> 项目信息",
         lines: [
           "// 菜单历史更新会持续记录每个版本的详细内容。",
+          "// 致谢：感谢 花海 为本游戏提供宣传协力支持！",
+          "// 合作/咨询 QQ：2256713629，手机：13072295416",
+          "// 再次感谢花海的帮助与推广！🙏",
           "// 官方Q群：414374792",
           "// 本项目永久免费对外开放，持续更新，助力每一个有编程梦的人。",
           "// 谢谢你的支持！"
@@ -11186,6 +11190,19 @@ int main() {
       }
     ]);
     const UPDATE_HISTORY = Object.freeze([
+      {
+        version: "v1.0.19",
+        date: "2026-06-17",
+        title: "输出判题、MP移除与手机触摸交互",
+        details: [
+          "主线判题改为只要求代码可编译且运行输出与任务预期一致，输出比对忽略空格、换行、缩进和首尾空白。",
+          "源码里的变量名、注释、顺序和不影响输出的多余代码不再作为失败原因；没有输出或输出内容不同仍会失败。",
+          "移除 MP 编译门槛和相关界面，编译不会因为 MP 不足被判为失败。",
+          "编译错误弹窗改为显示真实诊断位置，并支持点击或按任意键快速跳过。",
+          "手机设备改为触摸交互提示，虚拟交互按钮显示“触摸”并直接触发当前交互；移动摇杆和桌面 E 键保持可用。",
+          "制作名单新增致谢：感谢花海为本游戏提供宣传协力支持，并加入合作咨询联系方式。"
+        ]
+      },
       {
         version: "v1.0.18",
         date: "2026-06-16",
@@ -11385,7 +11402,7 @@ int main() {
           "对话栏新增手机专用“继续 / 跳过”按钮，解决移动端没有空格键无法推进对话的问题。",
           "新手指引会等待角色创建完成、主菜单和创角层关闭后再启动，避免未进游戏就弹出。",
           "创角编辑器默认填入带 // 注释的C语言模板，并提供填入示例、解释代码、创建角色三个按钮。",
-          "信息菜单新增图标和一句话用途标签，难度、课程、碎片、HP/MP、存档等功能更容易一眼识别。",
+          "信息菜单新增图标和一句话用途标签，难度、课程、碎片、容错状态、存档等功能更容易一眼识别。",
           "语音系统支持本地 ttsfm OpenAI兼容接口，默认女声风格；ttsfm不可用时不会播放浏览器机器人声，只保留文字提示。"
         ]
       },
@@ -11421,7 +11438,7 @@ int main() {
           "强化手机视口、安全区、触摸按钮尺寸和软键盘输入体验。",
           "修复移动端创建角色和编辑器输入容易重复、跳位、无法输入的问题。",
           "主画面常驻HUD收纳到左侧信息菜单，保留顶部灵动岛和底部对话栏。",
-          "新增手动保存、世界进化、课程进度、HP/MP、碎片、成就、图鉴等集中菜单功能。",
+          "新增手动保存、世界进化、课程进度、容错状态、碎片、成就、图鉴等集中菜单功能。",
           "移除电影级画质选项，保留更稳定的高画质与自动降级保护。"
         ]
       },
@@ -11454,7 +11471,7 @@ int main() {
       "世界进化": { icon: "🌍", purpose: "观察世界修复" },
       "任务提示": { icon: "🧭", purpose: "确认下一步目标" },
       "知识碎片": { icon: "💎", purpose: "查看收集与用途" },
-      "HP / MP": { icon: "❤️", purpose: "查看生命与能量" },
+      "容错状态": { icon: "❤️", purpose: "查看调试容错" },
       "成长 / 惩罚": { icon: "⭐", purpose: "查看等级和失败代价" },
       "装配碎片说明": { icon: "🛠️", purpose: "理解当前装备效果" },
       "主角外观": { icon: "🧑", purpose: "更换头像和配色" },
@@ -11475,9 +11492,9 @@ int main() {
         id: "now",
         icon: "🧭",
         title: "当前任务",
-        desc: "下一步、进度、HP/MP",
+        desc: "下一步、进度、容错",
         open: true,
-        sections: ["任务提示", "课程进度", "知识碎片", "HP / MP", "成长 / 惩罚", "装配碎片说明"]
+        sections: ["任务提示", "课程进度", "知识碎片", "容错状态", "成长 / 惩罚", "装配碎片说明"]
       },
       {
         id: "learn",
@@ -12054,7 +12071,7 @@ return 0;`;
       directSaveAs: "reduced-by-inline-resources"
     });
     const SECURITY_CONFIG = Object.freeze({
-      expectedScriptHash: "wrFd/x8iv+osBubwOLN0dIIHR4bke0gjTHtZKjssTAA=",
+      expectedScriptHash: "tE3Z16PQJdl6ATvmyeiiePvNAJS6iKSsIezsKeFFbJw=",
       selfCheckIntervalMs: 45000,
       tamperRefreshMs: 5000,
       devToolsRefreshMs: 2000,
@@ -14225,6 +14242,27 @@ return 0;`;
       return Boolean(document.body?.classList?.contains("mobile-input") || ((window.innerWidth <= 768) && touch) || coarse);
     }
 
+    function getInteractionPromptVerb() {
+      const activeDevice = gameState?.activeInputDevice || INPUT_DEVICE_TYPES.keyboard;
+      return isMobileTouchViewport() || activeDevice === INPUT_DEVICE_TYPES.touch ? "触摸" : "E";
+    }
+
+    function formatInteractionPrompt(actionText = "交互") {
+      const verb = getInteractionPromptVerb();
+      return `${verb}${String(actionText || "交互").replace(/^\s+/, "")}`;
+    }
+
+    function showMobileTouchInteractionNotice(force = false) {
+      if (!force && !isMobileTouchViewport()) return false;
+      if (gameState?.mobileTouchInteractionNoticeShown) return false;
+      if (gameState) gameState.mobileTouchInteractionNoticeShown = true;
+      detectActiveInputDevice?.({ type: "touchstart" });
+      unifiedInputPromptManager?.setDevice?.(INPUT_DEVICE_TYPES.touch);
+      showReward?.("手机模式：触摸才是交互；移动仍可用虚拟摇杆和方向键。");
+      announceGameEvent?.("手机模式已启用，触摸才是交互方式，移动键保留。");
+      return true;
+    }
+
     function isLowPowerCinematicViewport() {
       return Boolean(isMobileTouchViewport() || gameState?.mobilePowerSaveActive || getPerformanceModeId() === "low");
     }
@@ -14513,9 +14551,9 @@ return 0;`;
     frameScheduler.register("gamepadInput", () => gamepadInputManager.poll(), { frameInterval: 2 });
 
     function showIdeTooltip(text, x = 0, y = 0) {
-      showPrompt(text || "按 E 交互");
+      showPrompt(text || formatInteractionPrompt("交互"));
       if (gameState.scene?.player) {
-        showCodeCombatLine(text || "press E", x || window.innerWidth * 0.5, y || window.innerHeight * 0.72);
+        showCodeCombatLine(text || (getInteractionPromptVerb() === "触摸" ? "touch interact" : "press E"), x || window.innerWidth * 0.5, y || window.innerHeight * 0.72);
       }
     }
 
@@ -15307,6 +15345,7 @@ return 0;`;
       noviceGuideActive: false,
       menuOpen: true,
       paused: false,
+      mobileTouchInteractionNoticeShown: false,
       scene: null
     };
 
@@ -17729,7 +17768,6 @@ int main(void) {
       starChartFragmentText: document.getElementById("starChartFragmentText"),
       equipEvolutionShardButton: document.getElementById("equipEvolutionShardButton"),
       useHpShardButton: document.getElementById("useHpShardButton"),
-      useMpShardButton: document.getElementById("useMpShardButton"),
       heroCustomizeButton: document.getElementById("heroCustomizeButton"),
       heroAvatarCanvas: document.getElementById("heroAvatarCanvas"),
       regenerateHeroAvatarButton: document.getElementById("regenerateHeroAvatarButton"),
@@ -17759,8 +17797,6 @@ int main(void) {
       infoFragmentText: document.getElementById("infoFragmentText"),
       infoHpText: document.getElementById("infoHpText"),
       infoHpFill: document.getElementById("infoHpFill"),
-      infoMpText: document.getElementById("infoMpText"),
-      infoMpFill: document.getElementById("infoMpFill"),
       infoCompileLivesText: document.getElementById("infoCompileLivesText"),
       infoCompileLivesFill: document.getElementById("infoCompileLivesFill"),
       infoExpText: document.getElementById("infoExpText"),
@@ -17779,9 +17815,7 @@ int main(void) {
       taskExample: document.getElementById("taskExample"),
       taskHint: document.getElementById("taskHint"),
       hpMeter: document.getElementById("hpMeter"),
-      mpMeter: document.getElementById("mpMeter"),
       hpValue: document.getElementById("hpValue"),
-      mpValue: document.getElementById("mpValue"),
       variableWatchPanel: document.getElementById("variableWatchPanel"),
       variableWatchToggle: document.getElementById("variableWatchToggle"),
       variableWatchContent: document.getElementById("variableWatchContent"),
@@ -18137,7 +18171,7 @@ int main(void) {
     const ABSOLUTE_GUIDE_STAGES = Object.freeze({
       welcome: {
         prompt: "先找到第一块石碑",
-        target: "靠近入口石碑，按 E 交互",
+        target: "靠近入口石碑，手机触摸 / 键盘按 E 交互",
         feedback: "其它信息已收起，只看这三条。"
       },
       editor: {
@@ -18457,6 +18491,7 @@ int main(void) {
       const active = Boolean((narrow && touch) || coarse);
       document.body.classList.toggle("mobile-input", active);
       applyMobileEditorLayout(active);
+      if (active) showMobileTouchInteractionNotice();
       return active;
     }
 
@@ -19252,7 +19287,27 @@ int main(void) {
       return 3;
     }
 
-    function showCodeGenesisNextLineHint(index = getCodeGenesisNextGuideIndex()) {
+    function deriveCodeGenesisGuideStateFromSource(source = "", baseState = createCodeGenesisInitialState()) {
+      const state = {
+        ...createCodeGenesisInitialState(),
+        ...(baseState && typeof baseState === "object" ? baseState : {}),
+        lines: Array.isArray(baseState?.lines) ? [...baseState.lines] : []
+      };
+      String(source).split(/\r?\n/).forEach((line) => {
+        const executable = stripCodeGenesisComment(line).trim();
+        if (!executable || state.complete || state.handoffStarted) return;
+        const result = parseCodeGenesisLine(executable, state);
+        if (result.kind === "assignment") {
+          state[result.name] = result.value;
+        }
+        if (result.kind === "return") {
+          state.complete = true;
+        }
+      });
+      return state;
+    }
+
+    function renderCodeGenesisGuideHint(index = getCodeGenesisNextGuideIndex(), options = {}) {
       const safeIndex = Math.max(0, Math.min(CODE_GENESIS_GUIDED_LINES.length - 1, Number(index) || 0));
       codeGenesisGuideLineIndex = safeIndex;
       const item = CODE_GENESIS_GUIDED_LINES[safeIndex];
@@ -19265,10 +19320,22 @@ ${item.code}
 
 // 写完这一行后按 Enter。`;
       }
-      appendCodeGenesisOutput(`// 下一行示范：${item.code}`);
-      appendCodeGenesisOutput(`// ${item.explain}`);
-      showReward("照着提示自己打一行，写完按 Enter。");
+      if (dom.codeGenesisInput && item) dom.codeGenesisInput.placeholder = `下一行：${item.code}`;
+      if (options.announce !== false) {
+        appendCodeGenesisOutput(`// 下一行示范：${item.code}`);
+        appendCodeGenesisOutput(`// ${item.explain}`);
+      }
+      if (options.reward !== false) showReward("照着提示自己打一行，写完按 Enter。");
       return item;
+    }
+
+    function showCodeGenesisNextLineHint(index = getCodeGenesisNextGuideIndex()) {
+      return renderCodeGenesisGuideHint(index, { announce: true, reward: true });
+    }
+
+    function refreshCodeGenesisGuideFromInput(source = dom.codeGenesisInput?.value || "") {
+      const previewState = deriveCodeGenesisGuideStateFromSource(source, gameState.codeGenesisState || createCodeGenesisInitialState());
+      return renderCodeGenesisGuideHint(getCodeGenesisNextGuideIndex(previewState), { announce: false, reward: false });
     }
 
     function fillCodeGenesisBeginnerTemplate(focus = true) {
@@ -19362,7 +19429,8 @@ ${item.code}
         showCodeGenesisNextLineHint(getCodeGenesisNextGuideIndex(state));
         audioManager?.error?.();
       }
-      if (dom.codeGenesisInput && options.clearInput !== false) dom.codeGenesisInput.value = "";
+      if (dom.codeGenesisInput && options.clearInput !== false) setCodeGenesisInputValue("", 0, 0);
+      refreshCodeGenesisGuideFromInput();
       updateCodeGenesisStatus(state);
       return result;
     }
@@ -19534,7 +19602,7 @@ ${item.code}
       appendCodeGenesisOutput("/* ACT 1: 觉醒提示 */");
       appendCodeGenesisOutput("黑暗中只有一个终端。你不用一次写完，只要跟着提示一行一行打。");
       appendCodeGenesisOutput("先输入 int hp = 88; 然后按 Enter。系统会一步一步读懂你写的代码。");
-      showCodeGenesisNextLineHint(0);
+      renderCodeGenesisGuideHint(0, { announce: false, reward: false });
       if (startupMessage) appendCodeGenesisOutput(startupMessage, startupMessage.includes("[ERROR]") ? "error" : "info");
       updateCodeGenesisStatus(gameState.codeGenesisState);
       trackedSetTimeout(() => dom.codeGenesisInput?.focus?.(), 80, "code-genesis-focus");
@@ -19625,6 +19693,7 @@ ${item.code}
         }
       }
       if (processed) setCodeGenesisInputValue(value, value.length, value.length);
+      refreshCodeGenesisGuideFromInput(value);
       return processed;
     }
 
@@ -19642,7 +19711,7 @@ ${item.code}
       pushCodeGenesisUndoSnapshot();
       setCodeGenesisInputValue(result.value, result.start, result.end);
       codeGenesisSelectionAnchor = result.anchor ?? result.start;
-      processCodeGenesisBufferedLines();
+      if (!processCodeGenesisBufferedLines()) refreshCodeGenesisGuideFromInput();
       return true;
     }
 
@@ -19691,7 +19760,7 @@ ${item.code}
       if (!dom.codeGenesisOverlay?.classList.contains("active") || !dom.codeGenesisInput) return false;
       if (performance.now() - codeGenesisBeforeInputAt < 80) return true;
       codeGenesisEditorHistory.lastValue = dom.codeGenesisInput.value;
-      processCodeGenesisBufferedLines();
+      if (!processCodeGenesisBufferedLines()) refreshCodeGenesisGuideFromInput();
       return true;
     }
 
@@ -20416,7 +20485,7 @@ ${item.code}
     function getTaskNextStepHint(task, state = {}) {
       if (!task) return "跟随地图上的金色箭头前进。";
       if (state.status === TASK_STATUS.available) {
-        if (task.id === "solve_for_sequence") return "前往地图中央偏右的「循环石碑」，靠近后按 E 进入编辑器。";
+        if (task.id === "solve_for_sequence") return "前往地图中央偏右的「循环石碑」，靠近后手机触摸或键盘按 E 进入编辑器。";
         if (task.requirement?.clearedChapter) return "前往当前发光石碑，完成代码填空后通过编译之门。";
         const npc = NPC_DATA.find((item) => (item.taskIds || []).includes(task.id));
         return npc ? `去找 ${npc.name} 接取任务，NPC 头顶会显示名字和任务符号。` : "跟随地面光带，前往当前发光石碑。";
@@ -20454,9 +20523,9 @@ ${item.code}
       90: ["变量商人：我听见世界核心在响。最后一次编译，会让它重新拥有颜色。"]
     });
     const WORLD_EVOLUTION_I18N = Object.freeze({
-      "zh-CN": { advanced: "世界完成度提升", restored: "碎片已被使用，状态已恢复。", noMp: "MP不足，先用碎片恢复MP。", qte: "世界守护者出现，快速点击稳定核心。" },
-      "zh-TW": { advanced: "世界完成度提升", restored: "碎片已被使用，狀態已恢復。", noMp: "MP不足，先用碎片恢復MP。", qte: "世界守護者出現，快速點擊穩定核心。" },
-      en: { advanced: "World completion increased", restored: "A fragment restored your status.", noMp: "Not enough MP. Restore MP with fragments first.", qte: "A World Guardian appeared. Tap quickly to stabilize the core." }
+      "zh-CN": { advanced: "世界完成度提升", restored: "碎片已被使用，状态已恢复。", qte: "世界守护者出现，快速点击稳定核心。" },
+      "zh-TW": { advanced: "世界完成度提升", restored: "碎片已被使用，狀態已恢復。", qte: "世界守護者出現，快速點擊穩定核心。" },
+      en: { advanced: "World completion increased", restored: "A fragment restored your status.", qte: "A World Guardian appeared. Tap quickly to stabilize the core." }
     });
     const WORLD_EVOLUTION_SYNC_KEY = "code-awakener-world-evolution-sync-v1";
     const WORLD_EVOLUTION_CINEMATIC_STAGES = Object.freeze({
@@ -20491,34 +20560,28 @@ ${item.code}
         label: "🌱 简单",
         completion: [12, 20],
         fragments: [2, 5],
-        mpCost: 0,
-        internalMpCost: 0,
         particleScale: 0.5,
         shakeScale: 0.55,
         riftChance: 0,
-        hint: "// 简单：完成度 +12%~20%，碎片 +2~5，MP 不消耗，粒子减半。"
+        hint: "// 简单：完成度 +12%~20%，碎片 +2~5，粒子减半。"
       },
       normal: {
         label: "⚡ 普通",
         completion: [6, 14],
         fragments: [1, 3],
-        mpCost: 10,
-        internalMpCost: 1,
         particleScale: 1,
         shakeScale: 1,
         riftChance: 0,
-        hint: "// 普通：完成度 +6%~14%，碎片 +1~3，MP -10。"
+        hint: "// 普通：完成度 +6%~14%，碎片 +1~3。"
       },
       hard: {
         label: "🔥 困难",
         completion: [2, 6],
         fragments: [0, 2],
-        mpCost: 20,
-        internalMpCost: 2,
         particleScale: 2,
         shakeScale: 1.75,
         riftChance: 0.24,
-        hint: "// 困难：完成度 +2%~6%，碎片 +0~2，MP -20，偶发时空裂隙。"
+        hint: "// 困难：完成度 +2%~6%，碎片 +0~2，偶发时空裂隙。"
       }
     });
     const WORLD_EVOLUTION_UI_THEMES = Object.freeze({
@@ -22835,12 +22898,14 @@ ${item.code}
       return true;
     }
 
-    function triggerMobileInteractButton() {
-      if (gameState.scene?.keyE) {
-        gameState.scene.keyE.isDown = true;
-        trackedSetTimeout(() => { if (gameState.scene?.keyE) gameState.scene.keyE.isDown = false; }, 80, "mobile-interact-release");
+    function triggerMobileInteractButton(event = null) {
+      detectActiveInputDevice(event || { type: "touchstart" });
+      showMobileTouchInteractionNotice(true);
+      if (typeof gameState.scene?.performCurrentInteraction === "function") {
+        return gameState.scene.performCurrentInteraction("touch");
       }
-      return true;
+      showPrompt("靠近可交互对象后触摸。");
+      return false;
     }
 
     function triggerWorldEvolutionNpcComment() {
@@ -23091,29 +23156,10 @@ ${item.code}
       return true;
     }
 
-    /* ===== HP/MP系统 ===== */
-    function getWorldEvolutionMpMax() {
-      const vitality = Number(gameState.progress.worldEvolutionTalents?.vitality) || 0;
-      return 3 + vitality;
-    }
-
+    /* ===== 容错状态系统 ===== */
     function getWorldEvolutionHpMax() {
       const vitality = Number(gameState.progress.worldEvolutionTalents?.vitality) || 0;
       return 100 + vitality * 10;
-    }
-
-    function spendWorldEvolutionMp(cost = 1) {
-      const mpMax = getWorldEvolutionMpMax();
-      gameState.hintsLeft = Math.max(0, Math.min(mpMax, Number(gameState.hintsLeft) || 0));
-      if (gameState.hintsLeft < cost) {
-        showReward(tWorldEvolution("noMp"));
-        announceWorldEvolutionA11y(tWorldEvolution("noMp"));
-        return false;
-      }
-      gameState.hintsLeft = Math.max(0, gameState.hintsLeft - cost);
-      updateStatusBars();
-      updateInfoSideMenu();
-      return true;
     }
 
     function applyWorldEvolutionDamage(amount = 10, reason = "guardian") {
@@ -23131,8 +23177,7 @@ ${item.code}
         return false;
       }
       gameState.progress.worldEvolutionFragments = Math.max(0, gameState.progress.worldEvolutionFragments - 1);
-      if (kind === "mp") gameState.hintsLeft = Math.min(getWorldEvolutionMpMax(), (Number(gameState.hintsLeft) || 0) + 1);
-      else gameState.codeAccuracy = Math.min(getWorldEvolutionHpMax(), (Number(gameState.codeAccuracy) || 0) + 18);
+      gameState.codeAccuracy = Math.min(getWorldEvolutionHpMax(), (Number(gameState.codeAccuracy) || 0) + 18);
       saveProgress();
       saveGame();
       updateStatusBars();
@@ -23224,8 +23269,7 @@ ${item.code}
         randomEvents: gameState.progress.worldEvolutionRandomEventsSeen,
         memoryFragments: gameState.progress.worldEvolutionMemoryFragments,
         newGamePlus: gameState.progress.worldEvolutionNewGamePlus,
-        hp: gameState.codeAccuracy,
-        mp: gameState.hintsLeft
+        hp: gameState.codeAccuracy
       };
       localStorage.setItem(WORLD_EVOLUTION_SAVE_SLOT_KEY, JSON.stringify(slots));
       showReward(`世界进化槽 ${slot} 已保存。`);
@@ -23263,7 +23307,6 @@ ${item.code}
       gameState.progress.worldEvolutionMemoryFragments = Array.isArray(data.memoryFragments) ? data.memoryFragments : [];
       gameState.progress.worldEvolutionNewGamePlus = Number(data.newGamePlus) || 0;
       gameState.codeAccuracy = Math.max(0, Math.min(getWorldEvolutionHpMax(), Number(data.hp) || 100));
-      gameState.hintsLeft = Math.max(0, Math.min(getWorldEvolutionMpMax(), Number(data.mp) || 3));
       saveProgress();
       updateWorldEvolutionLayer(gameState.scene, true);
       updateStatusBars();
@@ -23441,7 +23484,7 @@ ${item.code}
       if (completion >= 60) return "// 代码路径已经固化，树木和光柱会随进度继续增强。";
       if (completion >= 35) return "// 生态层正在恢复，草地、极光和符文开始显形。";
       if (completion >= 10) return "// 世界核心已点火，地面裂纹开始减少。";
-      return "// 主线学习：靠近石碑按 E。世界进化会随课程编译自动推进。";
+      return "// 主线学习：手机触摸石碑，键盘靠近后按 E。世界进化会随课程编译自动推进。";
     }
 
     function isWorldEvolutionComplete() {
@@ -23543,7 +23586,6 @@ ${item.code}
         guardWorldEvolutionAdvance("manual");
         return false;
       }
-      if (!spendWorldEvolutionMp(config.internalMpCost)) return false;
       const efficiency = Number(gameState.progress.worldEvolutionTalents?.efficiency) || 0;
       const equippedBonus = gameState.progress.worldEvolutionEquipped ? 2 : 0;
       const blessingBonus = Date.now() < (Number(gameState.progress.worldEvolutionBlessingUntil) || 0) ? 3 : 0;
@@ -23567,7 +23609,7 @@ ${item.code}
       updateWorldEvolutionUi();
       saveProgress();
       updateWorldEvolutionLayer(gameState.scene, true);
-      showReward(`${config.label} ${tWorldEvolution("advanced")} +${gain}% · 进化碎片 +${fragmentGain} · MP -${config.mpCost}`);
+      showReward(`${config.label} ${tWorldEvolution("advanced")} +${gain}% · 进化碎片 +${fragmentGain}`);
       announceWorldEvolutionA11y(`${tWorldEvolution("advanced")} ${Math.round(gameState.progress.worldEvolutionCompletion)}%`);
       updateWorldEvolutionMusicMood();
       playWorldEvolutionRandomEffect(gameState.scene, config);
@@ -23593,8 +23635,6 @@ ${item.code}
       organizeInfoSideMenu();
       const hpMax = getWorldEvolutionHpMax();
       const hp = Math.max(0, Math.min(hpMax, Number(gameState.codeAccuracy) || 0));
-      const mpMax = getWorldEvolutionMpMax();
-      const mp = Math.max(0, Math.min(mpMax, Number(gameState.hintsLeft) || 0));
       const lifeState = normalizeCompileLifeState();
       const growthLevel = getPlayerGrowthLevel();
       const growthExp = getPlayerGrowthExpIntoLevel();
@@ -23602,9 +23642,7 @@ ${item.code}
       if (dom.infoTaskText) dom.infoTaskText.textContent = getInfoMenuTaskText();
       if (dom.infoFragmentText) dom.infoFragmentText.textContent = `碎片: ${getCourseFragmentProgressText()}`;
       if (dom.infoHpText) dom.infoHpText.textContent = `${hp}/${hpMax}`;
-      if (dom.infoMpText) dom.infoMpText.textContent = `${mp}/${mpMax}`;
       if (dom.infoHpFill) dom.infoHpFill.style.width = `${Math.min(100, (hp / hpMax) * 100)}%`;
-      if (dom.infoMpFill) dom.infoMpFill.style.width = `${Math.min(100, (mp / mpMax) * 100)}%`;
       if (dom.infoCompileLivesText) dom.infoCompileLivesText.textContent = `${lifeState.lives}/${lifeState.max}`;
       if (dom.infoCompileLivesFill) dom.infoCompileLivesFill.style.width = `${Math.min(100, (lifeState.lives / lifeState.max) * 100)}%`;
       if (dom.infoExpText) dom.infoExpText.textContent = `Lv.${growthLevel} · ${growthExp}/${COMPILE_LIFE_RULES.expPerLevel}`;
@@ -23746,7 +23784,7 @@ ${item.code}
       const totalChapters = chapters.length;
       const stats = [
         ["HP 正确率", `${gameState.codeAccuracy}%`],
-        ["MP 提示次数", `${gameState.hintsLeft}`],
+        ["提示次数", `${gameState.hintsLeft}`],
         ["已收集卡牌", `${gameState.cards.length}/${totalChapters}`],
         ["已解锁成就", `${gameState.achievements.length}/${achievementCatalog.length}`],
         ["已学习章节", `${gameState.progress.learned.length}/${totalChapters}`],
@@ -24103,16 +24141,12 @@ ${item.code}
 
     function updateStatusBars() {
       const hpMax = getWorldEvolutionHpMax();
-      const mpMax = getWorldEvolutionMpMax();
       const hp = Math.max(0, Math.min(hpMax, Number(gameState.codeAccuracy) || 0));
-      const mp = Math.max(0, Math.min(mpMax, Number(gameState.hintsLeft) || 0));
       if (dom.hpMeter) dom.hpMeter.style.transform = `scaleX(${Math.max(0.18, hp / hpMax)})`;
-      if (dom.mpMeter) dom.mpMeter.style.transform = `scaleX(${Math.max(0, mp / mpMax)})`;
       updateHudNumericRoll(dom.hpValue, gameState.codeAccuracy);
-      updateHudNumericRoll(dom.mpValue, gameState.hintsLeft);
       const meterRow = dom.hpMeter?.closest?.(".meter-row");
       if (meterRow) {
-        const isCritical = gameState.codeAccuracy <= 30 || gameState.hintsLeft <= 0;
+        const isCritical = gameState.codeAccuracy <= 30;
         meterRow.classList.toggle("hud-critical", isCritical);
       }
       updateInfoSideMenu();
@@ -24462,7 +24496,7 @@ ${item.code}
           enemy.nextAttackAt = now + 12000;
           showCodeCombatLine(enemy.type === "logicGuard" ? "lock(player);" : "error_code();", window.innerWidth / 2, window.innerHeight * 0.42);
           triggerMicroGlitch();
-          showReward(`${enemy.type === "logicGuard" ? "逻辑守卫" : "代码Bug"}在附近：靠近后按 E 修复，不会直接扣生命。`);
+          showReward(`${enemy.type === "logicGuard" ? "逻辑守卫" : "代码Bug"}在附近：靠近后手机触摸或键盘按 E 修复，不会直接扣生命。`);
         });
       }
 
@@ -24926,7 +24960,7 @@ ${item.code}
         const hints = {
           keyboard: { move: "方向键移动", interact: "E交互", map: "M地图", menu: "ESC菜单", run: "Ctrl+Enter运行" },
           mouse: { move: "方向键移动", interact: "点击/靠近交互", map: "M地图", menu: "ESC菜单", run: "点击运行" },
-          touch: { move: "虚拟摇杆移动", interact: "点按交互", map: "地图按钮", menu: "菜单按钮", run: "点按运行" },
+          touch: { move: "虚拟摇杆移动", interact: "触摸交互", map: "地图按钮", menu: "菜单按钮", run: "点按运行" },
           gamepad: { move: "左摇杆移动", interact: "A交互", map: "Y地图", menu: "B返回", run: "RT运行" }
         };
         return hints[this.device]?.[action] || hints.keyboard[action] || "";
@@ -25944,6 +25978,7 @@ ${item.code}
 
     let systemBootLogController = null;
     let systemBootLogFinished = false;
+    let activeSystemLogController = null;
 
     function typeSystemLine(target, line, onDone, controller = null) {
       let index = 0;
@@ -25962,13 +25997,18 @@ ${item.code}
     }
 
     function typeSystemLogLines(target, lines, onComplete) {
-      const controller = { cancelled: false };
       const normalized = normalizeSystemLogLines(lines);
+      const controller = { cancelled: false, finished: false, target, normalized, onComplete };
       target.textContent = "";
+      const complete = () => {
+        if (controller.finished) return;
+        controller.finished = true;
+        onComplete?.();
+      };
       const next = (index = 0) => {
         if (controller.cancelled) return;
         if (index >= normalized.length) {
-          onComplete?.();
+          complete();
           return;
         }
         typeSystemLine(target, normalized[index], () => next(index + 1), controller);
@@ -25978,11 +26018,33 @@ ${item.code}
     }
 
     function closeSystemOverlay(overlay, afterClose) {
+      if (overlay === dom.systemLogOverlay && activeSystemLogController) {
+        activeSystemLogController.cancelled = true;
+        activeSystemLogController = null;
+      }
       overlay?.classList.add("closing");
       trackedSetTimeout(() => {
         overlay?.classList.remove("active", "closing");
         afterClose?.();
       }, 430, "system-log-close");
+    }
+
+    function finishSystemLogImmediately(controller = activeSystemLogController) {
+      if (!controller || controller.finished) return false;
+      controller.cancelled = true;
+      if (controller.target) {
+        controller.target.textContent = controller.normalized.map((line) => line.text).join("\n") + "\n";
+      }
+      controller.finished = true;
+      controller.onComplete?.();
+      return true;
+    }
+
+    function skipSystemLogWindow() {
+      if (!dom.systemLogOverlay?.classList.contains("active")) return false;
+      if (finishSystemLogImmediately(activeSystemLogController)) return true;
+      closeSystemOverlay(dom.systemLogOverlay);
+      return true;
     }
 
     function playSystemBootLog() {
@@ -26022,7 +26084,7 @@ ${item.code}
       dom.systemLogOverlay.dataset.manual = autoCloseMs === 0 ? "true" : "false";
       dom.systemLogOverlay.classList.remove("closing");
       dom.systemLogOverlay.classList.add("active");
-      typeSystemLogLines(dom.systemLogText, lines, () => {
+      activeSystemLogController = typeSystemLogLines(dom.systemLogText, lines, () => {
         afterComplete?.();
         if (autoCloseMs > 0) trackedSetTimeout(() => closeSystemOverlay(dom.systemLogOverlay), autoCloseMs, "system-log-autoclose");
       });
@@ -26066,20 +26128,32 @@ ${item.code}
       return showSystemLogWindow(lines, { mode: "compact", autoCloseMs: 3000 });
     }
 
-    function showCompileErrorSystemLog(message = "", lineNumber = 1) {
-      const line = lineNumber || extractLineNumber(message);
-      const expected = /分号|;/.test(message) ? "分号" : "正确的 C 语法";
-      const lines = [
+    function buildCompileErrorSystemLogLines(message = "", lineNumber = null) {
+      const text = String(message || "").replace(/^编译错误[:：]\s*/, "").trim();
+      const line = lineNumber || extractLineNumber(text);
+      const primary = text.split("\n").find((item) => item.trim()) || "未知错误";
+      const isOutputMismatch = /运行结果不符|输出内容不匹配|expected terminal output/.test(text);
+      const isSyntax = !isOutputMismatch;
+      let suggestion = "按控制台诊断修正对应位置后重试。";
+      if (/return\s+0;.*main 函数外面/.test(text)) {
+        suggestion = "把 return 0; 移回 main 的花括号内部，再让最后一个 } 结束函数。";
+      } else if (isOutputMismatch) {
+        suggestion = "核对引号里的输出文本；大小写、空格和标点都必须和任务一致。";
+      } else if (/分号|;/.test(text)) {
+        suggestion = `检查第${line}行末尾是否缺少英文分号 ;。`;
+      }
+      return [
         "[ERROR] 编译失败",
-        `> 错误类型：语法错误（第${line}行）`,
-        `> 预期：${expected}`,
-        "> 实际：无",
-        "> 系统无法解析此代码片段。",
-        `> 建议：检查第${line}行末尾是否缺少分号。`,
-        "> 正在尝试自动修复...",
-        "> 修复失败。",
+        `> 错误类型：${isSyntax ? "语法错误" : "运行结果不符"}（第${line}行）`,
+        `> 诊断：${primary}`,
+        `> 建议：${suggestion}`,
+        "> 提示：点击或按任意键可立即显示/关闭此日志。",
         "> 请手动修正后重试。"
       ];
+    }
+
+    function showCompileErrorSystemLog(message = "", lineNumber = 1) {
+      const lines = buildCompileErrorSystemLogLines(message, lineNumber);
       return showSystemLogWindow(lines, { mode: "compact", className: "error", autoCloseMs: 3200 });
     }
 
@@ -26965,33 +27039,33 @@ ${item.code}
       if (interaction.type === "npc") {
         const npc = interaction.npc?.data;
         const action = getNpcQuestAction(npc || {});
-        if (action.ready) return `E 向${npc.name}交付任务`;
-        if (action.available) return `E 与${npc.name}对话并接取任务`;
-        if (npc?.type === NPC_TYPES.guard && !isCleared(FIRST_MAINLINE_CHAPTER_ID)) return "E 询问守卫（需要先通过编译）";
-        return `E 与${npc?.name || "NPC"}交互`;
+        if (action.ready) return formatInteractionPrompt(`向${npc.name}交付任务`);
+        if (action.available) return formatInteractionPrompt(`与${npc.name}对话并接取任务`);
+        if (npc?.type === NPC_TYPES.guard && !isCleared(FIRST_MAINLINE_CHAPTER_ID)) return formatInteractionPrompt("询问守卫（需要先通过编译）");
+        return formatInteractionPrompt(`与${npc?.name || "NPC"}交互`);
       }
-      if (interaction.type === "roomEntrance") return "E 进入一个安静的小房间";
-      if (interaction.type === "oldComputer") return "E 打开旧电脑";
-      if (interaction.type === "mossyStone") return "E 阅读长满苔藓的断碑";
-      if (interaction.type === "developerRoom") return "E 进入不存在的门";
-      if (interaction.type === "mazeLayer") return "E 进入迷宫层";
-      if (interaction.type === "terminalGuess") return "E 启动伪随机双向推演";
-      if (interaction.type === "codeEnemy") return `E 修复${interaction.enemy?.type === "logicGuard" ? "逻辑守卫" : "代码Bug"}（${interaction.enemy?.repair || "补全代码"}）`;
-      if (interaction.type === "regionPortal") return interaction.portal?.unlocked ? `E 进入${interaction.portal.label}` : `完成前一区域后解锁：${interaction.portal.label}`;
+      if (interaction.type === "roomEntrance") return formatInteractionPrompt("进入一个安静的小房间");
+      if (interaction.type === "oldComputer") return formatInteractionPrompt("打开旧电脑");
+      if (interaction.type === "mossyStone") return formatInteractionPrompt("阅读长满苔藓的断碑");
+      if (interaction.type === "developerRoom") return formatInteractionPrompt("进入不存在的门");
+      if (interaction.type === "mazeLayer") return formatInteractionPrompt("进入迷宫层");
+      if (interaction.type === "terminalGuess") return formatInteractionPrompt("启动伪随机双向推演");
+      if (interaction.type === "codeEnemy") return formatInteractionPrompt(`修复${interaction.enemy?.type === "logicGuard" ? "逻辑守卫" : "代码Bug"}（${interaction.enemy?.repair || "补全代码"}）`);
+      if (interaction.type === "regionPortal") return interaction.portal?.unlocked ? formatInteractionPrompt(`进入${interaction.portal.label}`) : `完成前一区域后解锁：${interaction.portal.label}`;
       if (interaction.type === "locked") {
-        if (!isLearned(interaction.chapter.id)) return `E 查看（先完成 ${interaction.chapter.stoneLabel}）`;
+        if (!isLearned(interaction.chapter.id)) return formatInteractionPrompt(`查看（先完成 ${interaction.chapter.stoneLabel}）`);
         const previousIndex = Math.max(0, chapters.findIndex((chapter) => chapter.id === interaction.chapter.id) - 1);
         const previous = chapters[previousIndex];
-        return `E 查看（需要先通过 ${previous.gateLabel}）`;
+        return formatInteractionPrompt(`查看（需要先通过 ${previous.gateLabel}）`);
       }
       if (interaction.type === "lesson") {
         const spec = getStonePuzzleSpec(interaction.chapter.id);
         const hasToken = gameState.codeInventory.includes(spec.answer);
-        return hasToken ? `E 学习（已持有 ${spec.answer}）` : `靠近 C 碎片 ${spec.answer} 后补全石碑`;
+        return hasToken ? formatInteractionPrompt(`学习（已持有 ${spec.answer}）`) : `靠近 C 碎片 ${spec.answer} 后补全石碑`;
       }
       if (interaction.type === "challenge") {
         const ready = isLearned(interaction.chapter.id);
-        return ready ? `E 打开${interaction.chapter.gateLabel}（已学习）` : `E 打开${interaction.chapter.gateLabel}（需要知识碎片）`;
+        return ready ? formatInteractionPrompt(`打开${interaction.chapter.gateLabel}（已学习）`) : formatInteractionPrompt(`打开${interaction.chapter.gateLabel}（需要知识碎片）`);
       }
       return "";
     }
@@ -27914,7 +27988,7 @@ ${item.code}
         renderQuestTracker();
         tutorialAnimationManager.trigger("T02_MENTOR_APPROACH", { scene: gameState.scene }).then(() => {
           showDialog(OPENING_MENTOR_LINES, () => {
-            showPrompt("跟随地面引导线前往入口石碑，按 E 学习第一课。");
+            showPrompt("跟随地面引导线前往入口石碑，手机触摸或键盘按 E 学习第一课。");
             announceGameEvent("新手引导完成，请前往入口石碑。");
             showQuestProgressToast(questManager?.getTask?.("collect_basic_fragments"));
             trackedSetTimeout(askPlayerName, 640, "cross-layer-name-prompt");
@@ -31143,9 +31217,6 @@ ${item.code}
       }
       clearExactCodeReferenceForCurrentTask();
       const cCode = autoInjectStdIoHeader(rawCCode);
-      if (!spendWorldEvolutionMp(1)) {
-        setOutput("MP不足：已提示你在信息菜单中使用进化碎片回复MP。本次进入教学保护模式，仍继续运行代码。", "info");
-      }
       setRunning(true);
       audioManager.run();
       const editorWindow = document.querySelector(".vscode-window");
@@ -31339,6 +31410,8 @@ ${item.code}
 
       const bracesIssue = inspectBraceBalance(lines);
       if (bracesIssue) return bracesIssue;
+      const returnScopeIssue = inspectReturnOutsideMain(cCode);
+      if (returnScopeIssue) return returnScopeIssue;
 
       const quoteIssue = lines.findIndex((lineText) => hasUnclosedCString(lineText.replace(/\/\/.*$/, "")));
       if (quoteIssue >= 0) {
@@ -31505,6 +31578,8 @@ ${item.code}
 
       const bracesIssue = inspectBraceBalance(lines);
       if (bracesIssue) return bracesIssue;
+      const returnScopeIssue = inspectReturnOutsideMain(cCode);
+      if (returnScopeIssue) return returnScopeIssue;
       return "";
     }
 
@@ -31854,7 +31929,7 @@ ${item.code}
     }
 
     function normalizeProgramOutput(output = "") {
-      return String(output ?? "").replace(/\r\n/g, "\n").replace(/\s+$/g, "");
+      return String(output ?? "").replace(/\r\n/g, "\n").replace(/\s+/g, "");
     }
 
     function compareProgramOutput(actual = "", expected = "") {
@@ -31905,44 +31980,217 @@ ${item.code}
       return "";
     }
 
+    function inspectReturnOutsideMain(cCode = "") {
+      const lines = stripCComments(String(cCode || "")).split("\n");
+      const mainIndex = lines.findIndex((lineText) => /\bint\s+main\s*\(\s*(void)?\s*\)/.test(lineText));
+      if (mainIndex < 0) return "";
+      let depth = 0;
+      let seenMainBody = false;
+      let mainClosed = false;
+      for (let i = mainIndex; i < lines.length; i += 1) {
+        const trimmed = lines[i].trim();
+        if (mainClosed && depth === 0 && /^return\b/.test(trimmed)) {
+          return `[第${i + 1}行] return 0; 写在 main 函数外面。\n知识点提示：return 0; 要放在 main 的花括号内部，最后再用 } 结束函数。`;
+        }
+        for (const char of lines[i]) {
+          if (char === "{") {
+            depth += 1;
+            seenMainBody = true;
+          } else if (char === "}") {
+            depth = Math.max(0, depth - 1);
+            if (seenMainBody && depth === 0) mainClosed = true;
+          }
+        }
+      }
+      return "";
+    }
+
     function findLine(lines, pattern) {
       const index = lines.findIndex((lineText) => pattern.test(lineText));
       return index >= 0 ? index + 1 : 0;
     }
 
     function getPrintfCall(cCode) {
-      return stripCComments(cCode).match(/printf\s*\(\s*"((?:\\.|[^"\\])*)"\s*(?:,\s*([A-Za-z_]\w*))?\s*\)\s*;/);
+      return stripCComments(cCode).match(/printf\s*\(\s*"((?:\\.|[^"\\])*)"\s*(?:,\s*([\s\S]*?))?\s*\)\s*;/);
+    }
+
+    function getPrintfCalls(cCode) {
+      return Array.from(stripCComments(cCode).matchAll(/printf\s*\(\s*"((?:\\.|[^"\\])*)"\s*(?:,\s*([\s\S]*?))?\s*\)\s*;/g));
     }
 
     function simulateCOutput(cCode, chapter) {
       const code = stripCComments(cCode);
       const variables = {};
+      const functions = extractIntFunctions(code);
+      for (const macro of code.matchAll(/#define\s+([A-Za-z_]\w*)\s+(-?\d+)\b/g)) {
+        variables[macro[1]] = Number(macro[2]);
+      }
+      for (const arrayDeclaration of code.matchAll(/\bint\s+([A-Za-z_]\w*)\s*\[\s*\d+\s*\]\s*=\s*\{([^}]+)\}\s*;/g)) {
+        arrayDeclaration[2].split(",").map((item) => item.trim()).forEach((value, index) => {
+          variables[`${arrayDeclaration[1]}[${index}]`] = evaluateIntExpression(value, variables, functions);
+        });
+      }
+      for (const structValue of code.matchAll(/\bstruct\s+\w+\s+([A-Za-z_]\w*)\s*=\s*\{\s*([^}]+)\}\s*;/g)) {
+        variables[`${structValue[1]}.level`] = evaluateIntExpression(structValue[2].split(",")[0] || "0", variables, functions);
+      }
       const declarations = code.matchAll(/\bint\s+([A-Za-z_]\w*)\s*=\s*([^;]+)\s*;/g);
       for (const declaration of declarations) {
-        variables[declaration[1]] = evaluateIntExpression(declaration[2], variables);
+        variables[declaration[1]] = evaluateIntExpression(declaration[2], variables, functions);
       }
+      for (const pointerDeclaration of code.matchAll(/\bint\s+\*\s*([A-Za-z_]\w*)\s*=\s*&\s*([A-Za-z_]\w*)\s*;/g)) {
+        variables[`*${pointerDeclaration[1]}`] = variables[pointerDeclaration[2]] ?? 0;
+      }
+      for (const assignment of code.matchAll(/\b([A-Za-z_]\w*(?:\s*\[\s*\d+\s*\])?)\s*=\s*([^;]+)\s*;/g)) {
+        const name = assignment[1].replace(/\s+/g, "");
+        if (/^(?:if|for|while|switch)$/.test(name)) continue;
+        variables[name] = evaluateIntExpression(assignment[2], variables, functions);
+      }
+      simulateForLoops(code, variables, functions);
 
-      const printfCall = getPrintfCall(cCode);
-      if (!printfCall) return chapter?.output || "";
-      const format = unescapeCString(printfCall[1]);
-      const argName = printfCall[2];
-      if (!argName) return format;
-      if (format === "%d") {
-        const value = variables[argName];
-        if ((value === undefined || value === 0) && chapter?.output && chapter.output !== "0") return chapter.output;
-        return String(value);
-      }
-      return format.replace("%d", String(variables[argName] ?? ""));
+      const outputCode = selectExecutableCBranches(removeNonMainFunctionBodies(code), variables, functions);
+      const printfCalls = getPrintfCalls(outputCode);
+      if (!printfCalls.length) return "";
+      return printfCalls.map((printfCall) => {
+        const format = unescapeCString(printfCall[1]);
+        const argExpression = printfCall[2]?.trim();
+        if (!argExpression) return format;
+        const value = evaluateIntExpression(argExpression, variables, functions);
+        return format.replace(/%[dlu]+/, String(value));
+      }).join("");
     }
 
-    function evaluateIntExpression(expression, variables) {
+    function extractIntFunctions(code = "") {
+      const functions = {};
+      for (const match of String(code).matchAll(/\bint\s+([A-Za-z_]\w*)\s*\(([^)]*)\)\s*\{([\s\S]*?)\n\s*\}/g)) {
+        if (match[1] === "main") continue;
+        functions[match[1]] = {
+          params: match[2].split(",").map((part) => part.trim().match(/([A-Za-z_]\w*)$/)?.[1]).filter(Boolean),
+          body: match[3]
+        };
+      }
+      return functions;
+    }
+
+    function removeNonMainFunctionBodies(code = "") {
+      return String(code).replace(/\bint\s+(?!main\b)[A-Za-z_]\w*\s*\([^)]*\)\s*\{[\s\S]*?\n\s*\}/g, "");
+    }
+
+    function splitTopLevelExpression(expression = "", operators = []) {
+      let depth = 0;
+      for (let i = expression.length - 1; i >= 0; i -= 1) {
+        const char = expression[i];
+        if (char === ")") depth += 1;
+        else if (char === "(") depth -= 1;
+        else if (depth === 0 && operators.includes(char) && i > 0) {
+          return [expression.slice(0, i), char, expression.slice(i + 1)];
+        }
+      }
+      return null;
+    }
+
+    function evaluateIntFunctionCall(name, args, variables, functions) {
+      const fn = functions?.[name];
+      if (!fn) return 0;
+      const local = { ...variables };
+      fn.params.forEach((param, index) => {
+        local[param] = evaluateIntExpression(args[index] || "0", variables, functions);
+      });
+      for (const conditionalReturn of fn.body.matchAll(/if\s*\(([^)]*)\)\s*return\s+([^;]+)\s*;/g)) {
+        if (evaluateCCondition(conditionalReturn[1], local, functions)) {
+          return evaluateIntExpression(conditionalReturn[2], local, functions);
+        }
+      }
+      const fallbackReturn = fn.body.match(/return\s+([^;]+)\s*;/);
+      return fallbackReturn ? evaluateIntExpression(fallbackReturn[1], local, functions) : 0;
+    }
+
+    function evaluateIntExpression(expression, variables, functions = {}) {
       const trimmed = expression.trim();
+      const withoutOuterParens = trimmed.replace(/^\((.*)\)$/s, "$1").trim();
+      if (withoutOuterParens !== trimmed && balancedParens(withoutOuterParens)) return evaluateIntExpression(withoutOuterParens, variables, functions);
       if (/^-?\d+$/.test(trimmed)) return Number(trimmed);
-      const addParts = trimmed.split("+").map((part) => part.trim());
-      if (addParts.length > 1) {
-        return addParts.reduce((sum, part) => sum + evaluateIntExpression(part, variables), 0);
+      const atoiMatch = trimmed.match(/^atoi\s*\(\s*"(-?\d+)"\s*\)$/);
+      if (atoiMatch) return Number(atoiMatch[1]);
+      const functionCall = trimmed.match(/^([A-Za-z_]\w*)\s*\((.*)\)$/);
+      if (functionCall) return evaluateIntFunctionCall(functionCall[1], functionCall[2].split(",").map((part) => part.trim()), variables, functions);
+      if (Object.prototype.hasOwnProperty.call(variables, trimmed)) return Number(variables[trimmed]) || 0;
+      const arrayMatch = trimmed.match(/^([A-Za-z_]\w*)\s*\[\s*(\d+)\s*\]$/);
+      if (arrayMatch) return Number(variables[`${arrayMatch[1]}[${arrayMatch[2]}]`] ?? 0);
+      if (/^\*[A-Za-z_]\w*$/.test(trimmed)) return Number(variables[trimmed] ?? 0);
+      if (/^[A-Za-z_]\w*\.[A-Za-z_]\w*$/.test(trimmed)) return Number(variables[trimmed] ?? 0);
+      for (const ops of [["+", "-"], ["*", "/", "%"]]) {
+        const split = splitTopLevelExpression(trimmed, ops);
+        if (!split) continue;
+        const left = evaluateIntExpression(split[0], variables, functions);
+        const right = evaluateIntExpression(split[2], variables, functions);
+        if (split[1] === "+") return left + right;
+        if (split[1] === "-") return left - right;
+        if (split[1] === "*") return left * right;
+        if (split[1] === "/") return right === 0 ? 0 : Math.trunc(left / right);
+        if (split[1] === "%") return right === 0 ? 0 : left % right;
       }
       return Number(variables[trimmed] ?? 0);
+    }
+
+    function balancedParens(text = "") {
+      let depth = 0;
+      for (const char of text) {
+        if (char === "(") depth += 1;
+        if (char === ")") depth -= 1;
+        if (depth < 0) return false;
+      }
+      return depth === 0;
+    }
+
+    function evaluateCCondition(condition = "", variables = {}, functions = {}) {
+      const comparison = String(condition).match(/^(.+?)\s*(>=|<=|==|!=|>|<)\s*(.+)$/);
+      if (!comparison) return Boolean(evaluateIntExpression(condition, variables, functions));
+      const left = evaluateIntExpression(comparison[1], variables, functions);
+      const right = evaluateIntExpression(comparison[3], variables, functions);
+      if (comparison[2] === ">=") return left >= right;
+      if (comparison[2] === "<=") return left <= right;
+      if (comparison[2] === "==") return left === right;
+      if (comparison[2] === "!=") return left !== right;
+      if (comparison[2] === ">") return left > right;
+      return left < right;
+    }
+
+    function applySimpleCStatement(statement = "", variables = {}, functions = {}) {
+      const addAssign = statement.match(/\b([A-Za-z_]\w*(?:\[\d+\])?)\s*\+=\s*([^;]+)\s*;/);
+      if (addAssign) {
+        const name = addAssign[1];
+        variables[name] = (Number(variables[name]) || 0) + evaluateIntExpression(addAssign[2], variables, functions);
+        return true;
+      }
+      const assign = statement.match(/\b([A-Za-z_]\w*(?:\[\d+\])?)\s*=\s*([^;]+)\s*;/);
+      if (assign) {
+        variables[assign[1]] = evaluateIntExpression(assign[2], variables, functions);
+        return true;
+      }
+      return false;
+    }
+
+    function simulateForLoops(code = "", variables = {}, functions = {}) {
+      for (const loop of String(code).matchAll(/for\s*\(\s*int\s+([A-Za-z_]\w*)\s*=\s*([^;]+);\s*\1\s*<=\s*([^;]+);\s*\1\+\+\s*\)\s*\{([\s\S]*?)\}/g)) {
+        const iterator = loop[1];
+        const start = evaluateIntExpression(loop[2], variables, functions);
+        const end = evaluateIntExpression(loop[3], variables, functions);
+        for (let value = start; value <= end && value - start < 1000; value += 1) {
+          variables[iterator] = value;
+          loop[4].split("\n").forEach((line) => applySimpleCStatement(line.trim(), variables, functions));
+        }
+      }
+    }
+
+    function selectExecutableCBranches(code = "", variables = {}, functions = {}) {
+      let next = String(code);
+      next = next.replace(/if\s*\(([^)]*)\)\s*\{([\s\S]*?)\}\s*else\s*\{([\s\S]*?)\}/g, (_match, condition, truthy, falsy) => (
+        evaluateCCondition(condition, variables, functions) ? truthy : falsy
+      ));
+      next = next.replace(/if\s*\(([^)]*)\)\s*\{([\s\S]*?)\}/g, (_match, condition, truthy) => (
+        evaluateCCondition(condition, variables, functions) ? truthy : ""
+      ));
+      return next;
     }
 
     function unescapeCString(value) {
@@ -36935,70 +37183,75 @@ ${item.code}
 
         showPrompt(getContextualInteractionHint(interaction));
 
-        if (Phaser.Input.Keyboard.JustDown(this.keyE)) {
-          audioManager.ding();
-          if (interaction?.type === "npc") {
-            triggerInteractionRipple(this, interaction.npc.container.x, interaction.npc.container.y);
-          } else if (interaction?.type === "roomEntrance") {
-            triggerInteractionRipple(this, this.playerRoomEntrance.door.x, this.playerRoomEntrance.door.y);
-          } else if (interaction?.type === "oldComputer") {
-            triggerInteractionRipple(this, this.oldComputerTerminal.terminal.x, this.oldComputerTerminal.terminal.y);
-          } else if (interaction?.type === "mossyStone") {
-            triggerInteractionRipple(this, this.mossyDeveloperStone.x, this.mossyDeveloperStone.y);
-          } else if (interaction?.type === "developerRoom") {
-            triggerInteractionRipple(this, this.developerRoomDoor.x, this.developerRoomDoor.y);
-          } else if (interaction?.type === "mazeLayer") {
-            triggerInteractionRipple(this, this.mazeLayerGlitch.x, this.mazeLayerGlitch.y);
-          } else if (interaction?.type === "terminalGuess") {
-            triggerInteractionRipple(this, this.terminalGuessStone.x, this.terminalGuessStone.y);
-          } else if (interaction?.type === "codeEnemy") {
-            triggerInteractionRipple(this, interaction.enemy.x, interaction.enemy.y);
-          } else if (interaction?.chapter) {
-            const target = interaction.type === "challenge" ? this.chapterObjects[interaction.chapter.id]?.gate : this.chapterObjects[interaction.chapter.id]?.stone;
-            if (target) triggerInteractionRipple(this, target.x, target.y);
-          } else if (interaction?.type === "regionPortal") {
-            triggerInteractionRipple(this, interaction.portal.x, interaction.portal.y);
-          }
-          const scanId = interaction?.chapter?.id || interaction?.npc?.data?.id || interaction?.type || "no target";
-          showTerminalBurst(interaction ? `scan("${scanId}") -> ${interaction.type}` : 'printf("no target");');
-          if (interaction?.type === "npc") handleNpcInteraction(this, interaction.npc);
-          if (interaction?.type === "roomEntrance") enterPlayerRoom();
-          if (interaction?.type === "oldComputer") openMetaOsWindow();
-          if (interaction?.type === "developerRoom") enterDeveloperRoom();
-          if (interaction?.type === "mazeLayer") enterMazeLayer();
-          if (interaction?.type === "terminalGuess") openTerminalGuessMiniGame();
-          if (interaction?.type === "codeEnemy") codeEnemyEncounterManager.beginRepair(interaction.enemy.id);
-          if (interaction?.type === "regionPortal") teleportToRegion(this, interaction.portal);
-          if (interaction?.type === "mossyStone") openNpcCodeWindow("长满苔藓的断碑", [
-            "亲爱的玩家：",
-            "谢谢你来到这里。",
-            "这个游戏是我一个人做的。从画第一块草地，到写出最后一行代码，我花了很长时间。",
-            "你可能觉得它还有粗糙的地方，画面不够精美，任务不够丰富。",
-            "但这里的每一个像素，每一行代码，都是我希望你能在某个深夜，因为解出一道谜题而笑出来。",
-            "如果你喜欢它，请把它分享给一个也喜欢代码的朋友。",
-            "如果你不喜欢它，也谢谢你愿意花时间来看看我的世界。",
-            "—— 杀戮"
-          ], "happy", 0x166534, this.mossyDeveloperStone);
-          if (interaction?.type === "locked") {
-            triggerErrorGlitch();
-            showReward(!isLearned(interaction.chapter.id)
-              ? `先完成 ${interaction.chapter.stoneLabel}，编译之门才会亮起。`
-              : `需要先通过前置编译节点。`);
-            showCompilerSpark(window.innerWidth * 0.5, window.innerHeight * 0.5);
-          }
-          if (interaction?.type === "lesson") {
-            if (absoluteGuideRuntime.active) {
-              openEditor(interaction.chapter.id);
-            } else if (this.chapterObjects[interaction.chapter.id]?.codePuzzle?.completed) this.startLesson(interaction.chapter.id, true);
-            else tryFillStoneBlank(this, interaction.chapter.id);
-          }
-          if (interaction?.type === "challenge") openEditor(interaction.chapter.id);
+        if (!isMobileTouchViewport() && Phaser.Input.Keyboard.JustDown(this.keyE)) {
+          this.performCurrentInteraction("keyboard", interaction);
         }
         } catch (error) {
           console.warn("[scene:update] 帧更新异常，已切入安全模式并冻结本帧。", error);
           enterSafeMode(error);
           this.player?.setVelocity?.(0, 0);
         }
+      }
+
+      performCurrentInteraction(source = "keyboard", interaction = this.getInteraction()) {
+        audioManager.ding();
+        if (interaction?.type === "npc") {
+          triggerInteractionRipple(this, interaction.npc.container.x, interaction.npc.container.y);
+        } else if (interaction?.type === "roomEntrance") {
+          triggerInteractionRipple(this, this.playerRoomEntrance.door.x, this.playerRoomEntrance.door.y);
+        } else if (interaction?.type === "oldComputer") {
+          triggerInteractionRipple(this, this.oldComputerTerminal.terminal.x, this.oldComputerTerminal.terminal.y);
+        } else if (interaction?.type === "mossyStone") {
+          triggerInteractionRipple(this, this.mossyDeveloperStone.x, this.mossyDeveloperStone.y);
+        } else if (interaction?.type === "developerRoom") {
+          triggerInteractionRipple(this, this.developerRoomDoor.x, this.developerRoomDoor.y);
+        } else if (interaction?.type === "mazeLayer") {
+          triggerInteractionRipple(this, this.mazeLayerGlitch.x, this.mazeLayerGlitch.y);
+        } else if (interaction?.type === "terminalGuess") {
+          triggerInteractionRipple(this, this.terminalGuessStone.x, this.terminalGuessStone.y);
+        } else if (interaction?.type === "codeEnemy") {
+          triggerInteractionRipple(this, interaction.enemy.x, interaction.enemy.y);
+        } else if (interaction?.chapter) {
+          const target = interaction.type === "challenge" ? this.chapterObjects[interaction.chapter.id]?.gate : this.chapterObjects[interaction.chapter.id]?.stone;
+          if (target) triggerInteractionRipple(this, target.x, target.y);
+        } else if (interaction?.type === "regionPortal") {
+          triggerInteractionRipple(this, interaction.portal.x, interaction.portal.y);
+        }
+        const scanId = interaction?.chapter?.id || interaction?.npc?.data?.id || interaction?.type || "no target";
+        showTerminalBurst(interaction ? `scan("${scanId}") -> ${interaction.type}` : 'printf("no target");');
+        if (interaction?.type === "npc") handleNpcInteraction(this, interaction.npc);
+        if (interaction?.type === "roomEntrance") enterPlayerRoom();
+        if (interaction?.type === "oldComputer") openMetaOsWindow();
+        if (interaction?.type === "developerRoom") enterDeveloperRoom();
+        if (interaction?.type === "mazeLayer") enterMazeLayer();
+        if (interaction?.type === "terminalGuess") openTerminalGuessMiniGame();
+        if (interaction?.type === "codeEnemy") codeEnemyEncounterManager.beginRepair(interaction.enemy.id);
+        if (interaction?.type === "regionPortal") teleportToRegion(this, interaction.portal);
+        if (interaction?.type === "mossyStone") openNpcCodeWindow("长满苔藓的断碑", [
+          "亲爱的玩家：",
+          "谢谢你来到这里。",
+          "这个游戏是我一个人做的。从画第一块草地，到写出最后一行代码，我花了很长时间。",
+          "你可能觉得它还有粗糙的地方，画面不够精美，任务不够丰富。",
+          "但这里的每一个像素，每一行代码，都是我希望你能在某个深夜，因为解出一道谜题而笑出来。",
+          "如果你喜欢它，请把它分享给一个也喜欢代码的朋友。",
+          "如果你不喜欢它，也谢谢你愿意花时间来看看我的世界。",
+          "—— 杀戮"
+        ], "happy", 0x166534, this.mossyDeveloperStone);
+        if (interaction?.type === "locked") {
+          triggerErrorGlitch();
+          showReward(!isLearned(interaction.chapter.id)
+            ? `先完成 ${interaction.chapter.stoneLabel}，编译之门才会亮起。`
+            : `需要先通过前置编译节点。`);
+          showCompilerSpark(window.innerWidth * 0.5, window.innerHeight * 0.5);
+        }
+        if (interaction?.type === "lesson") {
+          if (absoluteGuideRuntime.active) {
+            openEditor(interaction.chapter.id);
+          } else if (this.chapterObjects[interaction.chapter.id]?.codePuzzle?.completed) this.startLesson(interaction.chapter.id, true);
+          else tryFillStoneBlank(this, interaction.chapter.id);
+        }
+        if (interaction?.type === "challenge") openEditor(interaction.chapter.id);
+        return Boolean(interaction);
       }
 
       createCodeRainLayer() {
@@ -37254,7 +37507,7 @@ ${item.code}
         if (!gate || isCleared(chapterId)) return;
         gate.enableBody(false, gate.x, gate.y, true, true);
         gate.clearTint?.();
-        objects.gateHintText?.setText?.("按 E 进入编译");
+        objects.gateHintText?.setText?.(isMobileTouchViewport() ? "触摸进入编译" : "按 E 进入编译");
         objects.gateHintText?.setColor?.("#86efac");
         objects.gateHintText?.setAlpha?.(1);
         this.startGatePulse(gate);
@@ -37573,7 +37826,7 @@ ${item.code}
       dom.absoluteGuideHelp?.setAttribute("aria-hidden", "true");
       const stage = gameState.progress.absoluteGuideStage || "welcome";
       const text = stage === "welcome"
-        ? "去发光石碑旁，按 E。"
+        ? "去发光石碑旁，手机触摸或键盘按 E。"
         : stage === "editor"
           ? "先看 // 注释，再运行。"
           : stage === "run"
@@ -37910,7 +38163,6 @@ ${item.code}
     });
     dom.equipEvolutionShardButton?.addEventListener("click", equipEvolutionShard);
     dom.useHpShardButton?.addEventListener("click", () => useWorldEvolutionFragmentItem("hp"));
-    dom.useMpShardButton?.addEventListener("click", () => useWorldEvolutionFragmentItem("mp"));
     dom.heroCustomizeButton?.addEventListener("click", () => applyHeroStylePreset("random"));
     dom.regenerateHeroAvatarButton?.addEventListener("click", regenerateHeroAvatar);
     document.querySelectorAll("[data-world-difficulty]").forEach((button) => {
@@ -37998,6 +38250,7 @@ ${item.code}
     dom.systemBootOverlay?.addEventListener("click", (event) => {
       if (event.target === dom.systemBootOverlay) skipSystemBootLog();
     });
+    dom.systemLogOverlay?.addEventListener("click", () => skipSystemLogWindow());
     bindFastTouchAction(dom.audioStartButton, initializeAudioFromGesture);
     dom.globalErrorRestartButton?.addEventListener("click", () => window.location?.reload?.());
     dom.globalErrorContinueButton?.addEventListener("click", closeGlobalErrorDialog);
@@ -38095,9 +38348,9 @@ ${item.code}
         showSystemCoreStatus();
         return;
       }
-      if (dom.systemLogOverlay?.dataset.manual === "true" && dom.systemLogOverlay.classList.contains("active")) {
+      if (dom.systemLogOverlay?.classList.contains("active")) {
         event.preventDefault();
-        closeSystemOverlay(dom.systemLogOverlay);
+        skipSystemLogWindow();
         return;
       }
       if (inputManager.isEditorMode()) {

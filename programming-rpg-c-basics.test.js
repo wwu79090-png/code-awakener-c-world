@@ -86,6 +86,7 @@ globalThis.__gameApi = {
   validateExactTaskCode: typeof validateExactTaskCode === "function" ? validateExactTaskCode : undefined,
   findFirstExactCodeDifference: typeof findFirstExactCodeDifference === "function" ? findFirstExactCodeDifference : undefined,
   buildCompileFailureHelp: typeof buildCompileFailureHelp === "function" ? buildCompileFailureHelp : undefined,
+  buildCompileErrorSystemLogLines: typeof buildCompileErrorSystemLogLines === "function" ? buildCompileErrorSystemLogLines : undefined,
   resetEditorAfterCompileFailure: typeof resetEditorAfterCompileFailure === "function" ? resetEditorAfterCompileFailure : undefined,
   simulateCOutput,
   autoInjectStdIoHeader,
@@ -95,6 +96,8 @@ globalThis.__gameApi = {
   resetGameData,
   parseCodeGenesisLine: typeof parseCodeGenesisLine === "function" ? parseCodeGenesisLine : undefined,
   createCodeGenesisInitialState: typeof createCodeGenesisInitialState === "function" ? createCodeGenesisInitialState : undefined,
+  deriveCodeGenesisGuideStateFromSource: typeof deriveCodeGenesisGuideStateFromSource === "function" ? deriveCodeGenesisGuideStateFromSource : undefined,
+  getCodeGenesisNextGuideIndex: typeof getCodeGenesisNextGuideIndex === "function" ? getCodeGenesisNextGuideIndex : undefined,
   createFixedGameSavePayload: typeof createFixedGameSavePayload === "function" ? createFixedGameSavePayload : undefined,
   validateFixedGameSaveJson: typeof validateFixedGameSaveJson === "function" ? validateFixedGameSaveJson : undefined,
   resolveStartupRouteFromSave: typeof resolveStartupRouteFromSave === "function" ? resolveStartupRouteFromSave : undefined,
@@ -309,6 +312,7 @@ const injected = api.autoInjectStdIoHeader('int main(void) { printf("Hi"); retur
 assert(/^#include <stdio\.h>/.test(injected), "C preprocessing should add stdio.h when printf is used without include");
 assert(api.normalizeProgramOutput("Hello\n\n") === "Hello", "program output comparison should ignore trailing whitespace");
 assert(api.compareProgramOutput("Hello\n", "Hello").ok, "output comparison should allow trailing newline differences");
+assert(api.compareProgramOutput(" Hello World \n", "HelloWorld").ok, "output comparison should ignore output whitespace");
 assert(api.compareProgramOutput("Wrong", "Right").message.includes("预期输出"), "output mismatch should explain expected and actual output");
 const initialGameData = api.createInitialGameData();
 assert(initialGameData.progress.learned.length === 0, "initial game data should have no learned lessons");
@@ -329,6 +333,22 @@ int main(void) {
 assert(api.inspectRunnableCBeforeRun(looseVariableSolution, api.chapterById.variables) === "", "runtime judge should allow different variable names when C syntax is runnable");
 assert(api.isLenientChallengePass(looseVariableSolution, api.chapterById.variables, "7"), "runtime judge should pass runnable C solutions only when output matches");
 assert(!api.isLenientChallengePass(looseVariableSolution, api.chapterById.variables, "8"), "runtime judge should reject runnable code when output does not match the task target");
+const whitespaceOutputSolution = `#include <stdio.h>
+int main(void) {
+  int a = 10;
+  // extra code and comments do not matter when stdout matches
+  printf("  Hello, C World!\\n");
+  return 0;
+}`;
+assert(api.inspectRunnableCBeforeRun(whitespaceOutputSolution, api.chapterById.hello) === "", "runtime judge should ignore comments, variables, and extra non-output code");
+assert(api.compareProgramOutput(api.simulateCOutput(whitespaceOutputSolution, api.chapterById.hello), api.chapterById.hello.output).ok, "runtime judge should pass when normalized stdout matches expected output");
+const noOutputSolution = `#include <stdio.h>
+int main(void) {
+  int a = 10;
+  return 0;
+}`;
+assert(api.simulateCOutput(noOutputSolution, api.chapterById.hello) === "", "programs without output should not be filled with the expected answer");
+assert(!api.compareProgramOutput(api.simulateCOutput(noOutputSolution, api.chapterById.hello), api.chapterById.hello.output).ok, "programs without matching stdout should fail");
 const syntaxBrokenSolution = `#include <stdio.h>
 int main(void) {
   int score = 7
@@ -357,6 +377,13 @@ int main(void) {
   return 0;
 }`, api.chapterById.hello);
 assert(chineseIncludeIssue.includes("全角小于号") && chineseIncludeIssue.includes("修正示例"), "challenge inspector should explain full-width include delimiters before generic missing include errors");
+const returnOutsideMainSolution = `#include <stdio.h>
+int main(void) {
+  printf("C language");
+}
+return 0;`;
+const returnOutsideIssue = api.inspectRunnableCBeforeRun(returnOutsideMainSolution, api.chapterById.overview);
+assert(returnOutsideIssue.includes("第5行") && returnOutsideIssue.includes("return 0; 写在 main 函数外面"), "runtime judge should report return outside main with the real line number");
 assert(/inspectInstantSyntax[\s\S]*inspectLocaleSyntaxIssue/m.test(html), "instant syntax check should use the detailed locale punctuation diagnostics");
 assert(typeof api.createEditorFilesForTask === "function", "task editor file lifecycle helper should exist");
 assert(typeof api.validateEditorSubmissionForCurrentTask === "function", "compile button should use a dedicated preflight validator");
@@ -404,6 +431,13 @@ assert(!/renderExactCodeReferenceForCurrentTask\(preflight\)/m.test(html), "comp
 assert(/restoreEditorSourceAfterFailedRun\(userSourceBeforeRun,\s*preflight\.reason/m.test(html), "compile preflight failures should preserve the user's erroneous text for in-place correction");
 assert(/function formatCompileErrorMessage/m.test(html) && /appendCompileFailureHelp\(failureMessage,\s*chapter,\s*penalty\.failureCount\)/m.test(html), "all failed compile paths should display a compile-error message with non-blocking help while preserving editor text");
 assert(typeof api.buildCompileFailureHelp === "function", "compile failures should expose a non-blocking help builder");
+assert(typeof api.buildCompileErrorSystemLogLines === "function", "compile error popup should build testable diagnostic lines");
+{
+  const lines = api.buildCompileErrorSystemLogLines("编译错误：[第5行] return 0; 写在 main 函数外面。", 5).join("\n");
+  assert(lines.includes("第5行") && lines.includes("return 0; 写在 main 函数外面") && !lines.includes("检查第1行"), "compile error popup should show the real diagnostic instead of a fake first-line semicolon hint");
+}
+assert(/function skipSystemLogWindow/m.test(html) && /dom\.systemLogOverlay\?\.addEventListener\("click"[\s\S]*skipSystemLogWindow/m.test(html), "system log popups should be skippable or accelerated by click");
+assert(/dom\.systemLogOverlay\?\.classList\.contains\("active"\)[\s\S]*skipSystemLogWindow\(\)/m.test(html), "system log popups should be skippable or accelerated by keyboard");
 assert(api.buildCompileFailureHelp(api.chapterById.variables, 2) === "", "compile help should stay quiet before the third failed attempt");
 {
   const help = api.buildCompileFailureHelp(api.chapterById.variables, 3);
@@ -417,7 +451,6 @@ assert(!/localStorage\.setItem\([^)]*(?:codeInput|main\.c|activeChallengeCode|la
 const qualityMarkers = [
   "Press Start 2P",
   "id=\"hpMeter\"",
-  "id=\"mpMeter\"",
   "id=\"cardAlbumOverlay\"",
   "id=\"achievementOverlay\"",
   "id=\"resetCodeButton\"",
@@ -495,7 +528,7 @@ assert(/function createStoneScanline/m.test(html), "stones should have a scannin
 assert(/function updateInteractiveFocus/m.test(html), "nearby interactables should brighten and glow");
 assert(/\.glass-panel\s*\{[\s\S]*border-radius:\s*22px/m.test(html), "UI panels should use modern rounded frosted glass");
 assert(/\.settings-panel\s*\{[\s\S]*background:\s*linear-gradient[\s\S]*rgba\(8,\s*13,\s*23,\s*0\.42\)/m.test(html), "settings panel should be a lighter frosted floating window");
-assert(/\.code-meter/m.test(html), "HP/MP should use code-style progress bars");
+assert(/\.code-meter/m.test(html), "status meters should use code-style progress bars");
 assert(/\.code-meter::before[\s\S]*content:\s*\"\\|\"/m.test(html), "code meters should have cursor-like end caps");
 assert(/\.glitch-overlay\.active/m.test(html), "glitch overlay should have an active animation state");
 assert(/\.terminal-burst\.show/m.test(html), "terminal burst should have a visible animation state");
@@ -689,13 +722,13 @@ assert(/touch-action:\s*pan-y/m.test(html), "mobile info side menu should allow 
 assert(/mode:\s*"menuCloseSwipe"[\s\S]*startY:\s*firstTouch\.clientY[\s\S]*pending:\s*true/m.test(html), "menu close swipe should track vertical movement before capturing touch events");
 assert(/Math\.abs\(deltaY\)\s*>\s*8[\s\S]*Math\.abs\(deltaY\)\s*>\s*Math\.abs\(deltaX\)[\s\S]*drawerGesture\s*=\s*null[\s\S]*return/m.test(html), "vertical swipes inside the mobile menu should be released for native scrolling");
 assert(/id="infoTaskText"/m.test(html) && /id="infoFragmentText"/m.test(html), "side info menu should include task and fragment status");
-assert(/id="infoHpText"/m.test(html) && /id="infoMpText"/m.test(html), "side info menu should include HP and MP");
+assert(/id="infoHpText"/m.test(html), "side info menu should include HP");
 assert(/id="infoEquipText"/m.test(html), "side info menu should explain equipped fragments");
 assert(/id="textSpeedSlider"/m.test(html), "side info menu should include text speed control");
 assert(/id="manualSaveButton"/m.test(html), "side info menu should include a manual save button");
 assert(/manualSaveButton\?\.addEventListener\("click"[\s\S]*saveGame\(\)[\s\S]*进度已手动保存/m.test(html), "manual save button should save the game and show island feedback");
 assert(/Number\(gameState\.codeAccuracy\)/m.test(html), "side info menu HP should read the actual codeAccuracy state");
-assert(/Number\(gameState\.hintsLeft\)/m.test(html), "side info menu MP should read the actual hintsLeft state");
+assert(!/id="infoMpText"|id="infoMpFill"|id="mpMeter"|id="mpValue"|useMpShardButton/.test(html), "MP UI should be removed from the player interface");
 assert(!/Number\(gameState\.hp\)/m.test(html) && !/Number\(gameState\.mp\)/m.test(html), "side info menu should not read undefined hp/mp fields");
 assert(/Object\.values\(gameState\.equipped \|\| {}\)/m.test(html), "side info menu equipment text should read equipped skill cards");
 assert(/function getDialogTextDelay/m.test(html), "dialog typewriter speed should be driven by settings");
@@ -1203,6 +1236,7 @@ assert(/导师提示：/m.test(html), "editor hints should be framed as mentor g
 assert(!/AI\s*提示|AI提示|AI\s*评价|AI评价/m.test(html), "editor-facing hints should not use AI wording");
 assert(/id="startupAnnouncement"/m.test(html), "first load should include a dynamic-island announcement");
 assert(/>\s*消息/.test(html) && /作者：杀戮/.test(html), "announcement should show the requested title and author");
+assert(/id="creditsOverlay"[\s\S]*感谢 花海 为本游戏提供宣传协力支持[\s\S]*QQ：2256713629[\s\S]*手机：13072295416[\s\S]*再次感谢花海的帮助与推广/m.test(html), "credits should include the requested Huahai acknowledgement and contact details");
 assert(/UPDATE_ANNOUNCEMENT_PAGES\s*=\s*Object\.freeze/m.test(html), "announcement update notes should be centralized for every GitHub upload");
 assert(/本次更新|更新内容/m.test(html), "announcement should present the current update content instead of stale first-version copy");
 assert(/function renderStartupAnnouncementPage/m.test(html), "announcement should render paged update notes");
@@ -1211,13 +1245,14 @@ assert(/本项目永久免费对外开放/.test(html), "announcement should incl
 assert(/STARTUP_ANNOUNCEMENT_AUTO_HIDE_MS\s*=\s*3000/m.test(html), "announcement should auto-hide after 3 seconds");
 assert(/function showStartupAnnouncement/m.test(html), "announcement should be controlled by a startup function");
 assert(/id="announcementCloseButton"/m.test(html), "announcement should include a minimal close control");
-assert(/World Build v1\.0\.18/m.test(html) || /GAME_VERSION\s*=\s*"v1\.0\.18"/m.test(html), "game version should increment when shipping a new update");
+assert(/World Build v1\.0\.19/m.test(html) || /GAME_VERSION\s*=\s*"v1\.0\.19"/m.test(html), "game version should increment when shipping a new update");
 assert(/UPDATE_HISTORY\s*=\s*Object\.freeze\(\[[\s\S]*v1\.0\.1[\s\S]*零基础新手指引[\s\S]*v1\.0\.0[\s\S]*手机端适配/m.test(html), "update history should keep detailed previous release notes");
 assert(/id="updateHistoryList"/m.test(html) && /历史更新内容/m.test(html), "side menu should expose update history with detailed usage-visible notes");
-assert(/GAME_VERSION\s*=\s*"v1\.0\.18"/m.test(html), "game version should increment for the startup diagnostic and mobile performance cleanup release");
-assert(/UPDATE_ANNOUNCEMENT_PAGES\s*=\s*Object\.freeze\(\[\s*\{\s*title:\s*"> 消息 \/ 本次更新"[\s\S]*离线缓存不再尝试无效 blob Service Worker[\s\S]*手机端先使用低功耗特效预算/m.test(html), "collapsed startup announcement should show the latest diagnostic cleanup summary first, not only author text");
-assert(/id="announcementPageBody"[\s\S]*离线缓存不再尝试无效 blob Service Worker[\s\S]*手机端先使用低功耗特效预算/m.test(initialBodyMarkup), "static startup announcement placeholder should match the latest update before script hydration");
+assert(/GAME_VERSION\s*=\s*"v1\.0\.19"/m.test(html), "game version should increment for the output judge, MP removal, and mobile touch release");
+assert(/UPDATE_ANNOUNCEMENT_PAGES\s*=\s*Object\.freeze\(\[\s*\{\s*title:\s*"> 消息 \/ 本次更新"[\s\S]*判题只看运行输出[\s\S]*MP 门槛已移除[\s\S]*手机端改为触摸交互/m.test(html), "collapsed startup announcement should show the latest judge and touch interaction summary first, not only author text");
+assert(/id="announcementPageBody"[\s\S]*判题只看运行输出[\s\S]*MP 门槛已移除[\s\S]*手机端改为触摸交互/m.test(initialBodyMarkup), "static startup announcement placeholder should match the latest update before script hydration");
 assert(!/公告只保留关闭、课程锁定、自由模式通关后显示/m.test(initialBodyMarkup), "static startup announcement placeholder should not show stale update copy");
+assert(/UPDATE_HISTORY\s*=\s*Object\.freeze\(\[[\s\S]*v1\.0\.19[\s\S]*输出判题、MP移除与手机触摸交互[\s\S]*运行输出与任务预期一致[\s\S]*虚拟交互按钮显示“触摸”[\s\S]*感谢花海为本游戏提供宣传协力支持/m.test(html), "update history should record the v1.0.19 judge, MP, mobile touch, and credits release");
 assert(/UPDATE_HISTORY\s*=\s*Object\.freeze\(\[[\s\S]*v1\.0\.18[\s\S]*启动诊断、离线缓存降噪与移动端性能保护[\s\S]*无效 blob Service Worker[\s\S]*低功耗特效预算/m.test(html), "update history should record the v1.0.18 startup diagnostic and mobile performance cleanup");
 assert(/UPDATE_HISTORY\s*=\s*Object\.freeze\(\[[\s\S]*v1\.0\.17[\s\S]*智能判题与编译失败恢复[\s\S]*终端输出作为通关标准[\s\S]*连续三次失败/m.test(html), "update history should record the v1.0.17 intelligent judge and failure recovery fixes");
 assert(/UPDATE_HISTORY\s*=\s*Object\.freeze\(\[[\s\S]*v1\.0\.15[\s\S]*公告按钮删减[\s\S]*100%重复触发修复[\s\S]*课程权限收口/m.test(html), "update history should record the v1.0.15 announcement, 100%, and course-lock fixes");
@@ -1233,7 +1268,7 @@ assert(!/id="announcementExpandButton"/m.test(html) && !/announcementExpandButto
 assert(/UPDATE_HISTORY\s*=\s*Object\.freeze\(\[[\s\S]*v1\.0\.13[\s\S]*手机版设置入口[\s\S]*误开菜单[\s\S]*公告折叠状态/m.test(html), "update history should record the v1.0.13 mobile settings and announcement fix");
 assert(/UPDATE_HISTORY\s*=\s*Object\.freeze\(\[[\s\S]*v1\.0\.12[\s\S]*移除防白屏手动选项[\s\S]*CRT 雪花噪声 canvas 默认隐藏/m.test(html), "update history should record the v1.0.12 anti-white-screen option removal");
 assert(/UPDATE_HISTORY\s*=\s*Object\.freeze\(\[[\s\S]*v1\.0\.11[\s\S]*防白屏高档位白色噪点闪烁修复[\s\S]*CRT 噪声[\s\S]*每6帧[\s\S]*最多18个/m.test(html), "update history should record the v1.0.11 anti-white-noise release");
-assert(/UPDATE_ANNOUNCEMENT_PAGES\s*=\s*Object\.freeze\(\[[\s\S]*离线缓存不再尝试无效 blob Service Worker[\s\S]*旧的 blob Service Worker 注册路径已移除[\s\S]*手机和触控视口会先跳过 SSAO/m.test(html), "startup announcement should describe the current startup diagnostic and mobile performance cleanup");
+assert(/UPDATE_ANNOUNCEMENT_PAGES\s*=\s*Object\.freeze\(\[[\s\S]*判题只看运行输出[\s\S]*通过条件改为：代码能正常编译[\s\S]*手机设备会提示：触摸才是交互方式/m.test(html), "startup announcement should describe the current output judge and mobile touch update");
 assert(/id="announcementCloseButton"[\s\S]*>×<\/button>/m.test(html), "announcement close button should be a compact icon, not wrapping text");
 assert(/function isCTutorialChapterUnlocked/m.test(html) && /course-lesson-item[\s\S]*locked[\s\S]*disabled aria-disabled/m.test(html), "course progress should lock future chapters until the player reaches them");
 assert(/function isCTutorialFullyCompleted/m.test(html) && /const unlocked = isCTutorialFullyCompleted\(\)/m.test(html), "free mode editor should only unlock after full course completion");
@@ -1606,8 +1641,10 @@ assert(/function recoverSaveFromBackup/m.test(html), "save corruption should rec
 assert(/function pruneOldSaveBackups/m.test(html), "settings should be able to clear old save backups");
 assert(/id="clearOldSavesButton"/m.test(html), "settings should expose a clear old saves button");
 assert(/id="mobileControls"/m.test(html) && /id="virtualJoystick"/m.test(html) && /id="mobileInteractButton"/m.test(html), "touch devices should have virtual joystick and interact button");
+assert(/id="mobileInteractButton"[^>]*aria-label="触摸交互"[\s\S]{0,120}>触摸<\/button>/m.test(html), "mobile interact control should be labeled as touch interaction instead of E");
 assert(/body\.mobile-input\.is-settings-open \.mobile-controls[\s\S]*display:\s*none/m.test(html) && /document\.body\.classList\.add\("is-settings-open"\)/m.test(html), "mobile controls should hide while settings is open");
 assert(/function detectMobileInputMode/m.test(html), "mobile mode should be detected by width and touch capability");
+assert(/function showMobileTouchInteractionNotice/m.test(html) && /触摸才是交互/m.test(html), "mobile detection should explain that touch is the interaction method");
 assert(/function applyMobileEditorLayout/m.test(html), "small screens should switch editor to compact layout");
 assert(/function updateMobileEditorViewport/m.test(html) && /visualViewport/m.test(html) && /mobile-keyboard-open/m.test(html), "mobile editor should track the visual viewport when the soft keyboard opens");
 assert(/--mobile-visual-height/m.test(html) && /scrollIntoView/m.test(html), "mobile editor should stay visible above the soft keyboard");
@@ -1713,6 +1750,12 @@ assert(api.resolveStartupRouteFromSave, "startup route resolver should be export
   assert(finish.kind === "return" && finish.complete === true, "code genesis should accept return 0 when complete");
   const incomplete = api.parseCodeGenesisLine("return 0;", { hp: 88 });
   assert(incomplete.kind === "error" && /name/.test(incomplete.message) && /level/.test(incomplete.message), "code genesis should block return 0 until all fields exist");
+  assert(api.deriveCodeGenesisGuideStateFromSource, "code genesis should derive live guide state from typed source");
+  assert(api.getCodeGenesisNextGuideIndex, "code genesis should expose next guide index for live prompt refresh");
+  const afterHpGuide = api.getCodeGenesisNextGuideIndex(api.deriveCodeGenesisGuideStateFromSource("int hp = 88;"));
+  const afterNameGuide = api.getCodeGenesisNextGuideIndex(api.deriveCodeGenesisGuideStateFromSource('int hp = 88;\nchar name[] = "Ada";'));
+  const afterLevelGuide = api.getCodeGenesisNextGuideIndex(api.deriveCodeGenesisGuideStateFromSource('int hp = 88;\nchar name[] = "Ada";\nint level = 3;'));
+  assert(afterHpGuide === 1 && afterNameGuide === 2 && afterLevelGuide === 3, "code genesis live guide should advance from hp to name to level to return");
   const fixedPayload = api.createFixedGameSavePayload({ hp: 77, name: "Ada", level: 2 });
   const validSave = api.validateFixedGameSaveJson(JSON.stringify(fixedPayload));
   assert(validSave.valid && validSave.data.character.name === "Ada", "fixed save validator should accept complete character saves");
@@ -1808,7 +1851,8 @@ assert(/\/\* ===== 头像系统 ===== \*\//m.test(html), "single-file structure 
 assert(/function drawRandomPortraitExpression/m.test(html) && /eyebrowAngle/m.test(html) && /mouthStyle/m.test(html), "Canvas NPC portraits should randomize eyebrows and mouth expressions");
 assert(/WORLD_EVOLUTION_NARRATIVE_THRESHOLDS\s*=\s*Object\.freeze\(\[30,\s*60,\s*90\]\)/m.test(html), "world evolution should auto-trigger narrative at 30/60/90 percent");
 assert(/WORLD_EVOLUTION_EFFECT_THRESHOLDS\s*=\s*Object\.freeze\(\[20,\s*40,\s*60,\s*80,\s*100\]\)/m.test(html), "world evolution should define dedicated threshold performances");
-assert(/function spendWorldEvolutionMp/m.test(html) && /function useWorldEvolutionFragmentItem/m.test(html), "compile advance should consume MP and fragments should restore HP/MP");
+assert(!/function spendWorldEvolutionMp|spendWorldEvolutionMp\(|MP不足|internalMpCost|mpCost/.test(html), "compile advance must not consume or gate on MP");
+assert(/function useWorldEvolutionFragmentItem/m.test(html), "fragments should still restore HP");
 assert(/id="fragmentStarChartButton"/m.test(html) && /function openFragmentStarChart/m.test(html), "side menu should expose an interactive fragment star chart");
 assert(/id="heroCustomizeButton"/m.test(html) && /function applyHeroStylePreset/m.test(html), "side menu should expose hero avatar customization");
 assert(/function maybeSpawnWorldGuardianQte/m.test(html) && /function resolveWorldGuardianQte/m.test(html), "compile loop should spawn and resolve guardian QTE events");
@@ -1909,6 +1953,8 @@ assert(/const CODE_GENESIS_BEGINNER_TEMPLATE[\s\S]*int hp = 88;[\s\S]*char name\
 assert(/CODE_GENESIS_GUIDED_LINES\s*=\s*Object\.freeze\(\[/m.test(html) && html.includes("int hp = 88;") && html.includes('char name[] = \\"行者\\";') && html.includes("int level = 1;") && html.includes("return 0;"), "code genesis should teach character creation line by line");
 assert(/id="codeGenesisExampleButton"/m.test(html) && /id="codeGenesisExplainButton"/m.test(html) && /id="codeGenesisCreateButton"/m.test(html), "code genesis should expose helper buttons for zero-basis players");
 assert(/function showCodeGenesisNextLineHint/m.test(html) && /function explainCodeGenesisBeginnerTemplate/m.test(html) && /function runCodeGenesisEditor/m.test(html), "code genesis helper buttons should guide the next line without completing creation for the player");
+assert(/function refreshCodeGenesisGuideFromInput/m.test(html) && /codeGenesisInput\.placeholder/m.test(html), "code genesis helper and placeholder should refresh from the current typed code");
+assert(/commitCodeGenesisEditorOperation[\s\S]*refreshCodeGenesisGuideFromInput/m.test(html), "code genesis typing should refresh the current guide without waiting for helper buttons");
 assert(/runCodeGenesisEditor[\s\S]*const source = dom\.codeGenesisInput\.value[\s\S]*!source\.trim\(\)/m.test(html), "code genesis create button should validate player-typed code instead of auto-running the full template");
 assert(/function pickPreferredSpeechVoice/m.test(html) && /function applyPreferredSpeechVoice/m.test(html), "TTS should prefer softer local browser voices instead of forcing the default voice");
 assert(/TTSFM_CONFIG\s*=\s*Object\.freeze[\s\S]*http:\/\/localhost:8000\/v1\/audio\/speech[\s\S]*voice:\s*"nova"/m.test(html), "TTS should default to the requested ttsfm local OpenAI-compatible endpoint and female-style voice");
@@ -1926,7 +1972,7 @@ assert(/function confirmSkipNoviceGuide[\s\S]*clearNoviceGuideTimers\(\)/m.test(
 assert(/function completeNoviceGuide[\s\S]*closeNoviceGuideDialogue\(\)[\s\S]*closeEditor\(true\)/m.test(html), "finishing or skipping the guide should restore dialogue and editor input state");
 assert(/dom\.runButton\.addEventListener\("click", \(\) => \{[\s\S]*gameState\.noviceGuideActive[\s\S]*handleNoviceGuideCompile/m.test(html), "real editor run button should route through novice guide while active");
 assert(/INFO_MENU_SECTION_ICON_MAP\s*=\s*Object\.freeze/m.test(html), "side menu should have a centralized icon and purpose map");
-["课程进度", "知识碎片", "HP / MP", "存档槽", "学习辅助"].forEach((title) => {
+["课程进度", "知识碎片", "容错状态", "存档槽", "学习辅助"].forEach((title) => {
   assert(new RegExp(`${title}[\\s\\S]*icon[\\s\\S]*purpose`).test(html), `side menu icon map should explain ${title}`);
 });
 assert(/function decorateInfoMenuSectionIcons/m.test(html), "side menu headings should be decorated with icons and short purpose text");
@@ -2027,7 +2073,9 @@ assert(/function bindFastTouchAction/m.test(html), "touch-first buttons should u
 assert(/bindFastTouchAction\(dom\.infoMenuToggle[\s\S]*toggleInfoSideMenu/m.test(html), "menu button should support touchstart without 300ms delay");
 assert(/function isMobileControlTouchTarget/m.test(html) && /touchesStartedOnMobileControls/m.test(html), "side-menu touch gestures should ignore virtual joystick and mobile interact controls");
 assert(/dom\.mobileControls\?\.addEventListener\("touchstart"[\s\S]*stopPropagation/m.test(html), "mobile controls should stop touch bubbling so joystick plus E cannot open the menu");
-assert(/bindFastTouchAction\(dom\.mobileInteractButton,\s*triggerMobileInteractButton\)/m.test(html), "mobile E button should use fast touch handling instead of delayed click");
+assert(/bindFastTouchAction\(dom\.mobileInteractButton,\s*triggerMobileInteractButton\)/m.test(html), "mobile touch interact button should use fast touch handling instead of delayed click");
+assert(/function triggerMobileInteractButton[\s\S]*performCurrentInteraction\("touch"/m.test(html), "mobile touch interact should call the scene interaction handler directly");
+assert(!/function triggerMobileInteractButton[\s\S]*keyE\.isDown[\s\S]*mobile-interact-release/m.test(html), "mobile touch interact should not synthesize the E key");
 assert(!/bindFastTouchAction\(dom\.worldEvolutionMenuAdvanceButton[\s\S]*compileAndAdvanceWorld/m.test(html), "removed world evolution demo button should not keep a touch binding");
 assert(/function updateInfoMenuDragProgress/m.test(html) && /leftEdgeSwipe/m.test(html) && /touchmove[\s\S]*updateInfoMenuDragProgress/m.test(html), "side menu should support left-edge swipe open and drawer swipe close");
 assert(/function handleCanvasTouchCreation/m.test(html) && /touch\.clientX[\s\S]*touch\.clientY/m.test(html), "Canvas trajectory creation should map touch coordinates");

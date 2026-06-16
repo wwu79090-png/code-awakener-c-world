@@ -1,6 +1,6 @@
 {
   "name": "code-awakener-c-world",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "private": true,
   "description": "A C language learning RPG with an embeddable teaching SDK and desktop shell.",
   "main": "desktop/electron-main.cjs",

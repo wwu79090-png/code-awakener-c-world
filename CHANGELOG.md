@@ -2,6 +2,16 @@
 
 ## Unreleased
 
+## v1.0.19 - 2026-06-17
+
+- Judge rule now passes only when C code compiles and normalized runtime output matches the task expectation.
+- Output comparison ignores whitespace, newlines, indentation, and surrounding blanks; extra comments, variables, and non-output code no longer block a correct result.
+- Removed MP gating from compile progress and removed MP UI/status controls, so low MP is no longer reported as a compile failure.
+- Compile-error system logs now show the real diagnostic and can be skipped quickly by click or keyboard.
+- Mobile interaction is touch-first: the virtual interact button says `触摸`, mobile devices explain that touch is the interaction method, movement controls stay available, and desktop `E` remains available.
+- Character creation guidance now follows the current typed code, advancing from `int hp` to `char name`, `int level`, and `return 0;` instead of staying on the first prompt.
+- Added credits acknowledgement for 花海, including the requested cooperation/support contact details in the in-game credits and startup announcement.
+
 - Added versioned save envelopes with migration, repair, checksum validation, and immutable snapshots.
 - Added bounded runtime error reporting, watchdog heartbeat, timer tracking, particle budget guards, and debug shortcuts.
 - Added accessibility live announcements, muted visual alerts, adaptive stone-puzzle difficulty, animation intensity settings, learning report hooks, and local time capsule export.
