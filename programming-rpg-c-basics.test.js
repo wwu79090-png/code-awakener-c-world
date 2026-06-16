@@ -94,6 +94,11 @@ globalThis.__gameApi = {
   resolveStartupRouteFromSave: typeof resolveStartupRouteFromSave === "function" ? resolveStartupRouteFromSave : undefined,
   applyManualEditorKeyOperation: typeof applyManualEditorKeyOperation === "function" ? applyManualEditorKeyOperation : undefined,
   manualEditorOperationFromBeforeInput: typeof manualEditorOperationFromBeforeInput === "function" ? manualEditorOperationFromBeforeInput : undefined,
+  C_TUTORIAL_COURSE: typeof C_TUTORIAL_COURSE !== "undefined" ? C_TUTORIAL_COURSE : undefined,
+  C_VISUAL_ENTITY_MAP: typeof C_VISUAL_ENTITY_MAP !== "undefined" ? C_VISUAL_ENTITY_MAP : undefined,
+  flattenCTutorialSnippets: typeof flattenCTutorialSnippets === "function" ? flattenCTutorialSnippets : undefined,
+  buildExecutionPlanForSnippet: typeof buildExecutionPlanForSnippet === "function" ? buildExecutionPlanForSnippet : undefined,
+  getTutorialDifficultyTiming: typeof getTutorialDifficultyTiming === "function" ? getTutorialDifficultyTiming : undefined,
   destroyKnowledgeFragment: typeof destroyKnowledgeFragment === "function" ? destroyKnowledgeFragment : undefined,
   compressSavePayload: typeof compressSavePayload === "function" ? compressSavePayload : undefined,
   decompressSavePayload: typeof decompressSavePayload === "function" ? decompressSavePayload : undefined,
@@ -1626,6 +1631,62 @@ assert(/function grantGrowthExperience/m.test(html) && /function getPlayerGrowth
 assert(/function applyPlayerGrowthVisuals/m.test(html), "player visuals should evolve by level");
 assert(/function showLevelUpFeedback/m.test(html), "level-up should show a gold pulse feedback");
 assert(/infoExpText/m.test(html) && /infoCompileLivesText/m.test(html), "side info menu should show experience and compile lives");
+
+assert(api.C_TUTORIAL_COURSE, "C tutorial course data should be exported for tests");
+assert(Array.isArray(api.C_TUTORIAL_COURSE) && api.C_TUTORIAL_COURSE.length === 8, "C tutorial course should contain exactly eight structured chapters");
+{
+  const requiredChapterNames = ["初识C语言", "运算符与表达式", "流程控制", "数组与字符串", "函数", "指针", "结构体与联合体", "动态内存管理"];
+  requiredChapterNames.forEach((name) => assert(api.C_TUTORIAL_COURSE.some((chapter) => chapter.title.includes(name)), `missing C tutorial chapter ${name}`));
+  const snippets = api.flattenCTutorialSnippets();
+  assert(snippets.length >= 50, `C tutorial course should include at least 50 code snippets, got ${snippets.length}`);
+  api.C_TUTORIAL_COURSE.forEach((chapter) => {
+    const chapterSnippets = chapter.lessons.flatMap((lesson) => lesson.snippets || []);
+    assert(chapterSnippets.length >= 3, `${chapter.title} should include at least three runnable examples`);
+  });
+  ["printf", "scanf", "const", "#define", "for", "while", "do", "switch", "strlen", "strcpy", "return", "recursion", "*ptr", "struct", "malloc", "free", "calloc", "realloc"].forEach((token) => {
+    assert(snippets.some((snippet) => snippet.code.includes(token) || snippet.title.includes(token) || snippet.concept.includes(token)), `C tutorial snippets should cover ${token}`);
+  });
+  [5, 10, 18, 25].forEach((order) => {
+    const snippet = snippets.find((item) => item.order === order);
+    assert(snippet?.intentionalError && snippet.errorType && snippet.fixSuggestion && snippet.fixedCode, `snippet #${order} should teach a recoverable error`);
+  });
+}
+assert(api.C_VISUAL_ENTITY_MAP, "C visual entity map should be exported for tests");
+["variable", "pointer", "loop", "array", "string", "function"].forEach((key) => {
+  assert(api.C_VISUAL_ENTITY_MAP[key]?.entity, `visual entity map should include ${key}`);
+});
+assert(/variable:[\s\S]*glowing-container/.test(html), "variables should map to glowing containers");
+assert(/pointer:[\s\S]*light-beam/.test(html), "pointers should map to light beams");
+assert(/loop:[\s\S]*orbit/.test(html), "loops should map to orbits");
+assert(/array:[\s\S]*bookshelf/.test(html), "arrays should map to bookshelf/cell visuals");
+assert(/function buildExecutionPlanForSnippet/m.test(html), "C tutorial should build an execution visualization plan");
+assert(/function renderExecutionMemoryModel/m.test(html), "C tutorial should render a memory model");
+assert(/function renderExecutionTrace/m.test(html), "C tutorial should render code execution trace");
+assert(/function playCodeExecutionVisualization/m.test(html), "C tutorial should play the execution visualization");
+assert(/function compileCurrentTutorialSnippet/m.test(html), "compile button should run the current C tutorial snippet before world evolution");
+assert(/function showTutorialErrorFeedback/m.test(html), "C tutorial errors should have dedicated feedback");
+assert(/function applyTutorialFixSuggestion/m.test(html), "C tutorial should let players apply fix suggestions");
+assert(/function unlockFreeModeIfReady/m.test(html), "free mode should unlock from C tutorial progress");
+assert(/function compileFreeModeCode/m.test(html), "free mode code editor should be compilable");
+assert(/function stepDebugExecution/m.test(html), "debug mode should support single-step execution");
+assert(/id="courseProgressPanel"/m.test(html) && /id="courseLessonList"/m.test(html), "side menu should include course progress and chapter directory");
+assert(/id="learningLogList"/m.test(html) && /id="codeHistoryList"/m.test(html), "side menu should include learning log and replayable code history");
+assert(/id="freeModeEditorPanel"/m.test(html) && /id="freeModeCodeInput"/m.test(html) && /id="freeModeCompileButton"/m.test(html), "side menu should include free mode editor after unlock");
+assert(/id="debugStepButton"/m.test(html) && /id="tutorialFixSuggestionButton"/m.test(html), "side menu should expose debug stepping and error fix suggestion controls");
+assert(/currentLesson:\s*0/m.test(html) && /compiledHistory:\s*\[\]/m.test(html) && /errorAttempts:\s*\{\}/m.test(html), "C tutorial progress should persist core local state");
+assert(/localStorage\.setItem\("currentLesson"/m.test(html) && /localStorage\.setItem\("compiledHistory"/m.test(html) && /localStorage\.setItem\("freeModeCode"/m.test(html) && /localStorage\.setItem\("errorAttempts"/m.test(html), "C tutorial should persist required direct localStorage keys");
+assert(api.getTutorialDifficultyTiming("easy") === 1500, "easy mode should slow teaching animation to 1.5s");
+assert(api.getTutorialDifficultyTiming("normal") === 800, "normal mode should use 0.8s teaching animation");
+assert(api.getTutorialDifficultyTiming("hard") === 300, "hard mode should use 0.3s teaching animation");
+{
+  const plan = api.buildExecutionPlanForSnippet({ code: "int nums[3] = {1, 2, 3};\nint *ptr = &nums[0];\nfor (int i = 0; i < 3; i++) { nums[i] += 1; }", title: "plan", concept: "数组 指针 循环" });
+  assert(plan.memoryCells.length > 0, "execution plan should include memory cells");
+  assert(plan.arrays.length > 0, "execution plan should visualize arrays");
+  assert(plan.pointers.length > 0, "execution plan should visualize pointer arrows");
+  assert(plan.loops.length > 0, "execution plan should visualize loop orbits");
+  assert(plan.trace.length >= 3, "execution plan should include highlighted trace lines");
+}
+assert(/compileAndAdvanceWorld/m.test(html) && /compileCurrentTutorialSnippet\(\)/m.test(html), "world compile button should call the C tutorial compiler before evolution");
 
 console.log(`validated ${expectedIds.length} C tutorial chapters and quality systems`);
 assert(/event\.key\s*===\s*"Tab"[\s\S]{0,220}toggleInfoSideMenu\(\)/m.test(html), "Tab should toggle the in-game function info menu without using browser focus traversal");

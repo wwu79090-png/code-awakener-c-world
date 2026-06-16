@@ -11,7 +11,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; base-uri 'self'; object-src 'none'; frame-ancestors 'none'; script-src 'self' https://cdn.jsdelivr.net 'nonce-code-awakener-inline' 'sha256-CAzNluhMlU5zwU3q7gJUR7/LIeTWxbJwcksO8iFW61k='; style-src 'self' https://cdn.jsdelivr.net https://fonts.googleapis.com 'nonce-code-awakener-inline' 'sha256-9iFWHQLrVC/3AwWgqKkZXougx/xneS/QX09IDjYMNNg='; font-src 'self' https://cdn.jsdelivr.net https://fonts.gstatic.com data:; img-src 'self' data: blob:; media-src 'self' data: blob:; worker-src 'self' blob:; child-src 'self' blob:; connect-src 'self' https://cdn.jsdelivr.net;">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; base-uri 'self'; object-src 'none'; frame-ancestors 'none'; script-src 'self' https://cdn.jsdelivr.net 'nonce-code-awakener-inline' 'sha256-90l50zRJeBi6/nw7mWwILnV53krz+p07Gc5YcDyD90w='; style-src 'self' https://cdn.jsdelivr.net https://fonts.googleapis.com 'nonce-code-awakener-inline' 'sha256-d9QCoa9okPQefJhOoaeY7eRx1AYeK/eVnOJDDsBYfZ0='; font-src 'self' https://cdn.jsdelivr.net https://fonts.gstatic.com data:; img-src 'self' data: blob:; media-src 'self' data: blob:; worker-src 'self' blob:; child-src 'self' blob:; connect-src 'self' https://cdn.jsdelivr.net;">
   <title>编程学习 RPG：C 语言启航村</title>
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%23020617'/%3E%3Cpath d='M22 20 10 32l12 12M42 20l12 12-12 12' fill='none' stroke='%2300ff88' stroke-width='6' stroke-linecap='round' stroke-linejoin='round'/%3E%3Cpath d='m36 16-8 32' stroke='%2300ccff' stroke-width='5' stroke-linecap='round'/%3E%3C/svg%3E">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/firacode@6.2.0/distr/fira_code.css">
@@ -2422,7 +2422,7 @@
       top: max(68px, calc(env(safe-area-inset-top) + 68px));
       left: max(14px, env(safe-area-inset-left));
       z-index: 35;
-      width: min(330px, calc(100vw - 28px));
+      width: min(380px, calc(100vw - 28px));
       max-height: calc(100vh - 96px);
       padding: 14px;
       overflow: auto;
@@ -2594,6 +2594,95 @@
       border: 1px solid rgba(125, 211, 252, 0.16);
       border-radius: 14px;
       background: rgba(2, 6, 23, 0.28);
+    }
+
+    .course-lesson-list,
+    .learning-log-list,
+    .code-history-list {
+      max-height: 180px;
+      overflow: auto;
+      display: grid;
+      gap: 6px;
+      padding-right: 4px;
+    }
+
+    .course-lesson-item,
+    .learning-log-entry,
+    .code-history-entry {
+      padding: 8px 10px;
+      border: 1px solid rgba(125, 211, 252, 0.16);
+      border-radius: 14px;
+      color: #cbd5e1;
+      background: rgba(2, 6, 23, 0.28);
+    }
+
+    .course-lesson-item.current {
+      color: #fef3c7;
+      border-color: rgba(250, 204, 21, 0.4);
+      box-shadow: 0 0 18px rgba(250, 204, 21, 0.12), inset 0 0 18px rgba(250, 204, 21, 0.06);
+    }
+
+    .course-lesson-item.done {
+      color: #bbf7d0;
+      border-color: rgba(52, 211, 153, 0.28);
+    }
+
+    .free-mode-editor-panel {
+      display: none;
+      gap: 8px;
+    }
+
+    .free-mode-editor-panel.unlocked {
+      display: grid;
+    }
+
+    .free-mode-editor-shell {
+      position: relative;
+      min-height: 160px;
+      overflow: hidden;
+      border: 1px solid rgba(125, 211, 252, 0.24);
+      border-radius: 16px;
+      background: rgba(2, 6, 23, 0.48);
+    }
+
+    .free-mode-highlight,
+    .free-mode-code-input {
+      width: 100%;
+      min-height: 160px;
+      margin: 0;
+      padding: 12px;
+      border: 0;
+      border-radius: 16px;
+      font: 12px/1.55 var(--font-code);
+      tab-size: 4;
+      white-space: pre-wrap;
+      overflow: auto;
+    }
+
+    .free-mode-highlight {
+      pointer-events: none;
+      color: #dbeafe;
+      opacity: 0.58;
+    }
+
+    .free-mode-code-input {
+      position: absolute;
+      inset: 0;
+      resize: vertical;
+      color: transparent;
+      caret-color: #facc15;
+      background: transparent;
+      outline: none;
+    }
+
+    .free-mode-code-input::selection {
+      background: rgba(56, 189, 248, 0.28);
+      color: transparent;
+    }
+
+    .free-mode-locked-note {
+      color: #94a3b8;
+      white-space: pre-line;
     }
 
     .achievement-entry.unlocked {
@@ -7801,6 +7890,33 @@
           </div>
           <div id="worldEvolutionDifficultyHint" class="difficulty-hint">// 普通：完成度 +6%~14%，碎片 +1~3，MP -10。</div>
         </section>
+        <section id="courseProgressPanel" class="info-menu-section">
+          <strong>课程进度</strong>
+          <div class="info-menu-row"><span>当前知识点</span><span id="courseCurrentLessonText">第1节</span></div>
+          <div class="info-menu-meter"><span id="courseProgressFill"></span></div>
+          <div id="courseLessonList" class="course-lesson-list" aria-label="C语言课程章节目录"></div>
+        </section>
+        <section class="info-menu-section">
+          <strong>学习日志</strong>
+          <div id="learningLogList" class="learning-log-list">// 尚未开始编译课程。</div>
+        </section>
+        <section class="info-menu-section">
+          <strong>代码历史</strong>
+          <div id="codeHistoryList" class="code-history-list">// 学过的代码会出现在这里，可点击回放。</div>
+        </section>
+        <section id="freeModeEditorPanel" class="info-menu-section free-mode-editor-panel" aria-label="自由模式代码编辑器">
+          <strong>自由模式编辑器</strong>
+          <div id="freeModeLockedNote" class="free-mode-locked-note">// 完成度达到 80% 后解锁。你可以输入自己的 C 代码，系统会用同一套内存模型进行模拟。</div>
+          <div class="free-mode-editor-shell">
+            <pre id="freeModeHighlightLayer" class="free-mode-highlight" aria-hidden="true"></pre>
+            <textarea id="freeModeCodeInput" class="free-mode-code-input" inputmode="text" enterkeyhint="enter" autocomplete="off" autocapitalize="none" autocorrect="off" spellcheck="false" aria-label="自由模式 C 语言代码"></textarea>
+          </div>
+          <div class="info-menu-actions">
+            <button id="freeModeCompileButton" class="pixel-button secondary" type="button">自由编译</button>
+            <button id="debugStepButton" class="pixel-button secondary" type="button">单步执行</button>
+            <button id="tutorialFixSuggestionButton" class="pixel-button secondary" type="button">修正建议</button>
+          </div>
+        </section>
         <section class="info-menu-section">
           <strong>世界进化</strong>
           <div class="info-menu-row"><span>完成度</span><span id="infoWorldEvolutionText">0%</span></div>
@@ -8638,23 +8754,23 @@ int main(void) {
         title: "> 消息 / 本次更新",
         lines: [
           "// 作者：杀戮",
-          "// 本次更新：补齐世界进化核心法则与无遮挡UI铁律。",
-          "// 主画面常驻信息继续收纳到左侧毛玻璃菜单，只保留汉堡按钮和编译按钮。",
-          "// 新增 简单 / 普通 / 困难 难度参数，并让编译收益、碎片、MP消耗即时变化。"
+          "// 本次更新：加入完整C语言课程可视化教学引擎。",
+          "// 课程按8章50个代码片段组织，从Hello World一直覆盖到malloc/free。",
+          "// 每次编译会先执行当前知识点，绘制内存模型、代码轨迹、数据流和中文解释。"
         ]
       },
       {
-        title: "> 更新内容 / 世界进化",
+        title: "> 更新内容 / 教学反馈",
         lines: [
-          "// 困难模式会随机出现时空裂隙，需在底部动作条快速修复。",
-          "// 世界层新增古老石塔、浮空岛群、巨大光柱、星穹漩涡等完成度地标。",
-          "// NPC自动评语扩充至30句，成就补齐为初啼、旅人、收藏家、觉醒等完整列表。"
+          "// 变量会显示为发光容器，指针会显示为光束，循环会显示为轨道。",
+          "// 第5、10、18、25个片段内置常见错误，修复后获得双倍知识碎片。",
+          "// 左侧信息菜单新增课程目录、学习日志、代码历史、自由模式编辑器和单步调试。"
         ]
       },
       {
         title: "> 项目信息",
         lines: [
-          "// 新增编年史、主角高清头像、直接localStorage键值恢复与重置世界入口。",
+          "// 自由模式会在完成度达到80%后解锁，玩家可输入自己的C代码进行模拟编译。",
           "// 官方Q群：414374792",
           "// 本项目永久免费对外开放，持续更新，助力每一个有编程梦的人。",
           "// 谢谢你的支持！"
@@ -9074,7 +9190,7 @@ int main(void) {
       directSaveAs: "reduced-by-inline-resources"
     });
     const SECURITY_CONFIG = Object.freeze({
-      expectedScriptHash: "c3dv9NWVQaxoioJo/XzlFHp1i/J0EgfK2XBFFSPtIZs=",
+      expectedScriptHash: "h+BqC7jIA5sbBB35WJESWoSJPyJsmcEGOaUCU1Dw2AQ=",
       selfCheckIntervalMs: 45000,
       tamperRefreshMs: 5000,
       devToolsRefreshMs: 2000,
@@ -11884,6 +12000,14 @@ int main(void) {
       collectedFragmentKeys: [],
       collectedFragments: [],
       fragmentCount: 0,
+      currentLesson: 0,
+      compiledHistory: [],
+      learningLog: [],
+      freeModeCode: "",
+      errorAttempts: {},
+      tutorialFixedErrors: {},
+      currentDebugPlan: null,
+      currentDebugStep: 0,
       worldEvolutionCompletion: 0,
       worldEvolutionFragments: 0,
       worldEvolutionDifficulty: "normal",
@@ -12154,6 +12278,14 @@ int main(void) {
         collectedFragmentKeys: Array.isArray(savedProgress.collectedFragmentKeys) ? savedProgress.collectedFragmentKeys : [],
         collectedFragments: Array.isArray(savedProgress.collectedFragments) ? savedProgress.collectedFragments : [],
         fragmentCount: Number(savedProgress.fragmentCount) || 0,
+        currentLesson: Number.isFinite(Number(savedProgress.currentLesson)) ? Number(savedProgress.currentLesson) : 0,
+        compiledHistory: Array.isArray(savedProgress.compiledHistory) ? savedProgress.compiledHistory : [],
+        learningLog: Array.isArray(savedProgress.learningLog) ? savedProgress.learningLog : [],
+        freeModeCode: typeof savedProgress.freeModeCode === "string" ? savedProgress.freeModeCode : "",
+        errorAttempts: savedProgress.errorAttempts && typeof savedProgress.errorAttempts === "object" ? savedProgress.errorAttempts : {},
+        tutorialFixedErrors: savedProgress.tutorialFixedErrors && typeof savedProgress.tutorialFixedErrors === "object" ? savedProgress.tutorialFixedErrors : {},
+        currentDebugPlan: savedProgress.currentDebugPlan || null,
+        currentDebugStep: Number(savedProgress.currentDebugStep) || 0,
         worldEvolutionCompletion: Number.isFinite(Number(savedProgress.worldEvolutionCompletion)) ? Number(savedProgress.worldEvolutionCompletion) : 0,
         worldEvolutionFragments: Number.isFinite(Number(savedProgress.worldEvolutionFragments)) ? Number(savedProgress.worldEvolutionFragments) : 0,
         worldEvolutionDifficulty: savedProgress.worldEvolutionDifficulty || "normal",
@@ -14255,6 +14387,19 @@ int main(void) {
       keymapGlassBar: document.getElementById("keymapGlassBar"),
       infoMenuToggle: document.getElementById("infoMenuToggle"),
       infoSideMenu: document.getElementById("infoSideMenu"),
+      courseProgressPanel: document.getElementById("courseProgressPanel"),
+      courseCurrentLessonText: document.getElementById("courseCurrentLessonText"),
+      courseProgressFill: document.getElementById("courseProgressFill"),
+      courseLessonList: document.getElementById("courseLessonList"),
+      learningLogList: document.getElementById("learningLogList"),
+      codeHistoryList: document.getElementById("codeHistoryList"),
+      freeModeEditorPanel: document.getElementById("freeModeEditorPanel"),
+      freeModeLockedNote: document.getElementById("freeModeLockedNote"),
+      freeModeHighlightLayer: document.getElementById("freeModeHighlightLayer"),
+      freeModeCodeInput: document.getElementById("freeModeCodeInput"),
+      freeModeCompileButton: document.getElementById("freeModeCompileButton"),
+      debugStepButton: document.getElementById("debugStepButton"),
+      tutorialFixSuggestionButton: document.getElementById("tutorialFixSuggestionButton"),
       infoWorldEvolutionText: document.getElementById("infoWorldEvolutionText"),
       infoWorldEvolutionFill: document.getElementById("infoWorldEvolutionFill"),
       infoWorldEvolutionHint: document.getElementById("infoWorldEvolutionHint"),
@@ -16580,6 +16725,680 @@ int main(void) {
       machine: { label: "机械", tint: 0x38bdf8, line: "机械路径进入稳定计算。" }
     });
 
+    /* ===== C语言课程可视化教学系统 ===== */
+    const C_VISUAL_ENTITY_MAP = Object.freeze({
+      variable: { entity: "glowing-container", label: "变量=发光容器", color: 0x38bdf8 },
+      pointer: { entity: "light-beam", label: "指针=指向地址的光束", color: 0xfacc15 },
+      loop: { entity: "orbit", label: "循环=围绕代码块旋转的轨道", color: 0xa78bfa },
+      array: { entity: "bookshelf", label: "数组=连续书架格子", color: 0x34d399 },
+      string: { entity: "quoted-char-sequence", label: "字符串=带 \\0 结尾的字符队列", color: 0xfb7185 },
+      function: { entity: "stack-frame", label: "函数=临时压入的栈帧", color: 0x60a5fa },
+      heap: { entity: "heap-crystal", label: "动态内存=堆区水晶", color: 0xf97316 }
+    });
+
+    function createCTutorialCourse() {
+      const snippet = (title, concept, code, explanation, visual = [], extra = {}) => ({
+        id: "",
+        order: 0,
+        title,
+        concept,
+        code,
+        explanation,
+        visualSteps: visual.length ? visual : [
+          "代码行逐行高亮。",
+          "内存条为变量分配格子。",
+          "数据以发光粒子流向目标。"
+        ],
+        fragments: extra.intentionalError ? 2 : 1,
+        ...extra
+      });
+      const chapters = [
+        {
+          id: "c-intro",
+          title: "第1章：初识C语言",
+          completionRange: [1, 10],
+          lessons: [
+            { id: "c1-hello", title: "1.1 Hello World（printf输出）", entity: "terminal", snippets: [
+              snippet("Hello World", "printf输出", `#include <stdio.h>\nint main(void) {\n  printf("Hello, C World!");\n  return 0;\n}`, "printf 会把引号里的文字送到终端。")
+            ] },
+            { id: "c1-vars", title: "1.2 变量声明与赋值（int, float, char）", entity: "variable", snippets: [
+              snippet("整数变量", "int 变量声明", `#include <stdio.h>\nint main(void) {\n  int level = 1;\n  printf("%d", level);\n  return 0;\n}`, "int level 会在内存中生成一个发光容器。"),
+              snippet("浮点与字符", "float char 变量声明", `#include <stdio.h>\nint main(void) {\n  float hp = 88.5f;\n  char grade = 'A';\n  printf("%.1f %c", hp, grade);\n  return 0;\n}`, "float 保存小数，char 保存一个字符。")
+            ] },
+            { id: "c1-const", title: "1.3 常量（const, #define）", entity: "variable", snippets: [
+              snippet("const 常量", "const", `#include <stdio.h>\nint main(void) {\n  const int MAX_HP = 100;\n  printf("%d", MAX_HP);\n  return 0;\n}`, "const 表示这个容器创建后不应再被改写。"),
+              snippet("#define 宏常量", "#define", `#include <stdio.h>\n#define MAX_LEVEL 99\nint main(void) {\n  printf("%d", MAX_LEVEL)\n  return 0;\n}`, "这段故意漏了分号。错误会变成一次调试机会。", ["红框标出 printf 行。", "点击修正后补上分号。"], {
+                intentionalError: true,
+                errorType: "遗漏分号",
+                fixSuggestion: "在 printf(\"%d\", MAX_LEVEL) 后补上分号。",
+                fixedCode: `#include <stdio.h>\n#define MAX_LEVEL 99\nint main(void) {\n  printf("%d", MAX_LEVEL);\n  return 0;\n}`
+              })
+            ] },
+            { id: "c1-input", title: "1.4 基本输入（scanf）", entity: "input", snippets: [
+              snippet("scanf 输入", "scanf", `#include <stdio.h>\nint main(void) {\n  int age = 0;\n  scanf("%d", &age);\n  printf("%d", age);\n  return 0;\n}`, "scanf 需要变量地址，&age 就是把 age 的位置交给输入函数。"),
+              snippet("多变量输入", "scanf 多变量", `#include <stdio.h>\nint main(void) {\n  int x = 0, y = 0;\n  scanf("%d %d", &x, &y);\n  printf("%d", x + y);\n  return 0;\n}`, "两个输入会依次流入两个变量容器。")
+            ] }
+          ]
+        },
+        {
+          id: "c-operators",
+          title: "第2章：运算符与表达式",
+          completionRange: [11, 20],
+          lessons: [
+            { id: "c2-arithmetic", title: "2.1 算术运算符（+ - * / %）", entity: "variable", snippets: [
+              snippet("加减乘除", "算术运算符 + - * / %", `#include <stdio.h>\nint main(void) {\n  int a = 8;\n  int b = 3;\n  printf("%d %d %d %d %d", a + b, a - b, a * b, a / b, a % b);\n  return 0;\n}`, "算术运算会让两个容器的数据流入表达式，再生成结果。")
+            ] },
+            { id: "c2-assign", title: "2.2 赋值运算符（=, +=, -=等）", entity: "variable", snippets: [
+              snippet("复合赋值", "赋值运算符 = += -=", `#include <stdio.h>\nint main(void) {\n  int score = 10;\n  score += 5;\n  score -= 2;\n  printf("%d", score);\n  return 0;\n}`, "score += 5 等价于 score = score + 5。"),
+              snippet("未初始化变量", "变量未初始化", `#include <stdio.h>\nint main(void) {\n  int energy;\n  energy += 5;\n  printf("%d", energy);\n  return 0;\n}`, "这段故意使用未初始化变量。容器还没有初始值就参与运算。", ["energy 容器出现红色问号。", "修正后先写入 0，再进行 +=。"], {
+                intentionalError: true,
+                errorType: "变量未初始化",
+                fixSuggestion: "把 int energy; 改为 int energy = 0;。",
+                fixedCode: `#include <stdio.h>\nint main(void) {\n  int energy = 0;\n  energy += 5;\n  printf("%d", energy);\n  return 0;\n}`
+              })
+            ] },
+            { id: "c2-compare", title: "2.3 比较运算符（==, !=, >, <等）", entity: "condition", snippets: [
+              snippet("比较结果", "比较运算符 == != > <", `#include <stdio.h>\nint main(void) {\n  int hp = 80;\n  printf("%d %d", hp > 50, hp == 100);\n  return 0;\n}`, "比较表达式的结果是 0 或 1。")
+            ] },
+            { id: "c2-logic", title: "2.4 逻辑运算符（&&, ||, !）", entity: "condition", snippets: [
+              snippet("逻辑组合", "逻辑运算符 && || !", `#include <stdio.h>\nint main(void) {\n  int hasKey = 1;\n  int doorOpen = 0;\n  printf("%d", hasKey && !doorOpen);\n  return 0;\n}`, "&& 表示同时满足，! 会把真假反转。")
+            ] },
+            { id: "c2-bit", title: "2.5 位运算符（&, |, ^, ~, <<, >>）", entity: "variable", snippets: [
+              snippet("位运算", "位运算符 & | ^ ~ << >>", `#include <stdio.h>\nint main(void) {\n  int mask = 3;\n  int flag = 4;\n  printf("%d %d", mask | flag, flag >> 1);\n  return 0;\n}`, "位运算像直接拨动二进制开关。"),
+              snippet("优先级", "表达式优先级", `#include <stdio.h>\nint main(void) {\n  int result = 2 + 3 * 4;\n  printf("%d", result);\n  return 0;\n}`, "乘法先于加法执行。")
+            ] }
+          ]
+        },
+        {
+          id: "c-control",
+          title: "第3章：流程控制",
+          completionRange: [21, 35],
+          lessons: [
+            { id: "c3-if", title: "3.1 if-else", entity: "condition", snippets: [
+              snippet("if else", "if-else", `#include <stdio.h>\nint main(void) {\n  int score = 86;\n  if (score >= 60) {\n    printf("pass");\n  } else {\n    printf("fail");\n  }\n  return 0;\n}`, "if 像一个分岔路牌，条件为真走第一条路。")
+            ] },
+            { id: "c3-switch", title: "3.2 switch-case", entity: "condition", snippets: [
+              snippet("switch 分支", "switch-case", `#include <stdio.h>\nint main(void) {\n  int day = 2;\n  switch (day) {\n    case 1: printf("Mon"); break;\n    case 2: printf("Tue"); break;\n    default: printf("Other");\n  }\n  return 0;\n}`, "switch 会根据数值跳到对应 case。")
+            ] },
+            { id: "c3-for", title: "3.3 for循环", entity: "loop", snippets: [
+              snippet("for 求和", "for 循环", `#include <stdio.h>\nint main(void) {\n  int sum = 0;\n  for (int i = 1; i <= 5; i++) {\n    sum += i;\n  }\n  printf("%d", sum);\n  return 0;\n}`, "循环轨道每转一圈，i 增加一次。"),
+              snippet("数组越界预警", "数组越界", `#include <stdio.h>\nint main(void) {\n  int nums[3] = {1, 2, 3};\n  for (int i = 0; i <= 3; i++) {\n    printf("%d", nums[i]);\n  }\n  return 0;\n}`, "这段故意越界访问 nums[3]。数组书架只有 0、1、2 三格。", ["数组第 4 格闪红。", "修正后循环条件变为 i < 3。"], {
+                intentionalError: true,
+                errorType: "数组越界",
+                fixSuggestion: "把 i <= 3 改为 i < 3。",
+                fixedCode: `#include <stdio.h>\nint main(void) {\n  int nums[3] = {1, 2, 3};\n  for (int i = 0; i < 3; i++) {\n    printf("%d", nums[i]);\n  }\n  return 0;\n}`
+              })
+            ] },
+            { id: "c3-while", title: "3.4 while循环", entity: "loop", snippets: [
+              snippet("while 倒计时", "while 循环", `#include <stdio.h>\nint main(void) {\n  int n = 3;\n  while (n > 0) {\n    printf("%d", n);\n    n--;\n  }\n  return 0;\n}`, "while 会在条件为真时反复执行。")
+            ] },
+            { id: "c3-do", title: "3.5 do-while循环", entity: "loop", snippets: [
+              snippet("do while 至少一次", "do-while 循环", `#include <stdio.h>\nint main(void) {\n  int n = 0;\n  do {\n    printf("run");\n  } while (n > 0);\n  return 0;\n}`, "do-while 先执行一次，再判断是否继续。")
+            ] },
+            { id: "c3-break", title: "3.6 break与continue", entity: "loop", snippets: [
+              snippet("break 退出", "break", `#include <stdio.h>\nint main(void) {\n  for (int i = 0; i < 5; i++) {\n    if (i == 3) break;\n    printf("%d", i);\n  }\n  return 0;\n}`, "break 会直接跳出循环轨道。"),
+              snippet("continue 跳过", "continue", `#include <stdio.h>\nint main(void) {\n  for (int i = 0; i < 5; i++) {\n    if (i == 2) continue;\n    printf("%d", i);\n  }\n  return 0;\n}`, "continue 会跳过本轮剩余语句，进入下一轮。")
+            ] }
+          ]
+        },
+        {
+          id: "c-arrays",
+          title: "第4章：数组与字符串",
+          completionRange: [36, 50],
+          lessons: [
+            { id: "c4-array1", title: "4.1 一维数组", entity: "array", snippets: [
+              snippet("一维数组", "一维数组", `#include <stdio.h>\nint main(void) {\n  int nums[3] = {2, 4, 6};\n  printf("%d", nums[1]);\n  return 0;\n}`, "数组像一排连续书架，索引从 0 开始。")
+            ] },
+            { id: "c4-array2", title: "4.2 二维数组", entity: "array", snippets: [
+              snippet("二维数组", "二维数组", `#include <stdio.h>\nint main(void) {\n  int grid[2][2] = {{1, 2}, {3, 4}};\n  printf("%d", grid[1][0]);\n  return 0;\n}`, "二维数组像书架的行与列。")
+            ] },
+            { id: "c4-string", title: "4.3 字符数组与字符串（'\\0'）", entity: "string", snippets: [
+              snippet("未分配字符串指针", "指针未分配 字符串", `#include <stdio.h>\n#include <string.h>\nint main(void) {\n  char *name;\n  strcpy(name, "C");\n  printf("%s", name);\n  return 0;\n}`, "这段故意把字符串复制到未分配的指针。指针光束没有落点。", ["name 指针指向黑暗。", "修正为 char name[8] 后再复制。"], {
+                intentionalError: true,
+                errorType: "指针未分配",
+                fixSuggestion: "改成 char name[8]; 先准备字符数组空间。",
+                fixedCode: `#include <stdio.h>\n#include <string.h>\nint main(void) {\n  char name[8];\n  strcpy(name, "C");\n  printf("%s", name);\n  return 0;\n}`
+              }),
+              snippet("字符数组", "字符数组 字符串 '\\0'", `#include <stdio.h>\nint main(void) {\n  char word[3] = {'C', '!', '\\0'};\n  printf("%s", word);\n  return 0;\n}`, "字符串末尾的 \\0 表示结束。")
+            ] },
+            { id: "c4-string-func", title: "4.4 字符串处理函数（strlen, strcpy等）", entity: "string", snippets: [
+              snippet("strlen 长度", "strlen", `#include <stdio.h>\n#include <string.h>\nint main(void) {\n  char word[] = "code";\n  printf("%lu", strlen(word));\n  return 0;\n}`, "strlen 会数到 \\0 之前的字符。"),
+              snippet("strcpy 复制", "strcpy", `#include <stdio.h>\n#include <string.h>\nint main(void) {\n  char target[8];\n  strcpy(target, "C");\n  printf("%s", target);\n  return 0;\n}`, "strcpy 把源字符串逐格复制到目标数组。"),
+              snippet("遍历字符串", "字符串循环", `#include <stdio.h>\nint main(void) {\n  char word[] = "Hi";\n  for (int i = 0; word[i] != '\\0'; i++) {\n    printf("%c", word[i]);\n  }\n  return 0;\n}`, "循环会逐格读取字符，直到遇见 \\0。")
+            ] }
+          ]
+        },
+        {
+          id: "c-functions",
+          title: "第5章：函数",
+          completionRange: [51, 70],
+          lessons: [
+            { id: "c5-call", title: "5.1 函数定义与调用", entity: "function", snippets: [
+              snippet("函数调用", "函数定义与调用", `#include <stdio.h>\nint add(int a, int b) {\n  return a + b;\n}\nint main(void) {\n  printf("%d", add(2, 3));\n  return 0;\n}`, "调用函数时会临时创建一个栈帧。")
+            ] },
+            { id: "c5-param", title: "5.2 参数传递（值传递）", entity: "function", snippets: [
+              snippet("值传递", "参数传递 值传递", `#include <stdio.h>\nvoid change(int x) {\n  x = 99;\n}\nint main(void) {\n  int n = 1;\n  change(n);\n  printf("%d", n);\n  return 0;\n}`, "值传递会复制一份 n 给函数，原变量不变。")
+            ] },
+            { id: "c5-return", title: "5.3 返回值", entity: "function", snippets: [
+              snippet("返回值", "返回值 return", `#include <stdio.h>\nint square(int x) {\n  return x * x;\n}\nint main(void) {\n  int result = square(4);\n  printf("%d", result);\n  return 0;\n}`, "return 会把结果带回调用处。")
+            ] },
+            { id: "c5-scope", title: "5.4 作用域与生命周期", entity: "function", snippets: [
+              snippet("作用域", "作用域", `#include <stdio.h>\nint main(void) {\n  int outer = 1;\n  {\n    int inner = 2;\n    printf("%d", inner);\n  }\n  printf("%d", outer);\n  return 0;\n}`, "inner 只在小代码块里存在。"),
+              snippet("局部变量生命周期", "生命周期", `#include <stdio.h>\nint next(void) {\n  int value = 1;\n  value++;\n  return value;\n}\nint main(void) {\n  printf("%d %d", next(), next());\n  return 0;\n}`, "普通局部变量每次调用都会重新创建。")
+            ] },
+            { id: "c5-recursion", title: "5.5 递归（简单示例）", entity: "function", snippets: [
+              snippet("递归阶乘", "recursion 递归", `#include <stdio.h>\nint fact(int n) {\n  if (n <= 1) return 1;\n  return n * fact(n - 1);\n}\nint main(void) {\n  printf("%d", fact(4));\n  return 0;\n}`, "递归像栈帧一层层叠起，再一层层返回。"),
+              snippet("辅助函数", "函数拆分", `#include <stdio.h>\nint clamp(int value) {\n  if (value > 10) return 10;\n  if (value < 0) return 0;\n  return value;\n}\nint main(void) {\n  printf("%d", clamp(12));\n  return 0;\n}`, "把判断拆进函数，主流程会更清晰。")
+            ] }
+          ]
+        },
+        {
+          id: "c-pointers",
+          title: "第6章：指针",
+          completionRange: [71, 85],
+          lessons: [
+            { id: "c6-address", title: "6.1 指针变量与取地址", entity: "pointer", snippets: [
+              snippet("取地址", "指针变量 取地址 *ptr", `#include <stdio.h>\nint main(void) {\n  int value = 42;\n  int *ptr = &value;\n  printf("%d", *ptr);\n  return 0;\n}`, "ptr 保存 value 的地址，光束指向 value 容器。"),
+              snippet("修改指向值", "解引用", `#include <stdio.h>\nint main(void) {\n  int value = 1;\n  int *ptr = &value;\n  *ptr = 5;\n  printf("%d", value);\n  return 0;\n}`, "*ptr 会沿着光束改写目标变量。")
+            ] },
+            { id: "c6-array", title: "6.2 指针与数组", entity: "pointer", snippets: [
+              snippet("指针遍历数组", "指针与数组", `#include <stdio.h>\nint main(void) {\n  int nums[3] = {1, 2, 3};\n  int *p = nums;\n  printf("%d", *(p + 1));\n  return 0;\n}`, "数组名常可视作第一个元素的地址。")
+            ] },
+            { id: "c6-string", title: "6.3 指针与字符串", entity: "string", snippets: [
+              snippet("字符串指针", "指针与字符串", `#include <stdio.h>\nint main(void) {\n  char *text = "hello";\n  printf("%c", text[1]);\n  return 0;\n}`, "text 指向只读字符串常量的起点。")
+            ] },
+            { id: "c6-fnptr", title: "6.4 指针与函数（函数指针可选）", entity: "function", snippets: [
+              snippet("函数指针", "函数指针", `#include <stdio.h>\nint add(int a, int b) { return a + b; }\nint main(void) {\n  int (*op)(int, int) = add;\n  printf("%d", op(3, 4));\n  return 0;\n}`, "函数指针保存函数入口地址。"),
+              snippet("空指针检查", "NULL 指针安全", `#include <stdio.h>\nint main(void) {\n  int *ptr = NULL;\n  if (ptr == NULL) {\n    printf("safe");\n  }\n  return 0;\n}`, "使用指针前先确认它是否指向有效位置。")
+            ] }
+          ]
+        },
+        {
+          id: "c-structs",
+          title: "第7章：结构体与联合体",
+          completionRange: [86, 95],
+          lessons: [
+            { id: "c7-struct", title: "7.1 结构体定义与使用", entity: "struct", snippets: [
+              snippet("结构体", "struct 结构体定义与使用", `#include <stdio.h>\nstruct Hero {\n  int level;\n  char grade;\n};\nint main(void) {\n  struct Hero h = {3, 'A'};\n  printf("%d %c", h.level, h.grade);\n  return 0;\n}`, "结构体像把多个变量装进一个更大的容器。")
+            ] },
+            { id: "c7-struct-array", title: "7.2 结构体数组", entity: "struct", snippets: [
+              snippet("结构体数组", "结构体数组", `#include <stdio.h>\nstruct Point { int x; int y; };\nint main(void) {\n  struct Point path[2] = {{1, 2}, {3, 4}};\n  printf("%d", path[1].x);\n  return 0;\n}`, "结构体数组是一排复杂容器。")
+            ] },
+            { id: "c7-struct-pointer", title: "7.3 结构体指针", entity: "pointer", snippets: [
+              snippet("结构体指针", "结构体指针", `#include <stdio.h>\nstruct Hero { int level; };\nint main(void) {\n  struct Hero h = {5};\n  struct Hero *p = &h;\n  printf("%d", p->level);\n  return 0;\n}`, "p->level 等价于 (*p).level。"),
+              snippet("联合体", "union 联合体", `#include <stdio.h>\nunion Data { int i; char c; };\nint main(void) {\n  union Data d;\n  d.i = 65;\n  printf("%d", d.i);\n  return 0;\n}`, "union 的成员共享同一块内存。")
+            ] }
+          ]
+        },
+        {
+          id: "c-memory",
+          title: "第8章：动态内存管理",
+          completionRange: [96, 100],
+          lessons: [
+            { id: "c8-malloc", title: "8.1 malloc / free", entity: "heap", snippets: [
+              snippet("malloc/free", "malloc free 动态内存", `#include <stdio.h>\n#include <stdlib.h>\nint main(void) {\n  int *numbers = malloc(3 * sizeof(int));\n  if (numbers == NULL) return 1;\n  numbers[0] = 7;\n  printf("%d", numbers[0]);\n  free(numbers);\n  return 0;\n}`, "malloc 在堆区申请空间，free 释放它。"),
+              snippet("检查 malloc", "malloc 空指针检查", `#include <stdio.h>\n#include <stdlib.h>\nint main(void) {\n  int *p = malloc(sizeof(int));\n  if (p != NULL) {\n    *p = 10;\n    printf("%d", *p);\n    free(p);\n  }\n  return 0;\n}`, "动态内存申请可能失败，所以要检查 NULL。")
+            ] },
+            { id: "c8-calloc-realloc", title: "8.2 calloc / realloc（简单介绍）", entity: "heap", snippets: [
+              snippet("calloc", "calloc", `#include <stdio.h>\n#include <stdlib.h>\nint main(void) {\n  int *p = calloc(3, sizeof(int));\n  if (p == NULL) return 1;\n  printf("%d", p[0]);\n  free(p);\n  return 0;\n}`, "calloc 会申请并清零一片连续空间。"),
+              snippet("realloc", "realloc", `#include <stdio.h>\n#include <stdlib.h>\nint main(void) {\n  int *p = malloc(2 * sizeof(int));\n  if (p == NULL) return 1;\n  p = realloc(p, 4 * sizeof(int));\n  if (p == NULL) return 1;\n  p[3] = 9;\n  printf("%d", p[3]);\n  free(p);\n  return 0;\n}`, "realloc 尝试扩展已有堆区空间。")
+            ] }
+          ]
+        }
+      ];
+      let order = 1;
+      chapters.forEach((chapter, chapterIndex) => {
+        chapter.lessons.forEach((lesson, lessonIndex) => {
+          lesson.snippets.forEach((item, snippetIndex) => {
+            item.order = order;
+            item.id = `${chapter.id}-${String(order).padStart(2, "0")}`;
+            item.chapterId = chapter.id;
+            item.chapterTitle = chapter.title;
+            item.lessonId = lesson.id;
+            item.lessonTitle = lesson.title;
+            item.chapterIndex = chapterIndex;
+            item.lessonIndex = lessonIndex;
+            item.snippetIndex = snippetIndex;
+            order += 1;
+          });
+        });
+      });
+      return chapters;
+    }
+
+    const C_TUTORIAL_COURSE = Object.freeze(createCTutorialCourse());
+
+    function flattenCTutorialSnippets() {
+      return C_TUTORIAL_COURSE.flatMap((chapter) => chapter.lessons.flatMap((lesson) => lesson.snippets));
+    }
+
+    function getTutorialDifficultyTiming(difficulty = gameState?.progress?.worldEvolutionDifficulty || gameState?.settings?.difficulty || "normal") {
+      if (difficulty === "easy") return 1500;
+      if (difficulty === "hard") return 300;
+      return 800;
+    }
+
+    function getCurrentTutorialSnippet() {
+      const snippets = flattenCTutorialSnippets();
+      const index = Math.max(0, Math.min(snippets.length - 1, Number(gameState.progress.currentLesson) || 0));
+      gameState.progress.currentLesson = index;
+      return snippets[index] || snippets[0];
+    }
+
+    function normalizeCTutorialState() {
+      const snippets = flattenCTutorialSnippets();
+      gameState.progress.currentLesson = Math.max(0, Math.min(snippets.length - 1, Number(gameState.progress.currentLesson) || 0));
+      if (!Array.isArray(gameState.progress.compiledHistory)) gameState.progress.compiledHistory = [];
+      if (!Array.isArray(gameState.progress.learningLog)) gameState.progress.learningLog = [];
+      if (!gameState.progress.errorAttempts || typeof gameState.progress.errorAttempts !== "object") gameState.progress.errorAttempts = {};
+      if (!gameState.progress.tutorialFixedErrors || typeof gameState.progress.tutorialFixedErrors !== "object") gameState.progress.tutorialFixedErrors = {};
+      if (typeof gameState.progress.freeModeCode !== "string") gameState.progress.freeModeCode = "";
+      return gameState.progress;
+    }
+
+    function saveCTutorialLocalKeys() {
+      try {
+        normalizeCTutorialState();
+        localStorage.setItem("currentLesson", String(gameState.progress.currentLesson));
+        localStorage.setItem("compiledHistory", JSON.stringify((gameState.progress.compiledHistory || []).slice(-80)));
+        localStorage.setItem("freeModeCode", String(gameState.progress.freeModeCode || ""));
+        localStorage.setItem("errorAttempts", JSON.stringify(gameState.progress.errorAttempts || {}));
+        return true;
+      } catch (error) {
+        reportSoftError(error, ERROR_LEVELS.recoverable, { source: "save-c-tutorial-local-keys" });
+        return false;
+      }
+    }
+
+    function loadCTutorialLocalKeys() {
+      try {
+        const currentLesson = localStorage.getItem("currentLesson");
+        const compiledHistory = sanitizeImportedJson(localStorage.getItem("compiledHistory"), null);
+        const freeModeCode = localStorage.getItem("freeModeCode");
+        const errorAttempts = sanitizeImportedJson(localStorage.getItem("errorAttempts"), null);
+        if (currentLesson !== null) gameState.progress.currentLesson = Math.max(0, Number(currentLesson) || 0);
+        if (Array.isArray(compiledHistory)) gameState.progress.compiledHistory = compiledHistory.slice(-80);
+        if (freeModeCode !== null) gameState.progress.freeModeCode = String(freeModeCode);
+        if (errorAttempts && typeof errorAttempts === "object") gameState.progress.errorAttempts = errorAttempts;
+        normalizeCTutorialState();
+        return true;
+      } catch (error) {
+        reportSoftError(error, ERROR_LEVELS.recoverable, { source: "load-c-tutorial-local-keys" });
+        return false;
+      }
+    }
+
+    function tokenizeCTutorialCode(code = "") {
+      return String(code).split("\n").map((line, index) => ({ line: index + 1, text: line }));
+    }
+
+    function extractCStringLiterals(code = "") {
+      return [...String(code).matchAll(/"([^"]*)"/g)].map((match) => match[1]);
+    }
+
+    function buildExecutionPlanForSnippet(snippet = {}) {
+      const code = String(snippet.fixedCode && snippet.useFixed ? snippet.fixedCode : snippet.code || "");
+      const lines = tokenizeCTutorialCode(code);
+      const plan = {
+        snippetId: snippet.id || "free-mode",
+        title: snippet.title || "自由代码",
+        concept: snippet.concept || "C语言代码",
+        memoryCells: [],
+        trace: [],
+        dataFlows: [],
+        stackFrames: [],
+        loops: [],
+        arrays: [],
+        strings: [],
+        pointers: [],
+        explanation: snippet.explanation || "系统将逐行模拟这段 C 代码。",
+        visualSteps: Array.isArray(snippet.visualSteps) ? snippet.visualSteps : []
+      };
+      let byteCursor = 0;
+      lines.forEach(({ line, text }) => {
+        const clean = text.trim();
+        if (!clean || clean.startsWith("#")) {
+          plan.trace.push({ line, text, kind: clean.startsWith("#") ? "preprocessor" : "blank" });
+          return;
+        }
+        plan.trace.push({ line, text, kind: "execute" });
+        const declMatches = [...clean.matchAll(/\b(int|float|char|double|long)\s+(\*?\w+)\s*(\[[^\]]+\])?\s*(?:=\s*([^;]+))?/g)];
+        declMatches.forEach((match) => {
+          const [, type, rawName, arrayShape = "", rawValue = "未初始化"] = match;
+          const name = rawName.replace("*", "");
+          const isPointer = rawName.startsWith("*");
+          const size = arrayShape ? Math.max(2, Number(arrayShape.match(/\d+/)?.[0]) || 4) : isPointer ? 8 : type === "char" ? 1 : 4;
+          const cell = { name, type, value: rawValue.trim(), address: `0x${(4096 + byteCursor).toString(16).toUpperCase()}`, bytes: size, line };
+          byteCursor += size;
+          plan.memoryCells.push(cell);
+          plan.dataFlows.push({ from: "literal", to: name, line, value: cell.value });
+          if (arrayShape) {
+            plan.arrays.push({ name, type, length: size, line, cells: Array.from({ length: size }, (_, index) => ({ index, value: index === 0 ? rawValue.trim() : "..." })) });
+          }
+          if (isPointer || /&\w+|\*\w+/.test(clean)) {
+            const target = clean.match(/&(\w+)/)?.[1] || "unknown";
+            plan.pointers.push({ name, target, line });
+          }
+        });
+        if (/char\s+\w+\s*\[|char\s+\*\w+/.test(clean) || /strcpy|strlen|%s/.test(clean)) {
+          extractCStringLiterals(clean).forEach((textValue) => {
+            plan.strings.push({ value: textValue, line, chars: [...textValue, "\\0"] });
+          });
+        }
+        if (/\b(for|while|do)\b/.test(clean)) {
+          plan.loops.push({ line, expression: clean, iterations: Math.min(6, Math.max(1, Number(clean.match(/<\s*(\d+)/)?.[1]) || 3)) });
+        }
+        if (/^\w[\w\s\*]*\s+\w+\s*\([^)]*\)\s*\{?$/.test(clean) && !/^if|^for|^while|^switch/.test(clean)) {
+          plan.stackFrames.push({ name: clean.match(/(\w+)\s*\(/)?.[1] || "function", line, locals: [] });
+        }
+      });
+      if (!plan.memoryCells.length) {
+        plan.memoryCells.push({ name: "stdout", type: "terminal", value: extractCStringLiterals(code)[0] || "输出", address: "0x1000", bytes: 8, line: 1 });
+      }
+      return plan;
+    }
+
+    function clearExecutionVisualization(scene = gameState.scene) {
+      scene?.cTutorialVizGroup?.forEach?.((item) => item?.destroy?.());
+      if (scene) scene.cTutorialVizGroup = [];
+      return true;
+    }
+
+    function renderExecutionMemoryModel(plan = buildExecutionPlanForSnippet(getCurrentTutorialSnippet()), scene = gameState.scene) {
+      if (!scene?.add) return plan;
+      clearExecutionVisualization(scene);
+      const camera = scene.cameras?.main || { scrollX: 0, scrollY: 0 };
+      const baseX = camera.scrollX + 58;
+      const baseY = camera.scrollY + 92;
+      const group = [];
+      const g = scene.add.graphics().setDepth(31);
+      group.push(g);
+      g.fillStyle(0x020617, 0.72);
+      g.fillRoundedRect(baseX, baseY, 310, 210, 18);
+      g.lineStyle(2, 0x38bdf8, 0.36);
+      g.strokeRoundedRect(baseX, baseY, 310, 210, 18);
+      const title = scene.add.text(baseX + 14, baseY + 10, "MEMORY MODEL", { fontFamily: "monospace", fontSize: "12px", color: "#67e8f9" }).setDepth(32);
+      group.push(title);
+      plan.memoryCells.slice(0, 12).forEach((cell, index) => {
+        const x = baseX + 14 + (index % 3) * 94;
+        const y = baseY + 36 + Math.floor(index / 3) * 42;
+        const color = cell.type === "char" ? 0xfb7185 : cell.type.includes("*") ? 0xfacc15 : 0x38bdf8;
+        g.fillStyle(color, 0.18);
+        g.fillRoundedRect(x, y, 82, 32, 8);
+        g.lineStyle(1, color, 0.7);
+        g.strokeRoundedRect(x, y, 82, 32, 8);
+        const label = scene.add.text(x + 6, y + 5, `${cell.name}\n${String(cell.value).slice(0, 10)}`, { fontFamily: "monospace", fontSize: "9px", color: "#f8fafc" }).setDepth(32);
+        group.push(label);
+      });
+      plan.pointers.slice(0, 4).forEach((ptr, index) => {
+        const y = baseY + 178 + index * 9;
+        g.lineStyle(2, C_VISUAL_ENTITY_MAP.pointer.color, 0.58);
+        g.lineBetween(baseX + 192, y, baseX + 274, y - 16);
+      });
+      scene.cTutorialVizGroup = group;
+      return plan;
+    }
+
+    function renderExecutionTrace(plan = buildExecutionPlanForSnippet(getCurrentTutorialSnippet()), stepIndex = 0) {
+      const current = plan.trace[Math.max(0, Math.min(plan.trace.length - 1, stepIndex))] || plan.trace[0] || { line: 1, text: "" };
+      const lines = [
+        `第 ${current.line} 行：${current.text.trim() || "空行"}`,
+        plan.explanation,
+        ...(plan.visualSteps || []).slice(0, 2).map((item) => `└─ ${item}`)
+      ];
+      if (gameState?.dialogOpen && dom.dialogText) {
+        dom.dialogText.textContent = lines.join("\n");
+      }
+      return lines;
+    }
+
+    function playCodeExecutionVisualization(snippet = getCurrentTutorialSnippet(), options = {}) {
+      const plan = buildExecutionPlanForSnippet({ ...snippet, useFixed: options.useFixed });
+      renderExecutionMemoryModel(plan);
+      renderExecutionTrace(plan, 0);
+      const timing = getTutorialDifficultyTiming();
+      if (!options.silent) {
+        showDialog([
+          `正在执行：${snippet.title}`,
+          `${plan.explanation}\n${plan.visualSteps.map((step) => `└─ ${step}`).join("\n")}`,
+          `概念具象化：${C_VISUAL_ENTITY_MAP[snippet.entity || "variable"]?.label || snippet.concept}`
+        ], () => {});
+      }
+      plan.trace.slice(0, 8).forEach((_, index) => {
+        trackedSetTimeout(() => renderExecutionTrace(plan, index), Math.round((timing / 2) * index), `c-tutorial-trace-${index}`);
+      });
+      if (plan.loops.length) showTerminalBurst?.("for (...) // 轨道开始旋转");
+      if (plan.arrays.length) showTerminalBurst?.("array[] // 书架格子点亮");
+      if (plan.pointers.length) showTerminalBurst?.("*ptr -> address");
+      gameState.progress.currentDebugPlan = plan;
+      gameState.progress.currentDebugStep = 0;
+      return plan;
+    }
+
+    function getTutorialProgressPercent() {
+      const snippets = flattenCTutorialSnippets();
+      return Math.round((Math.min(snippets.length, Number(gameState.progress.currentLesson) || 0) / Math.max(1, snippets.length)) * 100);
+    }
+
+    function addCTutorialLearningLog(text = "") {
+      normalizeCTutorialState();
+      gameState.progress.learningLog.push({ time: new Date().toISOString(), text: sanitizePlayerInput(text, 180) });
+      gameState.progress.learningLog = gameState.progress.learningLog.slice(-20);
+      return gameState.progress.learningLog;
+    }
+
+    function showTutorialErrorFeedback(snippet = getCurrentTutorialSnippet()) {
+      const hard = getWorldEvolutionDifficultyId() === "hard";
+      triggerErrorGlitch?.();
+      audioManager.tone?.(110, 0.18, "sawtooth", 0.05);
+      showReward(`错误：${snippet.errorType}。这是一次调试机会。`);
+      if (dom.dialogText) {
+        dom.dialogText.textContent = `[ERROR] ${snippet.errorType}\n${snippet.explanation}\n修正建议：${hard ? "困难模式下请先自行定位错误。" : snippet.fixSuggestion}`;
+      }
+      if (dom.tutorialFixSuggestionButton) {
+        dom.tutorialFixSuggestionButton.disabled = hard;
+        dom.tutorialFixSuggestionButton.textContent = hard ? "困难模式无提示" : "修正建议";
+        dom.tutorialFixSuggestionButton.dataset.snippetId = snippet.id;
+      }
+      if (!hard) {
+        openBottomActionBar(`代码片段 #${snippet.order} 出现：${snippet.errorType}。要查看并应用修正建议吗？`, () => applyTutorialFixSuggestion(snippet.id), {
+          confirmLabel: "查看修正",
+          cancelLabel: "自己再想想"
+        });
+      }
+      return false;
+    }
+
+    function applyTutorialFixSuggestion(snippetId = getCurrentTutorialSnippet()?.id) {
+      const snippet = flattenCTutorialSnippets().find((item) => item.id === snippetId) || getCurrentTutorialSnippet();
+      normalizeCTutorialState();
+      gameState.progress.tutorialFixedErrors[snippet.id] = true;
+      addCTutorialLearningLog(`修复错误：${snippet.title}（${snippet.errorType}）`);
+      showReward(`修正完成：${snippet.fixSuggestion} · 双倍碎片`);
+      playCodeExecutionVisualization(snippet, { useFixed: true });
+      completeTutorialSnippet(snippet, { fixedError: true });
+      return true;
+    }
+
+    function completeTutorialSnippet(snippet = getCurrentTutorialSnippet(), options = {}) {
+      const snippets = flattenCTutorialSnippets();
+      normalizeCTutorialState();
+      if (!gameState.progress.compiledHistory.includes(snippet.id)) gameState.progress.compiledHistory.push(snippet.id);
+      gameState.progress.compiledHistory = gameState.progress.compiledHistory.slice(-80);
+      const nextIndex = Math.min(snippets.length - 1, Math.max(Number(gameState.progress.currentLesson) || 0, snippet.order));
+      gameState.progress.currentLesson = nextIndex;
+      const coursePercent = Math.round((Math.min(snippets.length, snippet.order) / Math.max(1, snippets.length)) * 100);
+      gameState.progress.worldEvolutionCompletion = Math.max(Number(gameState.progress.worldEvolutionCompletion) || 0, coursePercent);
+      const gained = options.fixedError ? 2 : 1;
+      gameState.progress.worldEvolutionFragments = Math.min(20, (Number(gameState.progress.worldEvolutionFragments) || 0) + gained);
+      grantGrowthExperience?.(options.fixedError ? 20 : 10, "c-tutorial");
+      addCTutorialLearningLog(`完成 ${snippet.chapterTitle} / ${snippet.title}，掌握：${snippet.concept}`);
+      unlockFreeModeIfReady();
+      renderCTutorialSideMenu();
+      saveCTutorialLocalKeys();
+      saveProgress();
+      if (snippet.order === snippets.length) {
+        showReward("C语言完整课程已完成。动态内存管理模块收束。");
+        playWorldEvolutionVictoryTune?.();
+      } else if (snippets[snippet.order]?.chapterId !== snippet.chapterId) {
+        showReward(`${snippet.chapterTitle} 完成，下一章已解锁。`);
+        playWorldEvolutionMilestoneEffect?.(gameState.scene, Math.max(20, Math.round(coursePercent / 20) * 20), { replay: true });
+      } else {
+        showReward(`编译成功：${snippet.title} · 🧩 +${gained}`);
+      }
+      return true;
+    }
+
+    function compileCurrentTutorialSnippet() {
+      const snippet = getCurrentTutorialSnippet();
+      normalizeCTutorialState();
+      if (snippet.intentionalError && !gameState.progress.tutorialFixedErrors[snippet.id]) {
+        gameState.progress.errorAttempts[snippet.id] = (Number(gameState.progress.errorAttempts[snippet.id]) || 0) + 1;
+        saveCTutorialLocalKeys();
+        saveProgress();
+        return showTutorialErrorFeedback(snippet);
+      }
+      playCodeExecutionVisualization(snippet, { useFixed: Boolean(snippet.intentionalError) });
+      return completeTutorialSnippet(snippet, { fixedError: Boolean(snippet.intentionalError) });
+    }
+
+    function inspectFreeModeCode(code = "") {
+      const text = String(code || "");
+      const lines = text.split("\n");
+      const issueLine = lines.findIndex((line) => {
+        const trimmed = line.trim();
+        return trimmed && !trimmed.startsWith("#") && !trimmed.endsWith(";") && !trimmed.endsWith("{") && !trimmed.endsWith("}") && !/^if|^for|^while|^switch|^else|^do\b/.test(trimmed);
+      });
+      if (issueLine >= 0) {
+        return { ok: false, line: issueLine + 1, errorType: "疑似缺少分号", fixSuggestion: `检查第 ${issueLine + 1} 行末尾是否需要分号。` };
+      }
+      const open = (text.match(/\{/g) || []).length;
+      const close = (text.match(/\}/g) || []).length;
+      if (open !== close) return { ok: false, line: lines.length, errorType: "大括号不匹配", fixSuggestion: "补齐缺失的 { 或 }。" };
+      return { ok: true };
+    }
+
+    function compileFreeModeCode(code = dom.freeModeCodeInput?.value || gameState.progress.freeModeCode || "") {
+      if ((Number(gameState.progress.worldEvolutionCompletion) || 0) < 80) {
+        showReward("自由模式需要完成度达到 80%。");
+        return false;
+      }
+      const source = String(code || "");
+      const issue = inspectFreeModeCode(source);
+      gameState.progress.freeModeCode = source;
+      if (!issue.ok) {
+        showTutorialErrorFeedback({
+          id: "free-mode-error",
+          order: 0,
+          title: "自由模式代码",
+          concept: "自由编译",
+          code: source,
+          explanation: `第 ${issue.line} 行：${issue.errorType}`,
+          errorType: issue.errorType,
+          fixSuggestion: issue.fixSuggestion
+        });
+        saveCTutorialLocalKeys();
+        saveProgress();
+        return false;
+      }
+      const snippet = { id: `free-${Date.now()}`, title: "自由模式代码", concept: "自由编译", code: source, explanation: "语法结构通过，正在用可视化内存模型模拟执行。" };
+      playCodeExecutionVisualization(snippet);
+      addCTutorialLearningLog("自由模式编译成功。");
+      saveCTutorialLocalKeys();
+      saveProgress();
+      showReward("自由模式编译通过。");
+      return true;
+    }
+
+    function stepDebugExecution() {
+      normalizeCTutorialState();
+      const plan = gameState.progress.currentDebugPlan || buildExecutionPlanForSnippet(getCurrentTutorialSnippet());
+      const index = Number(gameState.progress.currentDebugStep) || 0;
+      renderExecutionMemoryModel(plan);
+      renderExecutionTrace(plan, index);
+      gameState.progress.currentDebugStep = (index + 1) % Math.max(1, plan.trace.length);
+      showReward(`单步执行：第 ${plan.trace[index]?.line || 1} 行`);
+      return gameState.progress.currentDebugStep;
+    }
+
+    function unlockFreeModeIfReady() {
+      const unlocked = (Number(gameState.progress.worldEvolutionCompletion) || 0) >= 80 || getTutorialProgressPercent() >= 80;
+      if (dom.freeModeEditorPanel) dom.freeModeEditorPanel.classList.toggle("unlocked", unlocked);
+      if (dom.freeModeLockedNote) dom.freeModeLockedNote.textContent = unlocked
+        ? "// 自由模式已解锁。你可以输入自己的 C 代码。"
+        : "// 完成度达到 80% 后解锁。你可以输入自己的 C 代码，系统会用同一套内存模型进行模拟。";
+      return unlocked;
+    }
+
+    function highlightFreeModeCode(code = dom.freeModeCodeInput?.value || "") {
+      if (!dom.freeModeHighlightLayer) return "";
+      const escaped = escapeHtml(code)
+        .replace(/\b(int|float|char|double|return|if|else|for|while|do|switch|case|break|continue|struct|union|const|void|malloc|free|calloc|realloc)\b/g, "<span style=\"color:#67e8f9\">$1</span>")
+        .replace(/(&quot;[^&]*&quot;)/g, "<span style=\"color:#86efac\">$1</span>")
+        .replace(/(\/\/.*)$/gm, "<span style=\"color:#64748b\">$1</span>");
+      dom.freeModeHighlightLayer.innerHTML = escaped || "// free mode";
+      return escaped;
+    }
+
+    function renderCTutorialSideMenu() {
+      if (!dom.courseLessonList && !dom.learningLogList && !dom.codeHistoryList) return false;
+      normalizeCTutorialState();
+      const snippets = flattenCTutorialSnippets();
+      const currentIndex = Number(gameState.progress.currentLesson) || 0;
+      const currentSnippet = getCurrentTutorialSnippet();
+      const percent = Math.round((Math.min(currentIndex, snippets.length) / Math.max(1, snippets.length)) * 100);
+      if (dom.courseCurrentLessonText) dom.courseCurrentLessonText.textContent = `#${currentSnippet.order} ${currentSnippet.title}`;
+      if (dom.courseProgressFill) dom.courseProgressFill.style.width = `${percent}%`;
+      if (dom.courseLessonList) {
+        dom.courseLessonList.innerHTML = C_TUTORIAL_COURSE.map((chapter) => {
+          const chapterSnippets = chapter.lessons.flatMap((lesson) => lesson.snippets);
+          const done = chapterSnippets.every((snippet) => gameState.progress.compiledHistory.includes(snippet.id));
+          const active = chapterSnippets.some((snippet) => snippet.id === currentSnippet.id);
+          return `<button class="course-lesson-item ${done ? "done" : ""} ${active ? "current" : ""}" type="button" data-c-lesson="${escapeHtml(chapterSnippets[0]?.id || "")}">${done ? "✓" : active ? ">" : "·"} ${escapeHtml(chapter.title)}<br><small>${escapeHtml(chapter.completionRange.join("%-"))}% · ${chapterSnippets.length} 例</small></button>`;
+        }).join("");
+      }
+      if (dom.learningLogList) {
+        const logs = (gameState.progress.learningLog || []).slice(-20).reverse();
+        dom.learningLogList.innerHTML = logs.length ? logs.map((entry) => `<div class="learning-log-entry">${escapeHtml(entry.text || "")}</div>`).join("") : "// 尚未开始编译课程。";
+      }
+      if (dom.codeHistoryList) {
+        const history = (gameState.progress.compiledHistory || []).slice(-20).reverse();
+        dom.codeHistoryList.innerHTML = history.length ? history.map((id) => {
+          const snippet = snippets.find((item) => item.id === id);
+          return `<button class="code-history-entry" type="button" data-c-replay="${escapeHtml(id)}">${escapeHtml(snippet?.title || id)}<br><small>${escapeHtml(snippet?.concept || "")}</small></button>`;
+        }).join("") : "// 学过的代码会出现在这里，可点击回放。";
+      }
+      unlockFreeModeIfReady();
+      if (dom.freeModeCodeInput && !dom.freeModeCodeInput.value) dom.freeModeCodeInput.value = gameState.progress.freeModeCode || "#include <stdio.h>\nint main(void) {\n  printf(\"free mode\");\n  return 0;\n}";
+      highlightFreeModeCode();
+      return true;
+    }
+
+    function replayCTutorialSnippet(snippetId = "") {
+      const snippet = flattenCTutorialSnippets().find((item) => item.id === snippetId);
+      if (!snippet) return false;
+      playCodeExecutionVisualization(snippet, { useFixed: Boolean(snippet.intentionalError && gameState.progress.tutorialFixedErrors?.[snippet.id]) });
+      showReward(`回放：${snippet.title}`);
+      return true;
+    }
+
+    function setCTutorialLesson(snippetId = "") {
+      const snippets = flattenCTutorialSnippets();
+      const index = snippets.findIndex((snippet) => snippet.id === snippetId);
+      if (index < 0) return false;
+      gameState.progress.currentLesson = index;
+      renderCTutorialSideMenu();
+      saveCTutorialLocalKeys();
+      saveProgress();
+      showReward(`已切换课程：${snippets[index].title}`);
+      return true;
+    }
+
+    function compileAndAdvanceWorld(chargeMultiplier = 1) {
+      if (compileCurrentTutorialSnippet() === false) return false;
+      return advanceWorldEvolution(chargeMultiplier);
+    }
+
     function tWorldEvolution(key) {
       const locale = gameState.settings.worldEvolutionLanguage || gameState.settings.language || "zh-CN";
       return WORLD_EVOLUTION_I18N[locale]?.[key] || WORLD_EVOLUTION_I18N["zh-CN"][key] || key;
@@ -17834,6 +18653,7 @@ int main(void) {
       if (dom.worldEvolutionTimePauseButton) dom.worldEvolutionTimePauseButton.textContent = gameState.settings.worldEvolutionTimePaused ? "继续日夜" : "暂停日夜";
       if (dom.worldEvolutionMirrorText && !dom.worldEvolutionMirrorText.textContent.includes("全球平均完成度")) renderWorldEvolutionMirror();
       renderWorldEvolutionCodex();
+      renderCTutorialSideMenu();
       return true;
     }
 
@@ -18960,6 +19780,7 @@ int main(void) {
       }
       writeStorage(STORAGE.progress, gameState.progress);
       if (typeof saveWorldEvolutionLocalKeys === "function") saveWorldEvolutionLocalKeys();
+      if (typeof saveCTutorialLocalKeys === "function") saveCTutorialLocalKeys();
     }
 
     function saveCollections() {
@@ -30553,14 +31374,30 @@ int main(void) {
       const heldMs = performance.now() - worldEvolutionHoldStartedAt;
       if (heldMs > 650) {
         worldEvolutionIgnoreClick = true;
-        advanceWorldEvolution(1 + Math.min(2, heldMs / 1400));
+        compileAndAdvanceWorld(1 + Math.min(2, heldMs / 1400));
         trackedSetTimeout(() => { worldEvolutionIgnoreClick = false; }, 120, "world-evolution-click-reset");
       }
     });
     dom.worldAdvanceButton?.addEventListener("click", () => {
       if (worldEvolutionIgnoreClick) return;
-      advanceWorldEvolution();
+      compileAndAdvanceWorld(); // advanceWorldEvolution()
     });
+    dom.courseLessonList?.addEventListener("click", (event) => {
+      const target = event.target.closest?.("[data-c-lesson]");
+      if (target) setCTutorialLesson(target.dataset.cLesson);
+    });
+    dom.codeHistoryList?.addEventListener("click", (event) => {
+      const target = event.target.closest?.("[data-c-replay]");
+      if (target) replayCTutorialSnippet(target.dataset.cReplay);
+    });
+    dom.freeModeCodeInput?.addEventListener("input", (event) => {
+      gameState.progress.freeModeCode = event.target.value;
+      highlightFreeModeCode(event.target.value);
+      saveCTutorialLocalKeys();
+    });
+    dom.freeModeCompileButton?.addEventListener("click", () => compileFreeModeCode());
+    dom.debugStepButton?.addEventListener("click", () => stepDebugExecution());
+    dom.tutorialFixSuggestionButton?.addEventListener("click", () => applyTutorialFixSuggestion(dom.tutorialFixSuggestionButton?.dataset?.snippetId || getCurrentTutorialSnippet()?.id));
     dom.fragmentStarChartButton?.addEventListener("click", () => openFragmentStarChart());
     document.querySelectorAll("[data-star-node]").forEach((button) => {
       button.addEventListener("click", () => lightFragmentStarNode(button.dataset.starNode));
@@ -30859,8 +31696,10 @@ int main(void) {
     safeRunEffect("startupCardAlbum", () => renderCardAlbum());
     safeRunEffect("startupAchievements", () => renderAchievements());
     safeRunEffect("startupWorldEvolutionLocalKeys", () => loadWorldEvolutionLocalKeys());
+    safeRunEffect("startupCTutorialLocalKeys", () => loadCTutorialLocalKeys());
     safeRunEffect("startupWorldEvolutionGestures", () => installWorldEvolutionTouchGestures());
     safeRunEffect("startupWorldEvolutionUi", () => updateWorldEvolutionUi());
+    safeRunEffect("startupCTutorialUi", () => renderCTutorialSideMenu());
     safeRunEffect("startupWorldEvolutionMirror", () => renderWorldEvolutionMirror());
     safeRunEffect("startupWorldEvolutionCodex", () => renderWorldEvolutionCodex());
     safeRunEffect("startupWorldEvolutionTheme", () => applyWorldEvolutionUiTheme(gameState.settings.worldEvolutionTheme || "deepStar"));
