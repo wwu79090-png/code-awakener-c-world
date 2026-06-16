@@ -11,7 +11,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; base-uri 'self'; object-src 'none'; frame-ancestors 'none'; script-src 'self' https://cdn.jsdelivr.net 'nonce-code-awakener-inline' 'sha256-HWDhC9wogdU7Ys6BjSgATnoTZJcvfPVw8z0389CXA/w='; style-src 'self' https://cdn.jsdelivr.net https://fonts.googleapis.com 'nonce-code-awakener-inline' 'sha256-tafO1EMTINgEy43CisNS2+go+KZcVMAuWMjcskZ3EwU='; style-src-attr 'unsafe-inline'; font-src 'self' https://cdn.jsdelivr.net https://fonts.gstatic.com data:; img-src 'self' data: blob:; media-src 'self' data: blob:; worker-src 'self' blob:; child-src 'self' blob:; connect-src 'self' https://cdn.jsdelivr.net http://localhost:8000 http://127.0.0.1:8000;">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; base-uri 'self'; object-src 'none'; frame-ancestors 'none'; script-src 'self' https://cdn.jsdelivr.net 'nonce-code-awakener-inline' 'sha256-G00nL7EQ9yWgoFbPm4XodQnNDhq8GnzxqVbTVh+7F78='; style-src 'self' https://cdn.jsdelivr.net https://fonts.googleapis.com 'nonce-code-awakener-inline' 'sha256-5AG3yNXZyWd//gUrxhjhEnXw/C1iC9nf8JmChRf1vYg='; style-src-attr 'unsafe-inline'; font-src 'self' https://cdn.jsdelivr.net https://fonts.gstatic.com data:; img-src 'self' data: blob:; media-src 'self' data: blob:; worker-src 'self' blob:; child-src 'self' blob:; connect-src 'self' https://cdn.jsdelivr.net http://localhost:8000 http://127.0.0.1:8000;">
   <title>编程学习 RPG：C 语言启航村</title>
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%23020617'/%3E%3Cpath d='M22 20 10 32l12 12M42 20l12 12-12 12' fill='none' stroke='%2300ff88' stroke-width='6' stroke-linecap='round' stroke-linejoin='round'/%3E%3Cpath d='m36 16-8 32' stroke='%2300ccff' stroke-width='5' stroke-linecap='round'/%3E%3C/svg%3E">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/firacode@6.2.0/distr/fira_code.css">
@@ -3234,7 +3234,7 @@
 
     .code-block-mode-panel {
       display: none;
-      gap: 8px;
+      gap: 10px;
       padding: 10px;
       border: 1px solid rgba(125, 211, 252, 0.18);
       border-radius: 16px;
@@ -3247,9 +3247,38 @@
 
     .code-block-bank,
     .code-block-program {
+      min-width: 0;
+    }
+
+    .code-block-lane {
+      display: grid;
+      gap: 6px;
+      min-width: 0;
+    }
+
+    .code-block-lane-title {
+      color: rgba(191, 219, 254, 0.9);
+      font: 800 11px/1.3 var(--font-code);
+    }
+
+    .code-block-bank-row,
+    .code-block-program-row {
       display: flex;
       flex-wrap: wrap;
       gap: 7px;
+      min-width: 0;
+    }
+
+    .code-block-empty {
+      min-height: 40px;
+      display: inline-flex;
+      align-items: center;
+      padding: 0 12px;
+      border: 1px dashed rgba(125, 211, 252, 0.26);
+      border-radius: 12px;
+      color: rgba(191, 219, 254, 0.78);
+      font: 800 12px/1.35 var(--font-code);
+      background: rgba(15, 23, 42, 0.28);
     }
 
     .code-block {
@@ -3261,6 +3290,36 @@
       background: linear-gradient(135deg, rgba(14, 165, 233, 0.32), rgba(2, 6, 23, 0.72));
       font: 800 12px/1 var(--font-code);
       cursor: pointer;
+      transition: opacity 150ms ease, transform 150ms ease, border-color 150ms ease;
+    }
+
+    .code-block:hover,
+    .code-block:focus-visible {
+      transform: translateY(-1px);
+      border-color: rgba(125, 211, 252, 0.54);
+    }
+
+    .code-block.picked {
+      position: relative;
+      padding-left: 32px;
+      border-color: rgba(134, 239, 172, 0.38);
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08);
+    }
+
+    .code-block-step {
+      position: absolute;
+      left: 8px;
+      top: 50%;
+      width: 18px;
+      height: 18px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 999px;
+      color: #020617;
+      background: #a7f3d0;
+      font: 900 10px/1 var(--font-code);
+      transform: translateY(-50%);
     }
 
     .code-block.printf { background: linear-gradient(135deg, rgba(34, 197, 94, 0.36), rgba(2, 6, 23, 0.72)); }
@@ -3275,6 +3334,53 @@
     .code-block-mode-panel.ready {
       box-shadow: 0 0 28px rgba(34, 197, 94, 0.18);
       border-color: rgba(34, 197, 94, 0.38);
+    }
+
+    .vscode-window.code-block-guided {
+      grid-template-rows: 34px minmax(0, 1fr) 110px;
+    }
+
+    .vscode-window.code-block-guided .editor-main {
+      grid-template-columns: 92px minmax(0, 1fr) 48px;
+    }
+
+    .vscode-window.code-block-guided .file-tree h2 {
+      font-size: 10px;
+      padding-inline: 10px;
+    }
+
+    .vscode-window.code-block-guided .file-item {
+      min-height: 38px;
+      padding-inline: 10px;
+      justify-content: center;
+      font-size: 0;
+    }
+
+    .vscode-window.code-block-guided .file-icon {
+      font-size: 13px;
+    }
+
+    .vscode-window.code-block-guided .editor-center {
+      grid-template-rows: 34px auto minmax(0, 1fr);
+    }
+
+    .vscode-window.code-block-guided .task-panel {
+      display: none;
+    }
+
+    .vscode-window.code-block-guided .code-explain-panel {
+      width: 48px;
+      min-width: 48px;
+      overflow: hidden;
+    }
+
+    .vscode-window.code-block-guided .code-explain-body,
+    .vscode-window.code-block-guided .code-explain-panel h2 span {
+      display: none;
+    }
+
+    .vscode-window.code-block-guided .editor-pro-layer {
+      display: none;
     }
 
     .karaoke-highlight {
@@ -4682,6 +4788,31 @@
       caret-color: #67e8f9;
       font-variant-ligatures: contextual;
       text-shadow: 0 0 0 rgba(212, 212, 212, 0.04);
+    }
+
+    .code-wrap.readme-mode #highlightLayer,
+    .code-wrap.readme-mode #codeInput {
+      white-space: pre-wrap;
+      overflow-wrap: anywhere;
+      word-break: break-word;
+      overflow-x: hidden;
+    }
+
+    .code-wrap.readme-mode #highlightLayer {
+      color: #dbeafe;
+    }
+
+    .code-wrap.readme-mode #codeInput {
+      cursor: default;
+      caret-color: transparent;
+    }
+
+    .code-wrap.readme-mode #lineNumbers {
+      opacity: 0.5;
+    }
+
+    .code-wrap.readme-mode .editor-error-line-overlay {
+      display: none;
     }
 
     .editor-error-line-overlay {
@@ -8360,6 +8491,47 @@
         min-width: 0;
       }
 
+      body.mobile-input .vscode-window.code-block-guided {
+        grid-template-rows: 42px minmax(0, 1fr) minmax(96px, 18dvh);
+      }
+
+      body.mobile-input .vscode-window.code-block-guided .editor-center {
+        grid-template-rows: 40px auto minmax(0, 1fr);
+      }
+
+      body.mobile-input .code-block-mode-panel {
+        max-height: 34dvh;
+        padding: 8px;
+        gap: 6px;
+        overflow: auto;
+        border-radius: 14px;
+      }
+
+      body.mobile-input .code-block-mode-status {
+        font-size: 11px;
+        line-height: 1.45;
+      }
+
+      body.mobile-input .code-block-bank-row,
+      body.mobile-input .code-block-program-row {
+        flex-wrap: nowrap;
+        overflow-x: auto;
+        padding-bottom: 4px;
+        -webkit-overflow-scrolling: touch;
+      }
+
+      body.mobile-input .code-block,
+      body.mobile-input .code-block-empty {
+        flex: 0 0 auto;
+        min-height: 44px;
+        font-size: 12px;
+      }
+
+      body.mobile-input .code-block-mode-panel .info-menu-actions {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 8px;
+      }
+
       body.mobile-input .tabs {
         min-height: 40px;
       }
@@ -9242,7 +9414,6 @@
               <label class="setting-row">稳定档位
                 <select id="renderQualitySelect">
                   <option value="high">高</option>
-                  <option value="medium">中</option>
                   <option value="low">低</option>
                 </select>
                 <span>防白屏</span>
@@ -10459,25 +10630,25 @@ int main() {
     const SAVE_SIGNATURE_SALT = "c-world-local-integrity";
     const SAVE_CLEAR_CONFIRM_MS = 3000;
     const STARTUP_ANNOUNCEMENT_AUTO_HIDE_MS = 3000;
-    const GAME_VERSION = "v1.0.6";
+    const GAME_VERSION = "v1.0.7";
     const UPDATE_ANNOUNCEMENT_PAGES = Object.freeze([
       {
         title: "> 消息 / 本次更新",
         lines: [
           "// 作者：杀戮",
-          "// 本次更新：新增“绝对引导系统”，前10分钟只显示当前一步。",
-          "// 旧新手教程不再自动抢控制权，可在菜单中手动重看。",
-          "// 编辑器会逐行解释代码，出错时先把错误行标红并给短提示。",
-          "// 左侧菜单已整理成5个折叠分组，默认只展开当前任务。"
+          "// 本次更新：防白屏“稳定档位”只保留低/高，移除会闪白的中档。",
+          "// 积木拼装已整理：点过的积木会从可选区消失，避免重复误点。",
+          "// 编辑器 README 说明改为纯文本文档模式，长内容自动换行。",
+          "// 手机端积木区改为横向滑动，界面更干净。"
         ]
       },
       {
-        title: "> 更新内容 / 绝对引导",
+        title: "> 更新内容 / 界面整理",
         lines: [
-          "// 每个阶段最多保留：当前操作、当前目标、当前反馈三条信息。",
-          "// 玩家停留过久会先询问“是否需要帮助”，不会直接弹大窗口。",
-          "// 连续写错会逐步补充提示：先提醒英文分号，再给示例。",
-          "// 信息菜单改为5个折叠分组，减少功能堆叠造成的压力。"
+          "// 旧存档里如果保存了稳定中档，会自动迁移到高档。",
+          "// 积木教程默认隐藏右侧复杂说明，只保留当前操作。",
+          "// 右侧解析和任务说明仍保留，但在新手积木模式下先收起。",
+          "// 信息菜单继续按5个分组折叠，减少第一眼压力。"
         ]
       },
       {
@@ -10491,6 +10662,19 @@ int main() {
       }
     ]);
     const UPDATE_HISTORY = Object.freeze([
+      {
+        version: "v1.0.7",
+        date: "2026-06-16",
+        title: "稳定档位移除中档、积木拼装降噪、编辑器说明修复",
+        details: [
+          "设置里的防白屏稳定档位只保留低和高，移除会导致白色闪烁的中档选项。",
+          "旧存档中的 renderQuality=medium 会自动迁移为 high，避免再次进入异常档位。",
+          "积木拼装时，已点击的积木会从可选区消失，并在已拼程序区显示步骤编号。",
+          "积木教程模式下自动收起右侧任务/解析栏，让新手只看到当前该点的积木、代码区和运行按钮。",
+          "README 任务说明改为纯文本文档模式，长说明自动换行，不再露出内部高亮标签。",
+          "手机端积木区改为横向滑动，按钮保持触摸友好，减少元素堆叠。"
+        ]
+      },
       {
         version: "v1.0.6",
         date: "2026-06-16",
@@ -11212,7 +11396,7 @@ return 0;`;
       directSaveAs: "reduced-by-inline-resources"
     });
     const SECURITY_CONFIG = Object.freeze({
-      expectedScriptHash: "+TX+MQwKDIfwUbMxO+BOSjtddJW4ps8sLQQGr8MPkpE=",
+      expectedScriptHash: "RnhT7bwAJDAB4Ms6lN6UmB7hdXSNXBYjDU2J2EYSIC8=",
       selfCheckIntervalMs: 45000,
       tamperRefreshMs: 5000,
       devToolsRefreshMs: 2000,
@@ -11397,7 +11581,6 @@ return 0;`;
     const SAFE_MODE_QUERY_PARAM = "safeMode";
     const ULTIMATE_QUALITY_PROFILES = Object.freeze({
       low: { grass: 0, particles: 0.35, ssr: false, depthFog: false, bloom: false, renderer: "canvas" },
-      medium: { grass: CINEMATIC_RENDER_BUDGET.lowProceduralGrass, particles: 0.55, ssr: false, depthFog: true, bloom: true, renderer: "webgl" },
       high: { grass: CINEMATIC_RENDER_BUDGET.maxProceduralGrass, particles: 1, ssr: true, depthFog: true, bloom: true, renderer: "webgl" }
     });
     const ULTIMATE_EFFECT_REGISTRY = Object.freeze({
@@ -14289,7 +14472,7 @@ return 0;`;
     const savedAchievements = readStorage(STORAGE.achievements, []);
     const savedSettings = { ...defaultSettings, ...readStorage(STORAGE.settings, defaultSettings) };
     if (savedSettings.performanceMode === "auto") savedSettings.performanceMode = "high";
-    if (savedSettings.renderQuality === "auto") savedSettings.renderQuality = "high";
+    if (savedSettings.renderQuality === "auto" || savedSettings.renderQuality === "medium") savedSettings.renderQuality = "high";
     if (savedSettings.cinematicQuality === CINEMATIC_RENDER_MODES.auto) savedSettings.cinematicQuality = CINEMATIC_RENDER_MODES.high;
 
     function generateWorldSeed(source = "") {
@@ -14481,8 +14664,9 @@ return 0;`;
 
     function normalizeRenderQuality(value = "auto") {
       const quality = String(value || "auto");
-      if (quality === "ultra" || quality === "cinematic" || quality === "movie") return "high";
-      return (ULTIMATE_QUALITY_PROFILES[quality] || quality === "auto") ? quality : "auto";
+      if (quality === "low") return "low";
+      if (quality === "ultra" || quality === "cinematic" || quality === "movie" || quality === "medium" || quality === "auto") return "high";
+      return ULTIMATE_QUALITY_PROFILES[quality] ? quality : "high";
     }
 
     class RenderSafetyManager {
@@ -14605,7 +14789,7 @@ return 0;`;
     }
 
     function chooseInitialQualityProfile() {
-      return renderSafetyManager ? renderSafetyManager.chooseInitialQualityProfile() : "medium";
+      return renderSafetyManager ? renderSafetyManager.chooseInitialQualityProfile() : "high";
     }
 
     renderSafetyManager = new RenderSafetyManager();
@@ -19908,12 +20092,30 @@ ${item.code}
       const config = getCodeBlockModeSnippet();
       const enabled = Boolean(config && isFriendlyMode() && gameState.editorOpen);
       dom.codeBlockModePanel?.classList.toggle("active", enabled);
+      document.querySelector(".vscode-window")?.classList.toggle("code-block-guided", enabled);
       if (!enabled || !dom.codeBlockBank || !dom.codeBlockProgram) return false;
-      dom.codeBlockBank.innerHTML = config.blocks.map((block) => `<button class="code-block ${escapeHtml(block.type)}" type="button" data-code-block="${escapeHtml(block.id)}">${escapeHtml(block.label)}</button>`).join("");
-      dom.codeBlockProgram.innerHTML = codeBlockSelection.map((id) => {
+      const selectedIds = new Set(codeBlockSelection);
+      const remainingBlocks = config.blocks.filter((block) => !selectedIds.has(block.id));
+      const nextId = config.order[codeBlockSelection.length] || null;
+      dom.codeBlockBank.innerHTML = `
+        <div class="code-block-lane">
+          <span class="code-block-lane-title">${nextId ? `下一块：${escapeHtml(config.blocks.find((block) => block.id === nextId)?.label || "继续")}` : "可选积木"}</span>
+          <div class="code-block-bank-row">
+            ${remainingBlocks.length
+              ? remainingBlocks.map((block) => `<button class="code-block ${escapeHtml(block.type)}" type="button" data-code-block="${escapeHtml(block.id)}">${escapeHtml(block.label)}</button>`).join("")
+              : `<span class="code-block-empty">积木已全部放入下方程序。</span>`}
+          </div>
+        </div>`;
+      dom.codeBlockProgram.innerHTML = `
+        <div class="code-block-lane">
+          <span class="code-block-lane-title">已拼好的程序：${codeBlockSelection.length}/${config.order.length}</span>
+          <div class="code-block-program-row">
+            ${codeBlockSelection.length ? codeBlockSelection.map((id, index) => {
         const block = config.blocks.find((item) => item.id === id);
-        return block ? `<button class="code-block ${escapeHtml(block.type)}" type="button" data-remove-code-block="${escapeHtml(block.id)}">${escapeHtml(block.label)}</button>` : "";
-      }).join("");
+        return block ? `<button class="code-block picked ${escapeHtml(block.type)}" type="button" data-remove-code-block="${escapeHtml(block.id)}" title="点击移除这块积木"><span class="code-block-step">${index + 1}</span>${escapeHtml(block.label)}</button>` : "";
+            }).join("") : `<span class="code-block-empty">先从上方点第一块积木。</span>`}
+          </div>
+        </div>`;
       verifyCodeBlockProgram(false);
       return true;
     }
@@ -19923,7 +20125,17 @@ ${item.code}
       if (!config) return false;
       const ready = config.order.every((id, index) => codeBlockSelection[index] === id) && codeBlockSelection.length === config.order.length;
       dom.codeBlockModePanel?.classList.toggle("ready", ready);
-      if (dom.codeBlockModeStatus) dom.codeBlockModeStatus.textContent = ready ? "// 积木顺序正确，可以编译啦！" : "// 按顺序点积木：蓝色引入库、红色主入口、绿色输出、黄色结束。";
+      if (dom.codeBlockApplyButton) {
+        dom.codeBlockApplyButton.disabled = !ready;
+        dom.codeBlockApplyButton.textContent = ready ? "重新填入编辑器" : "拼完后自动填入";
+      }
+      if (dom.codeBlockModeStatus) {
+        const nextId = config.order[codeBlockSelection.length] || null;
+        const nextBlock = nextId ? config.blocks.find((block) => block.id === nextId) : null;
+        dom.codeBlockModeStatus.textContent = ready
+          ? "// 顺序正确，代码已填入编辑器。现在点底部“运行”。"
+          : `// 当前只做一件事：点“${nextBlock?.label || "下一块"}”。点错了可以点下方已选积木移除。`;
+      }
       if (ready && applyWhenReady) applyCodeBlockProgramToEditor();
       return ready;
     }
@@ -20057,6 +20269,7 @@ ${item.code}
 
     function unlockParentGuide() {
       if (!dom.parentGuideContent) return false;
+      dismissExecutionVisualization("parent-guide");
       dom.parentGuideContent.innerHTML = `
         <strong>给家长的话</strong><br>
         这款游戏先教孩子“顺序、存储、选择、重复”这些思维，再进入C语言代码。建议每次陪伴 20-30 分钟，多夸“你愿意尝试”而不是只看结果。遇到不会的地方，可以让孩子先点“填入当前代码”，看动画理解，再慢慢尝试打字。`;
@@ -20182,6 +20395,16 @@ ${item.code}
       scene?.cTutorialVizGroup?.forEach?.((item) => item?.destroy?.());
       if (scene) scene.cTutorialVizGroup = [];
       return true;
+    }
+
+    function dismissExecutionVisualization(reason = "ui") {
+      clearExecutionVisualization(gameState.scene);
+      if (gameState.progress) {
+        gameState.progress.currentDebugPlan = null;
+        gameState.progress.currentDebugStep = 0;
+      }
+      if (dom.executionPauseButton) dom.executionPauseButton.textContent = "暂停演示";
+      return reason;
     }
 
     function renderExecutionMemoryModel(plan = buildExecutionPlanForSnippet(getCurrentTutorialSnippet()), scene = gameState.scene) {
@@ -22196,7 +22419,10 @@ ${item.code}
       dom.infoSideMenu?.classList.toggle("active", next);
       dom.infoSideMenu?.setAttribute("aria-hidden", String(!next));
       dom.infoMenuToggle?.setAttribute("aria-expanded", String(next));
-      if (next) updateInfoSideMenu();
+      if (next) {
+        dismissExecutionVisualization("info-menu");
+        updateInfoSideMenu();
+      }
       audioManager.uiHover?.();
       return next;
     }
@@ -27893,6 +28119,7 @@ ${item.code}
 
     function closeEditor(resume = true) {
       if (!gameState.editorOpen) return;
+      dismissExecutionVisualization("editor-close");
       gameState.editorOpen = false;
       inputManager.setMode(INPUT_MODES.game);
       triggerGlitchEffect();
@@ -27920,6 +28147,7 @@ ${item.code}
       dom.activeTab.textContent = fileName;
       dom.codeInput.value = files[fileName];
       dom.codeInput.readOnly = fileName === "README.md";
+      dom.codeInput.closest?.(".code-wrap")?.classList.toggle("readme-mode", fileName === "README.md");
       resetEditorHistory(dom.codeInput.value);
       dom.fileItems.forEach((item) => {
         item.classList.toggle("active", item.dataset.file === fileName);
@@ -29018,6 +29246,7 @@ ${item.code}
       if (fileName.endsWith(".html")) return highlightHtml(code);
       if (fileName.endsWith(".css")) return highlightCss(code);
       if (fileName.endsWith(".c") || fileName.endsWith(".h")) return highlightC(code, markedLine);
+      if (fileName.endsWith(".md")) return escapeHtml(code);
       return highlightJs(code);
     }
 
@@ -29184,6 +29413,10 @@ ${item.code}
 
     function updateEditorErrorLineOverlay() {
       const overlay = dom.editorErrorLineOverlay;
+      if (currentFile === "README.md") {
+        overlay?.classList.remove("show");
+        return false;
+      }
       if (!overlay || !overlay.dataset.line) return false;
       const line = Math.max(1, Number(overlay.dataset.line) || 1);
       const lineHeight = getEditorLineHeightPx();
@@ -35661,6 +35894,7 @@ ${item.code}
     dom.codeBlockBank?.addEventListener("click", (event) => {
       const target = event.target?.closest?.("[data-code-block]");
       if (!target) return;
+      if (codeBlockSelection.includes(target.dataset.codeBlock)) return;
       codeBlockSelection.push(target.dataset.codeBlock);
       renderCodeBlockMode();
       verifyCodeBlockProgram(true);
