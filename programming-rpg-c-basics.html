@@ -14,7 +14,7 @@
   <meta http-equiv="Cache-Control" content="no-store, max-age=0, must-revalidate">
   <meta http-equiv="Pragma" content="no-cache">
   <meta http-equiv="Expires" content="0">
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self' file:; base-uri 'self'; object-src 'none'; frame-ancestors 'none'; script-src 'self' 'nonce-code-awakener-inline' file: 'sha256-61h8180p1+zH+J9mydlxKGuIk603IhU0gbx9Y/v5qjY='; style-src 'self' 'nonce-code-awakener-inline' file: 'sha256-yVOtiLuRDlaD4MLtyyFQJmzSElvrztqUwo762jeYNtc='; style-src-attr 'unsafe-inline'; font-src 'self' file: data:; img-src 'self' file: data: blob:; media-src 'self' file: data: blob:; worker-src 'self' file: blob:; child-src 'self' file: blob:; connect-src 'self' file: http://localhost:8000 http://127.0.0.1:8000;">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self' file:; base-uri 'self'; object-src 'none'; frame-ancestors 'none'; script-src 'self' 'nonce-code-awakener-inline' file: 'sha256-roK4RqBgRHkxbVIZm24OWG83lcZnx6nmUkijSW9MDk8='; style-src 'self' 'nonce-code-awakener-inline' file: 'sha256-LsLFbeuz1wvJ/MaI+cphfcThuuwfm0ZZMQGdjYVSvxs='; style-src-attr 'unsafe-inline'; font-src 'self' file: data:; img-src 'self' file: data: blob: https://cdn.pixabay.com; media-src 'self' file: data: blob: https: http: https://cdn.pixabay.com; worker-src 'self' file: blob:; child-src 'self' file: blob:; connect-src 'self' file: http://localhost:8000 http://127.0.0.1:8000 https://cdn.pixabay.com https://pixabay.com;">
   <title>编程学习 RPG：C 语言启航村</title>
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%23020617'/%3E%3Cpath d='M22 20 10 32l12 12M42 20l12 12-12 12' fill='none' stroke='%2300ff88' stroke-width='6' stroke-linecap='round' stroke-linejoin='round'/%3E%3Cpath d='m36 16-8 32' stroke='%2300ccff' stroke-width='5' stroke-linecap='round'/%3E%3C/svg%3E">
   <script src="./vendor/phaser.min.js"></script>
@@ -766,6 +766,317 @@
       color: #fbbf24;
       font-family: var(--font-code);
       font-size: 13px;
+    }
+
+    .music-switcher {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      margin-top: 16px;
+      padding: 12px 14px;
+      border: 1px solid rgba(34, 197, 94, 0.28);
+      border-radius: 14px;
+      background:
+        linear-gradient(135deg, rgba(34, 197, 94, 0.14), rgba(56, 189, 248, 0.08)),
+        rgba(2, 6, 23, 0.52);
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08), 0 0 24px rgba(34, 197, 94, 0.1);
+      font-family: var(--font-code);
+    }
+
+    .music-switcher.external-mode {
+      border-color: rgba(250, 204, 21, 0.42);
+      background:
+        linear-gradient(135deg, rgba(250, 204, 21, 0.16), rgba(34, 197, 94, 0.08)),
+        rgba(2, 6, 23, 0.58);
+    }
+
+    .music-switcher-copy {
+      display: grid;
+      gap: 3px;
+      min-width: 0;
+    }
+
+    .music-switcher-kicker {
+      color: #86efac;
+      font-size: 11px;
+    }
+
+    .music-switcher-title {
+      color: #f8fafc;
+      font-family: var(--font-pixel);
+      font-size: 11px;
+      line-height: 1.4;
+      word-break: break-word;
+    }
+
+    .music-switcher-meta {
+      color: #93c5fd;
+      font-size: 11px;
+      line-height: 1.4;
+      word-break: break-word;
+    }
+
+    .music-visualizer {
+      display: grid;
+      grid-template-columns: repeat(18, minmax(3px, 1fr));
+      align-items: end;
+      gap: 3px;
+      width: min(180px, 28vw);
+      height: 36px;
+      padding: 5px;
+      border: 1px solid rgba(125, 211, 252, 0.18);
+      border-radius: 10px;
+      background: rgba(2, 6, 23, 0.38);
+      overflow: hidden;
+      flex: 0 0 auto;
+    }
+
+    .music-visualizer-bar {
+      display: block;
+      min-height: 4px;
+      height: calc(var(--music-bar-level, 0.24) * 100%);
+      border-radius: 999px 999px 3px 3px;
+      background: linear-gradient(180deg, #fef08a, #22c55e 48%, #38bdf8);
+      box-shadow: 0 0 10px rgba(34, 197, 94, 0.32);
+      opacity: 0.86;
+      transform-origin: bottom;
+      transition: height 90ms linear, opacity 140ms ease-out;
+    }
+
+    .music-switcher-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex: 0 0 auto;
+    }
+
+    .music-switcher-button {
+      display: grid;
+      place-items: center;
+      width: 34px;
+      height: 34px;
+      border: 1px solid rgba(125, 211, 252, 0.38);
+      border-radius: 10px;
+      background: rgba(15, 23, 42, 0.72);
+      color: #d9f99d;
+      box-shadow: 0 8px 20px rgba(2, 6, 23, 0.24);
+      font-family: var(--font-pixel);
+      font-size: 13px;
+      cursor: pointer;
+      transition: transform 160ms ease-out, border-color 160ms ease-out, color 160ms ease-out;
+    }
+
+    .music-switcher-button:hover,
+    .music-switcher-button:focus-visible {
+      transform: translateY(-2px);
+      border-color: rgba(34, 197, 94, 0.72);
+      color: #fef3c7;
+      outline: none;
+    }
+
+    .music-switcher-button.active {
+      border-color: rgba(250, 204, 21, 0.82);
+      color: #fef08a;
+      box-shadow: 0 0 18px rgba(250, 204, 21, 0.24);
+    }
+
+    .pause-music-card {
+      margin: 14px 0 12px;
+      width: 100%;
+    }
+
+    .pause-custom-music-panel {
+      margin-bottom: 12px;
+    }
+
+    .music-dynamic-island {
+      position: fixed;
+      z-index: 230;
+      left: var(--music-island-x, 50%);
+      top: var(--music-island-y, 18px);
+      display: grid;
+      gap: 12px;
+      width: min(430px, calc(100vw - 28px));
+      min-height: 72px;
+      padding: 14px 16px;
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      border-radius: 28px;
+      background:
+        linear-gradient(135deg, rgba(255, 255, 255, 0.14), rgba(34, 197, 94, 0.09)),
+        rgba(2, 6, 23, 0.62);
+      box-shadow: 0 22px 70px rgba(2, 6, 23, 0.46), inset 0 1px 0 rgba(255, 255, 255, 0.18);
+      color: #f8fafc;
+      font-family: var(--font-code);
+      backdrop-filter: blur(22px) saturate(1.35);
+      transform: translateX(-50%) scale(1);
+      transform-origin: top center;
+      transition: width 420ms cubic-bezier(0.22, 1, 0.36, 1), min-height 420ms cubic-bezier(0.22, 1, 0.36, 1), border-radius 420ms cubic-bezier(0.22, 1, 0.36, 1), padding 420ms cubic-bezier(0.22, 1, 0.36, 1), transform 260ms ease, opacity 220ms ease;
+      user-select: none;
+      touch-action: none;
+    }
+
+    .music-dynamic-island.is-hidden {
+      opacity: 0;
+      pointer-events: none;
+      transform: translateX(-50%) translateY(-10px) scale(0.92);
+    }
+
+    .music-dynamic-island.is-positioned {
+      transform: scale(1);
+      transform-origin: top left;
+    }
+
+    .music-dynamic-island.is-positioned.is-hidden {
+      transform: translateY(-10px) scale(0.92);
+    }
+
+    .music-dynamic-island.is-collapsed {
+      width: min(265px, calc(100vw - 28px));
+      min-height: 48px;
+      padding: 9px 12px;
+      border-radius: 999px;
+      cursor: grab;
+    }
+
+    .music-dynamic-island.is-dragging {
+      cursor: grabbing;
+      transition: none;
+    }
+
+    .music-island-compact {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      min-width: 0;
+    }
+
+    .music-island-orb {
+      width: 28px;
+      height: 28px;
+      border-radius: 999px;
+      background: radial-gradient(circle at 35% 30%, #fef3c7, #22c55e 50%, #38bdf8);
+      box-shadow: 0 0 18px rgba(34, 197, 94, 0.46);
+      flex: 0 0 auto;
+    }
+
+    .music-island-lines {
+      display: grid;
+      gap: 2px;
+      min-width: 0;
+    }
+
+    .music-island-title,
+    .music-island-subtitle {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .music-island-title {
+      color: #f8fafc;
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .music-island-subtitle {
+      color: #bae6fd;
+      font-size: 10px;
+    }
+
+    .music-island-expanded {
+      display: grid;
+      gap: 12px;
+    }
+
+    .music-dynamic-island.is-collapsed .music-island-expanded {
+      display: none;
+    }
+
+    .music-island-controls,
+    .music-island-volume-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 8px;
+    }
+
+    .music-island-volume-grid {
+      grid-template-columns: 1fr 1fr;
+    }
+
+    .music-island-volume {
+      display: grid;
+      gap: 5px;
+      min-width: 0;
+      color: #bfdbfe;
+      font-size: 11px;
+    }
+
+    .music-island-volume input[type="range"] {
+      width: 100%;
+      accent-color: #22c55e;
+    }
+
+    .custom-music-panel {
+      display: grid;
+      gap: 10px;
+      margin-top: 10px;
+      padding: 12px;
+      border: 1px solid rgba(125, 211, 252, 0.22);
+      border-radius: 12px;
+      background: rgba(2, 6, 23, 0.62);
+      font-family: var(--font-code);
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06);
+    }
+
+    .custom-music-panel[hidden] {
+      display: none;
+    }
+
+    .custom-music-grid {
+      display: grid;
+      grid-template-columns: minmax(110px, 0.58fr) minmax(180px, 1.42fr);
+      gap: 8px;
+    }
+
+    .custom-music-field {
+      display: grid;
+      gap: 5px;
+      min-width: 0;
+      color: #bfdbfe;
+      font-size: 11px;
+    }
+
+    .custom-music-field input,
+    .custom-music-field select {
+      min-width: 0;
+      width: 100%;
+      border: 1px solid rgba(56, 189, 248, 0.32);
+      border-radius: 8px;
+      background: rgba(15, 23, 42, 0.74);
+      color: #e0f2fe;
+      font: inherit;
+      padding: 8px 9px;
+      outline: none;
+    }
+
+    .custom-music-field input:focus,
+    .custom-music-field select:focus {
+      border-color: rgba(34, 197, 94, 0.72);
+      box-shadow: 0 0 0 2px rgba(34, 197, 94, 0.12);
+    }
+
+    .custom-music-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .custom-music-status {
+      min-height: 16px;
+      color: #fef3c7;
+      font-size: 11px;
+      line-height: 1.5;
     }
 
     .boot-command {
@@ -10005,6 +10316,58 @@
         font-size: 11px;
       }
 
+      body.mobile-input .music-switcher {
+        align-items: stretch;
+        gap: 10px;
+        margin-top: 10px;
+        padding: 10px;
+        flex-wrap: wrap;
+      }
+
+      body.mobile-input .music-switcher-title,
+      body.mobile-input .music-switcher-meta {
+        font-size: 10px;
+      }
+
+      body.mobile-input .music-switcher-actions {
+        gap: 6px;
+      }
+
+      body.mobile-input .music-visualizer {
+        order: 3;
+        width: 100%;
+        height: 26px;
+        grid-template-columns: repeat(18, 1fr);
+      }
+
+      body.mobile-input .music-switcher-button {
+        width: 30px;
+        height: 30px;
+        border-radius: 9px;
+      }
+
+      body.mobile-input .custom-music-panel {
+        padding: 10px;
+      }
+
+      body.mobile-input .custom-music-grid {
+        grid-template-columns: 1fr;
+      }
+
+      body.mobile-input .music-dynamic-island {
+        width: min(360px, calc(100vw - 18px));
+        padding: 12px;
+      }
+
+      body.mobile-input .music-dynamic-island.is-collapsed {
+        width: min(236px, calc(100vw - 18px));
+      }
+
+      body.mobile-input .music-island-controls,
+      body.mobile-input .music-island-volume-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+
       body.mobile-input .main-menu-card .boot-command,
       body.mobile-input .main-menu-card .skin-picker,
       body.mobile-input .main-menu-card .menu-list {
@@ -10107,8 +10470,8 @@
       <p>&gt; 如果这里一直空白，说明浏览器缓存、旧存档或脚本自检阻塞了启动。</p>
       <p>&gt; 使用下面入口可以绕过旧缓存并关闭重型特效，学习进度仍会保留。</p>
       <div class="static-rescue-actions">
-        <a href="./programming-rpg-c-basics.html?safeMode=true&noAudio=true&v=1.0.28">安全启动</a>
-        <a href="./programming-rpg-c-basics.html?v=1.0.28">强制刷新</a>
+        <a href="./programming-rpg-c-basics.html?safeMode=true&noAudio=true&v=1.0.31">安全启动</a>
+        <a href="./programming-rpg-c-basics.html?v=1.0.31">强制刷新</a>
       </div>
       <p>作者：杀戮 · QQ：3424636983 · 官方Q群：414374792</p>
     </div>
@@ -10121,6 +10484,27 @@
     <div id="cinematicLetterbox" class="cinematic-letterbox" aria-hidden="true"><div id="cinematicSubtitle" class="cinematic-subtitle"></div></div>
     <div id="inputModeChip" class="input-mode-chip" aria-live="polite">输入：键盘</div>
     <div id="worldWeatherChip" class="world-weather-chip" aria-live="polite">天气：清朗</div>
+    <aside id="musicDynamicIsland" class="music-dynamic-island is-hidden is-collapsed" aria-label="音乐灵动岛" aria-live="polite">
+      <div class="music-island-compact" id="musicIslandCompact">
+        <span class="music-island-orb" aria-hidden="true"></span>
+        <span class="music-island-lines">
+          <strong id="musicIslandTitle" class="music-island-title">音乐未连接</strong>
+          <span id="musicIslandSubtitle" class="music-island-subtitle">QQ 或自定义音乐播放时显示</span>
+        </span>
+      </div>
+      <div class="music-island-expanded" id="musicIslandExpanded">
+        <div class="music-island-controls">
+          <button id="musicIslandPlayButton" class="music-switcher-button" type="button" aria-label="播放或暂停">▶</button>
+          <button id="musicIslandPrevButton" class="music-switcher-button" type="button" aria-label="上一个音乐主题">‹</button>
+          <button id="musicIslandNextButton" class="music-switcher-button" type="button" aria-label="下一个音乐主题">›</button>
+          <button id="musicIslandCloseButton" class="music-switcher-button" type="button" aria-label="缩小音乐灵动岛">－</button>
+        </div>
+        <div class="music-island-volume-grid">
+          <label class="music-island-volume">自定义音乐 <input id="musicIslandCustomVolume" type="range" min="0" max="140" step="1"><span id="musicIslandCustomVolumeValue">100</span></label>
+          <label class="music-island-volume">QQ音乐 <input id="musicIslandQqVolume" type="range" min="0" max="140" step="1"><span id="musicIslandQqVolumeValue">100</span></label>
+        </div>
+      </div>
+    </aside>
     <section id="codeGenesisOverlay" class="code-genesis-overlay" aria-label="代码创世终端" aria-hidden="true">
       <div id="codeGenesisTerminal" class="code-genesis-terminal">
         <pre id="codeGenesisOutput" class="code-genesis-output"></pre>
@@ -10276,7 +10660,50 @@
       <canvas id="menuFxCanvas" width="1280" height="720"></canvas>
       <div class="main-menu-card glass-panel">
         <h1 class="game-logo">CODE AWAKENER<br>C 语言启航村</h1>
-        <div class="version-label" id="versionLabel">World Build v1.0.28 · develop.fan C Basics</div>
+        <div class="version-label" id="versionLabel">World Build v1.0.31 · develop.fan C Basics</div>
+        <div id="musicSwitcher" class="music-switcher" aria-label="音乐主题切换器">
+          <div class="music-switcher-copy">
+            <span class="music-switcher-kicker">♪ 当前音乐主题</span>
+            <strong id="musicSwitcherTitle" class="music-switcher-title">主菜单 · Gamer Menu</strong>
+            <span id="musicSwitcherMeta" class="music-switcher-meta">BackgroundMusicMaster · Pixabay</span>
+          </div>
+          <div id="musicVisualizer" class="music-visualizer" aria-hidden="true">
+            <span class="music-visualizer-bar"></span><span class="music-visualizer-bar"></span><span class="music-visualizer-bar"></span><span class="music-visualizer-bar"></span><span class="music-visualizer-bar"></span><span class="music-visualizer-bar"></span>
+            <span class="music-visualizer-bar"></span><span class="music-visualizer-bar"></span><span class="music-visualizer-bar"></span><span class="music-visualizer-bar"></span><span class="music-visualizer-bar"></span><span class="music-visualizer-bar"></span>
+            <span class="music-visualizer-bar"></span><span class="music-visualizer-bar"></span><span class="music-visualizer-bar"></span><span class="music-visualizer-bar"></span><span class="music-visualizer-bar"></span><span class="music-visualizer-bar"></span>
+          </div>
+          <div class="music-switcher-actions">
+            <button id="musicPrevButton" class="music-switcher-button" type="button" aria-label="上一个音乐主题">‹</button>
+            <button id="musicPlayButton" class="music-switcher-button" type="button" aria-label="播放当前音乐">▶</button>
+            <button id="musicNextButton" class="music-switcher-button" type="button" aria-label="下一个音乐主题">›</button>
+            <button id="musicExternalButton" class="music-switcher-button" type="button" aria-label="打开QQ音乐外部播放器">QQ</button>
+            <button id="musicCustomButton" class="music-switcher-button" type="button" aria-label="自定义场景音乐">自定</button>
+          </div>
+        </div>
+        <div id="customMusicPanel" class="custom-music-panel" hidden aria-label="自定义场景音乐">
+          <div class="custom-music-grid">
+            <label class="custom-music-field">场景
+              <select id="customMusicSceneSelect">
+                <option value="menu">主菜单</option>
+                <option value="town">启航村探索</option>
+                <option value="puzzle">代码编辑</option>
+                <option value="battle">战斗 / 追逐</option>
+                <option value="night">夜晚地图</option>
+              </select>
+            </label>
+            <label class="custom-music-field">音乐直链
+              <input id="customMusicUrlInput" type="url" inputmode="url" placeholder="https://example.com/music.mp3" autocomplete="off" spellcheck="false">
+            </label>
+          </div>
+          <label class="custom-music-field">本地音频文件
+            <input id="customMusicFileInput" type="file" accept="audio/*">
+          </label>
+          <div class="custom-music-actions">
+            <button id="customMusicSaveButton" class="pixel-button secondary" type="button">保存到当前场景</button>
+            <button id="customMusicClearButton" class="pixel-button ghost" type="button">恢复内置音乐</button>
+          </div>
+          <div id="customMusicStatus" class="custom-music-status">支持 mp3 / ogg / wav / m4a。直链需允许浏览器播放，本地文件只保存在你的浏览器。</div>
+        </div>
         <label class="boot-command"><span>&gt;</span><input id="bootCommandInput" value="start_game.exe" autocomplete="off" spellcheck="false" aria-label="启动命令"></label>
         <nav class="menu-list" id="mainMenuList" aria-label="主菜单选项">
           <span id="menuHighlight" class="menu-highlight"></span>
@@ -10337,6 +10764,48 @@
       <div class="pause-panel glass-panel">
         <h2>PAUSED</h2>
         <p class="settings-section-desc">请勿使用 Ctrl+W/N/T 等浏览器快捷操作，以免意外关闭游戏。</p>
+        <div id="inGameMusicCard" class="music-switcher pause-music-card" aria-label="局内音乐播放器">
+          <div class="music-switcher-copy">
+            <span class="music-switcher-kicker">♪ 局内音乐播放器</span>
+            <strong id="inGameMusicTitle" class="music-switcher-title">启航村探索 · 8-Bit Retro</strong>
+            <span id="inGameMusicMeta" class="music-switcher-meta">8-bit 冒险 · The_Mountain · Pixabay</span>
+          </div>
+          <div id="inGameMusicVisualizer" class="music-visualizer" aria-hidden="true">
+            <span class="music-visualizer-bar"></span><span class="music-visualizer-bar"></span><span class="music-visualizer-bar"></span><span class="music-visualizer-bar"></span><span class="music-visualizer-bar"></span><span class="music-visualizer-bar"></span>
+            <span class="music-visualizer-bar"></span><span class="music-visualizer-bar"></span><span class="music-visualizer-bar"></span><span class="music-visualizer-bar"></span><span class="music-visualizer-bar"></span><span class="music-visualizer-bar"></span>
+          </div>
+          <div class="music-switcher-actions">
+            <button id="inGameMusicPrevButton" class="music-switcher-button" type="button" aria-label="上一个音乐主题">‹</button>
+            <button id="inGameMusicPlayButton" class="music-switcher-button" type="button" aria-label="暂停当前音乐">Ⅱ</button>
+            <button id="inGameMusicNextButton" class="music-switcher-button" type="button" aria-label="下一个音乐主题">›</button>
+            <button id="inGameMusicExternalButton" class="music-switcher-button" type="button" aria-label="打开QQ音乐外部播放器">QQ</button>
+            <button id="inGameMusicCustomButton" class="music-switcher-button" type="button" aria-label="自定义场景音乐">自定</button>
+          </div>
+        </div>
+        <div id="pauseCustomMusicPanel" class="custom-music-panel pause-custom-music-panel" hidden aria-label="局内自定义场景音乐">
+          <div class="custom-music-grid">
+            <label class="custom-music-field">场景
+              <select id="pauseCustomMusicSceneSelect">
+                <option value="menu">主菜单</option>
+                <option value="town">启航村探索</option>
+                <option value="puzzle">代码编辑</option>
+                <option value="battle">战斗 / 追逐</option>
+                <option value="night">夜晚地图</option>
+              </select>
+            </label>
+            <label class="custom-music-field">音乐直链
+              <input id="pauseCustomMusicUrlInput" type="url" inputmode="url" placeholder="https://example.com/music.mp3" autocomplete="off" spellcheck="false">
+            </label>
+          </div>
+          <label class="custom-music-field">本地音频文件
+            <input id="pauseCustomMusicFileInput" type="file" accept="audio/*">
+          </label>
+          <div class="custom-music-actions">
+            <button id="pauseCustomMusicSaveButton" class="pixel-button secondary" type="button">保存到当前场景</button>
+            <button id="pauseCustomMusicClearButton" class="pixel-button ghost" type="button">恢复内置音乐</button>
+          </div>
+          <div id="pauseCustomMusicStatus" class="custom-music-status">局内菜单可直接给当前场景换音乐，继续游戏后立即生效。</div>
+        </div>
         <nav class="menu-list" id="pauseMenuList" aria-label="暂停菜单选项">
           <button class="menu-option selected" type="button" data-pause-action="resume">继续游戏</button>
           <button class="menu-option" type="button" data-pause-action="cards">技能卡册</button>
@@ -10365,6 +10834,8 @@
               <p class="settings-section-desc">音乐与音效已做分层限幅、柔和包络和防叠加处理，避免爆音刺耳。</p>
               <label class="setting-row">主音量 <input id="masterVolumeSlider" type="range" min="0" max="140" step="1"> <span id="masterVolumeValue">100</span></label>
               <label class="setting-row">音乐音量 <input id="musicVolumeSlider" type="range" min="0" max="140" step="1"> <span id="musicVolumeValue">100</span></label>
+              <label class="setting-row">自定义音乐 <input id="customMusicVolumeSlider" type="range" min="0" max="140" step="1"> <span id="customMusicVolumeValue">100</span></label>
+              <label class="setting-row">QQ音乐偏好 <input id="qqMusicVolumeSlider" type="range" min="0" max="140" step="1"> <span id="qqMusicVolumeValue">100</span></label>
               <label class="setting-row">音效音量 <input id="sfxVolumeSlider" type="range" min="0" max="140" step="1"> <span id="sfxVolumeValue">100</span></label>
               <label class="setting-row">音乐复杂度
                 <select id="musicComplexitySelect">
@@ -10936,10 +11407,12 @@ int main(void) {
       <button id="announcementCloseButton" class="announcement-close" type="button" aria-label="关闭公告">×</button>
       <h2 id="startupAnnouncementTitle" class="startup-announcement-title">> 消息 / 本次更新</h2>
       <div id="announcementPageBody" class="startup-announcement-body">
-        <p>// v1.0.28：本地白屏与音乐爆音热修复。</p>
-        <p>// 修复 file 本地打开时 CSP/自检哈希不同步导致的白屏。</p>
-        <p>// 音乐不再双 BGM 叠加，音效加入柔和包络和事件冷却。</p>
-        <p>// HP 过低时系统会自动消耗进化碎片恢复，菜单手动按钮已移除。</p>
+        <p>// v1.0.31：QQ音乐外部模式与自定义场景音乐。</p>
+        <p>// QQ 按钮会打开官方 QQ 音乐，游戏内 BGM 自动暂停。</p>
+        <p>// 主菜单可为主菜单、探索、编程、战斗和夜晚分别绑定喜欢的音乐。</p>
+        <p>// 局内暂停菜单新增音乐播放器卡片，播放按钮可播放/暂停。</p>
+        <p>// QQ 或自定义音乐播放时会出现可拖拽玻璃音乐灵动岛。</p>
+        <p>// 自定义音乐可单独调真实音量，QQ 音量会保存外部偏好。</p>
         <p>// 作者：杀戮，QQ：3424636983。</p>
         <p>// 官方Q群：414374792。</p>
         <p>// 作者：杀戮</p>
@@ -11443,26 +11916,72 @@ int main() {
     const SAVE_CLEAR_CONFIRM_MS = 3000;
     const STARTUP_ANNOUNCEMENT_AUTO_HIDE_MS = 14000;
     const SYSTEM_BOOT_FORCE_RELEASE_MS = 3200;
-    const GAME_VERSION = "v1.0.28";
+    const GAME_VERSION = "v1.0.31";
     const OFFICIAL_SITE_HREF = "./official-site.html";
     const UPDATE_ANNOUNCEMENT_PAGES = Object.freeze([
       {
         title: "> 消息 / 本次更新",
         lines: [
-          "// v1.0.28：本地白屏与音乐爆音热修复。",
-          "// 修复 file 本地打开时 CSP、style、script、自检哈希不同步导致的白屏。",
-          "// 正常启动会立刻隐藏静态救援层；异常时仍保留安全启动和强制刷新入口。",
-          "// 音乐停止双 BGM 叠加，music bus 与程序化音乐导演整体削峰，减少背景音乐炸响。",
-          "// 移除背景音乐循环低频 bass/drone/noise pulse，解决一直“咚咚咚”的重复节拍。",
-          "// 背景旋律改为慢起音 pad，同一 BGM 不再每几秒重启打点；昼夜音乐只在状态变化时触发。",
-          "// 局内学习面板新增场景状态：用图标显示当前天气、白天或夜晚。",
-          "// 音效系统加入柔和包络、独立低通、事件冷却和爆音削峰，减少重复乱叫。",
-          "// HP 过低时系统会自动使用进化碎片恢复，菜单里的手动碎片回复按钮已移除。",
+          "// v1.0.31：QQ音乐外部模式与自定义场景音乐。",
+          "// 主菜单 QQ 按钮已接入官方 QQ 音乐入口，点击后游戏 BGM 自动暂停，避免和外部播放器叠音。",
+          "// 播放按钮改为播放/暂停切换：正在播放时显示暂停，再点即可停止当前游戏音乐。",
+          "// 主菜单新增自定义场景音乐面板，可分别给主菜单、探索、编程、战斗和夜晚绑定玩家喜欢的音乐。",
+          "// 自定义音乐支持 https 音乐直链，也支持本地音频文件；本地文件保存到浏览器 IndexedDB，不会上传。",
+          "// 局内暂停菜单新增音乐播放器卡片，可在游戏中查看当前音乐、切换主题、暂停播放、打开 QQ 音乐或编辑自定义音乐。",
+          "// QQ 或自定义音乐播放时会出现玻璃透明音乐灵动岛，点击展开，缩小后可拖到屏幕任意位置并记住位置。",
+          "// 自定义音乐新增独立音量，实时控制游戏内自定义音频；QQ 音量保存外部偏好，并提示到 QQ 音乐页面同步调节。",
+          "// 场景音乐仍保持固定主题：未自定义时使用 Pixabay，对应场景自定义后只覆盖该场景。",
+          "// 原来的 WebAudio 合成音乐和音效优先级降到最低，只作为外部/自定义/Pixabay 失败后的兜底。",
+          "// CSP 只放开媒体音频来源，脚本来源仍锁定；国内网络异常时仍保留内置回退。",
+          "// 安全启动与强制刷新入口已切到 v1.0.31，方便绕过旧缓存。",
           "// 作者：杀戮，QQ：3424636983，官方Q群：414374792。"
         ]
       }
     ]);
     const UPDATE_HISTORY = Object.freeze([
+      {
+        version: "v1.0.31",
+        date: "2026-06-17",
+        title: "QQ音乐外部模式与自定义场景音乐",
+        details: [
+          "主菜单 QQ 按钮接入官方 QQ 音乐入口，点击后立即暂停游戏内 BGM，避免和外部播放器叠加播放。",
+          "音乐播放按钮改成真正的播放/暂停切换，正在播放时显示暂停，再点即可停止当前主题。",
+          "新增自定义场景音乐面板，玩家可为主菜单、启航村探索、代码编辑、战斗/追逐和夜晚地图分别绑定喜欢的音乐。",
+          "自定义音乐支持 https 音乐直链和本地音频文件；本地文件写入浏览器 IndexedDB，只保存在玩家本机。",
+          "局内暂停菜单新增音乐播放器卡片，可在游戏中直接查看、切换、暂停和管理当前音乐。",
+          "QQ 或自定义音乐播放时显示玻璃透明音乐灵动岛，点击展开为播放器，缩小后可拖到任意位置并记住位置。",
+          "自定义音乐拥有独立真实音量控制；QQ 音量作为外部播放器偏好保存并在灵动岛提示。",
+          "自定义音乐只覆盖指定场景，清除后恢复内置 Pixabay 固定主题；音乐可视化继续跟随当前主题起伏。",
+          "原 WebAudio 合成音乐和音效优先级降到最低，仅作为外部/自定义/Pixabay 播放失败时的兜底。",
+          "CSP 媒体策略允许外部 https 音频直链，但脚本来源仍保持锁定。官方Q群：414374792。"
+        ]
+      },
+      {
+        version: "v1.0.30",
+        date: "2026-06-17",
+        title: "Pixabay 真实音乐与音效接入",
+        details: [
+          "背景音乐接入 Pixabay 场景主题：主菜单 Gamer Menu、探索 8-Bit Retro、编程 Byte Blast、战斗 Neon Arcade Runner、夜晚 Retro Arcade Game Music。",
+          "主菜单新增音乐切换器，可以查看当前音乐主题、曲名、作者和 Pixabay 来源，并预览不同场景音乐。",
+          "编译闪光、编译成功、碎片拾取、运行、设置和错误提示等关键事件优先使用 Pixabay 音效样本，替换单调合成音色。",
+          "外部音乐和音效增益收在中档，配合音量滑块同步，避免过吵或听不见。",
+          "加入外部音频失败回退：Pixabay CDN、国内网络、本地 file 或浏览器自动播放拦截失败时，自动切回上一版 Web Audio 合成音乐与音效。",
+          "保留事件冷却、外部音效并发限制、最大播放时长截断和音量滑块同步，防止音效重新爆炸或一直乱叫。",
+          "CSP 媒体策略新增 Pixabay CDN 白名单，安全启动和强制刷新入口同步更新到 v1.0.30。官方Q群：414374792。"
+        ]
+      },
+      {
+        version: "v1.0.29",
+        date: "2026-06-17",
+        title: "声音重新标定",
+        details: [
+          "提高主输出、音乐总线、音效总线、音乐事件和 pad 旋律增益，解决默认音量下游戏声音太小的问题。",
+          "旧存档或浏览器本地设置里保存过低音量时，会自动迁移到可听音量；静音值 0 仍保持静音。",
+          "进入游戏时的 BGM 改成干净单旋律底乐，反旋律和和声装饰只在真实事件变奏时出现，不再开场反复复杂循环。",
+          "保留 v1.0.28 的反咚咚保护：低频 bass/drone/noise pulse 仍关闭，同一 BGM 请求不再强制重启。",
+          "音效继续使用事件冷却、独立低通和爆音削峰，提升响度但不恢复之前的爆音和重复乱叫。官方Q群：414374792。"
+        ]
+      },
       {
         version: "v1.0.28",
         date: "2026-06-17",
@@ -12574,7 +13093,7 @@ return 0;`;
       directSaveAs: "reduced-by-inline-resources"
     });
     const SECURITY_CONFIG = Object.freeze({
-      expectedScriptHash: "TzxB0WN/BiWbu1zY4c2n9q2sXmmQziQBY4UIslvoSVY=",
+      expectedScriptHash: "P9E+s3IF4BDtDTFzWw5Bi0glP2CTkDbjmoADUlE2EAg=",
       selfCheckIntervalMs: 45000,
       tamperRefreshMs: 5000,
       devToolsRefreshMs: 2000,
@@ -12884,7 +13403,9 @@ return 0;`;
       settings: "rpg-c-basics-settings-v1",
       snapshots: "rpg-c-basics-immutable-snapshots-v1",
       capsule: "rpg-c-basics-time-capsule-v1",
-      saveSlots: "rpg-c-basics-manual-save-slots-v1"
+      saveSlots: "rpg-c-basics-manual-save-slots-v1",
+      customMusic: "rpg-c-basics-custom-music-v1",
+      musicIsland: "rpg-c-basics-music-island-v1"
     };
     const WORLD_EVOLUTION_SAVE_SLOT_KEY = "code-awakener-world-evolution-slots-v1";
     const FIXED_GAME_SAVE_PATH = "Application.persistentDataPath + \"/gameSave.json\"";
@@ -15605,10 +16126,153 @@ return 0;`;
       lastExitedAt: ""
     };
 
+    const AUDIO_CALIBRATION_VERSION = 3;
+    const PIXABAY_AUDIO_LICENSE_URL = "https://pixabay.com/service/license-summary/";
+    const PIXABAY_BGM_TRACKS = Object.freeze({
+      menu: Object.freeze({
+        id: "gamer-menu",
+        sceneLabel: "主菜单",
+        themeLabel: "系统启动 / 菜单",
+        title: "Gamer Menu",
+        creator: "BackgroundMusicMaster",
+        pageUrl: "https://pixabay.com/music/video-games-gamer-menu-431351/",
+        licenseUrl: PIXABAY_AUDIO_LICENSE_URL,
+        src: "https://cdn.pixabay.com/download/audio/2025/11/04/audio_e5ff164f13.mp3?filename=backgroundmusicmaster-gamer-menu-431351.mp3",
+        gain: 0.34,
+        energy: 0.58
+      }),
+      town: Object.freeze({
+        id: "eight-bit-retro",
+        sceneLabel: "启航村探索",
+        themeLabel: "8-bit 冒险",
+        title: "8-Bit Retro",
+        creator: "The_Mountain",
+        pageUrl: "https://pixabay.com/music/video-games-8-bit-retro-522443/",
+        licenseUrl: PIXABAY_AUDIO_LICENSE_URL,
+        src: "https://cdn.pixabay.com/download/audio/2026/04/20/audio_a12a05c11d.mp3?filename=the_mountain-8-bit-retro-522443.mp3",
+        gain: 0.38,
+        energy: 0.62
+      }),
+      puzzle: Object.freeze({
+        id: "byte-blast",
+        sceneLabel: "代码编辑",
+        themeLabel: "专注编程 / chiptune",
+        title: "Byte Blast. 8 bit arcade music",
+        creator: "White_Records",
+        pageUrl: "https://pixabay.com/music/video-games-byte-blast-8-bit-arcade-music-background-music-for-video-208780/",
+        licenseUrl: PIXABAY_AUDIO_LICENSE_URL,
+        src: "https://cdn.pixabay.com/download/audio/2024/05/13/audio_d9a31db651.mp3?filename=white_records-byte-blast-8-bit-arcade-music-background-music-for-video-208780.mp3",
+        gain: 0.3,
+        energy: 0.44
+      }),
+      battle: Object.freeze({
+        id: "neon-arcade-runner",
+        sceneLabel: "战斗 / 追逐",
+        themeLabel: "高速街机",
+        title: "Neon Arcade Runner",
+        creator: "BackgroundMusicMaster",
+        pageUrl: "https://pixabay.com/music/video-games-neon-arcade-runner-431354/",
+        licenseUrl: PIXABAY_AUDIO_LICENSE_URL,
+        src: "https://cdn.pixabay.com/download/audio/2025/11/04/audio_5b777358c2.mp3?filename=backgroundmusicmaster-neon-arcade-runner-431354.mp3",
+        gain: 0.36,
+        energy: 0.78
+      }),
+      night: Object.freeze({
+        id: "retro-arcade-night",
+        sceneLabel: "夜晚地图",
+        themeLabel: "低亮度复古",
+        title: "Retro Arcade Game Music",
+        creator: "MondaMusic",
+        pageUrl: "https://pixabay.com/music/video-games-retro-arcade-game-music-512837/",
+        licenseUrl: PIXABAY_AUDIO_LICENSE_URL,
+        src: "https://cdn.pixabay.com/download/audio/2026/04/08/audio_aed0378ce3.mp3?filename=mondamusic-retro-arcade-game-music-512837.mp3",
+        gain: 0.26,
+        energy: 0.32
+      })
+    });
+    const PIXABAY_BGM_THEME_ORDER = Object.freeze(["menu", "town", "puzzle", "battle", "night"]);
+    const EXTERNAL_MUSIC_CONNECTORS = Object.freeze({
+      qqmusic: Object.freeze({
+        id: "qqmusic",
+        label: "QQ音乐",
+        url: "https://y.qq.com/",
+        providerHint: "登录 QQ 音乐播放自己喜欢的歌"
+      })
+    });
+    const CUSTOM_MUSIC_DB_NAME = "code-awakener-custom-music-v1";
+    const CUSTOM_MUSIC_STORE_NAME = "tracks";
+    const CUSTOM_MUSIC_MAX_FILE_BYTES = 18 * 1024 * 1024;
+    let customMusicIndex = {};
+    let customMusicDbPromise = null;
+    const customMusicObjectUrls = new Map();
+    let musicIslandState = {
+      expanded: false,
+      x: null,
+      y: null,
+      dragging: false,
+      pointerId: null,
+      dragOffsetX: 0,
+      dragOffsetY: 0
+    };
+    const PIXABAY_SFX_TRACKS = Object.freeze({
+      compileFlash: Object.freeze({
+        id: "nexawave-whoosh",
+        title: "Cinematic Designed Sci-Fi Whoosh - Transition - NexaWave",
+        creator: "RescopicSound",
+        pageUrl: "https://pixabay.com/sound-effects/film-special-effects-cinematic-designed-sci-fi-whoosh-transition-nexawave-228295/",
+        licenseUrl: PIXABAY_AUDIO_LICENSE_URL,
+        src: "https://cdn.pixabay.com/download/audio/2024/07/30/audio_2944d6d258.mp3?filename=rescopicsound-cinematic-designed-sci-fi-whoosh-transition-nexawave-228295.mp3",
+        gain: 0.18,
+        maxMs: 900
+      }),
+      pickupSpark: Object.freeze({
+        id: "elemental-magic",
+        title: "Elemental Magic Spell Impact Outgoing",
+        creator: "RescopicSound",
+        pageUrl: "https://pixabay.com/sound-effects/film-special-effects-elemental-magic-spell-impact-outgoing-228342/",
+        licenseUrl: PIXABAY_AUDIO_LICENSE_URL,
+        src: "https://cdn.pixabay.com/download/audio/2024/07/30/audio_e8c15810bd.mp3?filename=rescopicsound-elemental-magic-spell-impact-outgoing-228342.mp3",
+        gain: 0.26,
+        maxMs: 1200
+      }),
+      run: Object.freeze({
+        id: "riser-hit",
+        title: "Riser Hit sfx 001",
+        creator: "AudioPapkin",
+        pageUrl: "https://pixabay.com/sound-effects/film-special-effects-riser-hit-sfx-001-289802/",
+        licenseUrl: PIXABAY_AUDIO_LICENSE_URL,
+        src: "https://cdn.pixabay.com/download/audio/2025/01/19/audio_175064ba80.mp3?filename=audiopapkin-riser-hit-sfx-001-289802.mp3",
+        gain: 0.16,
+        maxMs: 850
+      }),
+      compileSuccess: Object.freeze({
+        id: "technology-logo",
+        title: "Calm Inspiring Technology Logo (Short Version)",
+        creator: "AleXZavesa",
+        pageUrl: "https://pixabay.com/sound-effects/film-special-effects-calm-inspiring-technology-logo-short-version-518993/",
+        licenseUrl: PIXABAY_AUDIO_LICENSE_URL,
+        src: "https://cdn.pixabay.com/download/audio/2026/04/13/audio_1569faf36b.mp3?filename=alexzavesa-calm-inspiring-technology-logo-short-version-518993.mp3",
+        gain: 0.2,
+        maxMs: 1400
+      }),
+      error: Object.freeze({
+        id: "striking-bell",
+        title: "striking bell alarm",
+        creator: "flutie8211",
+        pageUrl: "https://pixabay.com/sound-effects/technology-striking-bell-alarm-465962/",
+        licenseUrl: PIXABAY_AUDIO_LICENSE_URL,
+        src: "https://cdn.pixabay.com/download/audio/2026/01/14/audio_527e36d573.mp3?filename=flutie8211-striking-bell-alarm-465962.mp3",
+        gain: 0.1,
+        maxMs: 850
+      })
+    });
     const defaultSettings = {
-      masterVolume: 100,
-      musicVolume: 100,
-      sfxVolume: 100,
+      masterVolume: 120,
+      musicVolume: 125,
+      customMusicVolume: 100,
+      qqMusicVolume: 100,
+      sfxVolume: 115,
+      audioCalibrationVersion: AUDIO_CALIBRATION_VERSION,
       editorTheme: "dark",
       editorFontSize: 14,
       language: "zh-CN",
@@ -15726,7 +16390,20 @@ return 0;`;
     const savedCards = readStorage(STORAGE.cards, []);
     const savedEquipped = readStorage(STORAGE.equipped, { 1: null, 2: null, 3: null, 4: null });
     const savedAchievements = readStorage(STORAGE.achievements, []);
-    const savedSettings = { ...defaultSettings, ...readStorage(STORAGE.settings, defaultSettings) };
+    function normalizeAudioCalibrationSettings(settings = defaultSettings) {
+      const next = { ...defaultSettings, ...settings };
+      const version = Number(next.audioCalibrationVersion) || 0;
+      if (version >= AUDIO_CALIBRATION_VERSION) return next;
+      if (Number(next.masterVolume) > 0) next.masterVolume = Math.max(Number(next.masterVolume) || 0, 120);
+      if (Number(next.musicVolume) > 0) next.musicVolume = Math.max(Number(next.musicVolume) || 0, 125);
+      if (Number(next.sfxVolume) > 0) next.sfxVolume = Math.max(Number(next.sfxVolume) || 0, 115);
+      next.customMusicVolume = Math.max(0, Math.min(140, Number(next.customMusicVolume ?? 100) || 0));
+      next.qqMusicVolume = Math.max(0, Math.min(140, Number(next.qqMusicVolume ?? 100) || 0));
+      next.audioCalibrationVersion = AUDIO_CALIBRATION_VERSION;
+      return next;
+    }
+
+    const savedSettings = normalizeAudioCalibrationSettings({ ...defaultSettings, ...readStorage(STORAGE.settings, defaultSettings) });
     if (savedSettings.performanceMode === "auto" || savedSettings.performanceMode === "medium") savedSettings.performanceMode = "high";
     if (savedSettings.renderQuality === "auto" || savedSettings.renderQuality === "medium") savedSettings.renderQuality = "high";
     if (savedSettings.cinematicQuality === CINEMATIC_RENDER_MODES.auto) savedSettings.cinematicQuality = CINEMATIC_RENDER_MODES.high;
@@ -16254,11 +16931,11 @@ return 0;`;
         this.lastMusicResumeAt = 0;
         this.bufferPool = new AudioBufferPool();
         this.wantMusic = false;
-        this.masterBaseGain = 0.42;
-        this.musicBusScale = 0.76;
-        this.sfxBusScale = 0.32;
-        this.musicEventGain = 0.58;
-        this.sfxEventGain = 0.3;
+        this.masterBaseGain = 0.82;
+        this.musicBusScale = 1.32;
+        this.sfxBusScale = 0.72;
+        this.musicEventGain = 1.25;
+        this.sfxEventGain = 0.68;
         this.lastBrightSfxAt = 0;
         this.lastNoiseSfxAt = 0;
         this.lastSfxAt = 0;
@@ -16266,6 +16943,16 @@ return 0;`;
         this.sfxBurstCount = 0;
         this.eventCooldowns = new Map();
         this.editorAudioFocus = false;
+        this.pixabayBgm = null;
+        this.pixabayBgmTrack = null;
+        this.pixabayBgmMode = "";
+        this.pixabayPreviewMode = "";
+        this.pixabayBgmFailedAt = 0;
+        this.pixabaySfxCooldowns = new Map();
+        this.pixabaySfxActive = new Set();
+        this.lastPixabaySfxAt = 0;
+        this.externalMusicMode = false;
+        this.externalMusicProvider = "";
         this.audioDisabled = window.location?.search?.includes("noAudio=true") || Boolean(typeof navigator !== "undefined" && navigator.webdriver);
       }
 
@@ -16280,6 +16967,174 @@ return 0;`;
           gameState.settings.masterVolume > 0 &&
           gameState.settings.musicVolume > 0
         );
+      }
+
+      hasExternalAudioEnabled() {
+        return Boolean(
+          !this.audioDisabled &&
+          typeof Audio !== "undefined" &&
+          !window.location?.search?.includes("noExternalAudio=true")
+        );
+      }
+
+      hasPrimaryMusicLayerActive() {
+        return Boolean(this.externalMusicMode || this.isPixabayBgmActive());
+      }
+
+      getLegacyAudioPriorityScale(channel = "sfx") {
+        if (channel === "music" && this.hasPrimaryMusicLayerActive()) return 0;
+        if (channel !== "music" && this.hasPrimaryMusicLayerActive()) return 0.32;
+        return 1;
+      }
+
+      getPixabayBgmList(mode = "town") {
+        return this.getPixabayBgmTrack(mode) ? Object.freeze([this.getPixabayBgmTrack(mode)]) : Object.freeze([]);
+      }
+
+      getPixabayBgmTrack(mode = "town") {
+        const customTrack = typeof getCustomMusicTrack === "function" ? getCustomMusicTrack(mode) : null;
+        if (customTrack) return customTrack;
+        if (mode === "menu") return PIXABAY_BGM_TRACKS.menu;
+        if (mode === "night") return PIXABAY_BGM_TRACKS.night;
+        if (mode === "battle") return PIXABAY_BGM_TRACKS.battle;
+        if (mode === "puzzle") return PIXABAY_BGM_TRACKS.puzzle;
+        return PIXABAY_BGM_TRACKS.town;
+      }
+
+      getPixabayMusicVolume(track = this.pixabayBgmTrack) {
+        const master = Math.max(0, Math.min(1.4, (gameState.settings.masterVolume || 0) / 100));
+        const music = Math.max(0, Math.min(1.4, (gameState.settings.musicVolume || 0) / 100));
+        const custom = track?.custom ? Math.max(0, Math.min(1.4, (gameState.settings.customMusicVolume ?? 100) / 100)) : 1;
+        return Math.max(0, Math.min(0.62, master * music * custom * (track?.gain || 0.34)));
+      }
+
+      getPixabaySfxVolume(track) {
+        const master = Math.max(0, Math.min(1.4, (gameState.settings.masterVolume || 0) / 100));
+        const sfx = Math.max(0, Math.min(1.4, (gameState.settings.sfxVolume || 0) / 100));
+        return Math.max(0, Math.min(0.34, master * sfx * (track?.gain || 0.18)));
+      }
+
+      syncPixabayVolumes() {
+        if (this.pixabayBgm && this.pixabayBgmTrack) {
+          this.pixabayBgm.volume = this.getPixabayMusicVolume(this.pixabayBgmTrack);
+        }
+        this.pixabaySfxActive.forEach((audio) => {
+          const track = audio.__pixabayTrack;
+          if (track) audio.volume = this.getPixabaySfxVolume(track);
+        });
+      }
+
+      isPixabayBgmPlaying() {
+        return Boolean(this.pixabayBgm && !this.pixabayBgm.paused && !this.pixabayBgm.ended);
+      }
+
+      isPixabayBgmActive() {
+        return Boolean(this.pixabayBgm && this.pixabayBgmTrack && this.pixabayBgm.src && !this.pixabayBgm.ended);
+      }
+
+      stopPixabayBgm() {
+        if (!this.pixabayBgm) return false;
+        try {
+          this.pixabayBgm.onended = null;
+          this.pixabayBgm.onerror = null;
+          this.pixabayBgm.pause();
+          this.pixabayBgm.removeAttribute("src");
+          this.pixabayBgm.load?.();
+        } catch (error) {
+          errorRingBuffer.push(error, ERROR_LEVELS.recoverable, { action: "stopPixabayBgm" });
+        }
+        this.pixabayBgmTrack = null;
+        this.pixabayBgmMode = "";
+        return true;
+      }
+
+      advancePixabayBgm() {
+        if (!this.hasMusicIntent()) return false;
+        const mode = this.pixabayBgmMode || this.bgmMode || "town";
+        return this.startPixabayBgm(mode, true);
+      }
+
+      startPixabayBgm(mode = "town", forceTrackRefresh = false) {
+        if (this.externalMusicMode) return false;
+        if (!this.hasMusicEnabled() || !this.hasExternalAudioEnabled()) return false;
+        const now = performance.now();
+        if (now - this.pixabayBgmFailedAt < 7000) return false;
+        const track = this.getPixabayBgmTrack(mode);
+        if (!track?.src) return false;
+        this.wantMusic = true;
+        this.bgmMode = mode;
+        this.lastBgmPingAt = now;
+        if (this.bgmTimer) window.clearTimeout(this.bgmTimer);
+        this.bgmTimer = null;
+        if (this.pixabayBgm && this.pixabayBgmTrack?.src === track.src && this.pixabayBgmMode === mode && !forceTrackRefresh) {
+          this.syncPixabayVolumes();
+          if (!this.pixabayBgm.paused) return true;
+        }
+        const audio = this.pixabayBgm || new Audio();
+        this.pixabayBgm = audio;
+        this.pixabayBgmTrack = track;
+        this.pixabayBgmMode = mode;
+        audio.preload = "auto";
+        audio.loop = true;
+        audio.src = track.src;
+        audio.volume = this.getPixabayMusicVolume(track);
+        audio.onended = () => this.advancePixabayBgm();
+        audio.onerror = () => {
+          this.pixabayBgmFailedAt = performance.now();
+          if (this.hasMusicIntent()) this.startSynthBgm(mode);
+        };
+        const playResult = audio.play();
+        playResult?.catch?.((error) => {
+          this.pixabayBgmFailedAt = performance.now();
+          errorRingBuffer.push(error, ERROR_LEVELS.recoverable, { action: "startPixabayBgm", track: track.id });
+          if (this.hasMusicIntent()) this.startSynthBgm(mode);
+        });
+        return true;
+      }
+
+      playPixabaySfx(key, fallback = null, options = {}) {
+        if (!this.hasExternalAudioEnabled() || !gameState?.settings || gameState.settings.masterVolume <= 0 || gameState.settings.sfxVolume <= 0) {
+          fallback?.();
+          return false;
+        }
+        const track = PIXABAY_SFX_TRACKS[key];
+        if (!track?.src) {
+          fallback?.();
+          return false;
+        }
+        const now = performance.now();
+        const cooldownMs = Number(options.cooldownMs || track.cooldownMs || 180);
+        const last = this.pixabaySfxCooldowns.get(key) || 0;
+        if (now - last < cooldownMs || now - this.lastPixabaySfxAt < 72 || this.pixabaySfxActive.size >= 3) return true;
+        this.pixabaySfxCooldowns.set(key, now);
+        this.lastPixabaySfxAt = now;
+        const audio = new Audio(track.src);
+        audio.__pixabayTrack = track;
+        audio.preload = "auto";
+        audio.volume = this.getPixabaySfxVolume(track);
+        audio.playbackRate = Math.max(0.82, Math.min(1.18, Number(options.playbackRate || 1)));
+        const cleanup = () => {
+          this.pixabaySfxActive.delete(audio);
+          try {
+            audio.pause();
+            audio.removeAttribute("src");
+            audio.load?.();
+          } catch {}
+        };
+        audio.onended = cleanup;
+        audio.onerror = () => {
+          cleanup();
+          fallback?.();
+        };
+        this.pixabaySfxActive.add(audio);
+        const maxMs = Math.max(260, Math.min(1800, Number(options.maxMs || track.maxMs || 900)));
+        window.setTimeout(cleanup, maxMs);
+        const playResult = audio.play();
+        playResult?.catch?.(() => {
+          cleanup();
+          fallback?.();
+        });
+        return true;
       }
 
       ensureContext() {
@@ -16332,8 +17187,8 @@ return 0;`;
         };
         this.musicLayers = {
           drone: createLayer(0),
-          ambience: createLayer(0.08),
-          theme: createLayer(0.34)
+          ambience: createLayer(0.18),
+          theme: createLayer(0.64)
         };
         return this.musicLayers;
       }
@@ -16344,10 +17199,11 @@ return 0;`;
         const music = Math.max(0, Math.min(1.4, gameState.settings.musicVolume / 100));
         const sfx = Math.max(0, Math.min(1.4, gameState.settings.sfxVolume / 100));
         this.master.gain.value = this.masterBaseGain * master;
-        if (this.musicBus) this.musicBus.gain.value = Math.min(0.86, music * this.musicBusScale);
-        if (this.sfxBus) this.sfxBus.gain.value = Math.min(0.36, sfx * this.sfxBusScale);
+        if (this.musicBus) this.musicBus.gain.value = Math.min(1.35, music * this.musicBusScale);
+        if (this.sfxBus) this.sfxBus.gain.value = Math.min(0.78, sfx * this.sfxBusScale);
         this.applyMusicLayerMix(this.bgmMode, this.editorAudioFocus);
         this.proceduralMusic?.applyVolume?.();
+        this.syncPixabayVolumes();
       }
 
       applyMusicLayerMix(mode = this.bgmMode, focus = this.editorAudioFocus) {
@@ -16356,12 +17212,12 @@ return 0;`;
         if (!ctx || !layers) return false;
         const complexity = gameState.settings.musicComplexity || "full";
         const mixes = {
-          town: { drone: 0, ambience: 0.08, theme: 0.34 },
-          puzzle: { drone: 0, ambience: 0.06, theme: 0.22 },
-          battle: { drone: 0, ambience: 0.06, theme: 0.34 }
+          town: { drone: 0, ambience: 0.18, theme: 0.64 },
+          puzzle: { drone: 0, ambience: 0.14, theme: 0.5 },
+          battle: { drone: 0, ambience: 0.16, theme: 0.66 }
         };
         const mix = { ...(mixes[mode] || mixes.town) };
-        if (focus) Object.assign(mix, { drone: 0, ambience: 0.04, theme: 0.12 });
+        if (focus) Object.assign(mix, { drone: 0, ambience: 0.1, theme: 0.36 });
         if (complexity === "reduced") mix.ambience *= 0.5;
         if (complexity === "off") Object.assign(mix, { drone: 0, ambience: 0, theme: 0 });
         Object.entries(mix).forEach(([key, value]) => {
@@ -16412,12 +17268,14 @@ return 0;`;
         osc.frequency.setValueAtTime(frequency, ctx.currentTime);
         const levelScale = channel === "music" ? this.musicEventGain : this.sfxEventGain;
         const sliderScale = channel === "music" ? 1 : gameState.settings.sfxVolume / 100;
-        let adjustedGain = gainValue * levelScale * sliderScale;
+        const legacyScale = this.getLegacyAudioPriorityScale(channel);
+        if (legacyScale <= 0) return;
+        let adjustedGain = gainValue * levelScale * sliderScale * legacyScale;
         if (channel !== "music") {
           if (this.shouldDropSfxBurst(frequency, type, gainValue)) return;
           if (type === "sawtooth" || type === "square") adjustedGain *= 0.58;
         }
-        const cap = channel === "music" ? 0.28 : 0.024;
+        const cap = channel === "music" ? 0.5 : 0.052;
         const targetGain = Math.min(cap, adjustedGain);
         const startAt = ctx.currentTime;
         const safeDuration = Math.max(0.012, duration);
@@ -16459,13 +17317,15 @@ return 0;`;
         source.buffer = buffer;
         const outputScale = outputChannel === "music" ? this.musicEventGain : this.sfxEventGain;
         const sliderScale = outputChannel === "music" ? 1 : gameState.settings.sfxVolume / 100;
+        const legacyScale = this.getLegacyAudioPriorityScale(outputChannel);
+        if (legacyScale <= 0) return;
         if (outputChannel !== "music") {
           const now = performance.now();
           if (now - this.lastNoiseSfxAt < 170 || this.shouldDropSfxBurst(0, "noise", gainValue)) return;
           this.lastNoiseSfxAt = now;
         }
-        const cap = outputChannel === "music" ? 0.14 : 0.009;
-        const targetGain = Math.min(cap, gainValue * outputScale * sliderScale);
+        const cap = outputChannel === "music" ? 0.24 : 0.022;
+        const targetGain = Math.min(cap, gainValue * outputScale * sliderScale * legacyScale);
         const startAt = ctx.currentTime;
         const safeDuration = Math.max(0.012, duration);
         const attack = Math.min(outputChannel === "music" ? 0.018 : 0.014, safeDuration * 0.45);
@@ -16492,8 +17352,10 @@ return 0;`;
       }
 
       startLayeredBgm() {
+        if (this.externalMusicMode) return false;
         this.wantMusic = true;
         startCyberLofiBgm();
+        return true;
       }
 
       ensureBgmRunning(mode = "town", forceStart = false) {
@@ -16512,6 +17374,7 @@ return 0;`;
         this.bgmTimer = null;
         this.wantMusic = false;
         this.activeBgmVariation = null;
+        this.stopPixabayBgm();
       }
 
       recoverMusicContext() {
@@ -16526,7 +17389,13 @@ return 0;`;
         if (this.bgmWatchdogTimer) return;
         const now = () => performance.now();
         this.bgmWatchdogTimer = window.setInterval(() => {
+          if (this.externalMusicMode) return;
           if (!this.hasMusicIntent() || !this.bgmMode) return;
+          if (this.isPixabayBgmActive()) {
+            this.lastBgmPingAt = now();
+            this.syncPixabayVolumes();
+            return;
+          }
           const targetMode = this.bgmMode || "town";
           const nowTime = now();
           if (!this.bgmTimer || nowTime - this.lastBgmPingAt > 3500) {
@@ -16606,7 +17475,7 @@ return 0;`;
         const safeDuration = Math.max(0.38, duration);
         const attack = Math.min(0.22, safeDuration * 0.32);
         const release = Math.min(0.46, safeDuration * 0.62);
-        const targetGain = Math.min(0.026, gainValue * this.musicEventGain);
+        const targetGain = Math.min(0.075, gainValue * this.musicEventGain);
         gain.gain.cancelScheduledValues(startAt);
         gain.gain.setValueAtTime(0.0001, startAt);
         gain.gain.linearRampToValueAtTime(targetGain, startAt + attack);
@@ -16625,11 +17494,18 @@ return 0;`;
       }
 
       playBgm(mode = "town") {
+        if (this.externalMusicMode) return false;
+        if (this.startPixabayBgm(mode)) return true;
+        return this.startSynthBgm(mode);
+      }
+
+      startSynthBgm(mode = "town") {
         const now = performance.now();
         if (this.bgmTimer && this.bgmMode === mode) {
           this.applyMusicLayerMix(mode, this.editorAudioFocus);
           return true;
         }
+        if (this.pixabayBgmTrack) this.stopPixabayBgm();
         this.lastBgmRestartAt = now;
         this.bgmMode = mode;
         if (!this.ensureBgmRunning(mode, true)) return;
@@ -16650,15 +17526,16 @@ return 0;`;
           const counter = section.counter || [];
           const note = this.getSoftBgmFrequency(melody[this.noteIndex % melody.length]);
           const counterEvery = section.counterEvery || 4;
+          const isEventVariation = Boolean(this.activeBgmVariation?.section === section);
           const padDuration = mode === "battle" ? 0.58 : mode === "puzzle" ? 0.78 : 0.96;
-          const padGain = mode === "battle" ? 0.02 : 0.016;
+          const padGain = mode === "battle" ? 0.046 : 0.038;
           this.playMusicPad(note, padDuration, section.wave || "triangle", padGain, layers.theme || "music", Math.sin(this.noteIndex * 0.7) * 0.16);
-          if (counter.length && this.noteIndex % counterEvery === 1) {
-            this.playMusicPad(counter[this.noteIndex % counter.length], 0.52, "sine", 0.007, layers.theme || "music", 0.16);
+          if (isEventVariation && counter.length && this.noteIndex % counterEvery === 1) {
+            this.playMusicPad(counter[this.noteIndex % counter.length], 0.52, "sine", 0.018, layers.theme || "music", 0.16);
           }
-          if (this.noteIndex % 12 === 0) {
+          if (isEventVariation && this.noteIndex % 12 === 0) {
             [1.25, 1.5].forEach((ratio, index) => {
-              window.setTimeout(() => this.playMusicPad(note * ratio, 0.38, "sine", 0.005, layers.theme || "music", 0.14), index * 180);
+              window.setTimeout(() => this.playMusicPad(note * ratio, 0.38, "sine", 0.012, layers.theme || "music", 0.14), index * 180);
             });
           }
           const nextInterval = this.getBgmTickInterval(section, mode);
@@ -16706,32 +17583,40 @@ return 0;`;
 
       settingsOpen() {
         if (!this.canPlayEvent("settingsOpen", 360)) return;
-        this.noise(0.028, 0.01);
-        this.tone(440, 0.055, "triangle", 0.018);
-        window.setTimeout(() => this.tone(620, 0.07, "sine", 0.012), 58);
+        this.playPixabaySfx("compileFlash", () => {
+          this.noise(0.028, 0.01);
+          this.tone(440, 0.055, "triangle", 0.018);
+          window.setTimeout(() => this.tone(620, 0.07, "sine", 0.012), 58);
+        }, { cooldownMs: 360, maxMs: 620, playbackRate: 1.08 });
       }
 
       compileFlash() {
         if (!this.canPlayEvent("compileFlash", 120)) return;
-        this.noise(0.026, 0.012);
-        this.tone(720, 0.055, "triangle", 0.018);
-        window.setTimeout(() => this.tone(980, 0.06, "sine", 0.012), 42);
+        this.playPixabaySfx("compileFlash", () => {
+          this.noise(0.026, 0.012);
+          this.tone(720, 0.055, "triangle", 0.018);
+          window.setTimeout(() => this.tone(980, 0.06, "sine", 0.012), 42);
+        }, { cooldownMs: 160, maxMs: 760 });
       }
 
       compileSuccess() {
         if (!this.canPlayEvent("compileSuccess", 620)) return;
-        this.noise(0.045, 0.012);
-        [420, 620, 940, 1280].forEach((note, index) => {
-          window.setTimeout(() => this.tone(note, 0.08, index >= 2 ? "sine" : "triangle", 0.018), index * 52);
-        });
-        playLongCompileOvertone();
+        this.playPixabaySfx("compileSuccess", () => {
+          this.noise(0.045, 0.012);
+          [420, 620, 940, 1280].forEach((note, index) => {
+            window.setTimeout(() => this.tone(note, 0.08, index >= 2 ? "sine" : "triangle", 0.018), index * 52);
+          });
+          playLongCompileOvertone();
+        }, { cooldownMs: 620, maxMs: 1350 });
       }
 
       pickupSpark() {
         if (!this.canPlayEvent("pickupSpark", 180)) return;
-        [1120, 1480, 1760].forEach((note, index) => {
-          window.setTimeout(() => this.tone(note * 0.82, 0.05, "sine", 0.012), index * 44);
-        });
+        this.playPixabaySfx("pickupSpark", () => {
+          [1120, 1480, 1760].forEach((note, index) => {
+            window.setTimeout(() => this.tone(note * 0.82, 0.05, "sine", 0.012), index * 44);
+          });
+        }, { cooldownMs: 190, maxMs: 900, playbackRate: 1 + Math.random() * 0.08 });
       }
 
       step(surface = "grass") {
@@ -16760,28 +17645,36 @@ return 0;`;
 
       run() {
         if (!this.canPlayEvent("run", 260)) return;
-        this.tone(170, 0.06, "triangle", 0.018);
-        window.setTimeout(() => this.tone(230, 0.08, "sine", 0.012), 80);
+        this.playPixabaySfx("run", () => {
+          this.tone(170, 0.06, "triangle", 0.018);
+          window.setTimeout(() => this.tone(230, 0.08, "sine", 0.012), 80);
+        }, { cooldownMs: 420, maxMs: 620, playbackRate: 0.92 });
       }
 
       success() {
         if (!this.canPlayEvent("success", 380)) return;
-        [523, 659, 784].forEach((note, index) => {
-          window.setTimeout(() => this.tone(note, 0.12, "triangle", 0.02), index * 90);
-        });
+        this.playPixabaySfx("compileSuccess", () => {
+          [523, 659, 784].forEach((note, index) => {
+            window.setTimeout(() => this.tone(note, 0.12, "triangle", 0.02), index * 90);
+          });
+        }, { cooldownMs: 420, maxMs: 1050, playbackRate: 1.08 });
       }
 
       error() {
         if (!this.canPlayEvent("error", 360)) return;
-        this.tone(150, 0.1, "triangle", 0.018);
-        window.setTimeout(() => this.tone(118, 0.1, "sine", 0.012), 100);
+        this.playPixabaySfx("error", () => {
+          this.tone(150, 0.1, "triangle", 0.018);
+          window.setTimeout(() => this.tone(118, 0.1, "sine", 0.012), 100);
+        }, { cooldownMs: 520, maxMs: 560, playbackRate: 0.86 });
       }
 
       card() {
         if (!this.canPlayEvent("card", 300)) return;
-        [784, 988, 1175].forEach((note, index) => {
-          window.setTimeout(() => this.tone(note * 0.88, 0.09, "triangle", 0.018), index * 76);
-        });
+        this.playPixabaySfx("pickupSpark", () => {
+          [784, 988, 1175].forEach((note, index) => {
+            window.setTimeout(() => this.tone(note * 0.88, 0.09, "triangle", 0.018), index * 76);
+          });
+        }, { cooldownMs: 360, maxMs: 700, playbackRate: 0.94 });
       }
     }
 
@@ -16811,6 +17704,662 @@ return 0;`;
         if (gameState.menuOpen) return;
         if (Math.random() > 0.74) audioManager.tone(620 + Math.random() * 120, 0.08, "sine", 0.003, "music");
       }, 2600);
+    }
+
+    function getMusicSceneLabel(mode = "town") {
+      return (PIXABAY_BGM_TRACKS[mode] || PIXABAY_BGM_TRACKS.town).sceneLabel;
+    }
+
+    function sanitizeCustomMusicUrl(value = "") {
+      const raw = sanitizePlayerInput(value, 1024).trim();
+      if (!raw) return "";
+      try {
+        const url = new URL(raw, window.location?.href || "https://example.invalid/");
+        if (!["https:", "http:", "file:"].includes(url.protocol)) return "";
+        if (window.location?.protocol === "https:" && url.protocol === "http:") return "";
+        return url.href;
+      } catch (error) {
+        return "";
+      }
+    }
+
+    function getCustomMusicTitleFromUrl(url = "") {
+      try {
+        const parsed = new URL(url, window.location?.href || "https://example.invalid/");
+        const fileName = decodeURIComponent(parsed.pathname.split("/").filter(Boolean).pop() || "自定义音乐");
+        return sanitizePlayerInput(fileName.replace(/\.(mp3|ogg|wav|m4a|aac|flac)$/i, ""), 48) || "自定义音乐";
+      } catch (error) {
+        return "自定义音乐";
+      }
+    }
+
+    function normalizeCustomMusicIndex(raw = {}) {
+      const source = raw && typeof raw === "object" && !Array.isArray(raw) ? raw : {};
+      return PIXABAY_BGM_THEME_ORDER.reduce((index, mode) => {
+        const entry = source[mode];
+        if (!entry || typeof entry !== "object" || Array.isArray(entry)) return index;
+        const type = entry.type === "blob" ? "blob" : entry.type === "url" ? "url" : "";
+        const title = sanitizePlayerInput(entry.title || "自定义音乐", 64) || "自定义音乐";
+        const updatedAt = sanitizePlayerInput(entry.updatedAt || "", 48);
+        if (type === "url") {
+          const src = sanitizeCustomMusicUrl(entry.src || "");
+          if (src) index[mode] = { type, title, src, updatedAt };
+        }
+        if (type === "blob") {
+          const blobId = sanitizePlayerInput(entry.blobId || "", 96);
+          if (blobId) {
+            index[mode] = {
+              type,
+              title,
+              blobId,
+              size: Math.max(0, Number(entry.size) || 0),
+              updatedAt
+            };
+          }
+        }
+        return index;
+      }, {});
+    }
+
+    function saveCustomMusicIndex() {
+      customMusicIndex = normalizeCustomMusicIndex(customMusicIndex);
+      return writeStorage(STORAGE.customMusic, customMusicIndex);
+    }
+
+    function openCustomMusicDb() {
+      if (customMusicDbPromise) return customMusicDbPromise;
+      customMusicDbPromise = new Promise((resolve) => {
+        if (!window.indexedDB) {
+          resolve(null);
+          return;
+        }
+        const request = window.indexedDB.open(CUSTOM_MUSIC_DB_NAME, 1);
+        request.onupgradeneeded = () => {
+          const db = request.result;
+          if (!db.objectStoreNames.contains(CUSTOM_MUSIC_STORE_NAME)) db.createObjectStore(CUSTOM_MUSIC_STORE_NAME);
+        };
+        request.onsuccess = () => resolve(request.result);
+        request.onerror = () => resolve(null);
+      });
+      return customMusicDbPromise;
+    }
+
+    async function writeCustomMusicBlob(blobId, blob) {
+      const db = await openCustomMusicDb();
+      if (!db) return false;
+      return new Promise((resolve) => {
+        const tx = db.transaction(CUSTOM_MUSIC_STORE_NAME, "readwrite");
+        tx.objectStore(CUSTOM_MUSIC_STORE_NAME).put(blob, blobId);
+        tx.oncomplete = () => resolve(true);
+        tx.onerror = () => resolve(false);
+      });
+    }
+
+    async function readCustomMusicBlob(blobId) {
+      const db = await openCustomMusicDb();
+      if (!db) return null;
+      return new Promise((resolve) => {
+        const tx = db.transaction(CUSTOM_MUSIC_STORE_NAME, "readonly");
+        const request = tx.objectStore(CUSTOM_MUSIC_STORE_NAME).get(blobId);
+        request.onsuccess = () => resolve(request.result || null);
+        request.onerror = () => resolve(null);
+      });
+    }
+
+    async function deleteCustomMusicBlob(blobId) {
+      const db = await openCustomMusicDb();
+      if (!db) return false;
+      return new Promise((resolve) => {
+        const tx = db.transaction(CUSTOM_MUSIC_STORE_NAME, "readwrite");
+        tx.objectStore(CUSTOM_MUSIC_STORE_NAME).delete(blobId);
+        tx.oncomplete = () => resolve(true);
+        tx.onerror = () => resolve(false);
+      });
+    }
+
+    function revokeCustomMusicObjectUrl(blobId) {
+      const existing = customMusicObjectUrls.get(blobId);
+      if (!existing) return false;
+      URL.revokeObjectURL(existing);
+      customMusicObjectUrls.delete(blobId);
+      return true;
+    }
+
+    function getCustomMusicTrack(mode = "town") {
+      const entry = customMusicIndex[mode];
+      if (!entry) return null;
+      const builtIn = PIXABAY_BGM_TRACKS[mode] || PIXABAY_BGM_TRACKS.town;
+      const src = entry.type === "url" ? entry.src : customMusicObjectUrls.get(entry.blobId);
+      if (!src) return null;
+      return {
+        id: `custom-${mode}-${entry.type}`,
+        sceneLabel: builtIn.sceneLabel,
+        themeLabel: "玩家自定义",
+        title: entry.title || "自定义音乐",
+        creator: entry.type === "blob" ? "本地文件" : "音乐直链",
+        sourceLabel: entry.type === "blob" ? "本地文件" : "自定义直链",
+        pageUrl: entry.type === "url" ? entry.src : "",
+        licenseUrl: "",
+        src,
+        gain: entry.type === "blob" ? 0.32 : 0.3,
+        energy: builtIn.energy || 0.5,
+        custom: true
+      };
+    }
+
+    async function hydrateCustomMusicBlobs() {
+      const entries = Object.values(customMusicIndex).filter((entry) => entry?.type === "blob" && entry.blobId);
+      if (!entries.length) return false;
+      let restored = 0;
+      for (const entry of entries) {
+        const blob = await readCustomMusicBlob(entry.blobId);
+        if (!blob) continue;
+        revokeCustomMusicObjectUrl(entry.blobId);
+        customMusicObjectUrls.set(entry.blobId, URL.createObjectURL(blob));
+        restored += 1;
+      }
+      if (restored > 0) {
+        const mode = audioManager.pixabayPreviewMode || audioManager.bgmMode || "menu";
+        renderMusicSwitcher(audioManager.externalMusicMode ? "external" : mode);
+        renderCustomMusicPanel();
+        renderCustomMusicPanel(mode, "pause");
+        if (!audioManager.externalMusicMode && audioBooted && getCustomMusicTrack(mode)) {
+          audioManager.stopPixabayBgm();
+          audioManager.playBgm(mode);
+        }
+      }
+      return restored > 0;
+    }
+
+    function getMusicThemeIndex(mode = audioManager.pixabayPreviewMode || audioManager.bgmMode || "menu") {
+      const index = PIXABAY_BGM_THEME_ORDER.indexOf(mode);
+      return index >= 0 ? index : 0;
+    }
+
+    function getMusicThemeTrack(mode = audioManager.pixabayPreviewMode || audioManager.bgmMode || "menu") {
+      return audioManager.getPixabayBgmTrack?.(mode) || PIXABAY_BGM_TRACKS.menu;
+    }
+
+    function getMusicUiSurfaces() {
+      return [
+        {
+          root: dom.musicSwitcher,
+          title: dom.musicSwitcherTitle,
+          meta: dom.musicSwitcherMeta,
+          playButton: dom.musicPlayButton,
+          externalButton: dom.musicExternalButton,
+          customButton: dom.musicCustomButton
+        },
+        {
+          root: dom.inGameMusicCard,
+          title: dom.inGameMusicTitle,
+          meta: dom.inGameMusicMeta,
+          playButton: dom.inGameMusicPlayButton,
+          externalButton: dom.inGameMusicExternalButton,
+          customButton: dom.inGameMusicCustomButton
+        }
+      ].filter((surface) => surface.root);
+    }
+
+    function renderMusicSwitcher(mode = audioManager.pixabayPreviewMode || audioManager.bgmMode || "menu") {
+      const isExternal = mode === "external" || audioManager.externalMusicMode;
+      if (isExternal) {
+        const connector = EXTERNAL_MUSIC_CONNECTORS[audioManager.externalMusicProvider] || EXTERNAL_MUSIC_CONNECTORS.qqmusic;
+        getMusicUiSurfaces().forEach((surface) => {
+          surface.root?.classList.add("external-mode");
+          surface.externalButton?.classList.add("active");
+          surface.customButton?.classList.toggle("active", false);
+          if (surface.title) surface.title.textContent = `外部音乐 · ${connector.label}`;
+          if (surface.meta) surface.meta.textContent = `游戏 BGM 已暂停 · ${connector.providerHint}`;
+        });
+        syncMusicPlayButton("external");
+        updateMusicVisualizerFrame();
+        updateMusicDynamicIsland();
+        return connector;
+      }
+      const track = getMusicThemeTrack(mode);
+      getMusicUiSurfaces().forEach((surface) => {
+        surface.root?.classList.remove("external-mode");
+        surface.externalButton?.classList.remove("active");
+        surface.customButton?.classList.toggle("active", Boolean(customMusicIndex[mode]));
+        if (surface.title) surface.title.textContent = `${track.sceneLabel} · ${track.title}`;
+        if (surface.meta) surface.meta.textContent = `${track.themeLabel} · ${track.creator} · ${track.sourceLabel || "Pixabay"}`;
+      });
+      syncMusicPlayButton(mode);
+      updateMusicVisualizerFrame();
+      updateMusicDynamicIsland();
+      return track;
+    }
+
+    function isMenuMusicPlaying(mode = audioManager.pixabayPreviewMode || audioManager.bgmMode || "menu") {
+      if (audioManager.externalMusicMode) return false;
+      if (audioManager.isPixabayBgmPlaying?.() && audioManager.pixabayBgmMode === mode) return true;
+      return Boolean(audioManager.wantMusic && audioManager.bgmTimer && audioManager.bgmMode === mode);
+    }
+
+    function syncMusicPlayButton(mode = audioManager.pixabayPreviewMode || audioManager.bgmMode || "menu") {
+      const playing = isMenuMusicPlaying(mode);
+      [dom.musicPlayButton, dom.inGameMusicPlayButton, dom.musicIslandPlayButton].forEach((button) => {
+        if (!button) return;
+        button.textContent = playing ? "Ⅱ" : "▶";
+        button.setAttribute?.("aria-label", playing ? "暂停当前音乐" : "播放当前音乐");
+        button.classList.toggle("active", playing);
+      });
+      return playing;
+    }
+
+    function updateMusicVisualizerFrame(frame = {}) {
+      const bars = [
+        ...Array.from(dom.musicVisualizerBars || []),
+        ...Array.from(dom.inGameMusicVisualizerBars || [])
+      ];
+      if (!bars.length) return false;
+      const mode = audioManager.externalMusicMode ? "external" : (audioManager.pixabayPreviewMode || audioManager.bgmMode || "menu");
+      const track = mode === "external" ? { energy: 0.46 } : getMusicThemeTrack(mode);
+      const energy = Math.max(0.24, Math.min(0.92, Number(track.energy) || 0.5));
+      const mediaTime = audioManager.pixabayBgm && !audioManager.pixabayBgm.paused ? audioManager.pixabayBgm.currentTime : 0;
+      const seconds = mediaTime || ((frame.now || performance.now()) / 1000);
+      bars.forEach((bar, index) => {
+        const phase = seconds * (1.45 + energy * 2.2) + index * 0.62;
+        const pulse = (Math.sin(phase) + Math.sin(phase * 0.41 + index)) * 0.5;
+        const level = Math.max(0.12, Math.min(1, 0.24 + energy * 0.36 + pulse * 0.22 + ((index % 5) * 0.018)));
+        bar.style.setProperty("--music-bar-level", level.toFixed(3));
+        bar.style.opacity = String(Math.max(0.52, Math.min(1, 0.62 + level * 0.38)));
+      });
+      return true;
+    }
+
+    function previewMenuMusicTheme(delta = 0) {
+      audioManager.externalMusicMode = false;
+      audioManager.externalMusicProvider = "";
+      initializeAudioFromGesture();
+      const currentIndex = getMusicThemeIndex();
+      const nextMode = PIXABAY_BGM_THEME_ORDER[(currentIndex + delta + PIXABAY_BGM_THEME_ORDER.length) % PIXABAY_BGM_THEME_ORDER.length];
+      audioManager.pixabayPreviewMode = nextMode;
+      audioManager.playBgm(nextMode);
+      renderMusicSwitcher(nextMode);
+      return nextMode;
+    }
+
+    function toggleMenuMusicPlayback() {
+      const mode = PIXABAY_BGM_THEME_ORDER.includes(audioManager.pixabayPreviewMode)
+        ? audioManager.pixabayPreviewMode
+        : gameState.menuOpen ? "menu" : (audioManager.bgmMode || "town");
+      if (!audioManager.externalMusicMode && isMenuMusicPlaying(mode)) {
+        audioManager.stopBgm();
+        audioManager.pixabayPreviewMode = mode;
+        renderMusicSwitcher(mode);
+        return false;
+      }
+      audioManager.externalMusicMode = false;
+      audioManager.externalMusicProvider = "";
+      audioManager.pixabayPreviewMode = mode;
+      initializeAudioFromGesture();
+      audioManager.playBgm(mode);
+      renderMusicSwitcher(mode);
+      return true;
+    }
+
+    function connectExternalMusic(provider = "qqmusic") {
+      const connector = EXTERNAL_MUSIC_CONNECTORS[provider] || EXTERNAL_MUSIC_CONNECTORS.qqmusic;
+      let opened = false;
+      try {
+        const popup = window.open(connector.url, "_blank");
+        opened = Boolean(popup);
+        if (popup) popup.opener = null;
+      } catch (error) {
+        errorRingBuffer.push(error, ERROR_LEVELS.recoverable, { action: "connectExternalMusic", provider: connector.id });
+      }
+      audioManager.stopBgm();
+      audioManager.externalMusicMode = true;
+      audioManager.externalMusicProvider = connector.id;
+      audioManager.pixabayPreviewMode = "external";
+      renderMusicSwitcher("external");
+      announceA11yEvent?.(`已打开 ${connector.label}，游戏音乐已暂停`, "♪");
+      showReward?.(`${connector.label}外部模式：游戏BGM已暂停，可在新页面登录播放喜欢的歌`);
+      if (!opened) {
+        showReward?.(`浏览器拦截了弹窗，请手动访问 ${connector.url}`);
+      }
+      return opened;
+    }
+
+    function normalizeMusicIslandState(raw = {}) {
+      const source = raw && typeof raw === "object" && !Array.isArray(raw) ? raw : {};
+      const maxX = Math.max(0, (window.innerWidth || 390) - 54);
+      const maxY = Math.max(0, (window.innerHeight || 720) - 54);
+      const x = Number.isFinite(Number(source.x)) ? Math.max(8, Math.min(maxX, Number(source.x))) : null;
+      const y = Number.isFinite(Number(source.y)) ? Math.max(8, Math.min(maxY, Number(source.y))) : null;
+      return {
+        ...musicIslandState,
+        expanded: Boolean(source.expanded),
+        x,
+        y,
+        dragging: false,
+        pointerId: null,
+        dragOffsetX: 0,
+        dragOffsetY: 0,
+        dragMoved: false
+      };
+    }
+
+    function loadMusicIslandState() {
+      musicIslandState = normalizeMusicIslandState(readStorage(STORAGE.musicIsland, {}));
+      applyMusicIslandPosition();
+      return musicIslandState;
+    }
+
+    function saveMusicIslandState() {
+      return writeStorage(STORAGE.musicIsland, {
+        expanded: musicIslandState.expanded,
+        x: musicIslandState.x,
+        y: musicIslandState.y
+      });
+    }
+
+    function applyMusicIslandPosition() {
+      const island = dom.musicDynamicIsland;
+      if (!island) return false;
+      const hasPosition = Number.isFinite(musicIslandState.x) && Number.isFinite(musicIslandState.y);
+      island.classList.toggle("is-positioned", hasPosition);
+      if (hasPosition) {
+        island.style?.setProperty?.("--music-island-x", `${musicIslandState.x}px`);
+        island.style?.setProperty?.("--music-island-y", `${musicIslandState.y}px`);
+      } else {
+        island.style?.removeProperty?.("--music-island-x");
+        island.style?.removeProperty?.("--music-island-y");
+      }
+      return hasPosition;
+    }
+
+    function syncMusicIslandVolumeControls() {
+      const customValue = Math.max(0, Math.min(140, Number(gameState.settings.customMusicVolume ?? 100) || 0));
+      const qqValue = Math.max(0, Math.min(140, Number(gameState.settings.qqMusicVolume ?? 100) || 0));
+      [
+        [dom.customMusicVolumeSlider, dom.customMusicVolumeValue, customValue],
+        [dom.qqMusicVolumeSlider, dom.qqMusicVolumeValue, qqValue],
+        [dom.musicIslandCustomVolume, dom.musicIslandCustomVolumeValue, customValue],
+        [dom.musicIslandQqVolume, dom.musicIslandQqVolumeValue, qqValue]
+      ].forEach(([input, label, value]) => {
+        if (input) input.value = value;
+        if (label) label.textContent = String(value);
+      });
+      return { customValue, qqValue };
+    }
+
+    function getActiveMusicIslandPayload() {
+      if (audioManager.externalMusicMode) {
+        const connector = EXTERNAL_MUSIC_CONNECTORS[audioManager.externalMusicProvider] || EXTERNAL_MUSIC_CONNECTORS.qqmusic;
+        return {
+          visible: true,
+          kind: "qq",
+          title: `QQ音乐 · 外部播放`,
+          subtitle: `偏好音量 ${gameState.settings.qqMusicVolume ?? 100}% · 请在 QQ 音乐页面同步调节`,
+          mode: "external",
+          track: connector
+        };
+      }
+      const mode = audioManager.pixabayPreviewMode || audioManager.bgmMode || "town";
+      const track = audioManager.pixabayBgmTrack?.custom ? audioManager.pixabayBgmTrack : getMusicThemeTrack(mode);
+      const isCustomPlaying = Boolean(track?.custom && isMenuMusicPlaying(mode));
+      if (!isCustomPlaying) return { visible: false, mode, track };
+      return {
+        visible: true,
+        kind: "custom",
+        title: `${track.sceneLabel} · ${track.title}`,
+        subtitle: `自定义音乐 ${gameState.settings.customMusicVolume ?? 100}% · ${track.creator}`,
+        mode,
+        track
+      };
+    }
+
+    function updateMusicDynamicIsland() {
+      const island = dom.musicDynamicIsland;
+      if (!island) return false;
+      const payload = getActiveMusicIslandPayload();
+      island.classList.toggle("is-hidden", !payload.visible);
+      island.classList.toggle("is-expanded", Boolean(payload.visible && musicIslandState.expanded));
+      island.classList.toggle("is-collapsed", !musicIslandState.expanded);
+      island.dataset.musicKind = payload.kind || "none";
+      if (dom.musicIslandTitle) dom.musicIslandTitle.textContent = payload.visible ? payload.title : "音乐未连接";
+      if (dom.musicIslandSubtitle) dom.musicIslandSubtitle.textContent = payload.visible ? payload.subtitle : "QQ 或自定义音乐播放时显示";
+      syncMusicIslandVolumeControls();
+      syncMusicPlayButton(payload.mode || audioManager.pixabayPreviewMode || audioManager.bgmMode || "town");
+      applyMusicIslandPosition();
+      return payload.visible;
+    }
+
+    function setMusicIslandExpanded(expanded = true) {
+      musicIslandState.expanded = Boolean(expanded);
+      updateMusicDynamicIsland();
+      saveMusicIslandState();
+      return musicIslandState.expanded;
+    }
+
+    function handleMusicIslandPointerDown(event) {
+      const island = dom.musicDynamicIsland;
+      if (!island || musicIslandState.expanded || island.classList.contains("is-hidden")) return;
+      if (event.target?.closest?.("button,input,select,textarea,a")) return;
+      const rect = island.getBoundingClientRect?.() || { left: musicIslandState.x || 16, top: musicIslandState.y || 16 };
+      musicIslandState.dragging = true;
+      musicIslandState.dragMoved = false;
+      musicIslandState.pointerId = event.pointerId;
+      musicIslandState.dragOffsetX = (event.clientX || rect.left) - rect.left;
+      musicIslandState.dragOffsetY = (event.clientY || rect.top) - rect.top;
+      island.classList.add("is-dragging");
+      island.setPointerCapture?.(event.pointerId);
+    }
+
+    function handleMusicIslandPointerMove(event) {
+      const island = dom.musicDynamicIsland;
+      if (!island || !musicIslandState.dragging || musicIslandState.pointerId !== event.pointerId) return;
+      const width = island.offsetWidth || 250;
+      const height = island.offsetHeight || 54;
+      const maxX = Math.max(8, (window.innerWidth || 390) - width - 8);
+      const maxY = Math.max(8, (window.innerHeight || 720) - height - 8);
+      musicIslandState.x = Math.max(8, Math.min(maxX, (event.clientX || 0) - musicIslandState.dragOffsetX));
+      musicIslandState.y = Math.max(8, Math.min(maxY, (event.clientY || 0) - musicIslandState.dragOffsetY));
+      musicIslandState.dragMoved = true;
+      applyMusicIslandPosition();
+    }
+
+    function handleMusicIslandPointerUp(event) {
+      const island = dom.musicDynamicIsland;
+      if (!island || !musicIslandState.dragging || musicIslandState.pointerId !== event.pointerId) return;
+      musicIslandState.dragging = false;
+      musicIslandState.pointerId = null;
+      island.classList.remove("is-dragging");
+      island.releasePointerCapture?.(event.pointerId);
+      saveMusicIslandState();
+    }
+
+    function handleMusicIslandCompactClick() {
+      if (musicIslandState.dragMoved) {
+        musicIslandState.dragMoved = false;
+        return false;
+      }
+      return setMusicIslandExpanded(true);
+    }
+
+    function getCustomMusicPanelControls(surface = "main") {
+      if (surface === "pause") {
+        return {
+          panel: dom.pauseCustomMusicPanel,
+          sceneSelect: dom.pauseCustomMusicSceneSelect,
+          urlInput: dom.pauseCustomMusicUrlInput,
+          fileInput: dom.pauseCustomMusicFileInput,
+          saveButton: dom.pauseCustomMusicSaveButton,
+          clearButton: dom.pauseCustomMusicClearButton,
+          status: dom.pauseCustomMusicStatus,
+          customButton: dom.inGameMusicCustomButton
+        };
+      }
+      return {
+        panel: dom.customMusicPanel,
+        sceneSelect: dom.customMusicSceneSelect,
+        urlInput: dom.customMusicUrlInput,
+        fileInput: dom.customMusicFileInput,
+        saveButton: dom.customMusicSaveButton,
+        clearButton: dom.customMusicClearButton,
+        status: dom.customMusicStatus,
+        customButton: dom.musicCustomButton
+      };
+    }
+
+    function getSelectedCustomMusicScene(surface = "main") {
+      const controls = getCustomMusicPanelControls(surface);
+      const value = controls.sceneSelect?.value || audioManager.pixabayPreviewMode || audioManager.bgmMode || "menu";
+      return PIXABAY_BGM_THEME_ORDER.includes(value) ? value : "menu";
+    }
+
+    function setCustomMusicStatus(message = "", surface = "main") {
+      const controls = getCustomMusicPanelControls(surface);
+      if (controls.status) controls.status.textContent = message;
+      return message;
+    }
+
+    function renderCustomMusicPanel(scene = getSelectedCustomMusicScene(), surface = "main") {
+      const controls = getCustomMusicPanelControls(surface);
+      const mode = PIXABAY_BGM_THEME_ORDER.includes(scene) ? scene : "menu";
+      const entry = customMusicIndex[mode];
+      if (controls.sceneSelect) controls.sceneSelect.value = mode;
+      if (controls.urlInput) controls.urlInput.value = entry?.type === "url" ? entry.src : "";
+      const sceneLabel = getMusicSceneLabel(mode);
+      if (!entry) {
+        setCustomMusicStatus(`${sceneLabel} 当前使用内置场景音乐。可粘贴音乐直链或选择本地音频文件。`, surface);
+        return false;
+      }
+      if (entry.type === "blob" && !customMusicObjectUrls.has(entry.blobId)) {
+        setCustomMusicStatus(`${sceneLabel} 已绑定本地音乐：${entry.title}，正在从浏览器本地库恢复。`, surface);
+        return true;
+      }
+      setCustomMusicStatus(`${sceneLabel} 已绑定：${entry.title} · ${entry.type === "blob" ? "本地文件" : "音乐直链"}`, surface);
+      return true;
+    }
+
+    function toggleCustomMusicPanel(forceOpen = null, surface = "main") {
+      const controls = getCustomMusicPanelControls(surface);
+      if (!controls.panel) return false;
+      const shouldOpen = forceOpen == null ? controls.panel.hidden : Boolean(forceOpen);
+      controls.panel.hidden = !shouldOpen;
+      controls.customButton?.classList.toggle("active", shouldOpen || Boolean(customMusicIndex[getSelectedCustomMusicScene(surface)]));
+      if (shouldOpen) {
+        const mode = PIXABAY_BGM_THEME_ORDER.includes(audioManager.pixabayPreviewMode)
+          ? audioManager.pixabayPreviewMode
+          : gameState.menuOpen ? "menu" : (audioManager.bgmMode || "town");
+        renderCustomMusicPanel(mode, surface);
+      }
+      return shouldOpen;
+    }
+
+    function getCustomMusicFileName(file) {
+      return sanitizePlayerInput(String(file?.name || "本地音乐").replace(/\.(mp3|ogg|wav|m4a|aac|flac)$/i, ""), 64) || "本地音乐";
+    }
+
+    function isSupportedCustomMusicFile(file) {
+      if (!file) return false;
+      const typeOk = String(file.type || "").startsWith("audio/");
+      const nameOk = /\.(mp3|ogg|wav|m4a|aac|flac)$/i.test(String(file.name || ""));
+      return typeOk || nameOk;
+    }
+
+    async function saveCustomMusicForSelectedScene(surface = "main") {
+      const controls = getCustomMusicPanelControls(surface);
+      const mode = getSelectedCustomMusicScene(surface);
+      const oldEntry = customMusicIndex[mode];
+      const file = controls.fileInput?.files?.[0] || null;
+      const url = sanitizeCustomMusicUrl(controls.urlInput?.value || "");
+      if (file) {
+        if (!isSupportedCustomMusicFile(file)) {
+          setCustomMusicStatus("请选择 mp3 / ogg / wav / m4a / aac / flac 等音频文件。", surface);
+          return false;
+        }
+        if (file.size > CUSTOM_MUSIC_MAX_FILE_BYTES) {
+          setCustomMusicStatus("本地音乐文件过大，请选择 18MB 以内的音频，保证启动速度。", surface);
+          return false;
+        }
+        const blobId = `${mode}-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
+        const stored = await writeCustomMusicBlob(blobId, file);
+        if (!stored) {
+          setCustomMusicStatus("浏览器没有允许保存本地音频，请改用可直接播放的音乐直链。", surface);
+          return false;
+        }
+        if (oldEntry?.type === "blob" && oldEntry.blobId) {
+          revokeCustomMusicObjectUrl(oldEntry.blobId);
+          deleteCustomMusicBlob(oldEntry.blobId);
+        }
+        customMusicObjectUrls.set(blobId, URL.createObjectURL(file));
+        customMusicIndex[mode] = {
+          type: "blob",
+          title: getCustomMusicFileName(file),
+          blobId,
+          size: file.size,
+          updatedAt: new Date().toISOString()
+        };
+      } else {
+        if (!url) {
+          setCustomMusicStatus("请先粘贴可播放的 https 音乐直链，或选择本地音频文件。", surface);
+          return false;
+        }
+        if (oldEntry?.type === "blob" && oldEntry.blobId) {
+          revokeCustomMusicObjectUrl(oldEntry.blobId);
+          deleteCustomMusicBlob(oldEntry.blobId);
+        }
+        customMusicIndex[mode] = {
+          type: "url",
+          title: getCustomMusicTitleFromUrl(url),
+          src: url,
+          updatedAt: new Date().toISOString()
+        };
+      }
+      saveCustomMusicIndex();
+      if (controls.fileInput) controls.fileInput.value = "";
+      audioManager.externalMusicMode = false;
+      audioManager.externalMusicProvider = "";
+      audioManager.pixabayPreviewMode = mode;
+      audioManager.stopBgm();
+      initializeAudioFromGesture();
+      audioManager.playBgm(mode);
+      renderMusicSwitcher(mode);
+      renderCustomMusicPanel(mode, surface);
+      renderCustomMusicPanel(mode, surface === "pause" ? "main" : "pause");
+      showReward?.(`${getMusicSceneLabel(mode)} 已切换为自定义音乐`);
+      return true;
+    }
+
+    async function clearCustomMusicForSelectedScene(surface = "main") {
+      const controls = getCustomMusicPanelControls(surface);
+      const mode = getSelectedCustomMusicScene(surface);
+      const oldEntry = customMusicIndex[mode];
+      if (!oldEntry) {
+        renderCustomMusicPanel(mode, surface);
+        return false;
+      }
+      if (oldEntry.type === "blob" && oldEntry.blobId) {
+        revokeCustomMusicObjectUrl(oldEntry.blobId);
+        await deleteCustomMusicBlob(oldEntry.blobId);
+      }
+      delete customMusicIndex[mode];
+      saveCustomMusicIndex();
+      if (controls.fileInput) controls.fileInput.value = "";
+      if (controls.urlInput) controls.urlInput.value = "";
+      audioManager.externalMusicMode = false;
+      audioManager.externalMusicProvider = "";
+      audioManager.pixabayPreviewMode = mode;
+      audioManager.stopBgm();
+      if (audioBooted) audioManager.playBgm(mode);
+      renderMusicSwitcher(mode);
+      renderCustomMusicPanel(mode, surface);
+      renderCustomMusicPanel(mode, surface === "pause" ? "main" : "pause");
+      showReward?.(`${getMusicSceneLabel(mode)} 已恢复内置音乐`);
+      return true;
+    }
+
+    function initializeCustomMusicLibrary() {
+      customMusicIndex = normalizeCustomMusicIndex(readStorage(STORAGE.customMusic, {}));
+      renderCustomMusicPanel("menu");
+      renderCustomMusicPanel("town", "pause");
+      hydrateCustomMusicBlobs();
+      return customMusicIndex;
     }
 
     function playLongCompileOvertone() {
@@ -16944,7 +18493,7 @@ return 0;`;
       window.setTimeout(() => setMoodIntensity(0.24), 2000);
     }
 
-    let lastDayNightMusicState = null;
+    let lastDayNightMusicState = WORLD_STATES.day;
     function updateMusicForDayNight(night = false) {
       const targetState = night ? "night" : "day";
       if (lastDayNightMusicState === targetState) return targetState;
@@ -18882,15 +20431,65 @@ int main(void) {
       menuHighlight: document.getElementById("menuHighlight"),
       mainMenuList: document.getElementById("mainMenuList"),
       mainMenuIdleCounter: document.getElementById("mainMenuIdleCounter"),
+      musicSwitcher: document.getElementById("musicSwitcher"),
+      musicSwitcherTitle: document.getElementById("musicSwitcherTitle"),
+      musicSwitcherMeta: document.getElementById("musicSwitcherMeta"),
+      musicVisualizer: document.getElementById("musicVisualizer"),
+      musicVisualizerBars: document.querySelectorAll("#musicVisualizer .music-visualizer-bar"),
+      musicPrevButton: document.getElementById("musicPrevButton"),
+      musicPlayButton: document.getElementById("musicPlayButton"),
+      musicNextButton: document.getElementById("musicNextButton"),
+      musicExternalButton: document.getElementById("musicExternalButton"),
+      musicCustomButton: document.getElementById("musicCustomButton"),
+      customMusicPanel: document.getElementById("customMusicPanel"),
+      customMusicSceneSelect: document.getElementById("customMusicSceneSelect"),
+      customMusicUrlInput: document.getElementById("customMusicUrlInput"),
+      customMusicFileInput: document.getElementById("customMusicFileInput"),
+      customMusicSaveButton: document.getElementById("customMusicSaveButton"),
+      customMusicClearButton: document.getElementById("customMusicClearButton"),
+      customMusicStatus: document.getElementById("customMusicStatus"),
+      inGameMusicCard: document.getElementById("inGameMusicCard"),
+      inGameMusicTitle: document.getElementById("inGameMusicTitle"),
+      inGameMusicMeta: document.getElementById("inGameMusicMeta"),
+      inGameMusicVisualizerBars: document.querySelectorAll("#inGameMusicVisualizer .music-visualizer-bar"),
+      inGameMusicPrevButton: document.getElementById("inGameMusicPrevButton"),
+      inGameMusicPlayButton: document.getElementById("inGameMusicPlayButton"),
+      inGameMusicNextButton: document.getElementById("inGameMusicNextButton"),
+      inGameMusicExternalButton: document.getElementById("inGameMusicExternalButton"),
+      inGameMusicCustomButton: document.getElementById("inGameMusicCustomButton"),
+      pauseCustomMusicPanel: document.getElementById("pauseCustomMusicPanel"),
+      pauseCustomMusicSceneSelect: document.getElementById("pauseCustomMusicSceneSelect"),
+      pauseCustomMusicUrlInput: document.getElementById("pauseCustomMusicUrlInput"),
+      pauseCustomMusicFileInput: document.getElementById("pauseCustomMusicFileInput"),
+      pauseCustomMusicSaveButton: document.getElementById("pauseCustomMusicSaveButton"),
+      pauseCustomMusicClearButton: document.getElementById("pauseCustomMusicClearButton"),
+      pauseCustomMusicStatus: document.getElementById("pauseCustomMusicStatus"),
       bootCommandInput: document.getElementById("bootCommandInput"),
       skinSelect: document.getElementById("skinSelect"),
       pauseMenuList: document.getElementById("pauseMenuList"),
       masterVolumeSlider: document.getElementById("masterVolumeSlider"),
       musicVolumeSlider: document.getElementById("musicVolumeSlider"),
+      customMusicVolumeSlider: document.getElementById("customMusicVolumeSlider"),
+      qqMusicVolumeSlider: document.getElementById("qqMusicVolumeSlider"),
       sfxVolumeSlider: document.getElementById("sfxVolumeSlider"),
       masterVolumeValue: document.getElementById("masterVolumeValue"),
       musicVolumeValue: document.getElementById("musicVolumeValue"),
+      customMusicVolumeValue: document.getElementById("customMusicVolumeValue"),
+      qqMusicVolumeValue: document.getElementById("qqMusicVolumeValue"),
       sfxVolumeValue: document.getElementById("sfxVolumeValue"),
+      musicDynamicIsland: document.getElementById("musicDynamicIsland"),
+      musicIslandCompact: document.getElementById("musicIslandCompact"),
+      musicIslandExpanded: document.getElementById("musicIslandExpanded"),
+      musicIslandTitle: document.getElementById("musicIslandTitle"),
+      musicIslandSubtitle: document.getElementById("musicIslandSubtitle"),
+      musicIslandPlayButton: document.getElementById("musicIslandPlayButton"),
+      musicIslandPrevButton: document.getElementById("musicIslandPrevButton"),
+      musicIslandNextButton: document.getElementById("musicIslandNextButton"),
+      musicIslandCloseButton: document.getElementById("musicIslandCloseButton"),
+      musicIslandCustomVolume: document.getElementById("musicIslandCustomVolume"),
+      musicIslandCustomVolumeValue: document.getElementById("musicIslandCustomVolumeValue"),
+      musicIslandQqVolume: document.getElementById("musicIslandQqVolume"),
+      musicIslandQqVolumeValue: document.getElementById("musicIslandQqVolumeValue"),
       settingsTabs: document.querySelectorAll("[data-settings-tab]"),
       settingsSections: document.querySelectorAll("[data-settings-section]"),
       uiProfileSelect: document.getElementById("uiProfileSelect"),
@@ -21119,7 +22718,7 @@ ${item.code}
     let lastPointerLockExitAt = -Infinity;
 
     function isPointerLockUiTarget(target) {
-      return Boolean(target?.closest?.("button,input,textarea,select,a,[role='button'],.menu-screen,.dynamic-island,.modal-card,.settings-shell,.collection-shell,#editorOverlay,#settingsPanel,#pauseMenuOverlay,#mainMenuOverlay,#worldSelectOverlay"));
+      return Boolean(target?.closest?.("button,input,textarea,select,a,[role='button'],.menu-screen,.dynamic-island,.music-dynamic-island,.modal-card,.settings-shell,.collection-shell,#editorOverlay,#settingsPanel,#pauseMenuOverlay,#mainMenuOverlay,#worldSelectOverlay"));
     }
 
     function requestGamePointerLock(event = null) {
@@ -26640,13 +28239,19 @@ ${item.code}
       updateFullscreenStatus();
       applyCodeGenesisHudAvatar();
       if (audioManager) audioManager.applyVolumes();
+      syncMusicIslandVolumeControls?.();
+      updateMusicDynamicIsland?.();
       if (dom.masterVolumeSlider) {
         if (gameState.settings.performanceMode === "medium") gameState.settings.performanceMode = "high";
         dom.masterVolumeSlider.value = gameState.settings.masterVolume;
         dom.musicVolumeSlider.value = gameState.settings.musicVolume;
+        if (dom.customMusicVolumeSlider) dom.customMusicVolumeSlider.value = gameState.settings.customMusicVolume;
+        if (dom.qqMusicVolumeSlider) dom.qqMusicVolumeSlider.value = gameState.settings.qqMusicVolume;
         dom.sfxVolumeSlider.value = gameState.settings.sfxVolume;
         dom.masterVolumeValue.textContent = gameState.settings.masterVolume;
         dom.musicVolumeValue.textContent = gameState.settings.musicVolume;
+        if (dom.customMusicVolumeValue) dom.customMusicVolumeValue.textContent = gameState.settings.customMusicVolume;
+        if (dom.qqMusicVolumeValue) dom.qqMusicVolumeValue.textContent = gameState.settings.qqMusicVolume;
         dom.sfxVolumeValue.textContent = gameState.settings.sfxVolume;
         if (dom.uiProfileSelect) dom.uiProfileSelect.value = gameState.settings.uiProfile || UI_PROFILES.default;
         dom.editorThemeSelect.value = gameState.settings.editorTheme;
@@ -26760,7 +28365,12 @@ ${item.code}
         renderSafetyManager?.applyInitialQuality?.();
         applyGlobalPostProcessing();
       }
-      if (key === "musicVolume" || key === "masterVolume") {
+      if (key === "customMusicVolume" || key === "qqMusicVolume") {
+        audioManager.syncPixabayVolumes();
+        syncMusicIslandVolumeControls();
+        updateMusicDynamicIsland();
+      }
+      if (key === "musicVolume" || key === "masterVolume" || key === "customMusicVolume") {
         const musicEnabled = gameState.settings.masterVolume > 0 && gameState.settings.musicVolume > 0;
         if (musicEnabled) {
           audioManager.requestBgmHeartbeat();
@@ -29620,14 +31230,47 @@ ${item.code}
           button.addEventListener("click", () => this.activatePauseButton(button));
         });
 
-        document.querySelectorAll(".menu-option, .hud-button, .pixel-button, .theme-swatch").forEach((button) => {
+        document.querySelectorAll(".menu-option, .hud-button, .pixel-button, .theme-swatch, .music-switcher-button").forEach((button) => {
           button.addEventListener("mouseenter", () => audioManager.uiHover());
           button.addEventListener("click", (event) => {
             relayClickPulse(event.currentTarget);
             audioManager.uiClick();
           });
         });
-        unifyPointerKeyboardFocus(document.querySelectorAll(".menu-option, .hud-button, .pixel-button, .theme-swatch"));
+        unifyPointerKeyboardFocus(document.querySelectorAll(".menu-option, .hud-button, .pixel-button, .theme-swatch, .music-switcher-button"));
+        dom.musicPrevButton?.addEventListener("click", () => previewMenuMusicTheme(-1));
+        dom.musicPlayButton?.addEventListener("click", () => toggleMenuMusicPlayback());
+        dom.musicNextButton?.addEventListener("click", () => previewMenuMusicTheme(1));
+        dom.musicExternalButton?.addEventListener("click", () => connectExternalMusic("qqmusic"));
+        dom.musicCustomButton?.addEventListener("click", () => toggleCustomMusicPanel());
+        dom.customMusicSceneSelect?.addEventListener("change", () => renderCustomMusicPanel(getSelectedCustomMusicScene()));
+        dom.customMusicFileInput?.addEventListener("change", () => {
+          const file = dom.customMusicFileInput?.files?.[0];
+          if (file) setCustomMusicStatus(`已选择本地文件：${getCustomMusicFileName(file)}，点击保存后绑定到当前场景。`);
+        });
+        dom.customMusicSaveButton?.addEventListener("click", () => saveCustomMusicForSelectedScene());
+        dom.customMusicClearButton?.addEventListener("click", () => clearCustomMusicForSelectedScene());
+        dom.inGameMusicPrevButton?.addEventListener("click", () => previewMenuMusicTheme(-1));
+        dom.inGameMusicPlayButton?.addEventListener("click", () => toggleMenuMusicPlayback());
+        dom.inGameMusicNextButton?.addEventListener("click", () => previewMenuMusicTheme(1));
+        dom.inGameMusicExternalButton?.addEventListener("click", () => connectExternalMusic("qqmusic"));
+        dom.inGameMusicCustomButton?.addEventListener("click", () => toggleCustomMusicPanel(null, "pause"));
+        dom.pauseCustomMusicSceneSelect?.addEventListener("change", () => renderCustomMusicPanel(getSelectedCustomMusicScene("pause"), "pause"));
+        dom.pauseCustomMusicFileInput?.addEventListener("change", () => {
+          const file = dom.pauseCustomMusicFileInput?.files?.[0];
+          if (file) setCustomMusicStatus(`已选择本地文件：${getCustomMusicFileName(file)}，点击保存后绑定到当前场景。`, "pause");
+        });
+        dom.pauseCustomMusicSaveButton?.addEventListener("click", () => saveCustomMusicForSelectedScene("pause"));
+        dom.pauseCustomMusicClearButton?.addEventListener("click", () => clearCustomMusicForSelectedScene("pause"));
+        dom.musicDynamicIsland?.addEventListener("pointerdown", handleMusicIslandPointerDown);
+        dom.musicDynamicIsland?.addEventListener("pointermove", handleMusicIslandPointerMove);
+        dom.musicDynamicIsland?.addEventListener("pointerup", handleMusicIslandPointerUp);
+        dom.musicDynamicIsland?.addEventListener("pointercancel", handleMusicIslandPointerUp);
+        dom.musicIslandCompact?.addEventListener("click", handleMusicIslandCompactClick);
+        dom.musicIslandCloseButton?.addEventListener("click", () => setMusicIslandExpanded(false));
+        dom.musicIslandPlayButton?.addEventListener("click", () => toggleMenuMusicPlayback());
+        dom.musicIslandPrevButton?.addEventListener("click", () => previewMenuMusicTheme(-1));
+        dom.musicIslandNextButton?.addEventListener("click", () => previewMenuMusicTheme(1));
         syncTextInputBlockCursor(dom.bootCommandInput);
         syncTextInputBlockCursor(dom.codeInput);
 
@@ -29785,6 +31428,7 @@ ${item.code}
         this.active = "main";
         gameState.menuOpen = true;
         gameState.paused = true;
+        if (!audioManager.externalMusicMode) audioManager.pixabayPreviewMode = "menu";
         document.body.classList.add("menu-open", "is-paused");
         document.body.classList.remove("pause-menu-open");
         dom.mainMenu.classList.add("active");
@@ -29799,6 +31443,8 @@ ${item.code}
         pauseFreezeAnimations();
         if (gameState.scene) gameState.scene.scene.pause();
         updateContextualHint();
+        renderMusicSwitcher(audioManager.externalMusicMode ? "external" : "menu");
+        if (!audioManager.externalMusicMode && audioBooted && audioManager.hasMusicEnabled()) audioManager.playBgm("menu");
         window.setTimeout(() => this.select(0), 40);
       }
 
@@ -29812,11 +31458,12 @@ ${item.code}
         this.active = "game";
         gameState.menuOpen = false;
         gameState.paused = false;
+        audioManager.pixabayPreviewMode = "";
         document.body.classList.remove("menu-open", "is-paused", "pause-menu-open");
         dom.mainMenu.classList.remove("active");
         dom.pauseMenu.classList.remove("active");
         dom.updateHistoryOverlay?.classList.remove("active");
-        audioManager.startLayeredBgm();
+        if (!audioManager.externalMusicMode) audioManager.startLayeredBgm();
         resumeFrozenAnimations();
         if (gameState.scene) gameState.scene.scene.resume();
         updateContextualHint();
@@ -29834,6 +31481,8 @@ ${item.code}
         document.body.classList.add("is-paused", "pause-menu-open");
         dom.pauseMenu.classList.add("active");
         showCodePauseMenu();
+        renderMusicSwitcher(audioManager.externalMusicMode ? "external" : (audioManager.pixabayPreviewMode || audioManager.bgmMode || "town"));
+        renderCustomMusicPanel(audioManager.bgmMode || "town", "pause");
         pauseFreezeAnimations();
         if (gameState.scene) gameState.scene.scene.pause();
         updateContextualHint();
@@ -38871,9 +40520,14 @@ ${item.code}
       if (audioBooted) return;
       audioBooted = true;
       const ctx = audioManager.ensureContext();
+      if (audioManager.externalMusicMode) {
+        updateAudioStartButtonVisibility(false);
+        renderMusicSwitcher("external");
+        return;
+      }
       if (gameState.settings.musicVolume > 0 && gameState.settings.masterVolume > 0) {
         audioManager.requestBgmHeartbeat();
-        const targetMode = gameState.editorOpen ? "puzzle" : (audioManager.bgmMode || "town");
+        const targetMode = gameState.menuOpen ? (audioManager.pixabayPreviewMode || "menu") : gameState.editorOpen ? "puzzle" : (audioManager.bgmMode || "town");
         audioManager.ensureBgmRunning(targetMode, true);
         audioManager.playBgm(targetMode);
       } else {
@@ -38893,12 +40547,19 @@ ${item.code}
     monitorFontLoadFallback();
     loadWorldEvolutionLocalKeys();
     applySettings();
+    loadMusicIslandState();
+    initializeCustomMusicLibrary();
     preloadTutorialAnimationResources();
     applyPerformanceMode(gameState.settings.performanceMode || "high", "启动配置", { runtimeOnly: true, silent: true });
     questManager?.refreshAll();
     const menuManager = new MenuManager();
     frameScheduler.register("systemClock", updateSystemClock, { frameInterval: 60 });
     frameScheduler.register("mainMenuIdleCounter", updateMainMenuIdleCounter, { frameInterval: 60 });
+    frameScheduler.register("musicVisualizer", updateMusicVisualizerFrame, {
+      frameInterval: 3,
+      enabled: () => Boolean(dom.mainMenu?.classList.contains("active"))
+    });
+    frameScheduler.register("musicDynamicIsland", updateMusicDynamicIsland, { frameInterval: 12 });
     frameScheduler.register("antiAddictionBreak", checkAntiAddictionBreak, { frameInterval: 900 });
     playSystemBootLog();
     applyMidnightTimeEasterEgg();
@@ -39201,6 +40862,10 @@ ${item.code}
 
     dom.masterVolumeSlider.addEventListener("input", (event) => updateSetting("masterVolume", Number(event.target.value)));
     dom.musicVolumeSlider.addEventListener("input", (event) => updateSetting("musicVolume", Number(event.target.value)));
+    dom.customMusicVolumeSlider?.addEventListener("input", (event) => updateSetting("customMusicVolume", Number(event.target.value)));
+    dom.qqMusicVolumeSlider?.addEventListener("input", (event) => updateSetting("qqMusicVolume", Number(event.target.value)));
+    dom.musicIslandCustomVolume?.addEventListener("input", (event) => updateSetting("customMusicVolume", Number(event.target.value)));
+    dom.musicIslandQqVolume?.addEventListener("input", (event) => updateSetting("qqMusicVolume", Number(event.target.value)));
     dom.sfxVolumeSlider.addEventListener("input", (event) => updateSetting("sfxVolume", Number(event.target.value)));
     dom.uiProfileSelect?.addEventListener("change", (event) => updateSetting("uiProfile", event.target.value));
     dom.editorThemeSelect.addEventListener("change", (event) => updateSetting("editorTheme", event.target.value));
