@@ -14,7 +14,7 @@
   <meta http-equiv="Cache-Control" content="no-store, max-age=0, must-revalidate">
   <meta http-equiv="Pragma" content="no-cache">
   <meta http-equiv="Expires" content="0">
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self' file:; base-uri 'self'; object-src 'none'; frame-ancestors 'none'; script-src 'self' 'nonce-code-awakener-inline' file: 'sha256-3l5uplxG2tebGowbV9xsJM5T/AX6O4+prIlVOUV4MlA='; style-src 'self' 'nonce-code-awakener-inline' file: 'sha256-S59GcWKbWbBO8ddVXnS1Lu4q956MzfFIztuVnQsJzuA='; style-src-attr 'unsafe-inline'; font-src 'self' file: data:; img-src 'self' file: data: blob: https://cdn.pixabay.com; media-src 'self' file: data: blob: https: http: https://cdn.pixabay.com; worker-src 'self' file: blob:; child-src 'self' file: blob:; connect-src 'self' file: http://localhost:8000 http://127.0.0.1:8000 https://cdn.pixabay.com https://pixabay.com;">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self' file:; base-uri 'self'; object-src 'none'; frame-ancestors 'none'; script-src 'self' 'nonce-code-awakener-inline' file: 'sha256-K0WfV+qffIJHFgfWKlqlp9bBBg+ZJgNsQXipCn73E3Y='; style-src 'self' 'nonce-code-awakener-inline' file: 'sha256-w1QUybbzFx9Qtp6+/0LGq7gAxW8YKdFJ9pX159PTjoM='; style-src-attr 'unsafe-inline'; font-src 'self' file: data:; img-src 'self' file: data: blob: https://cdn.pixabay.com; media-src 'self' file: data: blob: https: http: https://cdn.pixabay.com; worker-src 'self' file: blob:; child-src 'self' file: blob:; connect-src 'self' file: http://localhost:8000 http://127.0.0.1:8000 https://cdn.pixabay.com https://pixabay.com;">
   <title>编程学习 RPG：C 语言启航村</title>
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%23020617'/%3E%3Cpath d='M22 20 10 32l12 12M42 20l12 12-12 12' fill='none' stroke='%2300ff88' stroke-width='6' stroke-linecap='round' stroke-linejoin='round'/%3E%3Cpath d='m36 16-8 32' stroke='%2300ccff' stroke-width='5' stroke-linecap='round'/%3E%3C/svg%3E">
   <script src="./vendor/phaser.min.js"></script>
@@ -61,6 +61,12 @@
       --mobile-visual-offset-top: 0px;
       --mobile-visual-offset-left: 0px;
       --mobile-visual-width: 100vw;
+      --hud-scroll-track: rgba(2, 6, 23, 0.46);
+      --hud-scroll-thumb: rgba(56, 189, 248, 0.74);
+      --hud-scroll-thumb-hot: rgba(34, 197, 94, 0.86);
+      --hud-range-track: rgba(7, 14, 28, 0.82);
+      --hud-range-fill: rgba(56, 189, 248, 0.92);
+      --hud-range-fill-hot: rgba(34, 197, 94, 0.88);
     }
 
     * {
@@ -78,6 +84,110 @@
       color: var(--text);
       font-family: var(--font-code);
       cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'%3E%3Crect x='10' y='4' width='3' height='16' fill='%2338bdf8'/%3E%3Crect x='14' y='18' width='6' height='2' fill='%23a855f7'/%3E%3C/svg%3E") 10 4, text;
+    }
+
+    :where(.menu-list, .pause-panel, .settings-panel, .world-select-panel, .update-history-list, .info-side-menu, .dialog-box, .custom-music-panel, .music-dynamic-island) {
+      scrollbar-width: thin;
+      scrollbar-color: var(--hud-scroll-thumb) var(--hud-scroll-track);
+      scrollbar-gutter: stable;
+    }
+
+    :where(.menu-list, .pause-panel, .settings-panel, .world-select-panel, .update-history-list, .info-side-menu, .dialog-box, .custom-music-panel, .music-dynamic-island)::-webkit-scrollbar {
+      width: 10px;
+      height: 10px;
+    }
+
+    :where(.menu-list, .pause-panel, .settings-panel, .world-select-panel, .update-history-list, .info-side-menu, .dialog-box, .custom-music-panel, .music-dynamic-island)::-webkit-scrollbar-track {
+      border: 1px solid rgba(56, 189, 248, 0.12);
+      border-radius: 999px;
+      background:
+        repeating-linear-gradient(180deg, transparent 0 7px, rgba(125, 211, 252, 0.12) 7px 8px),
+        var(--hud-scroll-track);
+      box-shadow: inset 0 0 14px rgba(2, 6, 23, 0.58);
+    }
+
+    :where(.menu-list, .pause-panel, .settings-panel, .world-select-panel, .update-history-list, .info-side-menu, .dialog-box, .custom-music-panel, .music-dynamic-island)::-webkit-scrollbar-thumb {
+      border: 2px solid rgba(2, 6, 23, 0.74);
+      border-radius: 999px;
+      background:
+        linear-gradient(180deg, var(--hud-scroll-thumb), var(--hud-scroll-thumb-hot)),
+        rgba(56, 189, 248, 0.82);
+      box-shadow: 0 0 14px rgba(56, 189, 248, 0.3);
+    }
+
+    :where(.menu-list, .pause-panel, .settings-panel, .world-select-panel, .update-history-list, .info-side-menu, .dialog-box, .custom-music-panel, .music-dynamic-island)::-webkit-scrollbar-thumb:hover {
+      background:
+        linear-gradient(180deg, #fef08a, var(--hud-scroll-thumb-hot) 48%, #38bdf8),
+        rgba(34, 197, 94, 0.9);
+    }
+
+    input[type="range"] {
+      --range-progress: 50%;
+      width: 100%;
+      height: 22px;
+      min-width: 0;
+      padding: 0;
+      appearance: none;
+      -webkit-appearance: none;
+      border: 0;
+      background: transparent;
+      cursor: pointer;
+      accent-color: var(--neon-blue);
+    }
+
+    input[type="range"]::-webkit-slider-runnable-track {
+      height: 8px;
+      border: 1px solid rgba(125, 211, 252, 0.28);
+      border-radius: 999px;
+      background:
+        linear-gradient(90deg, var(--hud-range-fill) 0 var(--range-progress), var(--hud-range-track) var(--range-progress) 100%),
+        repeating-linear-gradient(90deg, transparent 0 10px, rgba(248, 250, 252, 0.12) 10px 11px);
+      box-shadow: inset 0 0 12px rgba(2, 6, 23, 0.58), 0 0 14px rgba(56, 189, 248, 0.12);
+    }
+
+    input[type="range"]::-webkit-slider-thumb {
+      width: 18px;
+      height: 18px;
+      margin-top: -6px;
+      border: 1px solid rgba(254, 240, 138, 0.86);
+      border-radius: 6px;
+      background:
+        linear-gradient(135deg, #fef3c7, #22c55e 48%, #38bdf8),
+        #22c55e;
+      box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.12), 0 0 18px rgba(34, 197, 94, 0.42);
+      -webkit-appearance: none;
+      appearance: none;
+      transition: transform 140ms ease-out, box-shadow 140ms ease-out;
+    }
+
+    input[type="range"]:hover::-webkit-slider-thumb,
+    input[type="range"]:focus-visible::-webkit-slider-thumb {
+      transform: scale(1.08);
+      box-shadow: 0 0 0 4px rgba(250, 204, 21, 0.14), 0 0 22px rgba(56, 189, 248, 0.52);
+    }
+
+    input[type="range"]::-moz-range-track {
+      height: 8px;
+      border: 1px solid rgba(125, 211, 252, 0.28);
+      border-radius: 999px;
+      background: var(--hud-range-track);
+      box-shadow: inset 0 0 12px rgba(2, 6, 23, 0.58);
+    }
+
+    input[type="range"]::-moz-range-progress {
+      height: 8px;
+      border-radius: 999px;
+      background: linear-gradient(90deg, var(--hud-range-fill), var(--hud-range-fill-hot));
+      box-shadow: 0 0 14px rgba(56, 189, 248, 0.22);
+    }
+
+    input[type="range"]::-moz-range-thumb {
+      width: 18px;
+      height: 18px;
+      border: 1px solid rgba(254, 240, 138, 0.86);
+      border-radius: 6px;
+      background: linear-gradient(135deg, #fef3c7, #22c55e 48%, #38bdf8);
+      box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.12), 0 0 18px rgba(34, 197, 94, 0.42);
     }
 
     button,
@@ -925,6 +1035,23 @@
       touch-action: none;
     }
 
+    .music-dynamic-island::before {
+      content: "";
+      position: absolute;
+      left: 50%;
+      top: 5px;
+      width: 58px;
+      height: 4px;
+      border-radius: 999px;
+      background:
+        linear-gradient(90deg, transparent, rgba(250, 240, 138, 0.82), rgba(34, 197, 94, 0.8), transparent),
+        rgba(56, 189, 248, 0.34);
+      box-shadow: 0 0 14px hsl(var(--music-island-hue) 88% 58% / 0.36);
+      transform: translateX(-50%);
+      opacity: 0.78;
+      pointer-events: none;
+    }
+
     .music-dynamic-island.is-hidden {
       opacity: 0;
       pointer-events: none;
@@ -948,9 +1075,22 @@
       cursor: grab;
     }
 
+    .music-dynamic-island.is-collapsed::before {
+      top: 4px;
+      width: 44px;
+      opacity: 0.9;
+    }
+
     .music-dynamic-island.is-dragging {
       cursor: grabbing;
       transition: none;
+    }
+
+    .music-dynamic-island.is-dragging::before {
+      background:
+        linear-gradient(90deg, transparent, #fef08a, #38bdf8, transparent),
+        rgba(34, 197, 94, 0.52);
+      box-shadow: 0 0 20px rgba(56, 189, 248, 0.52);
     }
 
     .music-island-compact {
@@ -1165,7 +1305,7 @@
       min-height: 0;
       max-height: 100%;
       overflow-y: auto;
-      padding-right: 3px;
+      padding-right: 8px;
       overscroll-behavior: contain;
       scrollbar-width: thin;
     }
@@ -11159,8 +11299,8 @@
       <p>&gt; 如果这里一直空白，说明浏览器缓存、旧存档或脚本自检阻塞了启动。</p>
       <p>&gt; 使用下面入口可以绕过旧缓存并关闭重型特效，学习进度仍会保留。</p>
       <div class="static-rescue-actions">
-        <a href="./programming-rpg-c-basics.html?safeMode=true&noAudio=true&v=1.0.38">安全启动</a>
-        <a href="./programming-rpg-c-basics.html?v=1.0.38">强制刷新</a>
+        <a href="./programming-rpg-c-basics.html?safeMode=true&noAudio=true&v=1.0.39">安全启动</a>
+        <a href="./programming-rpg-c-basics.html?v=1.0.39">强制刷新</a>
       </div>
       <p>作者：杀戮 · QQ：3424636983 · 官方Q群：414374792</p>
     </div>
@@ -11364,7 +11504,7 @@
       <canvas id="menuFxCanvas" width="1280" height="720"></canvas>
       <div class="main-menu-card glass-panel">
         <h1 class="game-logo">CODE AWAKENER<br>C 语言启航村</h1>
-        <div class="version-label" id="versionLabel">World Build v1.0.38 · develop.fan C Basics</div>
+        <div class="version-label" id="versionLabel">World Build v1.0.39 · develop.fan C Basics</div>
         <div id="musicSwitcher" class="music-switcher" aria-label="音乐主题切换器">
           <div class="music-switcher-copy">
             <span class="music-switcher-kicker">♪ 当前音乐主题</span>
@@ -12112,17 +12252,15 @@ int main(void) {
       <button id="announcementCloseButton" class="announcement-close" type="button" aria-label="关闭公告">×</button>
       <h2 id="startupAnnouncementTitle" class="startup-announcement-title">> 消息 / 本次更新</h2>
       <div id="announcementPageBody" class="startup-announcement-body">
-        <p>// v1.0.38：编辑器 HP、手机布局与碎片商人热修。</p>
-        <p>// 修复正确 C 代码通过后，沙箱预览 iframe 未准备好却导致“运行结果为空/沙箱异常”的误报。</p>
-        <p>// 编辑器顶部显示 HP 与商人回血道具；编译失败会扣 HP，道具需要手动使用恢复。</p>
-        <p>// 手机内置编辑器改为代码、任务提示、导师解析、控制台分区显示，不再只剩代码区。</p>
-        <p>// 手机创角终端重新划分输出、输入、符号栏、帮助、预览和状态条，避免信息被挤出屏幕。</p>
-        <p>// 编辑器底部重新划分为操作区、设备符号提示区、输出/导师控制台区，PC 提示和手机符号栏更清楚。</p>
-        <p>// 普通输入会同步 main.c 内存文件，撤销/重做也同步，降低可见代码和判题代码分叉的概率。</p>
-        <p>// 输入反馈、运行按钮和导师迷你地图更新已节流，长代码编辑更顺滑。</p>
-        <p>// NPC/导师对话进入安静音频焦点，逐字提示音降低频率和音量，关闭后恢复正常混音。</p>
-        <p>// NPC 交互选项会按 id 去重；碎片商人使用独立交易碎片出售回血道具，暗影紫外观默认解锁。</p>
-        <p>// 编译器、公告和安全自检已同步到 v1.0.38，便于绕过旧缓存。</p>
+        <p>// v1.0.39：音频降噪、输入延迟与移动卡顿热修。</p>
+        <p>// 内置 BGM 同模式请求改为保持当前播放，不再反复 pause/play 或重启合成循环。</p>
+        <p>// 编译成功、编译失败、拾取等音乐花句加入冷却和队列去重，避免一次操作叠多层提示音。</p>
+        <p>// Pixabay 音效增加全局冷却和并发上限，整体音效混音降低一档，长时间游玩更安静。</p>
+        <p>// 编辑器输入改为先响应文本，再合并刷新高亮、导师解析和引导线，降低打字延迟。</p>
+        <p>// 编辑器打开或对话冻结时，世界后台特效改为低频维护，减少覆盖层内卡顿。</p>
+        <p>// 角色移动起步响应提高，部分剧情、数据流、音频导演和调试面板刷新按帧节流。</p>
+        <p>// 主菜单、局内菜单、音乐岛和设置滑动条统一为赛博终端轨道样式，更贴合主题。</p>
+        <p>// 编译器、公告和安全自检已同步到 v1.0.39，便于绕过旧缓存。</p>
         <p>// 作者：杀戮，QQ：3424636983。</p>
         <p>// 官方Q群：414374792。</p>
         <p>// 作者：杀戮</p>
@@ -12636,28 +12774,41 @@ int main() {
     const SAVE_CLEAR_CONFIRM_MS = 3000;
     const STARTUP_ANNOUNCEMENT_AUTO_HIDE_MS = 14000;
     const SYSTEM_BOOT_FORCE_RELEASE_MS = 3200;
-    const GAME_VERSION = "v1.0.38";
+    const GAME_VERSION = "v1.0.39";
     const OFFICIAL_SITE_HREF = "./official-site.html";
     const UPDATE_ANNOUNCEMENT_PAGES = Object.freeze([
       {
         title: "> 消息 / 本次更新",
         lines: [
-          "// v1.0.38：编辑器 HP、手机布局与碎片商人热修。",
-          "// 修复正确 C 代码通过后，沙箱预览 iframe 未准备好却导致“运行结果为空/沙箱异常”的误报。",
-          "// 编辑器顶部显示 HP 与商人回血道具；编译失败会扣 HP，道具需要手动使用恢复。",
-          "// 手机内置编辑器改为代码、任务提示、导师解析、控制台分区显示，不再只剩代码区。",
-          "// 手机创角终端重新划分输出、输入、符号栏、帮助、预览和状态条，避免信息被挤出屏幕。",
-          "// 编辑器底部重新划分为操作区、设备符号提示区、输出/导师控制台区，PC 提示和手机符号栏更清楚。",
-          "// 普通输入会同步 main.c 内存文件，撤销/重做也同步，降低可见代码和判题代码分叉的概率。",
-          "// 输入反馈、运行按钮和导师迷你地图更新已节流，长代码编辑更顺滑。",
-          "// NPC/导师对话进入安静音频焦点，逐字提示音降低频率和音量，关闭后恢复正常混音。",
-          "// NPC 交互选项会按 id 去重；碎片商人使用独立交易碎片出售回血道具，暗影紫外观默认解锁。",
-          "// 安全启动、强制刷新、CSP 和脚本自检已同步到 v1.0.38，方便绕过旧缓存。",
+          "// v1.0.39：音频降噪、输入延迟与移动卡顿热修。",
+          "// 内置 BGM 同模式请求改为保持当前播放，不再反复 pause/play 或重启合成循环。",
+          "// 编译成功、编译失败、拾取等音乐花句加入冷却和队列去重，避免一次操作叠多层提示音。",
+          "// Pixabay 音效增加全局冷却和并发上限，整体音效混音降低一档，长时间游玩更安静。",
+          "// 编辑器输入改为先响应文本，再合并刷新高亮、导师解析和引导线，降低打字延迟。",
+          "// 编辑器打开或对话冻结时，世界后台特效改为低频维护，减少覆盖层内卡顿。",
+          "// 角色移动起步响应提高，部分剧情、数据流、音频导演和调试面板刷新按帧节流。",
+          "// 主菜单、局内菜单、音乐岛和设置滑动条统一为赛博终端轨道样式，更贴合主题。",
+          "// 安全启动、强制刷新、CSP 和脚本自检已同步到 v1.0.39，方便绕过旧缓存。",
           "// 作者：杀戮，QQ：3424636983，官方Q群：414374792。"
         ]
       }
     ]);
     const UPDATE_HISTORY = Object.freeze([
+      {
+        version: "v1.0.39",
+        date: "2026-06-17",
+        title: "音频降噪与输入移动延迟热修",
+        details: [
+          "内置 BGM 同模式请求加入去重保护，当前音乐正在播放时只同步音量和混音，不再反复重启或重复触发播放请求。",
+          "Pixabay BGM 的同曲目恢复加入 1.2 秒保护，避免暂停/恢复竞争造成循环重启；合成 BGM 定时器不再被同模式请求提前清掉。",
+          "编译成功、编译失败和拾取音乐花句加入事件冷却、队列去重和并发上限，防止多个流程同时触发导致提示音叠响。",
+          "Pixabay 音效全局冷却提升到 120ms，并发上限收紧到 2 个，SFX 总线和采样音量下调，NPC、编译和移动过程更安静。",
+          "编辑器输入改为先写入文本和 main.c 缓存，再通过 timeout + requestAnimationFrame 合并刷新高亮、导师解析、自动补全和绝对引导线。",
+          "编辑器或对话冻结时，世界后台特效只低频维护；游戏移动时对剧情、数据流、音频导演、调试面板等非关键刷新做按帧节流。",
+          "角色移动速度插值从慢追踪改为更快响应，按键移动和虚拟摇杆起步延迟降低。",
+          "主菜单、局内暂停菜单、音乐动态岛和设置滑动条统一为赛博终端轨道样式，滚动条、滑块和拖动握把更符合游戏主题。官方Q群：414374792。"
+        ]
+      },
       {
         version: "v1.0.38",
         date: "2026-06-17",
@@ -13293,9 +13444,17 @@ int main() {
     const BGM_SECTION_STEPS = 32;
     const BGM_VARIATION_QUEUE_MAX = 3;
     const BGM_DYNAMIC_SWING_MS = 54;
+    const BGM_REQUEST_DEDUPE_MS = 1200;
+    const BGM_VARIATION_COOLDOWN_MS = 1400;
+    const AUDIO_SFX_GLOBAL_COOLDOWN_MS = 120;
+    const AUDIO_SFX_ACTIVE_LIMIT = 2;
     const AUDIO_FOOTSTEP_COOLDOWN_MS = 420;
     const AUDIO_HOVER_COOLDOWN_MS = 180;
     const AUDIO_TYPE_COOLDOWN_MS = 42;
+    const EDITOR_VISUAL_IDLE_DELAY_MS = 34;
+    const EDITOR_VISUAL_BUSY_DELAY_MS = 110;
+    const PLAYER_MOVE_ACCELERATION = 0.58;
+    const PLAYER_MOVE_DECELERATION = 0.44;
     const ADAPTIVE_BGM_THEMES = Object.freeze({
       town: Object.freeze([
         Object.freeze({
@@ -13895,7 +14054,7 @@ return 0;`;
       directSaveAs: "reduced-by-inline-resources"
     });
     const SECURITY_CONFIG = Object.freeze({
-      expectedScriptHash: "ymPC5rbBCsPKvizBQMUT+xSQTviE4skCMWFdDQ4W/ns=",
+      expectedScriptHash: "MQEEseonagSrppQL5Iu+l5Byx5E3EU+Z5ziPiKk6tqs=",
       selfCheckIntervalMs: 45000,
       tamperRefreshMs: 5000,
       devToolsRefreshMs: 2000,
@@ -17803,20 +17962,23 @@ return 0;`;
         this.noteIndex = 0;
         this.bgmSectionOffset = Math.floor(Math.random() * 3);
         this.bgmVariationQueue = [];
+        this.bgmVariationCooldowns = new Map();
         this.activeBgmVariation = null;
         this.lastStepAt = 0;
         this.lastUiHoverAt = 0;
         this.lastTypeAt = 0;
         this.lastBgmPingAt = 0;
         this.lastBgmRestartAt = 0;
+        this.lastBgmRequestAt = 0;
+        this.lastBgmRequestMode = "";
         this.lastMusicResumeAt = 0;
         this.bufferPool = new AudioBufferPool();
         this.wantMusic = false;
         this.masterBaseGain = 0.82;
         this.musicBusScale = 1.32;
-        this.sfxBusScale = 0.72;
+        this.sfxBusScale = 0.62;
         this.musicEventGain = 1.25;
-        this.sfxEventGain = 0.68;
+        this.sfxEventGain = 0.56;
         this.lastBrightSfxAt = 0;
         this.lastNoiseSfxAt = 0;
         this.lastSfxAt = 0;
@@ -17899,7 +18061,7 @@ return 0;`;
         const master = Math.max(0, Math.min(1.4, (gameState.settings.masterVolume || 0) / 100));
         const sfx = Math.max(0, Math.min(1.4, (gameState.settings.sfxVolume || 0) / 100));
         const focusScale = this.dialogAudioFocus ? 0.38 : 1;
-        return Math.max(0, Math.min(0.34, master * sfx * (track?.gain || 0.18) * focusScale));
+        return Math.max(0, Math.min(0.28, master * sfx * (track?.gain || 0.18) * focusScale));
       }
 
       fadeHtmlAudio(audio, targetVolume = 0, durationMs = AUDIO_CROSSFADE_MS, onComplete = null) {
@@ -17980,6 +18142,31 @@ return 0;`;
         return this.startPixabayBgm(mode, true);
       }
 
+      shouldSkipBgmRequest(mode = "town") {
+        const targetMode = mode || this.bgmMode || "town";
+        const now = performance.now();
+        const synthPlaying = Boolean(this.bgmTimer && this.bgmMode === targetMode);
+        const pixabaySameMode = Boolean(this.pixabayBgm && this.pixabayBgmMode === targetMode);
+        if (synthPlaying || (pixabaySameMode && this.isPixabayBgmPlaying())) {
+          this.lastBgmPingAt = now;
+          this.syncPixabayVolumes();
+          this.applyMusicLayerMix(targetMode, this.isAudioFocusActive());
+          return true;
+        }
+        if (
+          pixabaySameMode &&
+          this.isPixabayBgmActive() &&
+          this.lastBgmRequestMode === targetMode &&
+          now - this.lastBgmRequestAt < BGM_REQUEST_DEDUPE_MS
+        ) {
+          this.lastBgmPingAt = now;
+          return true;
+        }
+        this.lastBgmRequestMode = targetMode;
+        this.lastBgmRequestAt = now;
+        return false;
+      }
+
       startPixabayBgm(mode = "town", forceTrackRefresh = false) {
         if (this.externalMusicMode) return false;
         if (!this.hasMusicEnabled() || !this.hasExternalAudioEnabled()) return false;
@@ -17990,12 +18177,14 @@ return 0;`;
         this.wantMusic = true;
         this.bgmMode = mode;
         this.lastBgmPingAt = now;
-        if (this.bgmTimer) window.clearTimeout(this.bgmTimer);
-        this.bgmTimer = null;
         if (this.pixabayBgm && this.pixabayBgmTrack?.src === track.src && this.pixabayBgmMode === mode && !forceTrackRefresh) {
           this.syncPixabayVolumes();
-          if (!this.pixabayBgm.paused) return true;
+          if (!this.pixabayBgm.paused && !this.pixabayBgm.ended) return true;
+          if (now - this.lastMusicResumeAt < BGM_REQUEST_DEDUPE_MS) return true;
+          this.lastMusicResumeAt = now;
         }
+        if (this.bgmTimer) window.clearTimeout(this.bgmTimer);
+        this.bgmTimer = null;
         const previousAudio = this.pixabayBgm && this.pixabayBgmTrack?.src !== track.src ? this.pixabayBgm : null;
         if (previousAudio) this.fadeHtmlAudio(previousAudio, 0, AUDIO_CROSSFADE_MS, () => this.cleanupHtmlAudio(previousAudio));
         const audio = previousAudio ? new Audio() : (this.pixabayBgm || new Audio());
@@ -18052,7 +18241,11 @@ return 0;`;
         const now = performance.now();
         const cooldownMs = Number(options.cooldownMs || track.cooldownMs || 180);
         const last = this.pixabaySfxCooldowns.get(key) || 0;
-        if (now - last < cooldownMs || now - this.lastPixabaySfxAt < 72 || this.pixabaySfxActive.size >= 3) return true;
+        if (
+          now - last < cooldownMs ||
+          now - this.lastPixabaySfxAt < AUDIO_SFX_GLOBAL_COOLDOWN_MS ||
+          this.pixabaySfxActive.size >= AUDIO_SFX_ACTIVE_LIMIT
+        ) return true;
         this.pixabaySfxCooldowns.set(key, now);
         this.lastPixabaySfxAt = now;
         const audio = new Audio(track.src);
@@ -18391,7 +18584,13 @@ return 0;`;
       queueBgmVariation(kind = "pickup") {
         const variation = BGM_EVENT_VARIATIONS[kind];
         if (!variation || this.bgmVariationQueue.length >= BGM_VARIATION_QUEUE_MAX) return false;
-        this.bgmVariationQueue.push(variation);
+        const now = performance.now();
+        const last = this.bgmVariationCooldowns.get(kind) || 0;
+        const duplicateActive = this.activeBgmVariation?.kind === kind;
+        const duplicateQueued = this.bgmVariationQueue.some((item) => item?.kind === kind);
+        if (duplicateActive || duplicateQueued || (last && now - last < BGM_VARIATION_COOLDOWN_MS)) return false;
+        this.bgmVariationCooldowns.set(kind, now);
+        this.bgmVariationQueue.push({ kind, section: variation });
         return true;
       }
 
@@ -18401,9 +18600,11 @@ return 0;`;
           return this.activeBgmVariation.section;
         }
         this.activeBgmVariation = null;
-        const variation = this.bgmVariationQueue.shift();
-        if (variation) {
+        const queuedVariation = this.bgmVariationQueue.shift();
+        if (queuedVariation) {
+          const variation = queuedVariation.section || queuedVariation;
           this.activeBgmVariation = {
+            kind: queuedVariation.kind || variation.name,
             section: variation,
             remaining: Math.max(2, Math.min(8, (variation.melody?.length || 4) - 1))
           };
@@ -18466,6 +18667,7 @@ return 0;`;
 
       playBgm(mode = "town") {
         if (this.externalMusicMode) return false;
+        if (this.shouldSkipBgmRequest(mode)) return true;
         if (this.startPixabayBgm(mode)) return true;
         return this.startSynthBgm(mode);
       }
@@ -19511,30 +19713,36 @@ return 0;`;
     }
 
     function triggerMusicPickupOrnament() {
+      if (!audioManager.canPlayEvent?.("musicPickupOrnament", 900)) return false;
       touchMusicInteraction();
-      audioManager.queueBgmVariation("pickup");
+      if (!audioManager.queueBgmVariation("pickup")) return false;
       const director = getProceduralMusicDirector();
       const note = director?.motif?.[director.step % director.motif.length] || 880;
       audioManager.tone(note * 1.25, 0.07, "sine", 0.008);
       director.firstPickupMotif ||= note;
+      return true;
     }
 
     function triggerMusicCompilePass() {
+      if (!audioManager.canPlayEvent?.("musicCompilePass", BGM_VARIATION_COOLDOWN_MS)) return false;
       touchMusicInteraction();
-      audioManager.queueBgmVariation("compilePass");
+      if (!audioManager.queueBgmVariation("compilePass")) return false;
       duckBgmForCue(500);
       applyMusicMood(WORLD_MOOD.triumph, 0.84);
       [0, 4, 7, 11].forEach((semi, index) => window.setTimeout(() => audioManager.tone(392 * midiRatio(semi), 0.09, "triangle", 0.012), index * 76));
       navigator.vibrate?.(5);
+      return true;
     }
 
     function triggerMusicCompileError() {
+      if (!audioManager.canPlayEvent?.("musicCompileError", BGM_VARIATION_COOLDOWN_MS)) return false;
       touchMusicInteraction();
-      audioManager.queueBgmVariation("compileError");
+      if (!audioManager.queueBgmVariation("compileError")) return false;
       duckBgmForCue(500);
       applyMusicMood(WORLD_MOOD.tension, 0.72);
       audioManager.tone(185, 0.08, "triangle", 0.016);
       window.setTimeout(() => audioManager.tone(185 * midiRatio(5), 0.07, "sine", 0.012), 56);
+      return true;
     }
 
     function pauseProceduralMusic() {
@@ -20964,6 +21172,7 @@ int main(void) {
     let lessonAnimationId = null;
     let lessonStartTime = 0;
     let editorVisualTimer = null;
+    let editorVisualRaf = 0;
     let editorFeedbackPulseAt = 0;
     let clearSaveConfirmTimer = null;
     let startupAnnouncementTimer = null;
@@ -31926,6 +32135,16 @@ ${item.code}
     }
 
     function updateAudioMix(interaction = null) {
+      const now = performance.now();
+      const signature = [
+        gameState.editorOpen ? "editor" : "game",
+        interaction?.type || "none",
+        gameState.codeAccuracy <= 30 ? "danger" : "safe",
+        worldStateMachine.state
+      ].join(":");
+      if (updateAudioMix.lastSignature === signature && now - (updateAudioMix.lastAt || 0) < 260) return false;
+      updateAudioMix.lastSignature = signature;
+      updateAudioMix.lastAt = now;
       enterSilentSoundZone(interaction?.type === "roomEntrance");
       focusStoneMonoField(["lesson", "challenge", "mossyStone"].includes(interaction?.type));
       const targetMode = gameState.editorOpen ? "puzzle" : audioManager.bgmMode || "town";
@@ -31935,6 +32154,7 @@ ${item.code}
         danger: gameState.codeAccuracy <= 30 ? 1 : 0,
         night: worldStateMachine.state === WORLD_STATES.night
       });
+      return true;
     }
 
     function updateDynamicAudioLayers({ interaction = null, danger = 0, night = false } = {}) {
@@ -33867,8 +34087,14 @@ ${item.code}
 
     function scheduleEditorVisuals() {
       window.clearTimeout(editorVisualTimer);
-      const delay = editorInputBudget.count > 10 ? 90 : 50;
-      editorVisualTimer = window.setTimeout(updateEditorVisuals, delay);
+      if (editorVisualRaf) cancelAnimationFrame(editorVisualRaf);
+      const delay = editorInputBudget.count > 10 ? EDITOR_VISUAL_BUSY_DELAY_MS : EDITOR_VISUAL_IDLE_DELAY_MS;
+      editorVisualTimer = window.setTimeout(() => {
+        editorVisualRaf = requestAnimationFrame(() => {
+          editorVisualRaf = 0;
+          updateEditorVisuals();
+        });
+      }, delay);
     }
 
     function syncActiveEditorFileFromInput(value = dom.codeInput?.value || "") {
@@ -34164,6 +34390,7 @@ ${item.code}
 
     function playEditorKeySound(event) {
       if (event.ctrlKey || event.metaKey || event.altKey) return;
+      if (!audioManager.canPlayEvent?.("editorKeySound", 36)) return;
       const keyMap = {
         Enter: () => { audioManager.noise(0.018, 0.012); audioManager.tone(260, 0.024, "triangle", 0.012); },
         Backspace: () => audioManager.tone(190, 0.022, "triangle", 0.012),
@@ -41479,6 +41706,9 @@ ${item.code}
         if (!this.player || inputManager.isEditorMode() || gameState.editorOpen || gameState.dialogOpen || gameState.tutorialAnimationLocked || this.playerFrozen) {
           transitionPlayerState(gameState.paused ? PLAYER_STATES.paused : PLAYER_STATES.interacting);
           if (this.player) this.player.setVelocity(0);
+          updateAudioMix(null);
+          const frozenFrameInterval = gameState.editorOpen ? 8 : 3;
+          if ((this.frameTick || 0) % frozenFrameInterval !== 0) return;
           this.updateLighting();
           updateCinematicProgression();
           updateWorldEvolutionLayer(this);
@@ -41512,8 +41742,9 @@ ${item.code}
         if (input.lengthSq() > 0) input.normalize().scale(speed);
         transitionPlayerState(input.lengthSq() > 0 ? PLAYER_STATES.walking : PLAYER_STATES.idle);
 
-        this.playerVelocity.x += (input.x - this.playerVelocity.x) * 0.22;
-        this.playerVelocity.y += (input.y - this.playerVelocity.y) * 0.22;
+        const moveLerp = input.lengthSq() > 0 ? PLAYER_MOVE_ACCELERATION : PLAYER_MOVE_DECELERATION;
+        this.playerVelocity.x += (input.x - this.playerVelocity.x) * moveLerp;
+        this.playerVelocity.y += (input.y - this.playerVelocity.y) * moveLerp;
         if (Math.abs(this.playerVelocity.x) < 2) this.playerVelocity.x = 0;
         if (Math.abs(this.playerVelocity.y) < 2) this.playerVelocity.y = 0;
         this.player.setVelocity(this.playerVelocity.x, this.playerVelocity.y);
@@ -41524,15 +41755,15 @@ ${item.code}
         updateCinematicProgression();
         updateWorldEvolutionLayer(this);
         updateSafeSceneFx(this, null);
-        updateAiCompanion(this);
+        if ((this.frameTick || 0) % 4 === 0) updateAiCompanion(this);
         updateSpawnStoneLifeRecovery(this);
         updatePlayerGrowthAura(this);
         codeEnemyEncounterManager.update(this);
-        updateNpcGazeTracking(this);
+        if ((this.frameTick || 0) % 2 === 0) updateNpcGazeTracking(this);
         spawnGroundMicroFeedback(this, this.player);
-        updateDynamicNarrativeHooks(this);
-        maybeTriggerRandomWorldEvent(this);
-        updateDevEasterOverlay(this);
+        if ((this.frameTick || 0) % 20 === 0) updateDynamicNarrativeHooks(this);
+        if ((this.frameTick || 0) % 60 === 0) maybeTriggerRandomWorldEvent(this);
+        if ((this.frameTick || 0) % 12 === 0) updateDevEasterOverlay(this);
         lockPetIdleAfterInactivity(this);
         if (performance.now() - (this.lastGhostCheckAt || 0) > 24000) {
           this.lastGhostCheckAt = performance.now();
@@ -41547,13 +41778,15 @@ ${item.code}
         updateThinkingCodeRainHint(this, interaction);
         updateInteractiveFocus(this, interaction);
         updateInteractionHalo(this, interaction);
-        updateGuidanceLine(this);
-        updatePathGuidePulse(this);
-        updateAbsoluteGuide(this);
-        updateDataBusProgress(this);
+        if ((this.frameTick || 0) % 2 === 0) {
+          updateGuidanceLine(this);
+          updatePathGuidePulse(this);
+          updateAbsoluteGuide(this);
+        }
+        if ((this.frameTick || 0) % 8 === 0) updateDataBusProgress(this);
         this.compilerEye?.update(16.67);
         updateAudioMix(interaction);
-        safeRunEffect("audioDirector", () => adaptiveSymphonicAudioDirector?.update(this, interaction));
+        if ((this.frameTick || 0) % 4 === 0) safeRunEffect("audioDirector", () => adaptiveSymphonicAudioDirector?.update(this, interaction));
 
         showPrompt(getContextualInteractionHint(interaction));
 
@@ -42139,6 +42372,27 @@ ${item.code}
       return true;
     }
 
+    function syncThemedRangeProgress(input) {
+      if (!input?.matches?.('input[type="range"]')) return false;
+      const min = Number(input.min || 0);
+      const max = Number(input.max || 100);
+      const value = Number(input.value || min);
+      const span = Math.max(1, max - min);
+      const progress = Math.max(0, Math.min(100, ((value - min) / span) * 100));
+      input.style.setProperty("--range-progress", `${progress.toFixed(2)}%`);
+      return true;
+    }
+
+    function initializeThemedRangeControls(root = document) {
+      root?.querySelectorAll?.('input[type="range"]')?.forEach(syncThemedRangeProgress);
+      return true;
+    }
+
+    document.addEventListener("input", (event) => syncThemedRangeProgress(event.target), true);
+    document.addEventListener("change", (event) => syncThemedRangeProgress(event.target), true);
+    document.addEventListener("focusin", (event) => syncThemedRangeProgress(event.target), true);
+    initializeThemedRangeControls();
+
     dom.variableWatchToggle?.addEventListener("click", () => toggleVariableWatch());
     dom.startupAnnouncement?.addEventListener("click", closeStartupAnnouncement);
     dom.announcementCloseButton?.addEventListener("click", (event) => {
@@ -42168,7 +42422,6 @@ ${item.code}
       }
       pulseCodeInputFeedback();
       scheduleEditorVisuals();
-      renderAbsoluteGuideLineHints(dom.codeInput.value);
     });
     dom.codeInput.addEventListener("scroll", syncEditorScroll);
     dom.codeInput.addEventListener("pointerdown", handleManualEditorPointerDown);
