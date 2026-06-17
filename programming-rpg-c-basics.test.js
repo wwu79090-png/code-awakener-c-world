@@ -114,6 +114,7 @@ globalThis.__gameApi = {
   getNpcQuestAction: typeof getNpcQuestAction === "function" ? getNpcQuestAction : undefined,
   getNearestNpcInteraction: typeof getNearestNpcInteraction === "function" ? getNearestNpcInteraction : undefined,
   handleNpcInteraction: typeof handleNpcInteraction === "function" ? handleNpcInteraction : undefined,
+  isBenignMediaPlayInterruption: typeof isBenignMediaPlayInterruption === "function" ? isBenignMediaPlayInterruption : undefined,
   C_TUTORIAL_COURSE: typeof C_TUTORIAL_COURSE !== "undefined" ? C_TUTORIAL_COURSE : undefined,
   QUEST_DATA: typeof QUEST_DATA !== "undefined" ? QUEST_DATA : undefined,
   getStonePuzzleSpec: typeof getStonePuzzleSpec === "function" ? getStonePuzzleSpec : undefined,
@@ -1170,7 +1171,13 @@ assert(/media-src[^"]*https:[^"]*https:\/\/cdn\.pixabay\.com/m.test(html) && /co
 assert(/PIXABAY_BGM_TRACKS\s*=\s*Object\.freeze\(\{[\s\S]*menu:[\s\S]*backgroundmusicmaster-gamer-menu[\s\S]*town:[\s\S]*the_mountain-8-bit-retro[\s\S]*puzzle:[\s\S]*white_records-byte-blast[\s\S]*battle:[\s\S]*backgroundmusicmaster-neon-arcade-runner[\s\S]*night:[\s\S]*mondamusic-retro-arcade-game-music/m.test(html), "BGM should map each scene to a thematically appropriate fixed Pixabay track");
 assert(/PIXABAY_BGM_THEME_ORDER\s*=\s*Object\.freeze\(\["menu", "town", "puzzle", "battle", "night"\]\)/m.test(html), "main menu music switcher should preview the fixed scene music themes in a predictable order");
 assert(/PIXABAY_SFX_TRACKS\s*=\s*Object\.freeze\(\{[\s\S]*rescopicsound-cinematic-designed-sci-fi-whoosh[\s\S]*rescopicsound-elemental-magic-spell-impact[\s\S]*audiopapkin-riser-hit-sfx/m.test(html), "SFX should use Pixabay sound-effect samples for major game events");
-assert(/startPixabayBgm\(mode = "town"[\s\S]*playResult\?\.catch[\s\S]*this\.startSynthBgm\(mode\)/m.test(html), "Pixabay BGM should fall back to synthesized music when autoplay or network loading fails");
+assert(/startPixabayBgm\(mode = "town"[\s\S]*handleHtmlAudioPlayFailure[\s\S]*this\.startSynthBgm\(mode\)/m.test(html), "Pixabay BGM should fall back to synthesized music when autoplay or network loading fails");
+assert(typeof api.isBenignMediaPlayInterruption === "function", "media play interruption classifier should be exported for regression tests");
+assert(api.isBenignMediaPlayInterruption(new Error("The play() request was interrupted by a call to pause().")), "play interrupted by pause should be treated as a recoverable browser media race");
+assert(!api.isBenignMediaPlayInterruption(new Error("Cannot read properties of undefined")), "real runtime errors should not be classified as benign media play interruptions");
+assert(!/playResult\?\.then\?\.\(\(\)\s*=>\s*this\.fadeHtmlAudio\(audio,\s*targetVolume,\s*AUDIO_CROSSFADE_MS\)\)/m.test(html), "Pixabay BGM play promise should not attach a bare then that can create an unhandled rejection");
+assert(/handleHtmlAudioPlayFailure[\s\S]*playResult\.then\(\(\)\s*=>\s*this\.fadeHtmlAudio\(audio,\s*targetVolume,\s*AUDIO_CROSSFADE_MS\)\)\.catch\(handleHtmlAudioPlayFailure\)/m.test(html), "Pixabay BGM play promise should use one handled then/catch chain");
+assert(/if \(isBenignMediaPlayInterruption\(event\.reason\)\)[\s\S]*event\.preventDefault\?\.\(\)[\s\S]*appendErrorLog\(event\.reason,[\s\S]*mediaPlayInterruption:\s*true[\s\S]*return/m.test(html), "global unhandled media play interruptions should be logged as recoverable instead of opening the fatal terminal");
 assert(/playPixabaySfx\(key,[\s\S]*fallback\?\.\(\)/m.test(html), "Pixabay SFX should fall back to existing synthesized cues when a sample cannot play");
 assert(/getPixabayMusicVolume\(track[\s\S]*Math\.min\(0\.62[\s\S]*getPixabaySfxVolume\(track\)[\s\S]*Math\.min\(0\.34/m.test(html), "Pixabay audio should stay in a clear middle volume range instead of becoming too loud or inaudible");
 assert(/audio\.loop = true/m.test(html), "fixed scene music should loop the same theme instead of randomly jumping between tracks");
@@ -1385,17 +1392,17 @@ assert(/启动公告只提示当前版本|历史版本改到主菜单查看/.tes
 assert(/STARTUP_ANNOUNCEMENT_AUTO_HIDE_MS\s*=\s*14000/m.test(html), "announcement should remain visible long enough to read the current update");
 assert(/function showStartupAnnouncement/m.test(html), "announcement should be controlled by a startup function");
 assert(/id="announcementCloseButton"/m.test(html), "announcement should include a minimal close control");
-assert(/World Build v1\.0\.34/m.test(html) || /GAME_VERSION\s*=\s*"v1\.0\.34"/m.test(html), "game version should increment when shipping a new update");
+assert(/World Build v1\.0\.35/m.test(html) || /GAME_VERSION\s*=\s*"v1\.0\.35"/m.test(html), "game version should increment when shipping a new update");
 assert(/UPDATE_HISTORY\s*=\s*Object\.freeze\(\[[\s\S]*v1\.0\.1[\s\S]*零基础新手指引[\s\S]*v1\.0\.0[\s\S]*手机端适配/m.test(html), "update history should keep detailed previous release notes");
 assert(/data-menu-action="history"[\s\S]*历史更新内容/.test(html) && /id="updateHistoryOverlay"/m.test(html) && /function renderUpdateHistoryList/m.test(html), "main menu should expose update history with detailed notes");
-assert(/GAME_VERSION\s*=\s*"v1\.0\.34"/m.test(html), "game version should increment for the PC device detection and E-key hotfix release");
+assert(/GAME_VERSION\s*=\s*"v1\.0\.35"/m.test(html), "game version should increment for the audio play interruption hotfix release");
 assert(html.includes('const OFFICIAL_SITE_HREF = "./official-site.html";') && /data-menu-action="official"[\s\S]*访问官方网站/.test(html) && /action === "official"[\s\S]*openOfficialWebsite\(\)/m.test(html), "main menu should expose and handle an official website entry");
 assert(/SYSTEM_BOOT_FORCE_RELEASE_MS\s*=\s*3200/m.test(html) && /system-boot-force-release/m.test(html) && /SYSTEM_BOOT_FORCE_RELEASE_MS \+ 1400/m.test(html), "startup boot overlay should have tracked and native failsafe release timers");
 assert(/function markAppRendered\(reason = "script-started"\)[\s\S]*classList\?\.add\("app-rendered"\)[\s\S]*staticRescue/m.test(html), "normal script startup should hide the static rescue layer");
-assert(/html\.app-rendered \.static-rescue/m.test(html) && /safeMode=true&noAudio=true&v=1\.0\.34/m.test(html), "static rescue should only appear if the app script does not render");
+assert(/html\.app-rendered \.static-rescue/m.test(html) && /safeMode=true&noAudio=true&v=1\.0\.35/m.test(html), "static rescue should only appear if the app script does not render");
 assert(/isStrictSecurityMode\(\)[\s\S]*removeItem\?\.\("codeAwakenerStrictSecurity"\)[\s\S]*params\.get\("strictSecurity"\) === "1"/m.test(html), "stale localStorage strict-security flags should not white-screen normal browsers");
-assert(/UPDATE_ANNOUNCEMENT_PAGES\s*=\s*Object\.freeze\(\[\s*\{\s*title:\s*"> 消息 \/ 本次更新"[\s\S]*v1\.0\.34[\s\S]*PC设备识别[\s\S]*E键交互[\s\S]*414374792/m.test(html), "startup announcement should show only the current v1.0.34 PC detection and E-key hotfix update");
-assert(/id="announcementPageBody"[\s\S]*v1\.0\.34：PC设备识别与E键交互热修复[\s\S]*官方Q群：414374792/m.test(initialBodyMarkup), "static startup announcement placeholder should match the current v1.0.34 update before script hydration");
+assert(/UPDATE_ANNOUNCEMENT_PAGES\s*=\s*Object\.freeze\(\[\s*\{\s*title:\s*"> 消息 \/ 本次更新"[\s\S]*v1\.0\.35[\s\S]*音频播放中断蓝屏热修复[\s\S]*play\(\) Promise[\s\S]*414374792/m.test(html), "startup announcement should show only the current v1.0.35 audio play interruption hotfix update");
+assert(/id="announcementPageBody"[\s\S]*v1\.0\.35：音频播放中断蓝屏热修复[\s\S]*官方Q群：414374792/m.test(initialBodyMarkup), "static startup announcement placeholder should match the current v1.0.35 update before script hydration");
 assert(!/公告只保留关闭、课程锁定、自由模式通关后显示/m.test(initialBodyMarkup), "static startup announcement placeholder should not show stale update copy");
 assert(/UPDATE_HISTORY\s*=\s*Object\.freeze\(\[[\s\S]*v1\.0\.31[\s\S]*QQ音乐外部模式与自定义场景音乐[\s\S]*播放\/暂停切换[\s\S]*IndexedDB[\s\S]*414374792/m.test(html), "update history should record the v1.0.31 custom music connector release");
 assert(/UPDATE_HISTORY\s*=\s*Object\.freeze\(\[[\s\S]*v1\.0\.30[\s\S]*Pixabay 真实音乐与音效接入[\s\S]*Gamer Menu[\s\S]*音乐切换器[\s\S]*外部音频失败回退[\s\S]*414374792/m.test(html), "update history should record the v1.0.30 Pixabay music and sound-effect release");
@@ -1448,7 +1455,8 @@ assert(/UPDATE_HISTORY\s*=\s*Object\.freeze\(\[[\s\S]*v1\.0\.13[\s\S]*手机版�
 assert(/UPDATE_HISTORY\s*=\s*Object\.freeze\(\[[\s\S]*v1\.0\.12[\s\S]*移除防白屏手动选项[\s\S]*CRT 雪花噪声 canvas 默认隐藏/m.test(html), "update history should record the v1.0.12 anti-white-screen option removal");
 assert(/UPDATE_HISTORY\s*=\s*Object\.freeze\(\[[\s\S]*v1\.0\.11[\s\S]*防白屏高档位白色噪点闪烁修复[\s\S]*CRT 噪声[\s\S]*每6帧[\s\S]*最多18个/m.test(html), "update history should record the v1.0.11 anti-white-noise release");
 assert(/UPDATE_HISTORY\s*=\s*Object\.freeze\(\[[\s\S]*v1\.0\.33[\s\S]*NPC交互稳定与手机代码符号助手[\s\S]*NPC交互入口[\s\S]*手机端主编辑器新增常用英文代码符号栏[\s\S]*414374792/m.test(html), "update history should retain the v1.0.33 NPC stability and symbol helper release");
-assert(/UPDATE_ANNOUNCEMENT_PAGES\s*=\s*Object\.freeze\(\[[\s\S]*v1\.0\.34[\s\S]*宽屏 Windows 触屏电脑[\s\S]*物理键盘 E 键[\s\S]*414374792/m.test(html), "startup announcement should describe the current PC detection and E-key hotfix update");
+assert(/UPDATE_HISTORY\s*=\s*Object\.freeze\(\[[\s\S]*v1\.0\.34[\s\S]*PC设备识别与E键交互热修复[\s\S]*宽屏 Windows 触屏电脑[\s\S]*物理键盘 E 键[\s\S]*414374792/m.test(html), "update history should retain the v1.0.34 PC detection and E-key hotfix release");
+assert(/UPDATE_ANNOUNCEMENT_PAGES\s*=\s*Object\.freeze\(\[[\s\S]*v1\.0\.35[\s\S]*The play\(\) request was interrupted by a call to pause\(\)[\s\S]*FATAL 运行异常[\s\S]*414374792/m.test(html), "startup announcement should describe the current audio interruption blue-screen hotfix update");
 assert(/id="announcementCloseButton"[\s\S]*>×<\/button>/m.test(html), "announcement close button should be a compact icon, not wrapping text");
 assert(/function isCTutorialChapterUnlocked/m.test(html) && /course-lesson-item[\s\S]*locked[\s\S]*disabled aria-disabled/m.test(html), "course progress should lock future chapters until the player reaches them");
 assert(/function isCTutorialFullyCompleted/m.test(html) && /const unlocked = isCTutorialFullyCompleted\(\)/m.test(html), "free mode editor should only unlock after full course completion");

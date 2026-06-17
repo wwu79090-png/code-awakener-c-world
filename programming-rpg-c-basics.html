@@ -14,7 +14,7 @@
   <meta http-equiv="Cache-Control" content="no-store, max-age=0, must-revalidate">
   <meta http-equiv="Pragma" content="no-cache">
   <meta http-equiv="Expires" content="0">
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self' file:; base-uri 'self'; object-src 'none'; frame-ancestors 'none'; script-src 'self' 'nonce-code-awakener-inline' file: 'sha256-+ZbLh5e1xIFpmF29CmH9pgrq43xFHG+hBVy2a/41n84='; style-src 'self' 'nonce-code-awakener-inline' file: 'sha256-eItKV3ej7b1xpV5MA2IqQ1Vyvr5OsUkfkuuLvlyzDPw='; style-src-attr 'unsafe-inline'; font-src 'self' file: data:; img-src 'self' file: data: blob: https://cdn.pixabay.com; media-src 'self' file: data: blob: https: http: https://cdn.pixabay.com; worker-src 'self' file: blob:; child-src 'self' file: blob:; connect-src 'self' file: http://localhost:8000 http://127.0.0.1:8000 https://cdn.pixabay.com https://pixabay.com;">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self' file:; base-uri 'self'; object-src 'none'; frame-ancestors 'none'; script-src 'self' 'nonce-code-awakener-inline' file: 'sha256-8tASa6Ogo8oq8/LnC7IGi390yCxAgAVYI6exzYm8zPw='; style-src 'self' 'nonce-code-awakener-inline' file: 'sha256-eItKV3ej7b1xpV5MA2IqQ1Vyvr5OsUkfkuuLvlyzDPw='; style-src-attr 'unsafe-inline'; font-src 'self' file: data:; img-src 'self' file: data: blob: https://cdn.pixabay.com; media-src 'self' file: data: blob: https: http: https://cdn.pixabay.com; worker-src 'self' file: blob:; child-src 'self' file: blob:; connect-src 'self' file: http://localhost:8000 http://127.0.0.1:8000 https://cdn.pixabay.com https://pixabay.com;">
   <title>编程学习 RPG：C 语言启航村</title>
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%23020617'/%3E%3Cpath d='M22 20 10 32l12 12M42 20l12 12-12 12' fill='none' stroke='%2300ff88' stroke-width='6' stroke-linecap='round' stroke-linejoin='round'/%3E%3Cpath d='m36 16-8 32' stroke='%2300ccff' stroke-width='5' stroke-linecap='round'/%3E%3C/svg%3E">
   <script src="./vendor/phaser.min.js"></script>
@@ -10845,8 +10845,8 @@
       <p>&gt; 如果这里一直空白，说明浏览器缓存、旧存档或脚本自检阻塞了启动。</p>
       <p>&gt; 使用下面入口可以绕过旧缓存并关闭重型特效，学习进度仍会保留。</p>
       <div class="static-rescue-actions">
-        <a href="./programming-rpg-c-basics.html?safeMode=true&noAudio=true&v=1.0.34">安全启动</a>
-        <a href="./programming-rpg-c-basics.html?v=1.0.34">强制刷新</a>
+        <a href="./programming-rpg-c-basics.html?safeMode=true&noAudio=true&v=1.0.35">安全启动</a>
+        <a href="./programming-rpg-c-basics.html?v=1.0.35">强制刷新</a>
       </div>
       <p>作者：杀戮 · QQ：3424636983 · 官方Q群：414374792</p>
     </div>
@@ -11050,7 +11050,7 @@
       <canvas id="menuFxCanvas" width="1280" height="720"></canvas>
       <div class="main-menu-card glass-panel">
         <h1 class="game-logo">CODE AWAKENER<br>C 语言启航村</h1>
-        <div class="version-label" id="versionLabel">World Build v1.0.34 · develop.fan C Basics</div>
+        <div class="version-label" id="versionLabel">World Build v1.0.35 · develop.fan C Basics</div>
         <div id="musicSwitcher" class="music-switcher" aria-label="音乐主题切换器">
           <div class="music-switcher-copy">
             <span class="music-switcher-kicker">♪ 当前音乐主题</span>
@@ -11798,12 +11798,12 @@ int main(void) {
       <button id="announcementCloseButton" class="announcement-close" type="button" aria-label="关闭公告">×</button>
       <h2 id="startupAnnouncementTitle" class="startup-announcement-title">> 消息 / 本次更新</h2>
       <div id="announcementPageBody" class="startup-announcement-body">
-        <p>// v1.0.34：PC设备识别与E键交互热修复。</p>
-        <p>// 宽屏 Windows 触屏电脑不再被误判为手机设备，左下虚拟摇杆和右下触摸键不会乱出现。</p>
-        <p>// 物理键盘 E 键恢复为稳定交互键，不会因为浏览器报告触摸能力而失效。</p>
-        <p>// 真手机仍保留移动触摸控制、手机符号助手和触摸交互提示。</p>
-        <p>// 新增桌面触摸、粗指针桌面和手机三类识别回归测试，防止再次误判。</p>
-        <p>// 编译器、公告和安全自检已同步到 v1.0.34，便于绕过旧缓存。</p>
+        <p>// v1.0.35：音频播放中断蓝屏热修复。</p>
+        <p>// 修复浏览器提示 The play() request was interrupted by a call to pause() 时进入终端蓝屏的问题。</p>
+        <p>// Pixabay/自定义音乐切换时的 play() Promise 改为单条已捕获链，避免派生未处理拒绝。</p>
+        <p>// 已知媒体播放/暂停竞态会记录为可恢复音频事件，不再触发 FATAL 运行异常。</p>
+        <p>// 保留音乐切换、QQ外部模式、自定义音乐和合成兜底音乐的淡入淡出体验。</p>
+        <p>// 编译器、公告和安全自检已同步到 v1.0.35，便于绕过旧缓存。</p>
         <p>// 作者：杀戮，QQ：3424636983。</p>
         <p>// 官方Q群：414374792。</p>
         <p>// 作者：杀戮</p>
@@ -12309,24 +12309,36 @@ int main() {
     const SAVE_CLEAR_CONFIRM_MS = 3000;
     const STARTUP_ANNOUNCEMENT_AUTO_HIDE_MS = 14000;
     const SYSTEM_BOOT_FORCE_RELEASE_MS = 3200;
-    const GAME_VERSION = "v1.0.34";
+    const GAME_VERSION = "v1.0.35";
     const OFFICIAL_SITE_HREF = "./official-site.html";
     const UPDATE_ANNOUNCEMENT_PAGES = Object.freeze([
       {
         title: "> 消息 / 本次更新",
         lines: [
-          "// v1.0.34：PC设备识别与E键交互热修复。",
-          "// 宽屏 Windows 触屏电脑会识别为桌面触摸设备，不再显示手机虚拟摇杆和右下角触摸键。",
-          "// 浏览器只报告粗指针或触摸点时，也会结合 Windows 桌面UA和宽屏尺寸判断，不再把电脑当手机。",
-          "// 物理键盘 E 键恢复为稳定交互键，即使设备支持触摸也不会被移动模式禁用。",
-          "// 真手机仍保留移动触摸控制、手机符号助手和触摸交互提示。",
-          "// 新增桌面触摸、粗指针桌面、窄屏桌面和手机四类识别回归测试。",
-          "// 安全启动、强制刷新、CSP 和脚本自检已同步到 v1.0.34，方便绕过旧缓存。",
+          "// v1.0.35：音频播放中断蓝屏热修复。",
+          "// 修复浏览器提示 The play() request was interrupted by a call to pause() 时进入终端蓝屏的问题。",
+          "// Pixabay/自定义音乐切换时的 play() Promise 改为单条已捕获链，避免派生未处理拒绝。",
+          "// 已知媒体播放/暂停竞态会记录为可恢复音频事件，不再触发 FATAL 运行异常。",
+          "// 全局未处理 Promise 边界会识别这类浏览器媒体竞态，保留日志但不打断游戏。",
+          "// 音乐切换、QQ外部模式、自定义音乐和合成兜底音乐仍保留淡入淡出体验。",
+          "// 安全启动、强制刷新、CSP 和脚本自检已同步到 v1.0.35，方便绕过旧缓存。",
           "// 作者：杀戮，QQ：3424636983，官方Q群：414374792。"
         ]
       }
     ]);
     const UPDATE_HISTORY = Object.freeze([
+      {
+        version: "v1.0.35",
+        date: "2026-06-17",
+        title: "音频播放中断蓝屏热修复",
+        details: [
+          "修复浏览器媒体层在 play() 尚未完成时被 pause() 打断，导出日志出现 The play() request was interrupted by a call to pause() 的问题。",
+          "Pixabay/自定义 BGM 的 play() Promise 改为单条 then/catch 链，避免 catch 已处理后裸 then 再派生未处理拒绝。",
+          "全局 unhandledrejection 边界会把已知媒体播放/暂停竞态记录为可恢复音频事件，不再弹出 FATAL 终端蓝屏。",
+          "保留音乐切换、QQ外部模式、自定义音乐和 WebAudio 合成兜底的淡入淡出体验。",
+          "新增媒体播放中断分类和 Promise 链回归测试。官方Q群：414374792。"
+        ]
+      },
       {
         version: "v1.0.34",
         date: "2026-06-17",
@@ -13521,7 +13533,7 @@ return 0;`;
       directSaveAs: "reduced-by-inline-resources"
     });
     const SECURITY_CONFIG = Object.freeze({
-      expectedScriptHash: "Xyd+K1gbr04VwWSP8IOk19PP34XI0XVGMyB708catJU=",
+      expectedScriptHash: "UFZUkGIvPMDwVCo7N7trFl+nFPI0gB/eTBTObhlnHMo=",
       selfCheckIntervalMs: 45000,
       tamperRefreshMs: 5000,
       devToolsRefreshMs: 2000,
@@ -14573,6 +14585,11 @@ return 0;`;
       }
       if (typeof visualAlertForMutedAudio === "function") visualAlertForMutedAudio("error");
       return entry;
+    }
+
+    function isBenignMediaPlayInterruption(errorLike) {
+      const message = String(errorLike?.message || errorLike || "");
+      return /play\(\) request was interrupted/i.test(message) && /pause\(\)|load request|new load request/i.test(message);
     }
 
     class TimerTracker {
@@ -17625,9 +17642,7 @@ return 0;`;
           }
           if (this.hasMusicIntent()) this.startSynthBgm(mode);
         };
-        const playResult = audio.play();
-        this.fadeSynthBgmTo(0, AUDIO_CROSSFADE_MS);
-        playResult?.catch?.((error) => {
+        const handleHtmlAudioPlayFailure = (error) => {
           this.pixabayBgmFailedAt = performance.now();
           errorRingBuffer.push(error, ERROR_LEVELS.recoverable, { action: "startPixabayBgm", track: track.id });
           this.cleanupHtmlAudio(audio);
@@ -17637,9 +17652,14 @@ return 0;`;
             this.pixabayBgmMode = "";
           }
           if (this.hasMusicIntent()) this.startSynthBgm(mode);
-        });
-        playResult?.then?.(() => this.fadeHtmlAudio(audio, targetVolume, AUDIO_CROSSFADE_MS));
-        if (!playResult?.then) this.fadeHtmlAudio(audio, targetVolume, AUDIO_CROSSFADE_MS);
+        };
+        const playResult = audio.play();
+        this.fadeSynthBgmTo(0, AUDIO_CROSSFADE_MS);
+        if (playResult?.then) {
+          playResult.then(() => this.fadeHtmlAudio(audio, targetVolume, AUDIO_CROSSFADE_MS)).catch(handleHtmlAudioPlayFailure);
+        } else {
+          this.fadeHtmlAudio(audio, targetVolume, AUDIO_CROSSFADE_MS);
+        }
         return true;
       }
 
@@ -21881,6 +21901,11 @@ int main(void) {
       });
       window.addEventListener("unhandledrejection", (event) => {
         event.preventDefault?.();
+        if (isBenignMediaPlayInterruption(event.reason)) {
+          errorRingBuffer.push(event.reason, ERROR_LEVELS.recoverable, { source: "unhandledrejection", mediaPlayInterruption: true });
+          appendErrorLog(event.reason, { source: "unhandledrejection", severity: ERROR_LEVELS.recoverable, mediaPlayInterruption: true });
+          return;
+        }
         errorRingBuffer.push(event.reason, ERROR_LEVELS.recoverable, { source: "unhandledrejection" });
         appendErrorLog(event.reason, { source: "unhandledrejection" });
         showGlobalErrorDialog(event.reason, { source: "unhandledrejection" });
@@ -32340,6 +32365,12 @@ ${item.code}
     });
 
     window.addEventListener("unhandledrejection", (event) => {
+      if (isBenignMediaPlayInterruption(event.reason)) {
+        event.preventDefault?.();
+        errorRingBuffer.push(event.reason, ERROR_LEVELS.recoverable, { source: "fatal-unhandledrejection", mediaPlayInterruption: true });
+        appendErrorLog(event.reason, { source: "fatal-unhandledrejection", severity: ERROR_LEVELS.recoverable, mediaPlayInterruption: true });
+        return;
+      }
       errorRingBuffer.push(event.reason || "Promise 执行失败", ERROR_LEVELS.fatal, { source: "unhandledrejection" });
       showFatalError(event.reason || "Promise 执行失败");
     });
