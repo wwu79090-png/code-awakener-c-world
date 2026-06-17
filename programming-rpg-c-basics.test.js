@@ -907,6 +907,31 @@ assert(!/id="infoEquipText"/m.test(initialBodyMarkup), "side info menu should no
 assert(/function getDialogTextDelay/m.test(html), "dialog typewriter speed should be driven by settings");
 assert(/function generateNpcPortraitDataUrl/m.test(html), "dialogue should generate high-resolution NPC portraits locally");
 assert(/canvas\.width\s*=\s*128[\s\S]*canvas\.height\s*=\s*128/m.test(html), "NPC portrait generator should draw at least 128x128 images");
+assert(/id="variableTheaterOverlay"/m.test(html), "variable theater overlay should exist for the first-time opening");
+assert(/class="variable-theater-panel"/m.test(html), "variable theater should render a bottom dialogue panel");
+assert(/VARIABLE_THEATER_ATLASES\s*=\s*Object\.freeze/m.test(html), "variable theater should define embedded WebP sprite atlases");
+assert(/repairer:\s*\{[\s\S]*mime:\s*"image\/webp"[\s\S]*logicalWidth:\s*1200[\s\S]*logicalHeight:\s*1600/m.test(html), "repairer atlas should be a 1200x1600 WebP portrait atlas");
+assert(/mentor:\s*\{[\s\S]*bodyEntity[\s\S]*codeRibbon[\s\S]*wiseSmile[\s\S]*beardStroke[\s\S]*frown[\s\S]*pupilContract/m.test(html), "mentor atlas should expose body/ribbon layers and four expressions");
+assert(/merchant:\s*\{[\s\S]*tradePush[\s\S]*transparentCoat/m.test(html), "merchant atlas should expose transparent clothing and trade push parts");
+assert(/tutorialWorker:\s*\{[\s\S]*goggles/m.test(html), "tutorial NPC atlas should expose the shared workwear and goggles template");
+assert(/VARIABLE_THEATER_KEYWORDS\s*=\s*Object\.freeze\(\["变量",\s*"int",\s*"printf"\]\)/m.test(html), "variable theater should highlight the required variables dialogue keywords");
+assert(/class VariableTheaterController/m.test(html), "variable theater controller should coordinate the opening flow");
+assert(/function showVariableOpeningTheater/m.test(html), "first-time opening should be routed through the variable theater");
+assert(/variablesTheaterSeen:\s*false/m.test(html), "progress state should persist whether the variable theater has been seen");
+assert(/showNewPlayerCourseIntro[\s\S]*showVariableOpeningTheater/m.test(html), "new player course intro should start the variable theater");
+{
+  const creationCompleteBlock = html.match(/async function OnCreationComplete[\s\S]*?state\.handoffDone = true;/)?.[0] || "";
+  assert(/showNewPlayerCourseIntro\(\)/m.test(creationCompleteBlock), "new character world entry should also trigger the variable theater");
+}
+assert(!/showNewPlayerCourseIntro[\s\S]*showOpeningNarrativeTerminal\(startMentorDialogue\)/m.test(html), "new player opening should no longer directly start the old overview terminal flow");
+assert(/body\.variable-theater-open/m.test(html), "theater should expose a body state class");
+assert(/@media\s*\(max-width:\s*800px\)[\s\S]*\.variable-theater-overlay/m.test(html), "variable theater should have a mobile layout below 800px");
+{
+  const mobileFullscreenPromptBlock = html.match(/function showMobileFullscreenPrompt[\s\S]*?return true;\s*\n\s*\}/)?.[0] || "";
+  assert(/variable-theater-open/m.test(mobileFullscreenPromptBlock), "mobile fullscreen prompt should not cover the variable theater");
+}
+assert(/VARIABLE_THEATER_MOBILE_FPS_TARGET\s*=\s*60/m.test(html), "mobile theater should target at least 60fps");
+assert(!/VARIABLE_THEATER_MOBILE_FPS_TARGET\s*=\s*30/m.test(html), "mobile theater must not lock to 30fps");
 assert(/islandToastQueue/m.test(html) && /function renderNextIslandToast/m.test(html), "dynamic-island toasts should be queued");
 assert(/#hud \.hud-top[\s\S]*display:\s*none !important/m.test(html), "legacy persistent HUD should be hidden from the central canvas");
 assert(/#questTracker,[\s\S]*display:\s*none !important/m.test(html), "legacy quest tracker should be hidden as a persistent playfield widget");
