@@ -14,7 +14,7 @@
   <meta http-equiv="Cache-Control" content="no-store, max-age=0, must-revalidate">
   <meta http-equiv="Pragma" content="no-cache">
   <meta http-equiv="Expires" content="0">
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self' file:; base-uri 'self'; object-src 'none'; frame-ancestors 'none'; script-src 'self' 'nonce-code-awakener-inline' file: 'sha256-HdBSDxk85PodkfHyM37+x+8IjcmPBGOLM0OcYYJiTqI='; style-src 'self' 'nonce-code-awakener-inline' file: 'sha256-eItKV3ej7b1xpV5MA2IqQ1Vyvr5OsUkfkuuLvlyzDPw='; style-src-attr 'unsafe-inline'; font-src 'self' file: data:; img-src 'self' file: data: blob: https://cdn.pixabay.com; media-src 'self' file: data: blob: https: http: https://cdn.pixabay.com; worker-src 'self' file: blob:; child-src 'self' file: blob:; connect-src 'self' file: http://localhost:8000 http://127.0.0.1:8000 https://cdn.pixabay.com https://pixabay.com;">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self' file:; base-uri 'self'; object-src 'none'; frame-ancestors 'none'; script-src 'self' 'nonce-code-awakener-inline' file: 'sha256-+ZbLh5e1xIFpmF29CmH9pgrq43xFHG+hBVy2a/41n84='; style-src 'self' 'nonce-code-awakener-inline' file: 'sha256-eItKV3ej7b1xpV5MA2IqQ1Vyvr5OsUkfkuuLvlyzDPw='; style-src-attr 'unsafe-inline'; font-src 'self' file: data:; img-src 'self' file: data: blob: https://cdn.pixabay.com; media-src 'self' file: data: blob: https: http: https://cdn.pixabay.com; worker-src 'self' file: blob:; child-src 'self' file: blob:; connect-src 'self' file: http://localhost:8000 http://127.0.0.1:8000 https://cdn.pixabay.com https://pixabay.com;">
   <title>编程学习 RPG：C 语言启航村</title>
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%23020617'/%3E%3Cpath d='M22 20 10 32l12 12M42 20l12 12-12 12' fill='none' stroke='%2300ff88' stroke-width='6' stroke-linecap='round' stroke-linejoin='round'/%3E%3Cpath d='m36 16-8 32' stroke='%2300ccff' stroke-width='5' stroke-linecap='round'/%3E%3C/svg%3E">
   <script src="./vendor/phaser.min.js"></script>
@@ -10845,8 +10845,8 @@
       <p>&gt; 如果这里一直空白，说明浏览器缓存、旧存档或脚本自检阻塞了启动。</p>
       <p>&gt; 使用下面入口可以绕过旧缓存并关闭重型特效，学习进度仍会保留。</p>
       <div class="static-rescue-actions">
-        <a href="./programming-rpg-c-basics.html?safeMode=true&noAudio=true&v=1.0.33">安全启动</a>
-        <a href="./programming-rpg-c-basics.html?v=1.0.33">强制刷新</a>
+        <a href="./programming-rpg-c-basics.html?safeMode=true&noAudio=true&v=1.0.34">安全启动</a>
+        <a href="./programming-rpg-c-basics.html?v=1.0.34">强制刷新</a>
       </div>
       <p>作者：杀戮 · QQ：3424636983 · 官方Q群：414374792</p>
     </div>
@@ -11050,7 +11050,7 @@
       <canvas id="menuFxCanvas" width="1280" height="720"></canvas>
       <div class="main-menu-card glass-panel">
         <h1 class="game-logo">CODE AWAKENER<br>C 语言启航村</h1>
-        <div class="version-label" id="versionLabel">World Build v1.0.33 · develop.fan C Basics</div>
+        <div class="version-label" id="versionLabel">World Build v1.0.34 · develop.fan C Basics</div>
         <div id="musicSwitcher" class="music-switcher" aria-label="音乐主题切换器">
           <div class="music-switcher-copy">
             <span class="music-switcher-kicker">♪ 当前音乐主题</span>
@@ -11798,12 +11798,12 @@ int main(void) {
       <button id="announcementCloseButton" class="announcement-close" type="button" aria-label="关闭公告">×</button>
       <h2 id="startupAnnouncementTitle" class="startup-announcement-title">> 消息 / 本次更新</h2>
       <div id="announcementPageBody" class="startup-announcement-body">
-        <p>// v1.0.33：NPC交互稳定与手机代码符号助手。</p>
-        <p>// NPC交互链路加入容错保护，缺失任务状态或临时坐标时不再触发系统故障重启。</p>
-        <p>// 手机端主编辑器新增常用英文代码符号栏，方便输入 ;、()、{}、#、引号等 C 语言符号。</p>
-        <p>// 主角创建终端同步加入英文符号助手，零基础创角时不用频繁切键盘页面。</p>
-        <p>// PC端编辑器明确提示代码符号要使用英文半角，中文文字仍可写在字符串里。</p>
-        <p>// 编译器、公告和安全自检已同步到 v1.0.33，便于绕过旧缓存。</p>
+        <p>// v1.0.34：PC设备识别与E键交互热修复。</p>
+        <p>// 宽屏 Windows 触屏电脑不再被误判为手机设备，左下虚拟摇杆和右下触摸键不会乱出现。</p>
+        <p>// 物理键盘 E 键恢复为稳定交互键，不会因为浏览器报告触摸能力而失效。</p>
+        <p>// 真手机仍保留移动触摸控制、手机符号助手和触摸交互提示。</p>
+        <p>// 新增桌面触摸、粗指针桌面和手机三类识别回归测试，防止再次误判。</p>
+        <p>// 编译器、公告和安全自检已同步到 v1.0.34，便于绕过旧缓存。</p>
         <p>// 作者：杀戮，QQ：3424636983。</p>
         <p>// 官方Q群：414374792。</p>
         <p>// 作者：杀戮</p>
@@ -12309,24 +12309,36 @@ int main() {
     const SAVE_CLEAR_CONFIRM_MS = 3000;
     const STARTUP_ANNOUNCEMENT_AUTO_HIDE_MS = 14000;
     const SYSTEM_BOOT_FORCE_RELEASE_MS = 3200;
-    const GAME_VERSION = "v1.0.33";
+    const GAME_VERSION = "v1.0.34";
     const OFFICIAL_SITE_HREF = "./official-site.html";
     const UPDATE_ANNOUNCEMENT_PAGES = Object.freeze([
       {
         title: "> 消息 / 本次更新",
         lines: [
-          "// v1.0.33：NPC交互稳定与手机代码符号助手。",
-          "// NPC交互链路加入防崩保护：缺失任务状态、玩家对象或NPC临时坐标时，只跳过本次交互，不再触发系统故障重启。",
-          "// 手机端主编辑器新增常用英文代码符号栏，可快速输入 ;、()、{}、[]、#、引号、运算符等 C 语言符号。",
-          "// 主角创建终端同步加入英文符号助手，创角代码不用频繁切换手机键盘符号页。",
-          "// PC端编辑器显示英文半角符号提示，提醒代码语法符号不要用中文全角。",
-          "// NPC气泡逐字显示增加失效保护，场景切换或对象销毁后不会把旧回调冒泡成全局错误。",
-          "// 安全启动、强制刷新、CSP 和脚本自检已同步到 v1.0.33，方便绕过旧缓存。",
+          "// v1.0.34：PC设备识别与E键交互热修复。",
+          "// 宽屏 Windows 触屏电脑会识别为桌面触摸设备，不再显示手机虚拟摇杆和右下角触摸键。",
+          "// 浏览器只报告粗指针或触摸点时，也会结合 Windows 桌面UA和宽屏尺寸判断，不再把电脑当手机。",
+          "// 物理键盘 E 键恢复为稳定交互键，即使设备支持触摸也不会被移动模式禁用。",
+          "// 真手机仍保留移动触摸控制、手机符号助手和触摸交互提示。",
+          "// 新增桌面触摸、粗指针桌面、窄屏桌面和手机四类识别回归测试。",
+          "// 安全启动、强制刷新、CSP 和脚本自检已同步到 v1.0.34，方便绕过旧缓存。",
           "// 作者：杀戮，QQ：3424636983，官方Q群：414374792。"
         ]
       }
     ]);
     const UPDATE_HISTORY = Object.freeze([
+      {
+        version: "v1.0.34",
+        date: "2026-06-17",
+        title: "PC设备识别与E键交互热修复",
+        details: [
+          "统一设备识别系统会区分手机触控主输入、桌面触摸设备和普通桌面，宽屏 Windows 触屏电脑不再进入 mobile-input。",
+          "浏览器只报告粗指针或触摸点时，会结合桌面UA与宽屏尺寸兜底，避免左下虚拟摇杆和右下触摸键误出现在电脑上。",
+          "物理键盘 E 键交互不再被移动模式条件包住，电脑玩家靠近 NPC、石碑或入口后可直接按 E 交互。",
+          "指针锁定只在真正手机触摸模式下关闭，桌面触摸电脑仍可保留鼠标捕获体验。",
+          "新增桌面触摸、粗指针桌面、窄屏桌面和手机识别回归测试。官方Q群：414374792。"
+        ]
+      },
       {
         version: "v1.0.33",
         date: "2026-06-17",
@@ -13509,7 +13521,7 @@ return 0;`;
       directSaveAs: "reduced-by-inline-resources"
     });
     const SECURITY_CONFIG = Object.freeze({
-      expectedScriptHash: "YKTarN7KDAL7yVAIjWu9MpFUFuNp4PkftVcme18YR0U=",
+      expectedScriptHash: "Xyd+K1gbr04VwWSP8IOk19PP34XI0XVGMyB708catJU=",
       selfCheckIntervalMs: 45000,
       tamperRefreshMs: 5000,
       devToolsRefreshMs: 2000,
@@ -15734,10 +15746,69 @@ return 0;`;
       return PERFORMANCE_MODES[mode] || PERFORMANCE_MODES.high;
     }
 
+    function collectInputEnvironment() {
+      const match = (query) => Boolean(globalThis.matchMedia?.(query)?.matches);
+      const nav = globalThis.navigator || window.navigator || {};
+      const width = Math.max(0, Number(window.innerWidth || document.documentElement?.clientWidth || 0));
+      const height = Math.max(0, Number(window.innerHeight || document.documentElement?.clientHeight || 0));
+      const maxTouchPoints = Number(nav.maxTouchPoints || 0);
+      return {
+        width,
+        height,
+        hasTouch: Boolean(("ontouchstart" in window) || maxTouchPoints > 0),
+        coarsePointer: match("(pointer: coarse)") || match("(any-pointer: coarse)"),
+        finePointer: match("(pointer: fine)") || match("(any-pointer: fine)"),
+        hover: match("(hover: hover)") || match("(any-hover: hover)"),
+        userAgent: String(nav.userAgent || ""),
+        platform: String(nav.platform || ""),
+        maxTouchPoints
+      };
+    }
+
+    function classifyInputEnvironment(env = collectInputEnvironment()) {
+      const width = Math.max(0, Number(env.width || 0));
+      const height = Math.max(0, Number(env.height || 0));
+      const shortSide = Math.min(width || 0, height || 0);
+      const longSide = Math.max(width || 0, height || 0);
+      const maxTouchPoints = Number(env.maxTouchPoints || 0);
+      const hasTouch = Boolean(env.hasTouch || maxTouchPoints > 0);
+      const coarsePointer = Boolean(env.coarsePointer);
+      const finePointer = Boolean(env.finePointer);
+      const hover = Boolean(env.hover);
+      const userAgent = String(env.userAgent || "");
+      const mobileUserAgent = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini|Mobile|Tablet/i.test(userAgent);
+      const iPadDesktopUserAgent = /Macintosh/i.test(userAgent) && hasTouch && maxTouchPoints > 1 && !finePointer && !hover;
+      const desktopUserAgent = /Windows NT|Win64|Win32|Macintosh|Linux x86_64|CrOS/i.test(userAgent) && !mobileUserAgent && !iPadDesktopUserAgent;
+      const keyboardCapable = Boolean(finePointer || hover);
+      const desktopSizedViewport = Boolean(shortSide >= 700 && longSide >= 1000);
+      const desktopLike = Boolean(desktopUserAgent && (keyboardCapable || desktopSizedViewport));
+      const narrowViewport = Boolean(shortSide > 0 && shortSide <= 820);
+      const phoneLikeViewport = Boolean(shortSide > 0 && shortSide <= 520 && longSide <= 980);
+      const touchPrimary = Boolean(hasTouch && coarsePointer && !keyboardCapable);
+      const mobileInput = Boolean(hasTouch && !desktopLike && (mobileUserAgent || iPadDesktopUserAgent || phoneLikeViewport || touchPrimary));
+      const compactEditor = Boolean(mobileInput || width <= 1100);
+      return {
+        mobileInput,
+        compactEditor,
+        keyboardPrimary: !mobileInput || keyboardCapable,
+        touchOnly: Boolean(mobileInput && !keyboardCapable),
+        touchPrimary,
+        desktopLike,
+        desktopSizedViewport,
+        narrowViewport,
+        hasTouch,
+        coarsePointer,
+        finePointer,
+        hover
+      };
+    }
+
+    function isKeyboardPrimaryInputProfile(profile = classifyInputEnvironment()) {
+      return Boolean(profile?.keyboardPrimary || profile?.desktopLike || (!profile?.mobileInput && !profile?.touchOnly));
+    }
+
     function isMobileTouchViewport() {
-      const coarse = globalThis.matchMedia?.("(pointer: coarse)")?.matches;
-      const touch = "ontouchstart" in window || (globalThis.navigator?.maxTouchPoints || 0) > 0;
-      return Boolean(document.body?.classList?.contains("mobile-input") || ((window.innerWidth <= 768) && touch) || coarse);
+      return Boolean(document.body?.classList?.contains("mobile-input") || classifyInputEnvironment().mobileInput);
     }
 
     function getInteractionPromptVerb() {
@@ -21434,15 +21505,14 @@ int main(void) {
     }
 
     function detectMobileInputMode() {
-      const coarse = globalThis.matchMedia?.("(pointer: coarse)")?.matches;
-      const narrow = window.innerWidth <= 768;
-      const touch = "ontouchstart" in window || (globalThis.navigator?.maxTouchPoints || 0) > 0;
-      const active = Boolean(narrow || coarse || touch);
-      document.body.classList.toggle("mobile-input", active);
-      applyMobileEditorLayout(active);
-      refreshEditorDeviceSymbolAssist(active);
-      if (active) showMobileTouchInteractionNotice();
-      return active;
+      const profile = classifyInputEnvironment();
+      document.body.classList.toggle("mobile-input", profile.mobileInput);
+      document.body.classList.toggle("desktop-touch-input", Boolean(profile.desktopLike && profile.hasTouch));
+      document.body.dataset.inputProfile = profile.mobileInput ? "mobile-touch" : profile.hasTouch ? "desktop-touch" : "desktop";
+      applyMobileEditorLayout(profile.compactEditor);
+      refreshEditorDeviceSymbolAssist(profile.mobileInput);
+      if (profile.mobileInput) showMobileTouchInteractionNotice();
+      return profile.mobileInput;
     }
 
     function getEditorDeviceSymbolHint(isMobile = document.body.classList.contains("mobile-input")) {
@@ -21498,7 +21568,7 @@ int main(void) {
       return true;
     }
 
-    function applyMobileEditorLayout(force = detectMobileInputMode()) {
+    function applyMobileEditorLayout(force = classifyInputEnvironment().compactEditor) {
       document.body.classList.toggle("editor-mobile-compact", Boolean(force));
       if (force && gameState?.editorOpen) {
         updateMobileEditorViewport();
@@ -23371,7 +23441,7 @@ ${item.code}
 
     function requestGamePointerLock(event = null) {
       if (gameState.menuOpen || gameState.editorOpen || gameState.dialogOpen || gameState.paused) return false;
-      if (document.body.classList.contains("mobile-input") || (navigator.maxTouchPoints || 0) > 0) return false;
+      if (isMobileTouchViewport()) return false;
       const target = event?.target;
       if (isPointerLockUiTarget(target)) return false;
       if (target && target.id !== "game" && target.tagName !== "CANVAS" && !target.closest?.("#game")) return false;
@@ -40771,7 +40841,7 @@ ${item.code}
 
         showPrompt(getContextualInteractionHint(interaction));
 
-        if (!isMobileTouchViewport() && Phaser.Input.Keyboard.JustDown(this.keyE)) {
+        if (Phaser.Input.Keyboard.JustDown(this.keyE)) {
           this.performCurrentInteraction("keyboard", interaction);
         }
         } catch (error) {

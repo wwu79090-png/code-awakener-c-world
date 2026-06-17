@@ -108,6 +108,8 @@ globalThis.__gameApi = {
   applyManualEditorKeyOperation: typeof applyManualEditorKeyOperation === "function" ? applyManualEditorKeyOperation : undefined,
   manualEditorOperationFromBeforeInput: typeof manualEditorOperationFromBeforeInput === "function" ? manualEditorOperationFromBeforeInput : undefined,
   COMMON_ASCII_CODE_SYMBOLS: typeof COMMON_ASCII_CODE_SYMBOLS !== "undefined" ? COMMON_ASCII_CODE_SYMBOLS : undefined,
+  classifyInputEnvironment: typeof classifyInputEnvironment === "function" ? classifyInputEnvironment : undefined,
+  isKeyboardPrimaryInputProfile: typeof isKeyboardPrimaryInputProfile === "function" ? isKeyboardPrimaryInputProfile : undefined,
   getEditorDeviceSymbolHint: typeof getEditorDeviceSymbolHint === "function" ? getEditorDeviceSymbolHint : undefined,
   getNpcQuestAction: typeof getNpcQuestAction === "function" ? getNpcQuestAction : undefined,
   getNearestNpcInteraction: typeof getNearestNpcInteraction === "function" ? getNearestNpcInteraction : undefined,
@@ -495,7 +497,8 @@ assert(/body\.mobile-input \.vscode-window\s*\{[\s\S]*grid-template-rows:\s*minm
 assert(/@media\s*\(max-width:\s*1100px\),\s*\(pointer:\s*coarse\)\s*\{[\s\S]*body\.mobile-input \.vscode-window/m.test(html), "tablet-sized editor viewports should share the compact single-column editor layout");
 assert(/body\.mobile-input \.console-actions\s*\{[\s\S]*display:\s*grid[\s\S]*grid-template-areas:\s*"run reset close"[\s\S]*"label status status"/m.test(html), "mobile editor action buttons should remain visible in a fixed bottom grid");
 assert(/body\.mobile-input #codeInput\s*\{[\s\S]*overflow:\s*auto[\s\S]*-webkit-overflow-scrolling:\s*touch[\s\S]*overscroll-behavior:\s*contain/m.test(html), "mobile editor code input should be an internally scrollable input viewport");
-assert(/const active = Boolean\(narrow \|\| coarse \|\| touch\)/m.test(html), "narrow editor viewports should use the mobile editor layout even when touch detection is unavailable");
+assert(/const compactEditor = Boolean\(mobileInput \|\| width <= 1100\)/m.test(html), "narrow editor viewports should use compact editor layout without forcing phone controls");
+assert(/document\.body\.classList\.toggle\("mobile-input", profile\.mobileInput\)/m.test(html), "mobile controls should be driven only by the classified mobile touch profile");
 assert(/body\.mobile-input \.vscode-window\.code-block-guided \.editor-main\s*\{[\s\S]*grid-template-columns:\s*minmax\(0,\s*1fr\)/m.test(html), "mobile guided-code editor should collapse explicit desktop columns so the code area fills the screen");
 assert(/body\.mobile-input \.code-wrap\s*\{[\s\S]*grid-template-columns:\s*clamp\(28px,\s*8vw,\s*34px\)\s+minmax\(0,\s*1fr\)/m.test(html), "mobile editor line-number gutter should stay compact so code remains visible on narrow phones");
 assert(typeof api.getEditorDeviceSymbolHint === "function", "editor should expose a testable device-specific symbol hint helper");
@@ -1382,17 +1385,17 @@ assert(/启动公告只提示当前版本|历史版本改到主菜单查看/.tes
 assert(/STARTUP_ANNOUNCEMENT_AUTO_HIDE_MS\s*=\s*14000/m.test(html), "announcement should remain visible long enough to read the current update");
 assert(/function showStartupAnnouncement/m.test(html), "announcement should be controlled by a startup function");
 assert(/id="announcementCloseButton"/m.test(html), "announcement should include a minimal close control");
-assert(/World Build v1\.0\.33/m.test(html) || /GAME_VERSION\s*=\s*"v1\.0\.33"/m.test(html), "game version should increment when shipping a new update");
+assert(/World Build v1\.0\.34/m.test(html) || /GAME_VERSION\s*=\s*"v1\.0\.34"/m.test(html), "game version should increment when shipping a new update");
 assert(/UPDATE_HISTORY\s*=\s*Object\.freeze\(\[[\s\S]*v1\.0\.1[\s\S]*零基础新手指引[\s\S]*v1\.0\.0[\s\S]*手机端适配/m.test(html), "update history should keep detailed previous release notes");
 assert(/data-menu-action="history"[\s\S]*历史更新内容/.test(html) && /id="updateHistoryOverlay"/m.test(html) && /function renderUpdateHistoryList/m.test(html), "main menu should expose update history with detailed notes");
-assert(/GAME_VERSION\s*=\s*"v1\.0\.33"/m.test(html), "game version should increment for the NPC stability and symbol helper release");
+assert(/GAME_VERSION\s*=\s*"v1\.0\.34"/m.test(html), "game version should increment for the PC device detection and E-key hotfix release");
 assert(html.includes('const OFFICIAL_SITE_HREF = "./official-site.html";') && /data-menu-action="official"[\s\S]*访问官方网站/.test(html) && /action === "official"[\s\S]*openOfficialWebsite\(\)/m.test(html), "main menu should expose and handle an official website entry");
 assert(/SYSTEM_BOOT_FORCE_RELEASE_MS\s*=\s*3200/m.test(html) && /system-boot-force-release/m.test(html) && /SYSTEM_BOOT_FORCE_RELEASE_MS \+ 1400/m.test(html), "startup boot overlay should have tracked and native failsafe release timers");
 assert(/function markAppRendered\(reason = "script-started"\)[\s\S]*classList\?\.add\("app-rendered"\)[\s\S]*staticRescue/m.test(html), "normal script startup should hide the static rescue layer");
-assert(/html\.app-rendered \.static-rescue/m.test(html) && /safeMode=true&noAudio=true&v=1\.0\.33/m.test(html), "static rescue should only appear if the app script does not render");
+assert(/html\.app-rendered \.static-rescue/m.test(html) && /safeMode=true&noAudio=true&v=1\.0\.34/m.test(html), "static rescue should only appear if the app script does not render");
 assert(/isStrictSecurityMode\(\)[\s\S]*removeItem\?\.\("codeAwakenerStrictSecurity"\)[\s\S]*params\.get\("strictSecurity"\) === "1"/m.test(html), "stale localStorage strict-security flags should not white-screen normal browsers");
-assert(/UPDATE_ANNOUNCEMENT_PAGES\s*=\s*Object\.freeze\(\[\s*\{\s*title:\s*"> 消息 \/ 本次更新"[\s\S]*v1\.0\.33[\s\S]*NPC交互稳定[\s\S]*手机代码符号助手[\s\S]*414374792/m.test(html), "startup announcement should show only the current v1.0.33 NPC stability and symbol helper update");
-assert(/id="announcementPageBody"[\s\S]*v1\.0\.33：NPC交互稳定与手机代码符号助手[\s\S]*官方Q群：414374792/m.test(initialBodyMarkup), "static startup announcement placeholder should match the current v1.0.33 update before script hydration");
+assert(/UPDATE_ANNOUNCEMENT_PAGES\s*=\s*Object\.freeze\(\[\s*\{\s*title:\s*"> 消息 \/ 本次更新"[\s\S]*v1\.0\.34[\s\S]*PC设备识别[\s\S]*E键交互[\s\S]*414374792/m.test(html), "startup announcement should show only the current v1.0.34 PC detection and E-key hotfix update");
+assert(/id="announcementPageBody"[\s\S]*v1\.0\.34：PC设备识别与E键交互热修复[\s\S]*官方Q群：414374792/m.test(initialBodyMarkup), "static startup announcement placeholder should match the current v1.0.34 update before script hydration");
 assert(!/公告只保留关闭、课程锁定、自由模式通关后显示/m.test(initialBodyMarkup), "static startup announcement placeholder should not show stale update copy");
 assert(/UPDATE_HISTORY\s*=\s*Object\.freeze\(\[[\s\S]*v1\.0\.31[\s\S]*QQ音乐外部模式与自定义场景音乐[\s\S]*播放\/暂停切换[\s\S]*IndexedDB[\s\S]*414374792/m.test(html), "update history should record the v1.0.31 custom music connector release");
 assert(/UPDATE_HISTORY\s*=\s*Object\.freeze\(\[[\s\S]*v1\.0\.30[\s\S]*Pixabay 真实音乐与音效接入[\s\S]*Gamer Menu[\s\S]*音乐切换器[\s\S]*外部音频失败回退[\s\S]*414374792/m.test(html), "update history should record the v1.0.30 Pixabay music and sound-effect release");
@@ -1444,7 +1447,8 @@ assert(!/id="announcementExpandButton"/m.test(html) && !/announcementExpandButto
 assert(/UPDATE_HISTORY\s*=\s*Object\.freeze\(\[[\s\S]*v1\.0\.13[\s\S]*手机版设置入口[\s\S]*误开菜单[\s\S]*公告折叠状态/m.test(html), "update history should record the v1.0.13 mobile settings and announcement fix");
 assert(/UPDATE_HISTORY\s*=\s*Object\.freeze\(\[[\s\S]*v1\.0\.12[\s\S]*移除防白屏手动选项[\s\S]*CRT 雪花噪声 canvas 默认隐藏/m.test(html), "update history should record the v1.0.12 anti-white-screen option removal");
 assert(/UPDATE_HISTORY\s*=\s*Object\.freeze\(\[[\s\S]*v1\.0\.11[\s\S]*防白屏高档位白色噪点闪烁修复[\s\S]*CRT 噪声[\s\S]*每6帧[\s\S]*最多18个/m.test(html), "update history should record the v1.0.11 anti-white-noise release");
-assert(/UPDATE_ANNOUNCEMENT_PAGES\s*=\s*Object\.freeze\(\[[\s\S]*v1\.0\.33[\s\S]*NPC交互链路加入防崩保护[\s\S]*常用英文代码符号栏[\s\S]*414374792/m.test(html), "startup announcement should describe the current NPC stability and symbol helper update");
+assert(/UPDATE_HISTORY\s*=\s*Object\.freeze\(\[[\s\S]*v1\.0\.33[\s\S]*NPC交互稳定与手机代码符号助手[\s\S]*NPC交互入口[\s\S]*手机端主编辑器新增常用英文代码符号栏[\s\S]*414374792/m.test(html), "update history should retain the v1.0.33 NPC stability and symbol helper release");
+assert(/UPDATE_ANNOUNCEMENT_PAGES\s*=\s*Object\.freeze\(\[[\s\S]*v1\.0\.34[\s\S]*宽屏 Windows 触屏电脑[\s\S]*物理键盘 E 键[\s\S]*414374792/m.test(html), "startup announcement should describe the current PC detection and E-key hotfix update");
 assert(/id="announcementCloseButton"[\s\S]*>×<\/button>/m.test(html), "announcement close button should be a compact icon, not wrapping text");
 assert(/function isCTutorialChapterUnlocked/m.test(html) && /course-lesson-item[\s\S]*locked[\s\S]*disabled aria-disabled/m.test(html), "course progress should lock future chapters until the player reaches them");
 assert(/function isCTutorialFullyCompleted/m.test(html) && /const unlocked = isCTutorialFullyCompleted\(\)/m.test(html), "free mode editor should only unlock after full course completion");
@@ -1830,6 +1834,53 @@ assert(/id="mobileControls"/m.test(html) && /id="virtualJoystick"/m.test(html) &
 assert(/id="mobileInteractButton"[^>]*aria-label="触摸交互"[\s\S]{0,120}>触摸<\/button>/m.test(html), "mobile interact control should be labeled as touch interaction instead of E");
 assert(/body\.mobile-input\.is-settings-open \.mobile-controls[\s\S]*display:\s*none/m.test(html) && /document\.body\.classList\.add\("is-settings-open"\)/m.test(html), "mobile controls should hide while settings is open");
 assert(/function detectMobileInputMode/m.test(html), "mobile mode should be detected by width and touch capability");
+assert(typeof api.classifyInputEnvironment === "function", "input environment classification should be testable");
+assert(typeof api.isKeyboardPrimaryInputProfile === "function", "keyboard-primary input profile helper should be testable");
+{
+  const touchPc = api.classifyInputEnvironment({
+    width: 1366,
+    height: 768,
+    hasTouch: true,
+    coarsePointer: true,
+    finePointer: true,
+    hover: true,
+    userAgent: "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/126 Safari/537.36"
+  });
+  assert(!touchPc.mobileInput && touchPc.keyboardPrimary && !touchPc.touchOnly, "wide Windows touch PCs should stay in keyboard mode instead of showing phone controls");
+  assert(api.isKeyboardPrimaryInputProfile(touchPc), "wide touch PCs should keep E-key interaction enabled");
+  const coarseOnlyWindowsPc = api.classifyInputEnvironment({
+    width: 1366,
+    height: 768,
+    hasTouch: true,
+    coarsePointer: true,
+    finePointer: false,
+    hover: false,
+    userAgent: "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/126 Safari/537.36"
+  });
+  assert(!coarseOnlyWindowsPc.mobileInput && coarseOnlyWindowsPc.keyboardPrimary, "wide Windows PCs should not become phone controls only because the browser reports coarse touch without fine pointer");
+  const phone = api.classifyInputEnvironment({
+    width: 390,
+    height: 844,
+    hasTouch: true,
+    coarsePointer: true,
+    finePointer: false,
+    hover: false,
+    userAgent: "Mozilla/5.0 (iPhone; CPU iPhone OS 17_0 like Mac OS X) AppleWebKit/605.1.15 Mobile/15E148 Safari/604.1"
+  });
+  assert(phone.mobileInput && phone.touchOnly && !phone.keyboardPrimary, "phones should still enable mobile touch controls and touch interaction hints");
+  const narrowDesktop = api.classifyInputEnvironment({
+    width: 640,
+    height: 900,
+    hasTouch: false,
+    coarsePointer: false,
+    finePointer: true,
+    hover: true,
+    userAgent: "Mozilla/5.0 (Windows NT 10.0; Win64; x64)"
+  });
+  assert(!narrowDesktop.mobileInput && narrowDesktop.compactEditor && narrowDesktop.keyboardPrimary, "narrow desktop windows may use compact editor layout without switching to phone controls");
+}
+assert(!/!isMobileTouchViewport\(\)\s*&&\s*Phaser\.Input\.Keyboard\.JustDown\(this\.keyE\)/m.test(html), "physical E-key interaction must not be disabled just because touch UI is available");
+assert(/if\s*\(Phaser\.Input\.Keyboard\.JustDown\(this\.keyE\)\)\s*\{[\s\S]*this\.performCurrentInteraction\("keyboard", interaction\)/m.test(html), "physical E-key interaction should remain available on desktop and hybrid devices");
 assert(/function showMobileTouchInteractionNotice/m.test(html) && /触摸才是交互/m.test(html), "mobile detection should explain that touch is the interaction method");
 assert(/function applyMobileEditorLayout/m.test(html), "small screens should switch editor to compact layout");
 assert(/function updateMobileEditorViewport/m.test(html) && /visualViewport/m.test(html) && /mobile-keyboard-open/m.test(html), "mobile editor should track the visual viewport when the soft keyboard opens");
@@ -1974,7 +2025,7 @@ assert(/codeGenesisInput\?\.addEventListener\("compositionend", handleCodeGenesi
 assert(/body\.mobile-input \.file-tree,[\s\S]*body\.mobile-input \.task-panel,[\s\S]*body\.mobile-input \.code-explain-panel/m.test(html), "mobile editor should collapse side panels for a single-column code-first layout");
 assert(/body\.mobile-input \.code-genesis-overlay\.active[\s\S]*grid-template-columns:\s*1fr/m.test(html), "mobile code genesis should use a single-column layout");
 assert(/body\.mobile-input\.is-editor-open \.mobile-controls/m.test(html), "mobile joystick should hide while the editor is open");
-assert(/navigator\.maxTouchPoints[\s\S]*return false;[\s\S]*requestPointerLock/m.test(html), "touch devices should not request pointer lock");
+assert(/function requestGamePointerLock[\s\S]*if \(isMobileTouchViewport\(\)\) return false;[\s\S]*requestPointerLock/m.test(html), "mobile touch mode should not request pointer lock while desktop touch PCs can keep mouse capture available");
 assert(/function handleManualEditorPointerDown/m.test(html), "editor should manually place the cursor on pointer down");
 assert(/function handleManualEditorDoubleClick/m.test(html), "editor should manually select words on double click");
 assert(/if \(!touchPointer\) event\.preventDefault\(\)/m.test(html), "touch pointer down should not suppress the mobile soft keyboard");
