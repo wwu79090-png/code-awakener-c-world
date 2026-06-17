@@ -14,7 +14,7 @@
   <meta http-equiv="Cache-Control" content="no-store, max-age=0, must-revalidate">
   <meta http-equiv="Pragma" content="no-cache">
   <meta http-equiv="Expires" content="0">
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self' file:; base-uri 'self'; object-src 'none'; frame-ancestors 'none'; script-src 'self' 'nonce-code-awakener-inline' file: 'sha256-hGB0SmUV4ljvi/+K4wALp7HWlb3j61JDT5JHagFad1Q='; style-src 'self' 'nonce-code-awakener-inline' file: 'sha256-K7+2PGjMcfloKHQpVEzuwP4olMk696bwWZVV6Qfdscg='; style-src-attr 'unsafe-inline'; font-src 'self' file: data:; img-src 'self' file: data: blob:; media-src 'self' file: data: blob:; worker-src 'self' file: blob:; child-src 'self' file: blob:; connect-src 'self' file: http://localhost:8000 http://127.0.0.1:8000;">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self' file:; base-uri 'self'; object-src 'none'; frame-ancestors 'none'; script-src 'self' 'nonce-code-awakener-inline' file: 'sha256-eVLbpWX6cm423V1tUD8me1nnVSct8sOTDVHzf8Fepeg='; style-src 'self' 'nonce-code-awakener-inline' file: 'sha256-K7+2PGjMcfloKHQpVEzuwP4olMk696bwWZVV6Qfdscg='; style-src-attr 'unsafe-inline'; font-src 'self' file: data:; img-src 'self' file: data: blob:; media-src 'self' file: data: blob:; worker-src 'self' file: blob:; child-src 'self' file: blob:; connect-src 'self' file: http://localhost:8000 http://127.0.0.1:8000;">
   <title>编程学习 RPG：C 语言启航村</title>
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%23020617'/%3E%3Cpath d='M22 20 10 32l12 12M42 20l12 12-12 12' fill='none' stroke='%2300ff88' stroke-width='6' stroke-linecap='round' stroke-linejoin='round'/%3E%3Cpath d='m36 16-8 32' stroke='%2300ccff' stroke-width='5' stroke-linecap='round'/%3E%3C/svg%3E">
   <script src="./vendor/phaser.min.js"></script>
@@ -11384,6 +11384,7 @@ int main() {
           "// 修复 file 本地打开时 CSP、style、script、自检哈希不同步导致的白屏。",
           "// 正常启动会立刻隐藏静态救援层；异常时仍保留安全启动和强制刷新入口。",
           "// 音乐停止双 BGM 叠加，music bus 与程序化音乐导演整体削峰，减少背景音乐炸响。",
+          "// 移除背景音乐循环低频 bass/drone/noise pulse，解决一直“咚咚咚”的重复节拍。",
           "// 音效系统加入柔和包络、独立低通、事件冷却和爆音削峰，减少重复乱叫。",
           "// HP 过低时系统会自动使用进化碎片恢复，菜单里的手动碎片回复按钮已移除。",
           "// 作者：杀戮，QQ：3424636983，官方Q群：414374792。"
@@ -11399,6 +11400,7 @@ int main() {
           "修复本地 file 地址打开时，源码已改但 CSP/style/script/脚本自检哈希未同步导致的白屏。",
           "新增启动渲染标记：主脚本正常执行后立即隐藏静态救援层，避免网页正常却误弹 CODE AWAKENER 救援提示。",
           "音乐停止双 BGM 叠加，降低 music bus、三层 BGM、程序化音乐导演和事件变奏增益；音效加入独立 SFX 低通、柔和包络、事件冷却和爆音削峰。",
+          "移除背景音乐里的循环低频 bass、drone 和 noise pulse，避免无论音量大小都能听到的“咚咚咚”重复节拍。",
           "菜单移除“碎片回复HP”，系统检测到 HP 过低时会自动消耗进化碎片恢复。官方Q群：414374792。"
         ]
       },
@@ -12498,7 +12500,7 @@ return 0;`;
       directSaveAs: "reduced-by-inline-resources"
     });
     const SECURITY_CONFIG = Object.freeze({
-      expectedScriptHash: "NnT+1I/HIH1NKlF6W8y4XU2l/zYbT3W889fXGThlQws=",
+      expectedScriptHash: "ip3PmkR9Z4kwNwiUHUVW+boqgN/JpP1lgn650YU0hfo=",
       selfCheckIntervalMs: 45000,
       tamperRefreshMs: 5000,
       devToolsRefreshMs: 2000,
@@ -16236,8 +16238,8 @@ return 0;`;
           return layer;
         };
         this.musicLayers = {
-          drone: createLayer(0.22),
-          ambience: createLayer(0.16),
+          drone: createLayer(0),
+          ambience: createLayer(0.08),
           theme: createLayer(0.34)
         };
         return this.musicLayers;
@@ -16261,12 +16263,12 @@ return 0;`;
         if (!ctx || !layers) return false;
         const complexity = gameState.settings.musicComplexity || "full";
         const mixes = {
-          town: { drone: 0.28, ambience: 0.2, theme: 0.38 },
-          puzzle: { drone: 0.3, ambience: 0.14, theme: 0.24 },
-          battle: { drone: 0.34, ambience: 0.16, theme: 0.42 }
+          town: { drone: 0, ambience: 0.08, theme: 0.34 },
+          puzzle: { drone: 0, ambience: 0.06, theme: 0.22 },
+          battle: { drone: 0, ambience: 0.06, theme: 0.34 }
         };
         const mix = { ...(mixes[mode] || mixes.town) };
-        if (focus) Object.assign(mix, { drone: 0.26, ambience: 0.08, theme: 0.12 });
+        if (focus) Object.assign(mix, { drone: 0, ambience: 0.04, theme: 0.12 });
         if (complexity === "reduced") mix.ambience *= 0.5;
         if (complexity === "off") Object.assign(mix, { drone: 0, ambience: 0, theme: 0 });
         Object.entries(mix).forEach(([key, value]) => {
@@ -16514,14 +16516,10 @@ return 0;`;
           this.lastBgmPingAt = performance.now();
           const section = this.getAdaptiveBgmSection(mode);
           const melody = section.melody || themeSections[0].melody;
-          const bass = section.bass || themeSections[0].bass;
           const counter = section.counter || [];
           const note = melody[this.noteIndex % melody.length];
-          const bassNote = bass[this.noteIndex % bass.length];
           const counterEvery = section.counterEvery || 4;
-          const accentEvery = section.accentEvery || 6;
           this.tone(note, 0.12, this.getGentleMusicWave(section.wave || "triangle"), mode === "battle" ? 0.052 : 0.044, layers.theme || "music", Math.sin(this.noteIndex * 0.7) * 0.18);
-          if (this.noteIndex % 2 === 0) this.tone(bassNote, 0.18, this.getGentleMusicWave(section.bassWave || "sine"), mode === "puzzle" ? 0.032 : 0.028, layers.drone || "music", -0.14);
           if (counter.length && this.noteIndex % counterEvery === 1) {
             this.tone(counter[this.noteIndex % counter.length], 0.1, "sine", 0.014, layers.theme || "music", 0.16);
           }
@@ -16530,7 +16528,6 @@ return 0;`;
               window.setTimeout(() => this.tone(note * ratio, 0.12, "sine", 0.01, layers.theme || "music", 0.14), index * 72);
             });
           }
-          if (this.noteIndex % accentEvery === 1) this.noise(0.01, mode === "battle" ? 0.004 : 0.0025, 0, layers.ambience || null, "music");
           const nextInterval = this.getBgmTickInterval(section, mode);
           this.noteIndex += 1;
           this.bgmTimer = window.setTimeout(tick, nextInterval);
@@ -16679,8 +16676,7 @@ return 0;`;
       if (ambientSoundTimer) return;
       ambientSoundTimer = window.setInterval(() => {
         if (gameState.menuOpen) return;
-        audioManager.noise(0.02, 0.004, 0, null, "music");
-        if (Math.random() > 0.64) audioManager.tone(72 + Math.random() * 16, 0.1, "sine", 0.006, "music");
+        if (Math.random() > 0.74) audioManager.tone(620 + Math.random() * 120, 0.08, "sine", 0.003, "music");
       }, 2600);
     }
 
@@ -35799,7 +35795,6 @@ ${item.code}
         this.maybeSuspendWhenIdle();
         if (this.step % 32 === 31) return this.restBeat();
         this.playHarmony(ctx);
-        if (this.rhythm[this.step % this.rhythm.length]) this.playNoisePulse(ctx);
         this.playMotifNote(ctx, this.motif[this.step % this.motif.length]);
         this.step += 1;
       }
@@ -35807,16 +35802,15 @@ ${item.code}
       playHarmony(ctx) {
         const harmony = MUSIC_HARMONY_PROGRESSION[Math.floor(this.step / 8) % 4];
         const root = harmony.root * (this.step % 32 > 24 && harmony.substitutes ? 0.9439 : 1);
-        this.playUnison(root, 0.3, this.waveType(), 0.004 + this.moodIntensity * 0.004);
         if (this.step % 4 === 0) {
           (harmony.chord || [0, 3, 7]).forEach((semi, index) => {
             window.setTimeout(() => {
-              this.playUnison(root * midiRatio(semi + 12), 0.14, "sine", 0.0025 + this.moodIntensity * 0.0025);
+              this.playUnison(root * midiRatio(semi + 19), 0.16, "sine", 0.002 + this.moodIntensity * 0.002);
             }, index * 70);
           });
         }
         if (this.step % 16 === 12 && harmony.substitutes) {
-          this.playUnison(root * midiRatio(-1), 0.22, "triangle", 0.003 + this.moodIntensity * 0.003);
+          this.playUnison(root * midiRatio(12), 0.18, "sine", 0.002 + this.moodIntensity * 0.002);
         }
       }
 
@@ -35831,10 +35825,7 @@ ${item.code}
       }
 
       playNoisePulse(ctx) {
-        if (gameState.settings.musicComplexity === "reduced") return;
-        this.manager.noise(0.01, this.mood === WORLD_MOOD.battle ? 0.0028 : 0.0016, Math.sin(this.step) * 0.5, null, "music");
-        this.musicGain.gain.setTargetAtTime(this.targetGain() * 0.68, ctx.currentTime, 0.035);
-        this.musicGain.gain.setTargetAtTime(this.targetGain(), ctx.currentTime + 0.08, 0.09);
+        return false;
       }
 
       playUnison(frequency, duration, type, gainValue) {

@@ -1119,6 +1119,9 @@ assert(/this\.musicBusScale\s*=\s*0\.76/m.test(html) && /this\.musicEventGain\s*
 assert(/startCyberLofiBgm\(\)[\s\S]*audioManager\.playBgm\("town"\)[\s\S]*director\?\.stop\?\.\(\)/m.test(html), "startup music should not run adaptive BGM and procedural director as simultaneous beds");
 assert(/getGentleMusicWave\(type = "triangle"\)[\s\S]*square[\s\S]*sawtooth[\s\S]*"triangle"/m.test(html), "BGM playback should soften square and sawtooth waves");
 assert(/BGM_VARIATION_QUEUE_MAX\s*=\s*3/m.test(html), "BGM event variation queue should be bounded to prevent stacked music bursts");
+assert(/drone:\s*createLayer\(0\)/m.test(html) && !/bassNote/.test(html), "BGM should not play a repeating low-frequency bass/drone pulse");
+assert(/function startAmbientSoundscape\(\)[\s\S]*620 \+ Math\.random\(\) \* 120/m.test(html) && !/72 \+ Math\.random\(\) \* 16/.test(html), "ambient music should avoid low-frequency thumping tones");
+assert(/playNoisePulse\(ctx\)\s*\{\s*return false;\s*\}/m.test(html), "procedural music should not emit recurring noise pulses");
 assert(/function playLongCompileOvertone\(\)[\s\S]*linearRampToValueAtTime\(targetGain[\s\S]*setTargetAtTime\(0\.0001/m.test(html), "long compile overtone should use a soft envelope instead of an instant gain jump");
 assert(/canPlayEvent\(key, cooldownMs = 120\)/m.test(html) && /shouldDropSfxBurst\(frequency = 0, type = "sine", gainValue = 0\)/m.test(html), "SFX events should have cooldown and burst protection");
 assert(/typewriterTick\(\)[\s\S]*canPlayEvent\?\.\("typewriterTick"[\s\S]*"triangle"/m.test(html), "typewriter sounds should avoid harsh high-gain square waves");
