@@ -110,6 +110,14 @@ async function exerciseCodeGenesis(page) {
   return "code genesis completed";
 }
 
+async function confirmPostGenesisSetupForSmoke(page) {
+  const active = await page.locator("#postGenesisSetupOverlay.active").count().catch(() => 0);
+  if (!active) return "post-genesis setup already skipped";
+  await page.locator("#postGenesisSetupConfirmButton").click({ timeout: 10000 });
+  await page.waitForFunction(() => !document.querySelector("#postGenesisSetupOverlay.active"), null, { timeout: 10000 });
+  return "post-genesis setup confirmed";
+}
+
 async function runCase(testCase) {
   const errors = [];
   const warnings = [];
@@ -138,8 +146,9 @@ async function runCase(testCase) {
     await page.waitForTimeout(700);
   }
 
-  const interaction = await exerciseCodeGenesis(page);
-  await page.waitForTimeout(800);
+  const genesisInteraction = await exerciseCodeGenesis(page);
+  const postGenesisInteraction = await confirmPostGenesisSetupForSmoke(page);
+  await page.waitForTimeout(1600);
 
   const state = await page.evaluate(() => {
     const visible = (selector) => {
@@ -157,6 +166,9 @@ async function runCase(testCase) {
       boot: visible("#systemBootOverlay"),
       menu: visible("#mainMenuOverlay"),
       genesis: visible("#codeGenesisOverlay"),
+      postGenesis: visible("#postGenesisSetupOverlay"),
+      errorDialogVisible: visible("#globalErrorDialog"),
+      errorToastVisible: visible("#errorRecoveryToast"),
       gameText: document.body.innerText.slice(0, 600)
     };
   });
@@ -168,6 +180,8 @@ async function runCase(testCase) {
   const relevantErrors = errors.filter(isRelevantConsoleError);
   if (!state.shell) throw new Error(`${testCase.label}: #game-shell 未渲染`);
   if (!state.canvas && !state.menu && !state.genesis && !state.boot) throw new Error(`${testCase.label}: 首屏疑似空白`);
+  if (state.postGenesis) throw new Error(`${testCase.label}: 创角后设置仍然停留，未真正进入世界`);
+  if (state.errorDialogVisible || state.errorToastVisible) throw new Error(`${testCase.label}: 错误保护层可见`);
   if (relevantErrors.length) {
     throw new Error(`${testCase.label}: 控制台存在运行错误：${JSON.stringify(relevantErrors.slice(0, 4))}`);
   }
@@ -176,7 +190,10 @@ async function runCase(testCase) {
     browser: testCase.label,
     url: targetUrl,
     state,
-    interaction,
+    interaction: {
+      genesis: genesisInteraction,
+      postGenesis: postGenesisInteraction
+    },
     warnings: warnings.slice(0, 6),
     screenshotPath
   };

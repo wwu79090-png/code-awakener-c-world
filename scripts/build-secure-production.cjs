@@ -15,14 +15,11 @@ function optionalRequire(name) {
   }
 }
 
-function extractMainScript(html) {
-  const match = html.match(/<script>([\s\S]*?)<\/script>\s*<\/body>/);
-  if (!match) throw new Error("Main inline script not found");
-  return match[1];
-}
-
 function replaceMainScript(html, script) {
-  return html.replace(/<script>([\s\S]*?)<\/script>\s*<\/body>/, `<script>${script}</script></body>`);
+  const scripts = [...String(html).matchAll(/<script(?![^>]*\bsrc=)[^>]*>([\s\S]*?)<\/script>/g)];
+  if (!scripts.length) throw new Error("Main inline script not found");
+  const last = scripts[scripts.length - 1];
+  return String(html).slice(0, last.index) + `<script>${script}</script>` + String(html).slice(last.index + last[0].length);
 }
 
 function extractInlineBlock(html, tag) {
@@ -98,7 +95,8 @@ function refreshSecurityHashes(html) {
 async function build() {
   fs.mkdirSync(outDir, { recursive: true });
   const html = fs.readFileSync(sourcePath, "utf8");
-  const script = extractMainScript(html);
+  const script = extractMainInlineScript(html);
+  if (!script) throw new Error("Main inline script not found");
   const minified = await terserMinify(normalizeScriptForSelfCheck(script));
   const hardened = obfuscateScript(minified);
   const compactHtml = replaceMainScript(html, hardened)

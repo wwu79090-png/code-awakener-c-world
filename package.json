@@ -1,6 +1,6 @@
 {
   "name": "code-awakener-c-world",
-  "version": "0.1.1",
+  "version": "1.1.0",
   "private": true,
   "description": "A C language learning RPG with an embeddable teaching SDK and desktop shell.",
   "main": "desktop/electron-main.cjs",
@@ -16,6 +16,9 @@
     "audit:animation": "node scripts/animation-leak-audit.cjs",
     "fuzz:save": "node scripts/fuzz-save-data.cjs",
     "mobile:smoke": "node scripts/mobile-browser-smoke.cjs",
+    "diagnose": "node scripts/diagnose-project.cjs",
+    "diagnose:ui": "node scripts/diagnose-project.cjs --ui",
+    "diagnose:all": "node scripts/diagnose-project.cjs --all",
     "desktop:dev": "electron desktop/electron-main.cjs",
     "desktop:package": "node scripts/package-desktop.cjs"
   },

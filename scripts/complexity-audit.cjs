@@ -1,9 +1,8 @@
 const fs = require("fs");
+const { extractInlineScripts } = require("./audit-html-utils.cjs");
 
 const html = fs.readFileSync("programming-rpg-c-basics.html", "utf8");
-const script = [...html.matchAll(/<script>([\s\S]*?)<\/script>/g)]
-  .map((match) => match[1])
-  .join("\n");
+const script = extractInlineScripts(html);
 
 const thresholds = {
   maxFunctionLines: 30,

@@ -1,10 +1,9 @@
 const fs = require("fs");
+const { extractInlineScripts } = require("./audit-html-utils.cjs");
 
 const htmlPath = "programming-rpg-c-basics.html";
 const html = fs.readFileSync(htmlPath, "utf8");
-const script = [...html.matchAll(/<script>([\s\S]*?)<\/script>/g)]
-  .map((match) => match[1])
-  .join("\n");
+const script = extractInlineScripts(html);
 
 const report = [];
 

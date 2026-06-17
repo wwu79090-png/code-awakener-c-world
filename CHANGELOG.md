@@ -2,6 +2,14 @@
 
 ## Unreleased
 
+## v1.1.0 - 2026-06-17
+
+- Added a post-character-creation five-act Memory Core cinematic using OffscreenCanvas layers for code rain, grid, scene objects, particles, actors, and UI effects.
+- Added C concept story acts for variables, input/output, conditions, loops, and functions with entrance, compile interaction, and exit beats.
+- Added a Web Audio cinematic layer with main/BGM/SFX routing, smooth mood transitions, panning, reverb, and randomized keyboard tick pitch.
+- Added the second-act rational/emotional choice and persisted it for later mentor tone.
+- Hardened quality audits so nonce inline scripts are scanned, and extended mobile smoke coverage through post-genesis world handoff.
+
 ## v1.0.20 - 2026-06-17
 
 - Fixed the mobile stone compiler layout so the editor stays inside the visible safe area on narrow phones, tall phones, and tablet landscape viewports.

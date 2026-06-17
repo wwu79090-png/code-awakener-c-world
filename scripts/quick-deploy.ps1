@@ -6,6 +6,8 @@ param(
 
 Set-StrictMode -Version Latest
 $ErrorActionPreference = "Stop"
+$ProgressPreference = "SilentlyContinue"
+$PSModuleAutoloadingPreference = "None"
 
 $Repo = $env:GH_REPO
 if (-not $Repo) {

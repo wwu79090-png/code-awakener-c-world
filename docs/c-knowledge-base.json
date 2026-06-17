@@ -1,0 +1,65 @@
+{
+  "int": {
+    "type": "keyword",
+    "category": "data-types",
+    "description": "int 定义整数变量，适合保存没有小数的数值。",
+    "example": "int hp = 100;",
+    "common_mistakes": ["声明后忘记分号", "把字符串赋给 int", "重复定义同名变量"]
+  },
+  "char": {
+    "type": "keyword",
+    "category": "data-types",
+    "description": "char 保存单个字符；字符串通常用 char 数组。",
+    "example": "char grade = 'A';",
+    "common_mistakes": ["字符和字符串引号混用", "数组长度不足"]
+  },
+  "if": {
+    "type": "keyword",
+    "category": "conditions",
+    "description": "if 根据条件决定是否执行代码块。",
+    "example": "if (hp > 0) { return 0; }",
+    "common_mistakes": ["把 = 当成 == 使用", "条件括号缺失"]
+  },
+  "for": {
+    "type": "keyword",
+    "category": "loops",
+    "description": "for 循环适合已知次数的重复。",
+    "example": "for (int i = 0; i < 5; i++) { printf(\"%d\", i); }",
+    "common_mistakes": ["漏写分号", "下标越界"]
+  },
+  "function": {
+    "type": "syntax",
+    "category": "functions",
+    "description": "函数把一段逻辑命名并复用。",
+    "example": "int add(int a, int b) { return a + b; }",
+    "common_mistakes": ["返回类型和 return 值不匹配", "函数定义后没有调用"]
+  },
+  "array": {
+    "type": "syntax",
+    "category": "arrays",
+    "description": "数组保存一组同类型元素，下标从 0 开始。",
+    "example": "int scores[3] = {90, 80, 70};",
+    "common_mistakes": ["访问越界", "忘记数组长度"]
+  },
+  "pointer": {
+    "type": "syntax",
+    "category": "pointers",
+    "description": "指针保存地址，* 表示间接访问，& 表示取地址。",
+    "example": "int *ptr = &value;",
+    "common_mistakes": ["未初始化就解引用", "忘记 NULL 检查"]
+  },
+  "struct": {
+    "type": "keyword",
+    "category": "structs",
+    "description": "struct 把多个不同类型字段组合成一个结构。",
+    "example": "struct Player { int hp; char name[16]; };",
+    "common_mistakes": ["定义后忘记分号", "成员访问符 . 和 -> 混用"]
+  },
+  "comment": {
+    "type": "syntax",
+    "category": "comments",
+    "description": "注释解释代码意图，不参与运行。",
+    "example": "// 这里保存玩家生命值",
+    "common_mistakes": ["块注释没有关闭", "把有效代码写进注释里"]
+  }
+}

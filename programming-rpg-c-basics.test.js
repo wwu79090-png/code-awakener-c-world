@@ -1,5 +1,6 @@
 const fs = require("fs");
 const crypto = require("crypto");
+const { execFileSync } = require("child_process");
 const vm = require("vm");
 
 function makeElement() {
@@ -149,6 +150,13 @@ if (typeof self !== "undefined") self.__gameApi = globalThis.__gameApi;`, contex
   return context.__gameApi;
 }
 
+function runJsonScript(scriptPath) {
+  const output = execFileSync(process.execPath, [scriptPath], { encoding: "utf8" });
+  const jsonMatch = output.match(/\{[\s\S]*\}/);
+  assert(jsonMatch, `${scriptPath} should print a JSON report`);
+  return JSON.parse(jsonMatch[0]);
+}
+
 function assert(condition, message) {
   if (!condition) throw new Error(message);
 }
@@ -193,6 +201,23 @@ assert(api.DEVELOP_FAN_C_LANGUAGE_PATH[0].title === "C 语言概述", "develop.f
 assert(api.DEVELOP_FAN_C_LANGUAGE_PATH[14].title === "高级主题和最佳实践", "develop.fan path should end with advanced best practices");
 assert(api.chapterById.overview.coursePathIndex === 1 && api.chapterById.hello.coursePathIndex === 2 && api.chapterById.syntax.coursePathIndex === 3, "first playable chapters should follow develop.fan ordering");
 assert(api.chapterById["best-practices"]?.coursePathIndex === 15, "final chapter should map to develop.fan section 15");
+
+assert(/id="memoryCoreCinematicOverlay"/m.test(html) && /id="memoryCoreCinematicCanvas"/m.test(html), "post-creation memory core cinematic overlay should exist");
+assert(/class MemoryCoreCinematicEngine/m.test(html), "memory core cinematic should expose an engine class");
+assert(/new OffscreenCanvas\(/m.test(html), "memory core cinematic renderer must use OffscreenCanvas layers");
+assert(/MEMORY_CORE_LAYER_ORDER\s*=\s*Object\.freeze\(\[\s*"codeRain",\s*"groundGrid",\s*"sceneObjects",\s*"particles",\s*"actors",\s*"uiFx"\s*\]\)/m.test(html), "memory core cinematic should render six layers in the required order");
+assert(/MEMORY_CORE_ENV_PARTICLE_LIMIT\s*=\s*800/m.test(html) && /MEMORY_CORE_INTERACTION_PARTICLE_LIMIT\s*=\s*200/m.test(html), "memory core particles should expose 800 environment and 200 interaction caps");
+assert(/distance\s*>\s*500[\s\S]*0\.1[\s\S]*0\.5/m.test(html), "memory core particles should implement distance LOD");
+assert(/requestAnimationFrame\(/m.test(html) && /frameCost\s*>\s*20/m.test(html) && /1000\s*\/\s*30/m.test(html), "memory core cinematic should use rAF and degrade to 30 FPS when frames exceed 20ms");
+assert(/class MemoryCoreAudioEngine/m.test(html) && /AudioContext[\s\S]*sampleRate:\s*44100/m.test(html), "memory core audio engine should create a 44100Hz AudioContext");
+assert(/mainGain[\s\S]*bgmGain[\s\S]*sfxGain/m.test(html) && /setTargetAtTime/m.test(html), "memory core audio should expose main, BGM, and SFX gain routing with smooth transitions");
+assert(/StereoPannerNode|createStereoPanner/m.test(html) && /ConvolverNode|createConvolver/m.test(html), "memory core audio should implement spatial panning and reverb");
+assert(/randomPitchCents[\s\S]*200/m.test(html), "memory core keyboard SFX should randomize pitch within +/-200 cents");
+assert(/MEMORY_CORE_ACTS\s*=\s*Object\.freeze\(\[[\s\S]*变量[\s\S]*输入输出[\s\S]*条件[\s\S]*循环[\s\S]*函数/m.test(html), "memory core cinematic should define five C concept acts");
+assert(/id:\s*"rational"/m.test(html) && /id:\s*"emotional"/m.test(html) && /memoryCoreChoice/m.test(html), "second memory core act should persist rational/emotional player choice");
+assert(/async function playMemoryCoreCinematicBridge/m.test(html), "creation flow should expose a memory core cinematic bridge");
+assert(/await openPostGenesisSetupOverlay\(character\);[\s\S]*await playMemoryCoreCinematicBridge\(character\);[\s\S]*const loaded = await LoadNextSceneWithTimeout/m.test(html), "character creation should play the memory core cinematic before loading the world");
+assert(/GAME_VERSION\s*=\s*"v1\.1\.0"/m.test(html) && /五幕记忆内核剧情/m.test(html), "startup announcement should be updated for the formal five-act cinematic release");
 
 assert(api.compressSavePayload, "save compressor should be exported for tests");
 assert(api.decompressSavePayload, "save decompressor should be exported for tests");
@@ -1464,17 +1489,17 @@ assert(/启动公告只提示当前版本|历史版本改到主菜单查看/.tes
 assert(/STARTUP_ANNOUNCEMENT_AUTO_HIDE_MS\s*=\s*14000/m.test(html), "announcement should remain visible long enough to read the current update");
 assert(/function showStartupAnnouncement/m.test(html), "announcement should be controlled by a startup function");
 assert(/id="announcementCloseButton"/m.test(html), "announcement should include a minimal close control");
-assert(/World Build v1\.0\.39/m.test(html) || /GAME_VERSION\s*=\s*"v1\.0\.39"/m.test(html), "game version should increment when shipping a new update");
+assert(/World Build v1\.1\.0/m.test(html) || /GAME_VERSION\s*=\s*"v1\.1\.0"/m.test(html), "game version should increment when shipping a new update");
 assert(/UPDATE_HISTORY\s*=\s*Object\.freeze\(\[[\s\S]*v1\.0\.1[\s\S]*零基础新手指引[\s\S]*v1\.0\.0[\s\S]*手机端适配/m.test(html), "update history should keep detailed previous release notes");
 assert(/data-menu-action="history"[\s\S]*历史更新内容/.test(html) && /id="updateHistoryOverlay"/m.test(html) && /function renderUpdateHistoryList/m.test(html), "main menu should expose update history with detailed notes");
-assert(/GAME_VERSION\s*=\s*"v1\.0\.39"/m.test(html), "game version should increment for the audio and responsiveness release");
+assert(/GAME_VERSION\s*=\s*"v1\.1\.0"/m.test(html), "game version should increment for the five-act cinematic release");
 assert(html.includes('const OFFICIAL_SITE_HREF = "./official-site.html";') && /data-menu-action="official"[\s\S]*访问官方网站/.test(html) && /action === "official"[\s\S]*openOfficialWebsite\(\)/m.test(html), "main menu should expose and handle an official website entry");
 assert(/SYSTEM_BOOT_FORCE_RELEASE_MS\s*=\s*3200/m.test(html) && /system-boot-force-release/m.test(html) && /SYSTEM_BOOT_FORCE_RELEASE_MS \+ 1400/m.test(html), "startup boot overlay should have tracked and native failsafe release timers");
 assert(/function markAppRendered\(reason = "script-started"\)[\s\S]*classList\?\.add\("app-rendered"\)[\s\S]*staticRescue/m.test(html), "normal script startup should hide the static rescue layer");
-assert(/html\.app-rendered \.static-rescue/m.test(html) && /safeMode=true&noAudio=true&v=1\.0\.39/m.test(html), "static rescue should only appear if the app script does not render");
+assert(/html\.app-rendered \.static-rescue/m.test(html) && /safeMode=true&noAudio=true&v=1\.1\.0/m.test(html), "static rescue should only appear if the app script does not render");
 assert(/isStrictSecurityMode\(\)[\s\S]*removeItem\?\.\("codeAwakenerStrictSecurity"\)[\s\S]*params\.get\("strictSecurity"\) === "1"/m.test(html), "stale localStorage strict-security flags should not white-screen normal browsers");
-assert(/UPDATE_ANNOUNCEMENT_PAGES\s*=\s*Object\.freeze\(\[\s*\{\s*title:\s*"> 消息 \/ 本次更新"[\s\S]*v1\.0\.39[\s\S]*音频降噪[\s\S]*输入延迟[\s\S]*移动卡顿[\s\S]*BGM 同模式请求[\s\S]*Pixabay 音效[\s\S]*滑动条[\s\S]*414374792/m.test(html), "startup announcement should show only the current v1.0.39 audio and responsiveness update");
-assert(/id="announcementPageBody"[\s\S]*v1\.0\.39：音频降噪、输入延迟与移动卡顿热修[\s\S]*BGM 同模式请求[\s\S]*官方Q群：414374792/m.test(initialBodyMarkup), "static startup announcement placeholder should match the current v1.0.39 update before script hydration");
+assert(/UPDATE_ANNOUNCEMENT_PAGES\s*=\s*Object\.freeze\(\[\s*\{\s*title:\s*"> 消息 \/ 本次更新"[\s\S]*v1\.1\.0[\s\S]*五幕记忆内核剧情[\s\S]*OffscreenCanvas[\s\S]*理性派 \/ 感性派[\s\S]*Web Audio[\s\S]*414374792/m.test(html), "startup announcement should show only the current v1.1.0 five-act cinematic update");
+assert(/id="announcementPageBody"[\s\S]*v1\.1\.0：五幕记忆内核剧情正式接入[\s\S]*OffscreenCanvas[\s\S]*官方Q群：414374792/m.test(initialBodyMarkup), "static startup announcement placeholder should match the current v1.1.0 update before script hydration");
 assert(!/公告只保留关闭、课程锁定、自由模式通关后显示/m.test(initialBodyMarkup), "static startup announcement placeholder should not show stale update copy");
 assert(/UPDATE_HISTORY\s*=\s*Object\.freeze\(\[[\s\S]*v1\.0\.31[\s\S]*QQ音乐外部模式与自定义场景音乐[\s\S]*播放\/暂停切换[\s\S]*IndexedDB[\s\S]*414374792/m.test(html), "update history should record the v1.0.31 custom music connector release");
 assert(/UPDATE_HISTORY\s*=\s*Object\.freeze\(\[[\s\S]*v1\.0\.30[\s\S]*Pixabay 真实音乐与音效接入[\s\S]*Gamer Menu[\s\S]*音乐切换器[\s\S]*外部音频失败回退[\s\S]*414374792/m.test(html), "update history should record the v1.0.30 Pixabay music and sound-effect release");
@@ -2454,6 +2479,23 @@ assert(/function applyTutorialFixSuggestion/m.test(html), "C tutorial should let
 assert(/function unlockFreeModeIfReady/m.test(html), "free mode should unlock from C tutorial progress");
 assert(/function compileFreeModeCode/m.test(html), "free mode code editor should be compilable");
 assert(/function stepDebugExecution/m.test(html), "debug mode should support single-step execution");
+{
+  const { extractInlineScripts } = require("./scripts/audit-html-utils.cjs");
+  const extracted = extractInlineScripts(`
+    <script src="./vendor/phaser.min.js"></script>
+    <script nonce="audit-nonce">function checkedByAudit() { return 42; }</script>
+    <script type="module">const moduleScriptIsInline = 1337;</script>
+  `);
+  assert(extracted.includes("function checkedByAudit"), "audit extraction should include nonce inline scripts");
+  assert(extracted.includes("moduleScriptIsInline"), "audit extraction should include typed inline scripts");
+  assert(!extracted.includes("phaser.min.js"), "audit extraction should skip external script tags");
+}
+{
+  const complexityReport = runJsonScript("scripts/complexity-audit.cjs");
+  assert(complexityReport.checked > 0, "complexity audit should inspect functions inside nonce inline scripts");
+  const magicReport = runJsonScript("scripts/magic-number-audit.cjs");
+  assert(magicReport.uniqueMagicNumbers > 0, "magic-number audit should inspect nonce inline scripts");
+}
 assert(/id="courseProgressPanel"/m.test(html) && /id="courseLessonList"/m.test(html), "side menu should include course progress and chapter directory");
 assert(!/id="learningLogList"|id="codeHistoryList"/m.test(initialBodyMarkup), "side menu should not include learning log or replayable code history panels");
 assert(!/id="freeModeEditorPanel"|id="freeModeCodeInput"|id="freeModeCompileButton"/m.test(initialBodyMarkup) && /function ensureFreeModeEditorPanel/m.test(html), "free mode editor should be dynamically created only after unlock");
@@ -2472,6 +2514,12 @@ assert(/id="mobileFullscreenPrompt"/m.test(html) && /id="mobileFullscreenStartBu
 assert(/function showMobileFullscreenPrompt/m.test(html) && /function enterMobileFullscreenLandscape/m.test(html) && /function requestMobileLandscapeFullscreen/m.test(html), "mobile fullscreen prompt should have explicit show, request, and enter handlers");
 assert(/screen\.orientation\?\.lock\?\.\("landscape"\)/m.test(html), "mobile fullscreen handler should try to lock landscape orientation when supported");
 assert(/MenuManager[\s\S]*enterGameWorld[\s\S]*maybePromptMobileFullscreen/m.test(html), "entering the game world should schedule the mobile landscape fullscreen prompt");
+{
+  const mobileSmokeScript = fs.readFileSync("scripts/mobile-browser-smoke.cjs", "utf8");
+  assert(/function confirmPostGenesisSetupForSmoke/m.test(mobileSmokeScript) && /#postGenesisSetupConfirmButton/m.test(mobileSmokeScript), "mobile smoke should confirm post-genesis setup after character creation");
+  assert(/errorDialogVisible/m.test(mobileSmokeScript) && /errorToastVisible/m.test(mobileSmokeScript), "mobile smoke should detect visible error recovery UI");
+  assert(/错误保护层可见/m.test(mobileSmokeScript) && /创角后设置仍然停留/m.test(mobileSmokeScript), "mobile smoke should fail when post-genesis or error overlays block the game");
+}
 assert(/id="mobileDialogAdvanceButton"/m.test(html), "mobile dialogue should expose a touch button for continuing or skipping text");
 assert(/bindFastTouchAction\(dom\.mobileDialogAdvanceButton[\s\S]*advanceDialog/m.test(html), "mobile dialogue continue button should use fast touch handling");
 assert(/手机点继续/m.test(html), "dialogue help text should explain the mobile continue action");

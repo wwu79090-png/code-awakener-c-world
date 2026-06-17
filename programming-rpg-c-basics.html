@@ -14,7 +14,7 @@
   <meta http-equiv="Cache-Control" content="no-store, max-age=0, must-revalidate">
   <meta http-equiv="Pragma" content="no-cache">
   <meta http-equiv="Expires" content="0">
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self' file:; base-uri 'self'; object-src 'none'; frame-ancestors 'none'; script-src 'self' 'nonce-code-awakener-inline' file: 'sha256-K0WfV+qffIJHFgfWKlqlp9bBBg+ZJgNsQXipCn73E3Y='; style-src 'self' 'nonce-code-awakener-inline' file: 'sha256-w1QUybbzFx9Qtp6+/0LGq7gAxW8YKdFJ9pX159PTjoM='; style-src-attr 'unsafe-inline'; font-src 'self' file: data:; img-src 'self' file: data: blob: https://cdn.pixabay.com; media-src 'self' file: data: blob: https: http: https://cdn.pixabay.com; worker-src 'self' file: blob:; child-src 'self' file: blob:; connect-src 'self' file: http://localhost:8000 http://127.0.0.1:8000 https://cdn.pixabay.com https://pixabay.com;">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self' file:; base-uri 'self'; object-src 'none'; frame-ancestors 'none'; script-src 'self' 'nonce-code-awakener-inline' file: 'sha256-eenj4CojdPrNuj2GpWth9M2xwGcJVGF6Su42jduEKi8='; style-src 'self' 'nonce-code-awakener-inline' file: 'sha256-yrxVsPlrV14nM4EJhhe53enSo12dZIS/rUNHHraiFUo='; style-src-attr 'unsafe-inline'; font-src 'self' file: data:; img-src 'self' file: data: blob: https://cdn.pixabay.com; media-src 'self' file: data: blob: https: http: https://cdn.pixabay.com; worker-src 'self' file: blob:; child-src 'self' file: blob:; connect-src 'self' file: http://localhost:8000 http://127.0.0.1:8000 https://cdn.pixabay.com https://pixabay.com;">
   <title>编程学习 RPG：C 语言启航村</title>
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%23020617'/%3E%3Cpath d='M22 20 10 32l12 12M42 20l12 12-12 12' fill='none' stroke='%2300ff88' stroke-width='6' stroke-linecap='round' stroke-linejoin='round'/%3E%3Cpath d='m36 16-8 32' stroke='%2300ccff' stroke-width='5' stroke-linecap='round'/%3E%3C/svg%3E">
   <script src="./vendor/phaser.min.js"></script>
@@ -10178,6 +10178,65 @@
       }
     }
 
+    .memory-core-cinematic {
+      position: fixed;
+      inset: 0;
+      z-index: 72;
+      display: none;
+      place-items: stretch;
+      overflow: hidden;
+      background: rgba(1, 5, 18, 0.82);
+      backdrop-filter: blur(8px);
+    }
+
+    .memory-core-cinematic.active {
+      display: grid;
+    }
+
+    .memory-core-cinematic canvas {
+      width: 100vw;
+      height: 100vh;
+      display: block;
+      touch-action: none;
+      image-rendering: auto;
+    }
+
+    .memory-core-status {
+      position: absolute;
+      left: max(16px, env(safe-area-inset-left));
+      top: max(12px, env(safe-area-inset-top));
+      z-index: 2;
+      color: rgba(219, 234, 254, 0.92);
+      font: 700 12px/1.5 var(--font-code);
+      text-shadow: 0 0 14px rgba(34, 211, 238, 0.65);
+      pointer-events: none;
+    }
+
+    .memory-core-skip {
+      position: absolute;
+      right: max(16px, env(safe-area-inset-right));
+      top: max(12px, env(safe-area-inset-top));
+      z-index: 3;
+      min-height: 42px;
+      border-radius: 10px;
+      backdrop-filter: blur(8px);
+    }
+
+    body.memory-core-cinematic-active #hud,
+    body.memory-core-cinematic-active #bottomActionBar,
+    body.memory-core-cinematic-active #interactionPrompt,
+    body.memory-core-cinematic-active #infoSideMenu,
+    body.memory-core-cinematic-active #mobileControls {
+      pointer-events: none !important;
+      opacity: 0 !important;
+    }
+
+    @media (max-width: 768px) {
+      .memory-core-skip {
+        min-width: 72px;
+      }
+    }
+
     .code-genesis-preview {
       position: relative;
       z-index: 1;
@@ -11299,8 +11358,8 @@
       <p>&gt; 如果这里一直空白，说明浏览器缓存、旧存档或脚本自检阻塞了启动。</p>
       <p>&gt; 使用下面入口可以绕过旧缓存并关闭重型特效，学习进度仍会保留。</p>
       <div class="static-rescue-actions">
-        <a href="./programming-rpg-c-basics.html?safeMode=true&noAudio=true&v=1.0.39">安全启动</a>
-        <a href="./programming-rpg-c-basics.html?v=1.0.39">强制刷新</a>
+        <a href="./programming-rpg-c-basics.html?safeMode=true&noAudio=true&v=1.1.0">安全启动</a>
+        <a href="./programming-rpg-c-basics.html?v=1.1.0">强制刷新</a>
       </div>
       <p>作者：杀戮 · QQ：3424636983 · 官方Q群：414374792</p>
     </div>
@@ -11390,6 +11449,11 @@
           <button id="postGenesisSetupConfirmButton" class="pixel-button" type="button">进入世界</button>
         </div>
       </div>
+    </section>
+    <section id="memoryCoreCinematicOverlay" class="memory-core-cinematic" aria-label="五幕记忆内核剧情" aria-hidden="true">
+      <canvas id="memoryCoreCinematicCanvas" width="1280" height="720"></canvas>
+      <div id="memoryCoreCinematicStatus" class="memory-core-status" aria-live="polite">MEMORY_CORE // standby</div>
+      <button id="memoryCoreCinematicSkipButton" class="pixel-button secondary memory-core-skip" type="button">跳过</button>
     </section>
     <section id="pixelLoadingOverlay" class="pixel-loading-overlay active" aria-live="polite" aria-label="加载进度">
       <div class="pixel-loading-box">
@@ -11504,7 +11568,7 @@
       <canvas id="menuFxCanvas" width="1280" height="720"></canvas>
       <div class="main-menu-card glass-panel">
         <h1 class="game-logo">CODE AWAKENER<br>C 语言启航村</h1>
-        <div class="version-label" id="versionLabel">World Build v1.0.39 · develop.fan C Basics</div>
+        <div class="version-label" id="versionLabel">World Build v1.1.0 · develop.fan C Basics</div>
         <div id="musicSwitcher" class="music-switcher" aria-label="音乐主题切换器">
           <div class="music-switcher-copy">
             <span class="music-switcher-kicker">♪ 当前音乐主题</span>
@@ -12252,18 +12316,13 @@ int main(void) {
       <button id="announcementCloseButton" class="announcement-close" type="button" aria-label="关闭公告">×</button>
       <h2 id="startupAnnouncementTitle" class="startup-announcement-title">> 消息 / 本次更新</h2>
       <div id="announcementPageBody" class="startup-announcement-body">
-        <p>// v1.0.39：音频降噪、输入延迟与移动卡顿热修。</p>
-        <p>// 内置 BGM 同模式请求改为保持当前播放，不再反复 pause/play 或重启合成循环。</p>
-        <p>// 编译成功、编译失败、拾取等音乐花句加入冷却和队列去重，避免一次操作叠多层提示音。</p>
-        <p>// Pixabay 音效增加全局冷却和并发上限，整体音效混音降低一档，长时间游玩更安静。</p>
-        <p>// 编辑器输入改为先响应文本，再合并刷新高亮、导师解析和引导线，降低打字延迟。</p>
-        <p>// 编辑器打开或对话冻结时，世界后台特效改为低频维护，减少覆盖层内卡顿。</p>
-        <p>// 角色移动起步响应提高，部分剧情、数据流、音频导演和调试面板刷新按帧节流。</p>
-        <p>// 主菜单、局内菜单、音乐岛和设置滑动条统一为赛博终端轨道样式，更贴合主题。</p>
-        <p>// 编译器、公告和安全自检已同步到 v1.0.39，便于绕过旧缓存。</p>
-        <p>// 作者：杀戮，QQ：3424636983。</p>
-        <p>// 官方Q群：414374792。</p>
-        <p>// 作者：杀戮</p>
+        <p>// v1.1.0：五幕记忆内核剧情正式接入。</p>
+        <p>// 创角完成后进入 OffscreenCanvas 剧情桥，依次学习变量、输入输出、条件、循环、函数。</p>
+        <p>// 每幕包含入口剧情、核心编译交互和出口剧情，通关后环境、粒子、地面光效与音乐情绪会永久变化。</p>
+        <p>// 第二幕新增理性派 / 感性派选择，会写入存档并影响导师进程后续对白态度。</p>
+        <p>// 新增 Web Audio 三层动态音乐、空间音效、键盘随机变调、石碑/开阔地混响和故障反馈。</p>
+        <p>// 修复质量门禁漏检：审计脚本现在能扫描带 nonce 的主脚本，移动烟测会覆盖创角后进入世界流程。</p>
+        <p>// 作者：杀戮，QQ：3424636983，官方Q群：414374792。</p>
         <p class="announcement-dismiss-hint">- 点击任意处关闭</p>
       </div>
       <div class="startup-announcement-pager" aria-label="公告分页">
@@ -12774,26 +12833,37 @@ int main() {
     const SAVE_CLEAR_CONFIRM_MS = 3000;
     const STARTUP_ANNOUNCEMENT_AUTO_HIDE_MS = 14000;
     const SYSTEM_BOOT_FORCE_RELEASE_MS = 3200;
-    const GAME_VERSION = "v1.0.39";
+    const GAME_VERSION = "v1.1.0";
     const OFFICIAL_SITE_HREF = "./official-site.html";
     const UPDATE_ANNOUNCEMENT_PAGES = Object.freeze([
       {
         title: "> 消息 / 本次更新",
         lines: [
-          "// v1.0.39：音频降噪、输入延迟与移动卡顿热修。",
-          "// 内置 BGM 同模式请求改为保持当前播放，不再反复 pause/play 或重启合成循环。",
-          "// 编译成功、编译失败、拾取等音乐花句加入冷却和队列去重，避免一次操作叠多层提示音。",
-          "// Pixabay 音效增加全局冷却和并发上限，整体音效混音降低一档，长时间游玩更安静。",
-          "// 编辑器输入改为先响应文本，再合并刷新高亮、导师解析和引导线，降低打字延迟。",
-          "// 编辑器打开或对话冻结时，世界后台特效改为低频维护，减少覆盖层内卡顿。",
-          "// 角色移动起步响应提高，部分剧情、数据流、音频导演和调试面板刷新按帧节流。",
-          "// 主菜单、局内菜单、音乐岛和设置滑动条统一为赛博终端轨道样式，更贴合主题。",
-          "// 安全启动、强制刷新、CSP 和脚本自检已同步到 v1.0.39，方便绕过旧缓存。",
+          "// v1.1.0：五幕记忆内核剧情正式接入。",
+          "// 创角完成后进入 OffscreenCanvas 剧情桥，依次学习变量、输入输出、条件、循环、函数。",
+          "// 每幕包含入口剧情、核心编译交互和出口剧情，通关后环境、粒子、地面光效与音乐情绪会永久变化。",
+          "// 第二幕新增理性派 / 感性派选择，会写入存档并影响导师进程后续对白态度。",
+          "// 新增 Web Audio 三层动态音乐、空间音效、键盘随机变调、石碑/开阔地混响和故障反馈。",
+          "// 渲染层按代码雨、地面网格、物件、粒子、角色、UI 顺序叠加，并带自动降级保护。",
+          "// 质量门禁修复：审计脚本现在能扫描带 nonce 的主脚本，移动烟测会覆盖创角后进入世界流程。",
+          "// 安全启动、强制刷新、CSP 和脚本自检已同步到 v1.1.0，方便绕过旧缓存。",
           "// 作者：杀戮，QQ：3424636983，官方Q群：414374792。"
         ]
       }
     ]);
     const UPDATE_HISTORY = Object.freeze([
+      {
+        version: "v1.1.0",
+        date: "2026-06-17",
+        title: "五幕记忆内核剧情正式版",
+        details: [
+          "创角完成后新增 OffscreenCanvas 五幕剧情桥，按变量、输入输出、条件、循环、函数串联 C 语言核心概念。",
+          "每幕都有入口剧情、核心编译交互和出口剧情，环境粒子、地面网格、体积光、角色动作与音乐情绪会随通关永久改变。",
+          "第二幕加入理性派 / 感性派选择，选择会写入存档并改变导师进程后续对白态度。",
+          "新增 Web Audio 三层动态音乐、空间声像、键盘随机变调、石碑室内混响与开阔地混响。",
+          "质量门禁同步加固：审计脚本能扫描 nonce 主脚本，移动烟测会穿过创角后设置并确认进入世界。官方Q群：414374792。"
+        ]
+      },
       {
         version: "v1.0.39",
         date: "2026-06-17",
@@ -14054,7 +14124,7 @@ return 0;`;
       directSaveAs: "reduced-by-inline-resources"
     });
     const SECURITY_CONFIG = Object.freeze({
-      expectedScriptHash: "MQEEseonagSrppQL5Iu+l5Byx5E3EU+Z5ziPiKk6tqs=",
+      expectedScriptHash: "Gd5gXcAq2XMjyHS52aUwc7vBXVcpx2TRjhGqZQuePVg=",
       selfCheckIntervalMs: 45000,
       tamperRefreshMs: 5000,
       devToolsRefreshMs: 2000,
@@ -21476,6 +21546,10 @@ int main(void) {
       playerNameResponse: document.getElementById("playerNameResponse"),
       savePlayerNameButton: document.getElementById("savePlayerNameButton"),
       closePlayerNamePromptButton: document.getElementById("closePlayerNamePromptButton"),
+      memoryCoreCinematicOverlay: document.getElementById("memoryCoreCinematicOverlay"),
+      memoryCoreCinematicCanvas: document.getElementById("memoryCoreCinematicCanvas"),
+      memoryCoreCinematicStatus: document.getElementById("memoryCoreCinematicStatus"),
+      memoryCoreCinematicSkipButton: document.getElementById("memoryCoreCinematicSkipButton"),
       terminalGuessOverlay: document.getElementById("terminalGuessOverlay"),
       terminalGuessLog: document.getElementById("terminalGuessLog"),
       terminalGuessInput: document.getElementById("terminalGuessInput"),
@@ -23209,6 +23283,1034 @@ ${item.code}
     }
 
     const POST_GENESIS_SETUP_DEFAULTS = Object.freeze({ difficulty: "normal", skin: "neonBlue" });
+    const MEMORY_CORE_LAYER_ORDER = Object.freeze(["codeRain", "groundGrid", "sceneObjects", "particles", "actors", "uiFx"]);
+    const MEMORY_CORE_ENV_PARTICLE_LIMIT = 800;
+    const MEMORY_CORE_INTERACTION_PARTICLE_LIMIT = 200;
+    const MEMORY_CORE_ACTS = Object.freeze([
+      {
+        id: "variables",
+        concept: "变量",
+        title: "第一幕：变量容器",
+        compileTarget: "int memory = 1;",
+        mood: "cold",
+        color: { h: 188, s: 88, l: 58 },
+        entrance: [
+          "Layer-0 的代码雨坠入黑白记忆内核，所有名字都被擦成 NULL。",
+          "导师进程 GUIDE：变量不是数字本身，而是给记忆单元贴上的稳定标签。"
+        ],
+        core: "把记忆写进变量容器，让崩溃的内核第一次记住一个值。",
+        exit: [
+          "变量石碑亮起，地面网格永久出现第一束青色脉冲。",
+          "导师进程 ENCOURAGE：你刚把混沌变成了可追踪的状态。"
+        ]
+      },
+      {
+        id: "io",
+        concept: "输入输出",
+        title: "第二幕：回声终端",
+        compileTarget: "printf(\"wake\");",
+        mood: "echo",
+        color: { h: 154, s: 82, l: 56 },
+        choices: [
+          { id: "rational", label: "理性派", feedback: "导师语气变得精准克制：先观察输入，再验证输出。" },
+          { id: "emotional", label: "感性派", feedback: "导师语气变得柔和鼓励：先把想说的话送到屏幕上。" }
+        ],
+        entrance: [
+          "回声终端只剩噪声。输入流断裂，输出光幕无法回应玩家。",
+          "导师进程 GUIDE：这一幕需要你选择修复风格。理性派重视验证，感性派重视表达。"
+        ],
+        core: "选择一种修复态度，并用 printf 让终端说出第一句清晰的回应。",
+        exit: [
+          "终端恢复回声，粒子从灰白转为绿色数据萤火。",
+          "导师进程会记住这次选择，后续对白会按你的态度微调。"
+        ]
+      },
+      {
+        id: "conditions",
+        concept: "条件",
+        title: "第三幕：分支审判门",
+        compileTarget: "if (signal) { repair(); }",
+        mood: "tense",
+        color: { h: 44, s: 92, l: 58 },
+        entrance: [
+          "两扇门同时请求开启，崩溃内核无法判断哪条路径安全。",
+          "导师进程 GUIDE：条件判断让程序根据真假选择路线。"
+        ],
+        core: "编译 if 分支，把危险流量导向隔离门，把有效信号送往修复门。",
+        exit: [
+          "审判门合拢成一条清晰路径，黄色体积光穿过尘埃。",
+          "导师进程 ENCOURAGE：判断不是犹豫，是让程序拥有边界。"
+        ]
+      },
+      {
+        id: "loops",
+        concept: "循环",
+        title: "第四幕：循环修复环",
+        compileTarget: "for (int i = 0; i < 5; i++)",
+        mood: "motion",
+        color: { h: 262, s: 86, l: 64 },
+        entrance: [
+          "记忆链条断成五段，手动修补会在第三段前耗尽能量。",
+          "导师进程 SIGH：重复工作不该压垮修复进程，让循环接管节奏。"
+        ],
+        core: "启动 for 循环，让同一条修复指令按次数稳定执行。",
+        exit: [
+          "循环环轨开始自转，断裂链条逐段焊接。",
+          "导师进程 ENCOURAGE：你掌握了一种创造重复的力量。"
+        ]
+      },
+      {
+        id: "functions",
+        concept: "函数",
+        title: "第五幕：函数方舟",
+        compileTarget: "int repair(void) { return 1; }",
+        mood: "final",
+        color: { h: 206, s: 90, l: 62 },
+        entrance: [
+          "所有修复片段都在发光，但它们还没有名字，也无法复用。",
+          "导师进程 GUIDE：函数把一段逻辑封装成可调用的能力。"
+        ],
+        core: "声明 repair 函数，把变量、输出、条件和循环汇聚成最后的修复接口。",
+        exit: [
+          "函数方舟启动，记忆内核从黑白灰升为代码极光。",
+          "导师进程 ENCOURAGE：五个概念已经接通，启航村主线目标已写入。"
+        ]
+      }
+    ]);
+
+    const MEMORY_CORE_EASING = Object.freeze({
+      easeInOut(t) {
+        const n = Math.max(0, Math.min(1, t));
+        return n < 0.5 ? 2 * n * n : 1 - Math.pow(-2 * n + 2, 2) / 2;
+      },
+      easeOutBack(t) {
+        const n = Math.max(0, Math.min(1, t));
+        const c1 = 1.70158;
+        const c3 = c1 + 1;
+        return 1 + c3 * Math.pow(n - 1, 3) + c1 * Math.pow(n - 1, 2);
+      },
+      easeInElastic(t) {
+        const n = Math.max(0, Math.min(1, t));
+        if (n === 0 || n === 1) return n;
+        return -Math.pow(2, 10 * n - 10) * Math.sin((n * 10 - 10.75) * ((2 * Math.PI) / 3));
+      }
+    });
+
+    const MEMORY_CORE_PLAYER_ACTIONS = Object.freeze({
+      IDLE: "IDLE",
+      WALK: "WALK",
+      INTERACT: "INTERACT",
+      COMPILE_SUCCESS: "COMPILE_SUCCESS",
+      COMPILE_FAIL: "COMPILE_FAIL"
+    });
+
+    const MEMORY_CORE_NPC_ACTIONS = Object.freeze({
+      GUIDE: "GUIDE",
+      ENCOURAGE: "ENCOURAGE",
+      SIGH: "SIGH"
+    });
+
+    function createMemoryCoreLayerCanvas(width, height) {
+      if (typeof OffscreenCanvas === "function") return new OffscreenCanvas(width, height);
+      const fallback = document.createElement("canvas");
+      fallback.width = width;
+      fallback.height = height;
+      return fallback;
+    }
+
+    class MemoryCoreAudioEngine {
+      constructor() {
+        this.ctx = null;
+        this.mainGain = null;
+        this.bgmGain = null;
+        this.sfxGain = null;
+        this.reverbGain = null;
+        this.indoorReverb = null;
+        this.outdoorReverb = null;
+        this.layers = [];
+        this.bufferCache = new Map();
+        this.longBgmElement = new Audio();
+        this.longBgmElement.loop = true;
+        this.longBgmElement.preload = "metadata";
+      }
+
+      ensureContext() {
+        if (this.ctx) return this.ctx;
+        const AudioCtor = globalThis.AudioContext || globalThis.webkitAudioContext;
+        if (!AudioCtor) return null;
+        try {
+          this.ctx = new AudioCtor({ sampleRate: 44100 });
+        } catch (error) {
+          try {
+            this.ctx = new AudioCtor();
+          } catch (_) {
+            return null;
+          }
+        }
+        this.mainGain = this.ctx.createGain();
+        this.bgmGain = this.ctx.createGain();
+        this.sfxGain = this.ctx.createGain();
+        this.reverbGain = this.ctx.createGain();
+        this.indoorReverb = this.ctx.createConvolver();
+        this.outdoorReverb = this.ctx.createConvolver();
+        this.indoorReverb.buffer = this.createImpulseResponse(1.2, 0.48);
+        this.outdoorReverb.buffer = this.createImpulseResponse(1.8, 0.2);
+        this.mainGain.gain.value = 0.72;
+        this.bgmGain.gain.value = 0.22;
+        this.sfxGain.gain.value = 0.34;
+        this.reverbGain.gain.value = 0.22;
+        this.bgmGain.connect(this.mainGain);
+        this.sfxGain.connect(this.mainGain);
+        this.reverbGain.connect(this.mainGain);
+        this.mainGain.connect(this.ctx.destination);
+        this.createDecodedBuffers();
+        return this.ctx;
+      }
+
+      createImpulseResponse(seconds, decay) {
+        const sampleRate = this.ctx?.sampleRate || 44100;
+        const length = Math.max(1, Math.floor(sampleRate * seconds));
+        const buffer = this.ctx.createBuffer(2, length, sampleRate);
+        for (let channel = 0; channel < 2; channel += 1) {
+          const data = buffer.getChannelData(channel);
+          for (let i = 0; i < length; i += 1) {
+            data[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / length, decay * 5);
+          }
+        }
+        return buffer;
+      }
+
+      createDecodedBuffers() {
+        if (!this.ctx || this.bufferCache.size) return;
+        const sampleRate = this.ctx.sampleRate;
+        const build = (id, duration, frequency, gain = 0.22) => {
+          const length = Math.floor(sampleRate * duration);
+          const buffer = this.ctx.createBuffer(1, length, sampleRate);
+          const data = buffer.getChannelData(0);
+          for (let i = 0; i < length; i += 1) {
+            const t = i / sampleRate;
+            const envelope = Math.pow(1 - i / length, 1.8);
+            data[i] = Math.sin(2 * Math.PI * frequency * t) * envelope * gain;
+          }
+          this.bufferCache.set(id, buffer);
+        };
+        build("tick", 0.045, 880, 0.08);
+        build("success", 0.26, 660, 0.18);
+        build("fail", 0.15, 120, 0.2);
+        build("choice", 0.18, 520, 0.13);
+      }
+
+      async resume() {
+        const ctx = this.ensureContext();
+        if (ctx?.state === "suspended") await ctx.resume();
+        if (ctx && !this.layers.length) this.startLayeredMusic();
+      }
+
+      startLayeredMusic() {
+        const ctx = this.ensureContext();
+        if (!ctx) return;
+        const specs = [
+          { id: "bed", type: "sine", frequency: 82, gain: 0.05 },
+          { id: "texture", type: "triangle", frequency: 164, gain: 0.035 },
+          { id: "melody", type: "sine", frequency: 328, gain: 0.025 }
+        ];
+        this.layers = specs.map((spec) => {
+          const oscillator = ctx.createOscillator();
+          const gain = ctx.createGain();
+          oscillator.type = spec.type;
+          oscillator.frequency.value = spec.frequency;
+          gain.gain.value = spec.gain;
+          oscillator.connect(gain).connect(this.bgmGain);
+          oscillator.start();
+          return { ...spec, oscillator, gain };
+        });
+      }
+
+      setMood(mood = "cold") {
+        const ctx = this.ensureContext();
+        if (!ctx) return;
+        const profiles = {
+          cold: [82, 164, 328],
+          echo: [96, 192, 384],
+          tense: [73, 146, 292],
+          motion: [110, 220, 440],
+          final: [123, 246, 492]
+        };
+        const target = profiles[mood] || profiles.cold;
+        this.layers.forEach((layer, index) => {
+          layer.oscillator.frequency.setTargetAtTime(target[index], ctx.currentTime, 0.5);
+          layer.gain.gain.setTargetAtTime(index === 2 && mood === "final" ? 0.055 : layer.gain.value || layer.gain.gain.value, ctx.currentTime, 0.5);
+        });
+      }
+
+      playBuffer(id, x = 0, zone = "outdoor", cents = 0) {
+        const ctx = this.ensureContext();
+        const buffer = this.bufferCache.get(id);
+        if (!ctx || !buffer) return;
+        const source = ctx.createBufferSource();
+        const panner = ctx.createStereoPanner ? ctx.createStereoPanner() : new StereoPannerNode(ctx);
+        const convolver = zone === "indoor" ? this.indoorReverb : this.outdoorReverb;
+        source.buffer = buffer;
+        source.playbackRate.value = Math.pow(2, cents / 1200);
+        panner.pan.value = Math.max(-1, Math.min(1, x));
+        source.connect(panner).connect(this.sfxGain);
+        source.connect(convolver).connect(this.reverbGain);
+        source.start();
+      }
+
+      tick(x = 0) {
+        const randomPitchCents = Math.round(-200 + Math.random() * 400);
+        this.playBuffer("tick", x, "indoor", randomPitchCents);
+      }
+
+      success(x = 0) {
+        this.playBuffer("success", x, "outdoor", 80);
+      }
+
+      fail(x = 0) {
+        this.playBuffer("fail", x, "indoor", -120);
+      }
+
+      releaseActCache() {
+        this.bufferCache.clear();
+        this.createDecodedBuffers();
+      }
+
+      stop() {
+        this.layers.forEach((layer) => {
+          try { layer.oscillator.stop(); } catch (_) {}
+        });
+        this.layers = [];
+      }
+    }
+
+    class MemoryCoreCinematicEngine {
+      constructor({ overlay, canvas, status, skipButton }) {
+        this.overlay = overlay;
+        this.canvas = canvas;
+        this.status = status;
+        this.skipButton = skipButton;
+        this.ctx = canvas?.getContext?.("2d", { colorSpace: "srgb", alpha: false });
+        this.audio = new MemoryCoreAudioEngine();
+        this.layers = new Map();
+        this.environmentParticles = [];
+        this.interactionParticles = [];
+        this.completedActs = new Set();
+        this.buttons = [];
+        this.keyEvents = [];
+        this.actIndex = 0;
+        this.phase = "entrance";
+        this.lineIndex = 0;
+        this.typedText = "";
+        this.targetText = "";
+        this.typeAccumulator = 0;
+        this.typewriterMs = 40;
+        this.lastTime = 0;
+        this.frameInterval = 1000 / 60;
+        this.lastDrawAt = 0;
+        this.uiFrameAlpha = 1;
+        this.particleScale = 1;
+        this.shakeUntil = 0;
+        this.glitchUntil = 0;
+        this.notification = null;
+        this.playerAction = MEMORY_CORE_PLAYER_ACTIONS.IDLE;
+        this.npcAction = MEMORY_CORE_NPC_ACTIONS.GUIDE;
+        this.hoverButton = null;
+        this.resolve = null;
+        this.boundResize = () => this.resize();
+        this.boundPointerMove = (event) => this.onPointerMove(event);
+        this.boundPointerDown = (event) => this.onPointerDown(event);
+        this.boundKeyDown = (event) => this.onKeyDown(event);
+        this.boundSkip = () => this.complete("skipped");
+      }
+
+      start({ character } = {}) {
+        if (!this.overlay || !this.canvas || !this.ctx) return Promise.resolve({ skipped: true });
+        this.character = character || {};
+        this.overlay.classList.add("active");
+        this.overlay.setAttribute("aria-hidden", "false");
+        document.body.classList.add("memory-core-cinematic-active");
+        this.resize();
+        this.createParticlePools();
+        this.bindEvents();
+        this.setAct(0);
+        this.audio.resume().catch?.(() => {});
+        this.lastTime = Date.now();
+        this.rafId = requestAnimationFrame((time) => this.loop(time));
+        return new Promise((resolve) => {
+          this.resolve = resolve;
+        });
+      }
+
+      bindEvents() {
+        window.addEventListener("resize", this.boundResize);
+        this.canvas.addEventListener("pointermove", this.boundPointerMove);
+        this.canvas.addEventListener("pointerdown", this.boundPointerDown);
+        window.addEventListener("keydown", this.boundKeyDown, { capture: true });
+        this.skipButton?.addEventListener("click", this.boundSkip);
+      }
+
+      unbindEvents() {
+        window.removeEventListener("resize", this.boundResize);
+        this.canvas.removeEventListener("pointermove", this.boundPointerMove);
+        this.canvas.removeEventListener("pointerdown", this.boundPointerDown);
+        window.removeEventListener("keydown", this.boundKeyDown, { capture: true });
+        this.skipButton?.removeEventListener("click", this.boundSkip);
+      }
+
+      resize() {
+        const dpr = Math.min(2, window.devicePixelRatio || 1);
+        this.width = Math.max(320, Math.floor(window.innerWidth * dpr));
+        this.height = Math.max(240, Math.floor(window.innerHeight * dpr));
+        this.dpr = dpr;
+        this.canvas.width = this.width;
+        this.canvas.height = this.height;
+        this.layers.clear();
+        MEMORY_CORE_LAYER_ORDER.forEach((id) => {
+          const layerCanvas = createMemoryCoreLayerCanvas(this.width, this.height);
+          const ctx = layerCanvas.getContext("2d", { colorSpace: "srgb", alpha: true });
+          this.layers.set(id, { canvas: layerCanvas, ctx });
+        });
+      }
+
+      createParticlePools() {
+        this.environmentParticles = Array.from({ length: MEMORY_CORE_ENV_PARTICLE_LIMIT }, (_, index) => this.createParticle(index, "environment"));
+        this.interactionParticles = Array.from({ length: MEMORY_CORE_INTERACTION_PARTICLE_LIMIT }, (_, index) => this.createParticle(index, "interaction", false));
+      }
+
+      createParticle(index, type, alive = true) {
+        const act = MEMORY_CORE_ACTS[this.actIndex] || MEMORY_CORE_ACTS[0];
+        const life = 300 + Math.random() * 1700;
+        return {
+          type,
+          alive,
+          born: Date.now() - Math.random() * life,
+          life,
+          x: Math.random() * (this.width || 1280),
+          y: Math.random() * (this.height || 720),
+          vx: (Math.random() - 0.5) * (type === "interaction" ? 3.2 : 0.55),
+          vy: (Math.random() - 0.35) * (type === "interaction" ? 3.2 : 0.75),
+          size: 1 + Math.random() * (type === "interaction" ? 5 : 3),
+          h: act.color.h + Math.random() * 24 - 12,
+          s: act.color.s,
+          l: act.color.l
+        };
+      }
+
+      setAct(index) {
+        this.actIndex = index;
+        this.phase = "entrance";
+        this.lineIndex = 0;
+        this.playerAction = MEMORY_CORE_PLAYER_ACTIONS.WALK;
+        this.npcAction = MEMORY_CORE_NPC_ACTIONS.GUIDE;
+        const act = MEMORY_CORE_ACTS[index];
+        this.audio.setMood(act.mood);
+        this.setDialogue(act.entrance[0]);
+        this.showNotification(`${act.title} // ${act.concept}`);
+        if (this.status) this.status.textContent = `MEMORY_CORE // ${act.title}`;
+      }
+
+      setDialogue(text) {
+        this.targetText = text || "";
+        this.typedText = "";
+        this.typeAccumulator = 0;
+      }
+
+      showNotification(text) {
+        this.notification = { text, born: Date.now(), life: 2200 };
+      }
+
+      isTypingComplete() {
+        return this.typedText.length >= this.targetText.length;
+      }
+
+      advanceDialogue() {
+        const act = MEMORY_CORE_ACTS[this.actIndex];
+        if (!this.isTypingComplete()) {
+          this.typedText = this.targetText;
+          return;
+        }
+        if (this.phase === "entrance") {
+          this.lineIndex += 1;
+          if (this.lineIndex < act.entrance.length) this.setDialogue(act.entrance[this.lineIndex]);
+          else this.enterCore();
+          return;
+        }
+        if (this.phase === "exit") {
+          this.lineIndex += 1;
+          if (this.lineIndex < act.exit.length) this.setDialogue(this.resolveBranchLine(act.exit[this.lineIndex]));
+          else if (this.actIndex < MEMORY_CORE_ACTS.length - 1) this.setAct(this.actIndex + 1);
+          else this.phase = "final";
+        }
+      }
+
+      resolveBranchLine(line) {
+        const choice = gameState.progress.memoryCoreChoice;
+        if (!choice || !line.includes("导师进程")) return line;
+        if (choice === "rational") return line.replace("导师进程", "导师进程（理性校准）");
+        return line.replace("导师进程", "导师进程（共鸣校准）");
+      }
+
+      enterCore() {
+        const act = MEMORY_CORE_ACTS[this.actIndex];
+        this.phase = "core";
+        this.playerAction = MEMORY_CORE_PLAYER_ACTIONS.INTERACT;
+        this.npcAction = this.actIndex === 3 ? MEMORY_CORE_NPC_ACTIONS.SIGH : MEMORY_CORE_NPC_ACTIONS.GUIDE;
+        this.setDialogue(`${act.core}\n\n目标代码：${act.compileTarget}`);
+      }
+
+      completeCore(choiceId = "") {
+        const act = MEMORY_CORE_ACTS[this.actIndex];
+        if (act.choices?.length && choiceId) {
+          gameState.progress.memoryCoreChoice = choiceId;
+          const choice = act.choices.find((item) => item.id === choiceId);
+          showReward(choice?.feedback || "选择已记录。");
+        }
+        this.completedActs.add(act.id);
+        gameState.progress.memoryCoreCinematicClearedActs = Array.from(this.completedActs);
+        saveProgress?.();
+        this.phase = "exit";
+        this.lineIndex = 0;
+        this.playerAction = MEMORY_CORE_PLAYER_ACTIONS.COMPILE_SUCCESS;
+        this.npcAction = MEMORY_CORE_NPC_ACTIONS.ENCOURAGE;
+        this.shakeUntil = Date.now() + 150;
+        this.spawnInteractionBurst(this.width * 0.5, this.height * 0.5, act.color);
+        this.audio.success(0);
+        this.showNotification(`${act.concept} 修复完成`);
+        this.setDialogue(this.resolveBranchLine(act.exit[0]));
+      }
+
+      triggerFailure() {
+        this.playerAction = MEMORY_CORE_PLAYER_ACTIONS.COMPILE_FAIL;
+        this.npcAction = MEMORY_CORE_NPC_ACTIONS.SIGH;
+        this.glitchUntil = Date.now() + 150;
+        this.shakeUntil = Date.now() + 150;
+        this.audio.fail(0);
+        this.showNotification("编译故障：请重新稳定语义");
+      }
+
+      spawnInteractionBurst(x, y, color) {
+        this.interactionParticles.forEach((particle, index) => {
+          const angle = (Math.PI * 2 * index) / this.interactionParticles.length;
+          particle.alive = true;
+          particle.born = Date.now();
+          particle.life = 500 + Math.random() * 900;
+          particle.x = x;
+          particle.y = y;
+          particle.vx = Math.cos(angle) * (1.2 + Math.random() * 4.2);
+          particle.vy = Math.sin(angle) * (1.2 + Math.random() * 4.2);
+          particle.size = 2 + Math.random() * 5;
+          particle.h = color.h + Math.random() * 20 - 10;
+          particle.s = color.s;
+          particle.l = color.l;
+        });
+      }
+
+      onPointerMove(event) {
+        const point = this.eventPoint(event);
+        this.hoverButton = this.buttons.find((button) => this.hitButton(button, point)) || null;
+      }
+
+      onPointerDown(event) {
+        event.preventDefault();
+        this.audio.resume().catch?.(() => {});
+        const point = this.eventPoint(event);
+        const button = this.buttons.find((item) => this.hitButton(item, point));
+        if (button) {
+          button.action();
+          return;
+        }
+        this.advanceDialogue();
+      }
+
+      onKeyDown(event) {
+        if (!this.overlay?.classList.contains("active")) return;
+        event.preventDefault();
+        const now = Date.now();
+        this.keyEvents.push({ key: event.key, at: now });
+        this.keyEvents = this.keyEvents.filter((item) => now - item.at <= 500);
+        const eventsToProcess = this.keyEvents.length > 10 ? this.keyEvents.slice(-5) : [this.keyEvents[this.keyEvents.length - 1]];
+        const last = eventsToProcess[eventsToProcess.length - 1];
+        this.audio.tick(0);
+        if (last?.key === "Escape") this.complete("skipped");
+        else if (last?.key === "Enter" || last?.key === " ") {
+          if (this.phase === "core") this.handlePrimaryCoreAction();
+          else this.advanceDialogue();
+        }
+      }
+
+      handlePrimaryCoreAction() {
+        const act = MEMORY_CORE_ACTS[this.actIndex];
+        if (act.choices?.length && !gameState.progress.memoryCoreChoice) return this.completeCore("rational");
+        this.completeCore();
+      }
+
+      eventPoint(event) {
+        const rect = this.canvas.getBoundingClientRect();
+        return {
+          x: (event.clientX - rect.left) * this.dpr,
+          y: (event.clientY - rect.top) * this.dpr
+        };
+      }
+
+      hitButton(button, point) {
+        return point.x >= button.x && point.x <= button.x + button.w && point.y >= button.y && point.y <= button.y + button.h;
+      }
+
+      loop() {
+        const now = Date.now();
+        const deltaTime = now - this.lastTime;
+        this.lastTime = now;
+        if (now - this.lastDrawAt >= this.frameInterval - 1) {
+          const frameStart = performance.now();
+          this.update(deltaTime);
+          this.render(now, deltaTime);
+          const frameCost = performance.now() - frameStart;
+          if (frameCost > 20) {
+            this.frameInterval = 1000 / 30;
+            this.particleScale = Math.max(0.45, this.particleScale - 0.08);
+            this.uiFrameAlpha = Math.max(0.64, this.uiFrameAlpha - 0.04);
+          } else if (this.frameInterval > 1000 / 60 && frameCost < 14) {
+            this.frameInterval = 1000 / 60;
+            this.particleScale = Math.min(1, this.particleScale + 0.02);
+            this.uiFrameAlpha = Math.min(1, this.uiFrameAlpha + 0.02);
+          }
+          this.lastDrawAt = now;
+        }
+        this.rafId = requestAnimationFrame((time) => this.loop(time));
+      }
+
+      update(deltaTime) {
+        if (!this.isTypingComplete()) {
+          this.typeAccumulator += deltaTime;
+          const nextChars = Math.floor(this.typeAccumulator / this.typewriterMs);
+          if (nextChars > 0) {
+            const previous = this.typedText.length;
+            this.typedText = this.targetText.slice(0, Math.min(this.targetText.length, previous + nextChars));
+            this.typeAccumulator -= nextChars * this.typewriterMs;
+            if (this.typedText.length !== previous) this.audio.tick((this.typedText.length % 9) / 4.5 - 1);
+          }
+        }
+        this.updateParticles(deltaTime);
+      }
+
+      updateParticles(deltaTime) {
+        const now = Date.now();
+        const recycle = (particle) => {
+          const replacement = this.createParticle(0, particle.type, particle.type === "environment");
+          Object.assign(particle, replacement);
+        };
+        const updateOne = (particle) => {
+          if (!particle.alive) return;
+          const age = now - particle.born;
+          if (age > particle.life) {
+            if (particle.type === "interaction") particle.alive = false;
+            else recycle(particle);
+            return;
+          }
+          particle.x += particle.vx * deltaTime * 0.06;
+          particle.y += particle.vy * deltaTime * 0.06;
+          if (particle.y < -20) particle.y = this.height + 20;
+          if (particle.x < -20) particle.x = this.width + 20;
+          if (particle.x > this.width + 20) particle.x = -20;
+        };
+        this.environmentParticles.forEach(updateOne);
+        this.interactionParticles.forEach(updateOne);
+      }
+
+      clearLayers() {
+        this.layers.forEach(({ ctx }) => {
+          ctx.clearRect(0, 0, this.width, this.height);
+        });
+      }
+
+      render(now) {
+        this.clearLayers();
+        this.drawCodeRain(now);
+        this.drawGroundGrid(now);
+        this.drawSceneObjects(now);
+        this.drawParticles(now);
+        this.drawActors(now);
+        this.drawUiFx(now);
+        this.compositeLayers(now);
+      }
+
+      compositeLayers(now) {
+        const ctx = this.ctx;
+        const shake = now < this.shakeUntil ? Math.sin(now / 16) * 3 * this.dpr : 0;
+        ctx.save();
+        ctx.setTransform(1, 0, 0, 1, shake, -shake);
+        ctx.fillStyle = "#020617";
+        ctx.fillRect(0, 0, this.width, this.height);
+        MEMORY_CORE_LAYER_ORDER.forEach((id) => {
+          const layer = this.layers.get(id);
+          if (!layer) return;
+          ctx.drawImage(layer.canvas, 0, 0);
+        });
+        const act = MEMORY_CORE_ACTS[this.actIndex] || MEMORY_CORE_ACTS[0];
+        ctx.globalCompositeOperation = "source-over";
+        ctx.fillStyle = `hsla(${act.color.h + this.completedActs.size * 4}, 70%, ${this.phase === "final" ? 18 : 10}%, 0.18)`;
+        ctx.fillRect(0, 0, this.width, this.height);
+        if (now < this.glitchUntil) {
+          ctx.globalCompositeOperation = "lighter";
+          ctx.fillStyle = "rgba(255, 32, 64, 0.18)";
+          ctx.fillRect(0, 0, this.width, this.height);
+          ctx.fillStyle = "rgba(56, 189, 248, 0.14)";
+          ctx.fillRect(8 * this.dpr, 0, this.width, this.height);
+        }
+        ctx.restore();
+      }
+
+      drawCodeRain(now) {
+        const { ctx } = this.layers.get("codeRain");
+        const density = Math.floor(56 * this.particleScale);
+        ctx.fillStyle = "rgba(2, 6, 23, 0.8)";
+        ctx.fillRect(0, 0, this.width, this.height);
+        ctx.font = `${12 * this.dpr}px JetBrains Mono, monospace`;
+        ctx.textAlign = "center";
+        for (let i = 0; i < density; i += 1) {
+          const x = ((i * 97 + now * 0.018) % this.width);
+          const y = ((i * 173 + now * (0.05 + (i % 7) * 0.008)) % this.height);
+          ctx.fillStyle = `hsla(${176 + (i % 5) * 18}, 86%, 62%, ${0.08 + (i % 4) * 0.035})`;
+          ctx.fillText(["int", "if", "for", "fn", "0x"][i % 5], x, y);
+        }
+      }
+
+      drawGroundGrid(now) {
+        const { ctx } = this.layers.get("groundGrid");
+        const act = MEMORY_CORE_ACTS[this.actIndex];
+        const horizon = this.height * 0.58;
+        const tile = 72 * this.dpr;
+        ctx.strokeStyle = `hsla(${act.color.h}, 82%, 58%, 0.18)`;
+        ctx.lineWidth = 1 * this.dpr;
+        for (let x = (-(now * 0.018) % tile); x < this.width; x += tile) {
+          if (x < -tile || x > this.width + tile) continue;
+          ctx.beginPath();
+          ctx.moveTo(x, horizon);
+          ctx.lineTo(this.width * 0.5 + (x - this.width * 0.5) * 2.8, this.height);
+          ctx.stroke();
+        }
+        for (let y = horizon; y < this.height; y += tile * 0.72) {
+          if (y < horizon || y > this.height) continue;
+          ctx.beginPath();
+          ctx.moveTo(0, y);
+          ctx.lineTo(this.width, y);
+          ctx.stroke();
+        }
+        ctx.globalCompositeOperation = "lighter";
+        ctx.strokeStyle = `hsla(${act.color.h}, 92%, 66%, ${0.18 + this.completedActs.size * 0.035})`;
+        ctx.beginPath();
+        ctx.moveTo(0, horizon + this.completedActs.size * 12 * this.dpr);
+        ctx.lineTo(this.width, horizon + this.completedActs.size * 12 * this.dpr);
+        ctx.stroke();
+        ctx.globalCompositeOperation = "source-over";
+      }
+
+      drawSceneObjects(now) {
+        const { ctx } = this.layers.get("sceneObjects");
+        const act = MEMORY_CORE_ACTS[this.actIndex];
+        const cx = this.width * 0.5;
+        const cy = this.height * 0.46;
+        const pulse = 0.5 + Math.sin(now / 520) * 0.5;
+        const ray = ctx.createLinearGradient(cx, cy - 220 * this.dpr, cx, cy + 220 * this.dpr);
+        ray.addColorStop(0, `hsla(${act.color.h}, 92%, 68%, 0)`);
+        ray.addColorStop(0.45, `hsla(${act.color.h}, 92%, 68%, ${0.12 + pulse * 0.1})`);
+        ray.addColorStop(1, `hsla(${act.color.h}, 92%, 68%, 0)`);
+        ctx.globalCompositeOperation = "lighter";
+        ctx.fillStyle = ray;
+        ctx.beginPath();
+        ctx.moveTo(cx - 110 * this.dpr, 0);
+        ctx.lineTo(cx + 110 * this.dpr, 0);
+        ctx.lineTo(cx + 34 * this.dpr, this.height);
+        ctx.lineTo(cx - 34 * this.dpr, this.height);
+        ctx.closePath();
+        ctx.fill();
+        ctx.strokeStyle = `hsla(${act.color.h}, 92%, 64%, 0.74)`;
+        ctx.lineWidth = 3 * this.dpr;
+        ctx.strokeRect(cx - 56 * this.dpr, cy - 96 * this.dpr, 112 * this.dpr, 176 * this.dpr);
+        ctx.strokeStyle = `hsla(${act.color.h + 38}, 88%, 70%, 0.38)`;
+        ctx.beginPath();
+        ctx.arc(cx, cy, (122 + pulse * 18) * this.dpr, 0, Math.PI * 2);
+        ctx.stroke();
+        ctx.globalCompositeOperation = "source-over";
+        ctx.fillStyle = "rgba(2, 6, 23, 0.68)";
+        ctx.fillRect(cx - 72 * this.dpr, cy - 20 * this.dpr, 144 * this.dpr, 42 * this.dpr);
+        ctx.fillStyle = "#dbeafe";
+        ctx.font = `${18 * this.dpr}px JetBrains Mono, monospace`;
+        ctx.textAlign = "center";
+        ctx.fillText(act.concept, cx, cy + 7 * this.dpr);
+      }
+
+      drawParticles(now) {
+        const { ctx } = this.layers.get("particles");
+        const center = { x: this.width * 0.5, y: this.height * 0.5 };
+        const drawParticle = (particle) => {
+          if (!particle.alive) return;
+          const age = now - particle.born;
+          const t = Math.max(0, Math.min(1, age / particle.life));
+          const distance = Math.hypot(particle.x - center.x, particle.y - center.y);
+          const lodAlpha = distance > 500 ? 0.1 : 1;
+          const lodSize = distance > 500 ? 0.5 : 1;
+          const alpha = (1 - t) * lodAlpha * (particle.type === "environment" ? 0.42 : 0.82) * this.particleScale;
+          if (alpha <= 0.01) return;
+          ctx.globalCompositeOperation = "lighter";
+          ctx.fillStyle = `hsla(${particle.h}, ${particle.s}%, ${particle.l}%, ${alpha})`;
+          ctx.beginPath();
+          ctx.arc(particle.x, particle.y, particle.size * lodSize * this.dpr, 0, Math.PI * 2);
+          ctx.fill();
+        };
+        this.environmentParticles.forEach(drawParticle);
+        this.interactionParticles.forEach(drawParticle);
+        ctx.globalCompositeOperation = "source-over";
+      }
+
+      drawActors(now) {
+        const { ctx } = this.layers.get("actors");
+        const playerX = this.width * 0.36;
+        const npcX = this.width * 0.64;
+        const y = this.height * 0.62;
+        this.drawSpriteActor(ctx, playerX, y, "#38bdf8", this.playerAction, now, "修复进程");
+        const npcTone = this.npcAction === MEMORY_CORE_NPC_ACTIONS.SIGH ? "#fca5a5" : this.npcAction === MEMORY_CORE_NPC_ACTIONS.ENCOURAGE ? "#fde68a" : "#86efac";
+        this.drawSpriteActor(ctx, npcX, y, npcTone, this.npcAction, now, "导师进程");
+      }
+
+      drawSpriteActor(ctx, x, y, color, action, now, label) {
+        const breathe = Math.sin(now / 420) * 3 * this.dpr;
+        const walk = action === MEMORY_CORE_PLAYER_ACTIONS.WALK ? Math.abs(Math.sin(now / 95)) * 8 * this.dpr : 0;
+        const interactGlow = action === MEMORY_CORE_PLAYER_ACTIONS.INTERACT ? Math.max(0, 1 - ((now % 2000) / 2000)) : 0;
+        const failBend = action === MEMORY_CORE_PLAYER_ACTIONS.COMPILE_FAIL ? 8 * this.dpr : 0;
+        const successLean = action === MEMORY_CORE_PLAYER_ACTIONS.COMPILE_SUCCESS ? -6 * this.dpr : 0;
+        ctx.save();
+        ctx.translate(x, y + breathe - walk + failBend);
+        ctx.strokeStyle = color;
+        ctx.fillStyle = "rgba(2, 6, 23, 0.78)";
+        ctx.lineWidth = 3 * this.dpr;
+        ctx.shadowColor = color;
+        ctx.shadowBlur = 18 * this.dpr;
+        ctx.beginPath();
+        ctx.roundRect(-22 * this.dpr, -72 * this.dpr + successLean, 44 * this.dpr, 72 * this.dpr, 16 * this.dpr);
+        ctx.fill();
+        ctx.stroke();
+        ctx.beginPath();
+        ctx.arc(0, -86 * this.dpr + successLean, 21 * this.dpr, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.stroke();
+        ctx.beginPath();
+        ctx.moveTo(-18 * this.dpr, -35 * this.dpr);
+        ctx.lineTo(-38 * this.dpr, -12 * this.dpr + failBend);
+        ctx.moveTo(18 * this.dpr, -35 * this.dpr);
+        ctx.lineTo(40 * this.dpr, -18 * this.dpr - interactGlow * 18 * this.dpr);
+        ctx.stroke();
+        if (interactGlow) {
+          ctx.globalCompositeOperation = "lighter";
+          ctx.fillStyle = `rgba(74, 222, 128, ${0.3 + interactGlow * 0.45})`;
+          ctx.beginPath();
+          ctx.arc(42 * this.dpr, -20 * this.dpr - interactGlow * 18 * this.dpr, (7 + interactGlow * 12) * this.dpr, 0, Math.PI * 2);
+          ctx.fill();
+        }
+        ctx.globalCompositeOperation = "source-over";
+        ctx.shadowBlur = 0;
+        ctx.fillStyle = "rgba(226, 232, 240, 0.86)";
+        ctx.font = `${12 * this.dpr}px JetBrains Mono, monospace`;
+        ctx.textAlign = "center";
+        ctx.fillText(label, 0, 20 * this.dpr);
+        ctx.restore();
+      }
+
+      drawUiFx(now) {
+        const { ctx } = this.layers.get("uiFx");
+        const act = MEMORY_CORE_ACTS[this.actIndex];
+        this.buttons = [];
+        ctx.save();
+        ctx.globalAlpha = this.uiFrameAlpha;
+        ctx.fillStyle = "rgba(2, 6, 23, 0.72)";
+        ctx.strokeStyle = `hsla(${act.color.h}, 88%, 62%, 0.58)`;
+        ctx.lineWidth = 1.5 * this.dpr;
+        const panel = { x: this.width * 0.08, y: this.height * 0.72, w: this.width * 0.84, h: this.height * 0.22 };
+        ctx.shadowColor = `hsla(${act.color.h}, 88%, 62%, 0.55)`;
+        ctx.shadowBlur = 22 * this.dpr;
+        ctx.beginPath();
+        ctx.roundRect(panel.x, panel.y, panel.w, panel.h, 16 * this.dpr);
+        ctx.fill();
+        ctx.stroke();
+        ctx.shadowBlur = 0;
+        ctx.fillStyle = "#dbeafe";
+        ctx.font = `${16 * this.dpr}px JetBrains Mono, monospace`;
+        ctx.textAlign = "left";
+        ctx.fillText(`${act.title} // ${act.concept}`, panel.x + 20 * this.dpr, panel.y + 32 * this.dpr);
+        ctx.font = `${14 * this.dpr}px JetBrains Mono, monospace`;
+        ctx.shadowColor = `hsla(${act.color.h}, 88%, 72%, 0.85)`;
+        ctx.shadowBlur = 10 * this.dpr;
+        this.wrapText(ctx, this.typedText, panel.x + 20 * this.dpr, panel.y + 64 * this.dpr, panel.w - 40 * this.dpr, 24 * this.dpr);
+        ctx.shadowBlur = 0;
+        this.drawProgress(ctx, panel.x + 20 * this.dpr, panel.y + panel.h - 26 * this.dpr, panel.w - 40 * this.dpr, 8 * this.dpr);
+        this.drawCoreButtons(ctx, panel);
+        this.drawNotification(ctx, now);
+        if (this.phase === "final") {
+          this.drawButton(ctx, {
+            id: "finish",
+            label: "进入启航村",
+            x: this.width * 0.5 - 110 * this.dpr,
+            y: this.height * 0.54,
+            w: 220 * this.dpr,
+            h: 52 * this.dpr,
+            action: () => this.complete("finished")
+          });
+        }
+        ctx.restore();
+      }
+
+      drawCoreButtons(ctx, panel) {
+        if (this.phase !== "core" || !this.isTypingComplete()) return;
+        const act = MEMORY_CORE_ACTS[this.actIndex];
+        const y = panel.y - 70 * this.dpr;
+        if (act.choices?.length && !gameState.progress.memoryCoreChoice) {
+          act.choices.forEach((choice, index) => {
+            this.drawButton(ctx, {
+              id: choice.id,
+              label: choice.label,
+              x: this.width * 0.5 + (index - 1) * 170 * this.dpr + 20 * this.dpr,
+              y,
+              w: 150 * this.dpr,
+              h: 48 * this.dpr,
+              action: () => this.completeCore(choice.id)
+            });
+          });
+          return;
+        }
+        this.drawButton(ctx, {
+          id: "compile",
+          label: `编译 ${act.concept}`,
+          x: this.width * 0.5 - 180 * this.dpr,
+          y,
+          w: 170 * this.dpr,
+          h: 48 * this.dpr,
+          action: () => this.completeCore()
+        });
+        this.drawButton(ctx, {
+          id: "fail",
+          label: "故障试跑",
+          x: this.width * 0.5 + 10 * this.dpr,
+          y,
+          w: 170 * this.dpr,
+          h: 48 * this.dpr,
+          action: () => this.triggerFailure()
+        });
+      }
+
+      drawButton(ctx, button) {
+        const hovered = this.hoverButton?.id === button.id;
+        const y = hovered ? button.y - 2 * this.dpr : button.y;
+        ctx.save();
+        ctx.shadowColor = "rgba(34, 211, 238, 0.46)";
+        ctx.shadowBlur = hovered ? 24 * this.dpr : 10 * this.dpr;
+        ctx.fillStyle = hovered ? "rgba(14, 165, 233, 0.24)" : "rgba(15, 23, 42, 0.84)";
+        ctx.strokeStyle = hovered ? "rgba(186, 230, 253, 0.92)" : "rgba(56, 189, 248, 0.58)";
+        ctx.lineWidth = 1.4 * this.dpr;
+        ctx.beginPath();
+        ctx.roundRect(button.x, y, button.w, button.h, 8 * this.dpr);
+        ctx.fill();
+        ctx.stroke();
+        ctx.shadowBlur = 0;
+        ctx.fillStyle = "#e0f2fe";
+        ctx.font = `${14 * this.dpr}px JetBrains Mono, monospace`;
+        ctx.textAlign = "center";
+        ctx.textBaseline = "middle";
+        ctx.fillText(button.label, button.x + button.w / 2, y + button.h / 2);
+        ctx.restore();
+        this.buttons.push(button);
+      }
+
+      drawProgress(ctx, x, y, w, h) {
+        const progress = (this.completedActs.size + (this.phase === "exit" ? 0.6 : this.phase === "core" ? 0.35 : 0.12)) / MEMORY_CORE_ACTS.length;
+        const eased = Math.min(1.1, MEMORY_CORE_EASING.easeOutBack(progress));
+        ctx.fillStyle = "rgba(15, 23, 42, 0.9)";
+        ctx.fillRect(x, y, w, h);
+        ctx.fillStyle = "rgba(56, 189, 248, 0.88)";
+        ctx.fillRect(x, y, w * Math.min(1, eased), h);
+      }
+
+      drawNotification(ctx, now) {
+        if (!this.notification) return;
+        const age = now - this.notification.born;
+        if (age > this.notification.life) {
+          this.notification = null;
+          return;
+        }
+        const t = Math.min(1, age / 420);
+        const alpha = Math.max(0, 1 - age / this.notification.life);
+        const x = (-280 + MEMORY_CORE_EASING.easeOutBack(t) * 320) * this.dpr;
+        const y = 82 * this.dpr;
+        ctx.save();
+        ctx.globalAlpha = alpha;
+        for (let i = 0; i < 4; i += 1) {
+          ctx.fillStyle = `rgba(56, 189, 248, ${0.05 - i * 0.008})`;
+          ctx.fillRect(x - i * 18 * this.dpr, y + i * 3 * this.dpr, 320 * this.dpr, 42 * this.dpr);
+        }
+        ctx.fillStyle = "rgba(2, 6, 23, 0.84)";
+        ctx.strokeStyle = "rgba(125, 211, 252, 0.7)";
+        ctx.beginPath();
+        ctx.roundRect(x, y, 320 * this.dpr, 42 * this.dpr, 10 * this.dpr);
+        ctx.fill();
+        ctx.stroke();
+        ctx.fillStyle = "#dbeafe";
+        ctx.font = `${13 * this.dpr}px JetBrains Mono, monospace`;
+        ctx.textAlign = "left";
+        ctx.fillText(this.notification.text, x + 16 * this.dpr, y + 26 * this.dpr);
+        ctx.restore();
+      }
+
+      wrapText(ctx, text, x, y, maxWidth, lineHeight) {
+        const paragraphs = String(text || "").split("\n");
+        let lineY = y;
+        paragraphs.forEach((paragraph) => {
+          let line = "";
+          Array.from(paragraph).forEach((char) => {
+            const testLine = line + char;
+            if (ctx.measureText(testLine).width > maxWidth && line) {
+              ctx.fillText(line, x, lineY);
+              line = char;
+              lineY += lineHeight;
+            } else line = testLine;
+          });
+          ctx.fillText(line, x, lineY);
+          lineY += lineHeight;
+        });
+      }
+
+      complete(reason = "finished") {
+        if (!this.overlay?.classList.contains("active")) return;
+        cancelAnimationFrame(this.rafId);
+        this.unbindEvents();
+        this.audio.releaseActCache();
+        this.audio.stop();
+        this.overlay.classList.remove("active");
+        this.overlay.setAttribute("aria-hidden", "true");
+        document.body.classList.remove("memory-core-cinematic-active");
+        gameState.progress.memoryCoreCinematicComplete = reason === "finished";
+        if (reason === "finished") gameState.progress.memoryCoreCinematicClearedActs = MEMORY_CORE_ACTS.map((act) => act.id);
+        saveProgress?.();
+        const resolve = this.resolve;
+        this.resolve = null;
+        resolve?.({ reason, choice: gameState.progress.memoryCoreChoice || "" });
+      }
+    }
+
+    let memoryCoreCinematicEngine = null;
+
+    async function playMemoryCoreCinematicBridge(character = gameState.progress.codeGenesisCharacter) {
+      if (gameState.progress.memoryCoreCinematicComplete) return { skipped: true };
+      if (!memoryCoreCinematicEngine) {
+        memoryCoreCinematicEngine = new MemoryCoreCinematicEngine({
+          overlay: dom.memoryCoreCinematicOverlay,
+          canvas: dom.memoryCoreCinematicCanvas,
+          status: dom.memoryCoreCinematicStatus,
+          skipButton: dom.memoryCoreCinematicSkipButton
+        });
+      }
+      return memoryCoreCinematicEngine.start({ character });
+    }
+
     let postGenesisSetupSelection = { ...POST_GENESIS_SETUP_DEFAULTS };
     let postGenesisSetupResolve = null;
 
@@ -23376,6 +24478,7 @@ ${item.code}
         typeCodeGenesisAppend(dom.codeGenesisOutput, `欢迎来到这个世界，${state.name}。\n`, 34);
         await PlayBirthEffect();
         await openPostGenesisSetupOverlay(character);
+        await playMemoryCoreCinematicBridge(character);
         const loaded = await LoadNextSceneWithTimeout(3000);
         if (!loaded) {
           codeGenesisCompletionInFlight = false;

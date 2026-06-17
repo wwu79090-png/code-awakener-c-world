@@ -36,6 +36,12 @@ scripts\deploy-oneclick.bat 你的用户名/仓库名 main create wait
 $env:GH_TOKEN="你的_PAT"; $env:GH_REPO="你的用户名/仓库名"; .\scripts\quick-deploy.ps1 -Branch main -Create -Wait
 ```
 
+如果你自己的 PowerShell 经常启动慢，推荐至少保留这两个参数：
+```powershell
+powershell -NoLogo -NoProfile -NonInteractive -ExecutionPolicy Bypass
+```
+仓库内的 `quick-deploy.ps1` 也已经关闭了模块自动加载和进度输出，`deploy-auto.bat` 则不再额外拉起 PowerShell 探测仓库信息。
+
 #### 方式 B：直接 npm（无脚本包裹）
 ```bash
 npm run deploy:gh-pages -- --repo 你的用户名/仓库名 --branch main --create --wait
@@ -82,3 +88,10 @@ scripts\deploy-auto.bat 你的用户名/仓库名 main create wait
 - 游戏页不再加载 Google Fonts、jsDelivr 字体或远程 Phaser，首屏运行库随 `dist/vendor/` 一起发布。
 - 官网在慢网、省流量、移动端或低性能设备上自动进入低功耗模式，跳过 Three.js/GSAP 重特效。
 - 官网外部 ES Module 都带超时回退，CDN 慢时保留 Canvas/CSS 基础内容，不阻塞首页。
+
+## 统一诊断入口
+- `npm run diagnose`：按固定顺序跑核心测试、静态检查、构建和视觉检查。
+- `npm run diagnose:ui`：在上面基础上再跑移动端烟测。
+- `npm run diagnose:all`：完整诊断，包含移动端烟测。
+
+诊断结果会写到 `tmp-smoke/diagnostics/<timestamp>/`，每个阶段都有单独日志。这样 Codex 遇到问题时，可以先沿着同一条路径定位，不用中途改方法。
