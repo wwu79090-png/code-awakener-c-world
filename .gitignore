@@ -16,6 +16,7 @@ Desktop.ini
 
 # 游戏测试临时目录
 .superpowers/
+tmp-smoke/
 
 # 本地构建与缓存
 coverage/

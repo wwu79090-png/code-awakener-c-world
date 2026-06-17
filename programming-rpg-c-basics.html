@@ -14,7 +14,7 @@
   <meta http-equiv="Cache-Control" content="no-store, max-age=0, must-revalidate">
   <meta http-equiv="Pragma" content="no-cache">
   <meta http-equiv="Expires" content="0">
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self' file:; base-uri 'self'; object-src 'none'; frame-ancestors 'none'; script-src 'self' 'nonce-code-awakener-inline' file: 'sha256-eenj4CojdPrNuj2GpWth9M2xwGcJVGF6Su42jduEKi8='; style-src 'self' 'nonce-code-awakener-inline' file: 'sha256-yrxVsPlrV14nM4EJhhe53enSo12dZIS/rUNHHraiFUo='; style-src-attr 'unsafe-inline'; font-src 'self' file: data:; img-src 'self' file: data: blob: https://cdn.pixabay.com; media-src 'self' file: data: blob: https: http: https://cdn.pixabay.com; worker-src 'self' file: blob:; child-src 'self' file: blob:; connect-src 'self' file: http://localhost:8000 http://127.0.0.1:8000 https://cdn.pixabay.com https://pixabay.com;">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self' file:; base-uri 'self'; object-src 'none'; script-src 'self' 'nonce-code-awakener-inline' file: 'sha256-r+fIGFH643ukXG8W2x8oSaY69JE34GfuIFfcZ688ZbA='; style-src 'self' 'nonce-code-awakener-inline' file: 'sha256-yrxVsPlrV14nM4EJhhe53enSo12dZIS/rUNHHraiFUo='; style-src-attr 'unsafe-inline'; font-src 'self' file: data:; img-src 'self' file: data: blob: https://cdn.pixabay.com; media-src 'self' file: data: blob: https: http: https://cdn.pixabay.com; worker-src 'self' file: blob:; child-src 'self' file: blob:; connect-src 'self' file: http://localhost:8000 http://127.0.0.1:8000 https://cdn.pixabay.com https://pixabay.com;">
   <title>编程学习 RPG：C 语言启航村</title>
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%23020617'/%3E%3Cpath d='M22 20 10 32l12 12M42 20l12 12-12 12' fill='none' stroke='%2300ff88' stroke-width='6' stroke-linecap='round' stroke-linejoin='round'/%3E%3Cpath d='m36 16-8 32' stroke='%2300ccff' stroke-width='5' stroke-linecap='round'/%3E%3C/svg%3E">
   <script src="./vendor/phaser.min.js"></script>
@@ -11358,8 +11358,8 @@
       <p>&gt; 如果这里一直空白，说明浏览器缓存、旧存档或脚本自检阻塞了启动。</p>
       <p>&gt; 使用下面入口可以绕过旧缓存并关闭重型特效，学习进度仍会保留。</p>
       <div class="static-rescue-actions">
-        <a href="./programming-rpg-c-basics.html?safeMode=true&noAudio=true&v=1.1.0">安全启动</a>
-        <a href="./programming-rpg-c-basics.html?v=1.1.0">强制刷新</a>
+        <a href="./programming-rpg-c-basics.html?safeMode=true&noAudio=true&v=1.1.1">安全启动</a>
+        <a href="./programming-rpg-c-basics.html?v=1.1.1">强制刷新</a>
       </div>
       <p>作者：杀戮 · QQ：3424636983 · 官方Q群：414374792</p>
     </div>
@@ -11568,7 +11568,7 @@
       <canvas id="menuFxCanvas" width="1280" height="720"></canvas>
       <div class="main-menu-card glass-panel">
         <h1 class="game-logo">CODE AWAKENER<br>C 语言启航村</h1>
-        <div class="version-label" id="versionLabel">World Build v1.1.0 · develop.fan C Basics</div>
+        <div class="version-label" id="versionLabel">World Build v1.1.1 · develop.fan C Basics</div>
         <div id="musicSwitcher" class="music-switcher" aria-label="音乐主题切换器">
           <div class="music-switcher-copy">
             <span class="music-switcher-kicker">♪ 当前音乐主题</span>
@@ -12316,12 +12316,11 @@ int main(void) {
       <button id="announcementCloseButton" class="announcement-close" type="button" aria-label="关闭公告">×</button>
       <h2 id="startupAnnouncementTitle" class="startup-announcement-title">> 消息 / 本次更新</h2>
       <div id="announcementPageBody" class="startup-announcement-body">
-        <p>// v1.1.0：五幕记忆内核剧情正式接入。</p>
-        <p>// 创角完成后进入 OffscreenCanvas 剧情桥，依次学习变量、输入输出、条件、循环、函数。</p>
-        <p>// 每幕包含入口剧情、核心编译交互和出口剧情，通关后环境、粒子、地面光效与音乐情绪会永久变化。</p>
-        <p>// 第二幕新增理性派 / 感性派选择，会写入存档并影响导师进程后续对白态度。</p>
-        <p>// 新增 Web Audio 三层动态音乐、空间音效、键盘随机变调、石碑/开阔地混响和故障反馈。</p>
-        <p>// 修复质量门禁漏检：审计脚本现在能扫描带 nonce 的主脚本，移动烟测会覆盖创角后进入世界流程。</p>
+        <p>// v1.1.1：旧存档进入世界前会补播五幕记忆内核剧情，不再直接跳过新剧情桥。</p>
+        <p>// 如果玩家主动点击“跳过”，系统会记录为手动跳过，避免后续每次读档重复弹出。</p>
+        <p>// 记忆核心动画已加入新手引导阻塞名单，防止剧情期间叠加其他教程弹层。</p>
+        <p>// CSP 移除浏览器会忽略的 meta frame-ancestors，并保留运行时防嵌套安全层，控制台更干净。</p>
+        <p>// 完整回归已覆盖静态测试、旧档浏览器验证、移动烟测、构建和全量诊断。</p>
         <p>// 作者：杀戮，QQ：3424636983，官方Q群：414374792。</p>
         <p class="announcement-dismiss-hint">- 点击任意处关闭</p>
       </div>
@@ -12833,25 +12832,35 @@ int main() {
     const SAVE_CLEAR_CONFIRM_MS = 3000;
     const STARTUP_ANNOUNCEMENT_AUTO_HIDE_MS = 14000;
     const SYSTEM_BOOT_FORCE_RELEASE_MS = 3200;
-    const GAME_VERSION = "v1.1.0";
+    const GAME_VERSION = "v1.1.1";
     const OFFICIAL_SITE_HREF = "./official-site.html";
     const UPDATE_ANNOUNCEMENT_PAGES = Object.freeze([
       {
         title: "> 消息 / 本次更新",
         lines: [
-          "// v1.1.0：五幕记忆内核剧情正式接入。",
-          "// 创角完成后进入 OffscreenCanvas 剧情桥，依次学习变量、输入输出、条件、循环、函数。",
-          "// 每幕包含入口剧情、核心编译交互和出口剧情，通关后环境、粒子、地面光效与音乐情绪会永久变化。",
-          "// 第二幕新增理性派 / 感性派选择，会写入存档并影响导师进程后续对白态度。",
-          "// 新增 Web Audio 三层动态音乐、空间音效、键盘随机变调、石碑/开阔地混响和故障反馈。",
-          "// 渲染层按代码雨、地面网格、物件、粒子、角色、UI 顺序叠加，并带自动降级保护。",
-          "// 质量门禁修复：审计脚本现在能扫描带 nonce 的主脚本，移动烟测会覆盖创角后进入世界流程。",
-          "// 安全启动、强制刷新、CSP 和脚本自检已同步到 v1.1.0，方便绕过旧缓存。",
+          "// v1.1.1：旧存档进入世界前会补播五幕记忆内核剧情，不再直接跳过新剧情桥。",
+          "// 固定存档 gameSave.json 会先恢复角色数据，再进入记忆核心动画门。",
+          "// 如果玩家主动点击“跳过”，系统会记录为手动跳过，避免后续每次读档重复弹出。",
+          "// 记忆核心动画已加入新手引导阻塞名单，防止剧情期间叠加其他教程弹层。",
+          "// CSP 移除浏览器会忽略的 meta frame-ancestors，并保留运行时防嵌套安全层。",
+          "// 安全启动、强制刷新、CSP 和脚本自检已同步到 v1.1.1，方便绕过旧缓存。",
           "// 作者：杀戮，QQ：3424636983，官方Q群：414374792。"
         ]
       }
     ]);
     const UPDATE_HISTORY = Object.freeze([
+      {
+        version: "v1.1.1",
+        date: "2026-06-17",
+        title: "旧存档剧情桥热修",
+        details: [
+          "旧存档或继续游戏进入世界前会统一经过记忆核心剧情门，不再绕过 v1.1.0 新增五幕剧情桥。",
+          "固定存档 gameSave.json 会先恢复角色数据，再交给记忆核心动画使用，避免导师对白拿不到角色名。",
+          "玩家主动点击“跳过”会写入 memoryCoreCinematicSkipped 和观看时间，避免每次读档重复弹出。",
+          "记忆核心覆盖层加入新手引导阻塞名单，防止动画期间叠加其他教程弹层。",
+          "移除浏览器会忽略的 meta frame-ancestors，保留运行时防嵌套安全层并降低控制台误报。官方Q群：414374792。"
+        ]
+      },
       {
         version: "v1.1.0",
         date: "2026-06-17",
@@ -14124,7 +14133,7 @@ return 0;`;
       directSaveAs: "reduced-by-inline-resources"
     });
     const SECURITY_CONFIG = Object.freeze({
-      expectedScriptHash: "Gd5gXcAq2XMjyHS52aUwc7vBXVcpx2TRjhGqZQuePVg=",
+      expectedScriptHash: "POjfvTxXO7bXV/uRNXZd25EBqsLTlmdllggmRadfNn8=",
       selfCheckIntervalMs: 45000,
       tamperRefreshMs: 5000,
       devToolsRefreshMs: 2000,
@@ -17222,6 +17231,10 @@ return 0;`;
       friendlyAchievements: [],
       firstFriendlyOpenedAt: "",
       postGenesisSetupComplete: false,
+      memoryCoreCinematicComplete: false,
+      memoryCoreCinematicSkipped: false,
+      memoryCoreCinematicClearedActs: [],
+      memoryCoreCinematicLastSeenAt: "",
       restReminderLastShownAt: 0,
       tutorialAnimationsSeen: {},
       editorUseStartedAt: 0,
@@ -24287,8 +24300,13 @@ ${item.code}
         this.overlay.classList.remove("active");
         this.overlay.setAttribute("aria-hidden", "true");
         document.body.classList.remove("memory-core-cinematic-active");
-        gameState.progress.memoryCoreCinematicComplete = reason === "finished";
-        if (reason === "finished") gameState.progress.memoryCoreCinematicClearedActs = MEMORY_CORE_ACTS.map((act) => act.id);
+        const finished = reason === "finished";
+        const skipped = reason === "skipped";
+        gameState.progress.memoryCoreCinematicComplete = finished;
+        gameState.progress.memoryCoreCinematicSkipped = skipped;
+        gameState.progress.memoryCoreCinematicLastSeenAt = new Date().toISOString();
+        if (finished) gameState.progress.memoryCoreCinematicClearedActs = MEMORY_CORE_ACTS.map((act) => act.id);
+        else gameState.progress.memoryCoreCinematicClearedActs = Array.from(this.completedActs);
         saveProgress?.();
         const resolve = this.resolve;
         this.resolve = null;
@@ -24299,7 +24317,8 @@ ${item.code}
     let memoryCoreCinematicEngine = null;
 
     async function playMemoryCoreCinematicBridge(character = gameState.progress.codeGenesisCharacter) {
-      if (gameState.progress.memoryCoreCinematicComplete) return { skipped: true };
+      const progress = gameState.progress || {};
+      if (progress.memoryCoreCinematicComplete || progress.memoryCoreCinematicSkipped) return { skipped: true };
       if (!memoryCoreCinematicEngine) {
         memoryCoreCinematicEngine = new MemoryCoreCinematicEngine({
           overlay: dom.memoryCoreCinematicOverlay,
@@ -24309,6 +24328,44 @@ ${item.code}
         });
       }
       return memoryCoreCinematicEngine.start({ character });
+    }
+
+    function shouldPlayMemoryCoreCinematicBeforeWorldEntry() {
+      const progress = gameState.progress || {};
+      return Boolean(
+        hasCompletedCodeGenesisCharacter() &&
+        !progress.memoryCoreCinematicComplete &&
+        !progress.memoryCoreCinematicSkipped
+      );
+    }
+
+    function hydrateLegacyCharacterForMemoryCoreGate() {
+      if (gameState.progress?.codeGenesisCharacter?.complete) return gameState.progress.codeGenesisCharacter;
+      try {
+        const checked = validateFixedGameSaveJson(readFixedGameSaveJson());
+        if (checked.valid && checked.character) {
+          hydrateCharacterFromFixedSave(checked.character);
+          return gameState.progress.codeGenesisCharacter;
+        }
+      } catch (error) {
+        errorRingBuffer?.push?.(error, ERROR_LEVELS.recoverable, { action: "hydrateLegacyCharacterForMemoryCoreGate" });
+      }
+      return gameState.progress?.codeGenesisCharacter || null;
+    }
+
+    async function ensureMemoryCoreCinematicBeforeWorldEntry() {
+      if (!shouldPlayMemoryCoreCinematicBeforeWorldEntry()) return { skipped: true, reason: "already-seen-or-no-character" };
+      const character = hydrateLegacyCharacterForMemoryCoreGate();
+      dom.mainMenu?.classList.remove("active");
+      dom.pauseMenu?.classList.remove("active");
+      dom.settingsPanel?.classList.remove("active");
+      dom.creditsOverlay?.classList.remove("active");
+      dom.updateHistoryOverlay?.classList.remove("active");
+      dom.worldSelectOverlay?.classList.remove("active");
+      document.body.classList.remove("menu-open", "is-paused", "pause-menu-open", "is-settings-open");
+      gameState.menuOpen = false;
+      gameState.paused = false;
+      return playMemoryCoreCinematicBridge(character);
     }
 
     let postGenesisSetupSelection = { ...POST_GENESIS_SETUP_DEFAULTS };
@@ -32923,6 +32980,7 @@ ${item.code}
         dom.mainMenu,
         dom.worldSelectOverlay,
         dom.codeGenesisOverlay,
+        dom.memoryCoreCinematicOverlay,
         dom.pixelLoadingOverlay,
         dom.mobileFullscreenPrompt,
         dom.settingsPanel,
@@ -33832,6 +33890,7 @@ ${item.code}
         this.selectedIndex = 0;
         this.menuButtons = [];
         this.animationFrame = null;
+        this.enterGameWorldInFlight = false;
         this.stopMenuFx = frameScheduler.register("menuCodeRain", (frame) => this.drawMenuFxFrame(frame), {
           frameInterval: 1,
           enabled: () => this.active === "main" || this.active === "pause" || dom.settingsPanel.classList.contains("active")
@@ -34089,7 +34148,23 @@ ${item.code}
         });
       }
 
-      enterGameWorld() {
+      async enterGameWorld() {
+        if (this.enterGameWorldInFlight) return false;
+        this.enterGameWorldInFlight = true;
+        try {
+          await ensureMemoryCoreCinematicBeforeWorldEntry();
+          this.finishEnterGameWorld();
+          return true;
+        } catch (error) {
+          errorRingBuffer.push(error, ERROR_LEVELS.recoverable, { action: "enterGameWorld" });
+          this.finishEnterGameWorld();
+          return false;
+        } finally {
+          this.enterGameWorldInFlight = false;
+        }
+      }
+
+      finishEnterGameWorld() {
         this.active = "game";
         gameState.menuOpen = false;
         gameState.paused = false;

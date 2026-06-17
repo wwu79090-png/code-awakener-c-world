@@ -2,6 +2,14 @@
 
 ## Unreleased
 
+## v1.1.1 - 2026-06-17
+
+- Fixed legacy saves and continue-game entry so completed characters pass through the Memory Core cinematic gate before entering the world.
+- Hydrated fixed `gameSave.json` character data before the cinematic gate so old saves have the correct player identity during the bridge.
+- Persisted intentional Memory Core skips with a timestamp to avoid repeatedly prompting players who chose to skip.
+- Added the Memory Core cinematic overlay to novice-guide blocking checks so tutorials cannot stack over the story.
+- Removed the ignored `frame-ancestors` meta CSP directive and kept the runtime frame-bust security layer to reduce browser console false alarms.
+
 ## v1.1.0 - 2026-06-17
 
 - Added a post-character-creation five-act Memory Core cinematic using OffscreenCanvas layers for code rain, grid, scene objects, particles, actors, and UI effects.
