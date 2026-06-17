@@ -14,7 +14,7 @@
   <meta http-equiv="Cache-Control" content="no-store, max-age=0, must-revalidate">
   <meta http-equiv="Pragma" content="no-cache">
   <meta http-equiv="Expires" content="0">
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self' file:; base-uri 'self'; object-src 'none'; frame-ancestors 'none'; script-src 'self' 'nonce-code-awakener-inline' file: 'sha256-8tASa6Ogo8oq8/LnC7IGi390yCxAgAVYI6exzYm8zPw='; style-src 'self' 'nonce-code-awakener-inline' file: 'sha256-eItKV3ej7b1xpV5MA2IqQ1Vyvr5OsUkfkuuLvlyzDPw='; style-src-attr 'unsafe-inline'; font-src 'self' file: data:; img-src 'self' file: data: blob: https://cdn.pixabay.com; media-src 'self' file: data: blob: https: http: https://cdn.pixabay.com; worker-src 'self' file: blob:; child-src 'self' file: blob:; connect-src 'self' file: http://localhost:8000 http://127.0.0.1:8000 https://cdn.pixabay.com https://pixabay.com;">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self' file:; base-uri 'self'; object-src 'none'; frame-ancestors 'none'; script-src 'self' 'nonce-code-awakener-inline' file: 'sha256-EOc6fDaAVd1+NV3836Xap94liFa/9+VfgiyQFBA2ee4='; style-src 'self' 'nonce-code-awakener-inline' file: 'sha256-eItKV3ej7b1xpV5MA2IqQ1Vyvr5OsUkfkuuLvlyzDPw='; style-src-attr 'unsafe-inline'; font-src 'self' file: data:; img-src 'self' file: data: blob: https://cdn.pixabay.com; media-src 'self' file: data: blob: https: http: https://cdn.pixabay.com; worker-src 'self' file: blob:; child-src 'self' file: blob:; connect-src 'self' file: http://localhost:8000 http://127.0.0.1:8000 https://cdn.pixabay.com https://pixabay.com;">
   <title>编程学习 RPG：C 语言启航村</title>
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%23020617'/%3E%3Cpath d='M22 20 10 32l12 12M42 20l12 12-12 12' fill='none' stroke='%2300ff88' stroke-width='6' stroke-linecap='round' stroke-linejoin='round'/%3E%3Cpath d='m36 16-8 32' stroke='%2300ccff' stroke-width='5' stroke-linecap='round'/%3E%3C/svg%3E">
   <script src="./vendor/phaser.min.js"></script>
@@ -10845,8 +10845,8 @@
       <p>&gt; 如果这里一直空白，说明浏览器缓存、旧存档或脚本自检阻塞了启动。</p>
       <p>&gt; 使用下面入口可以绕过旧缓存并关闭重型特效，学习进度仍会保留。</p>
       <div class="static-rescue-actions">
-        <a href="./programming-rpg-c-basics.html?safeMode=true&noAudio=true&v=1.0.35">安全启动</a>
-        <a href="./programming-rpg-c-basics.html?v=1.0.35">强制刷新</a>
+        <a href="./programming-rpg-c-basics.html?safeMode=true&noAudio=true&v=1.0.36">安全启动</a>
+        <a href="./programming-rpg-c-basics.html?v=1.0.36">强制刷新</a>
       </div>
       <p>作者：杀戮 · QQ：3424636983 · 官方Q群：414374792</p>
     </div>
@@ -11050,7 +11050,7 @@
       <canvas id="menuFxCanvas" width="1280" height="720"></canvas>
       <div class="main-menu-card glass-panel">
         <h1 class="game-logo">CODE AWAKENER<br>C 语言启航村</h1>
-        <div class="version-label" id="versionLabel">World Build v1.0.35 · develop.fan C Basics</div>
+        <div class="version-label" id="versionLabel">World Build v1.0.36 · develop.fan C Basics</div>
         <div id="musicSwitcher" class="music-switcher" aria-label="音乐主题切换器">
           <div class="music-switcher-copy">
             <span class="music-switcher-kicker">♪ 当前音乐主题</span>
@@ -11493,7 +11493,7 @@
         </section>
         <section class="info-menu-section">
           <strong>容错状态</strong>
-          <p class="menu-help">HP是调试容错生命。系统检测到 HP 过低时会自动消耗进化碎片恢复，不需要手动操作。</p>
+          <p class="menu-help">HP是调试容错生命。系统检测到 HP 过低时只会自动消耗可使用进化碎片恢复，不会扣任务碎片。</p>
           <div class="info-menu-row"><span>HP</span><span id="infoHpText">100</span></div>
           <div class="info-menu-meter"><span id="infoHpFill"></span></div>
         </section>
@@ -11798,12 +11798,12 @@ int main(void) {
       <button id="announcementCloseButton" class="announcement-close" type="button" aria-label="关闭公告">×</button>
       <h2 id="startupAnnouncementTitle" class="startup-announcement-title">> 消息 / 本次更新</h2>
       <div id="announcementPageBody" class="startup-announcement-body">
-        <p>// v1.0.35：音频播放中断蓝屏热修复。</p>
-        <p>// 修复浏览器提示 The play() request was interrupted by a call to pause() 时进入终端蓝屏的问题。</p>
-        <p>// Pixabay/自定义音乐切换时的 play() Promise 改为单条已捕获链，避免派生未处理拒绝。</p>
-        <p>// 已知媒体播放/暂停竞态会记录为可恢复音频事件，不再触发 FATAL 运行异常。</p>
-        <p>// 保留音乐切换、QQ外部模式、自定义音乐和合成兜底音乐的淡入淡出体验。</p>
-        <p>// 编译器、公告和安全自检已同步到 v1.0.35，便于绕过旧缓存。</p>
+        <p>// v1.0.36：碎片系统分账与卡关引导修复。</p>
+        <p>// 任务碎片、世界进化碎片、可使用进化碎片已拆清：任务碎片只用于任务、石碑和课程进度。</p>
+        <p>// HP 自动恢复、星盘强化和造物只会消耗可使用进化碎片，不会扣掉任务碎片。</p>
+        <p>// 隐藏代码块任务引导会跳过隐藏、已收集或未启用的碎片，不再把玩家带到空地。</p>
+        <p>// 玩家房间壁炉改为映照任务碎片记忆，不再删除 codeInventory。</p>
+        <p>// 编译器、公告和安全自检已同步到 v1.0.36，便于绕过旧缓存。</p>
         <p>// 作者：杀戮，QQ：3424636983。</p>
         <p>// 官方Q群：414374792。</p>
         <p>// 作者：杀戮</p>
@@ -12309,24 +12309,36 @@ int main() {
     const SAVE_CLEAR_CONFIRM_MS = 3000;
     const STARTUP_ANNOUNCEMENT_AUTO_HIDE_MS = 14000;
     const SYSTEM_BOOT_FORCE_RELEASE_MS = 3200;
-    const GAME_VERSION = "v1.0.35";
+    const GAME_VERSION = "v1.0.36";
     const OFFICIAL_SITE_HREF = "./official-site.html";
     const UPDATE_ANNOUNCEMENT_PAGES = Object.freeze([
       {
         title: "> 消息 / 本次更新",
         lines: [
-          "// v1.0.35：音频播放中断蓝屏热修复。",
-          "// 修复浏览器提示 The play() request was interrupted by a call to pause() 时进入终端蓝屏的问题。",
-          "// Pixabay/自定义音乐切换时的 play() Promise 改为单条已捕获链，避免派生未处理拒绝。",
-          "// 已知媒体播放/暂停竞态会记录为可恢复音频事件，不再触发 FATAL 运行异常。",
-          "// 全局未处理 Promise 边界会识别这类浏览器媒体竞态，保留日志但不打断游戏。",
-          "// 音乐切换、QQ外部模式、自定义音乐和合成兜底音乐仍保留淡入淡出体验。",
-          "// 安全启动、强制刷新、CSP 和脚本自检已同步到 v1.0.35，方便绕过旧缓存。",
+          "// v1.0.36：碎片系统分账与卡关引导修复。",
+          "// 任务碎片/知识碎片只用于任务进度、NPC提交、石碑填空和课程展示，不再作为消耗品。",
+          "// 世界进化奖励统一进入可使用进化碎片池；HP自动恢复、星盘强化和造物只会消耗这一个池。",
+          "// 隐藏代码块任务引导会跳过隐藏、已收集、未启用或还没解锁的碎片，不再指向空地。",
+          "// 玩家房间壁炉改成映照任务碎片记忆，不会删除 codeInventory 里的关键词。",
+          "// 侧边菜单和提示文案已区分任务碎片、世界进化进度、可使用进化碎片，减少误解。",
+          "// 安全启动、强制刷新、CSP 和脚本自检已同步到 v1.0.36，方便绕过旧缓存。",
           "// 作者：杀戮，QQ：3424636983，官方Q群：414374792。"
         ]
       }
     ]);
     const UPDATE_HISTORY = Object.freeze([
+      {
+        version: "v1.0.36",
+        date: "2026-06-17",
+        title: "碎片系统分账与卡关引导修复",
+        details: [
+          "把任务碎片/知识碎片、世界进化碎片、可使用进化碎片拆成清晰账本：任务碎片只用于任务进度、NPC提交、石碑填空和课程展示。",
+          "HP 自动恢复、星盘自动强化、造物模式等消耗逻辑统一走可使用进化碎片接口，不再读取或删除 codeInventory / collectedFragmentKeys。",
+          "收集任务碎片只推进世界完成度与学习记录，不再立即转成可使用碎片，也不会被低 HP 自动恢复吃掉。",
+          "隐藏代码块和基础碎片任务引导改为选择最近的可见、未收集、已启用碎片；没有可见碎片时回落到当前石碑/编译门，避免玩家跟着箭头走到空地。",
+          "玩家房间壁炉仪式改为映照任务碎片记忆，不再 pop 掉任务关键词；侧边菜单显示“任务碎片”和“可使用进化碎片”以区分资源。官方Q群：414374792。"
+        ]
+      },
       {
         version: "v1.0.35",
         date: "2026-06-17",
@@ -12799,7 +12811,7 @@ int main() {
       "世界进化": { icon: "🌍", purpose: "观察世界修复" },
       "场景状态": { icon: "🌦️", purpose: "查看天气和昼夜" },
       "任务提示": { icon: "🧭", purpose: "确认下一步目标" },
-      "知识碎片": { icon: "💎", purpose: "查看碎片位置" },
+      "知识碎片": { icon: "💎", purpose: "查看任务碎片位置" },
       "容错状态": { icon: "❤️", purpose: "查看调试容错" },
       "成长 / 惩罚": { icon: "⭐", purpose: "查看等级和失败代价" },
       "学习辅助": { icon: "💾", purpose: "手动保存和设置" }
@@ -13533,7 +13545,7 @@ return 0;`;
       directSaveAs: "reduced-by-inline-resources"
     });
     const SECURITY_CONFIG = Object.freeze({
-      expectedScriptHash: "UFZUkGIvPMDwVCo7N7trFl+nFPI0gB/eTBTObhlnHMo=",
+      expectedScriptHash: "B1UZ2So7r5fIhBmjbiZSHoVB27DSng2B1/iIFl8m+Fc=",
       selfCheckIntervalMs: 45000,
       tamperRefreshMs: 5000,
       devToolsRefreshMs: 2000,
@@ -21392,7 +21404,7 @@ int main(void) {
       if (!scene?.chapterObjects) return null;
       const stage = gameState.progress.absoluteGuideStage || "welcome";
       if (stage === "fragment") {
-        const fragment = scene.codeFragments?.find((item) => item?.visible !== false && !item.collecting && !gameState.progress.collectedFragmentKeys.includes(getFragmentKey(item)));
+        const fragment = getNextVisibleGuidanceFragment(scene);
         if (fragment) return fragment;
       }
       const chapterId = gameState.activeChallengeId || chapters?.[gameState.progress.currentLevel || 0]?.id || FIRST_MAINLINE_CHAPTER_ID;
@@ -21441,7 +21453,7 @@ int main(void) {
       }
       if (!absoluteGuideRuntime.active) startAbsoluteGuide(false);
       if (gameState.progress.absoluteGuideStage === "fragment") {
-        const hasPendingFragment = scene?.codeFragments?.some((item) => item?.visible !== false && !item.collecting && !gameState.progress.collectedFragmentKeys.includes(getFragmentKey(item)));
+        const hasPendingFragment = Boolean(getNextVisibleGuidanceFragment(scene));
         if (!hasPendingFragment) setAbsoluteGuideStage("followPath", "碎片已处理，跟着光带去下一处。", { save: false });
       }
       updateAbsoluteGuideIdle();
@@ -23709,7 +23721,11 @@ ${item.code}
         const missing = task.requirement.keywords.filter((keyword) => !gameState.codeInventory.includes(keyword));
         return missing.length ? `收集 ${missing.join("、")} 碎片；地面引导线和箭头会指向最近碎片。` : "基础碎片已齐，回导师处交付。";
       }
-      if (task.requirement?.anyKeywordCount) return "沿主路径收集发光代码碎片，靠近即可自动吸附。";
+      if (task.requirement?.anyKeywordCount) {
+        return getNextVisibleGuidanceFragment(gameState.scene)
+          ? "沿主路径收集发光代码碎片，靠近即可自动吸附。"
+          : "当前可见碎片已收完，先完成发光石碑或编译之门，新碎片会显现。";
+      }
       if (task.requirement?.clearedChapter) return "前往当前发光石碑，完成代码填空后通过编译之门。";
       return "跟随地图上的金色箭头前进。";
     }
@@ -23774,7 +23790,7 @@ ${item.code}
         particleScale: 0.5,
         shakeScale: 0.55,
         riftChance: 0,
-        hint: "// 简单：完成度 +12%~20%，碎片 +2~5，粒子减半。"
+        hint: "// 简单：完成度 +12%~20%，可使用进化碎片 +2~5，粒子减半。"
       },
       normal: {
         label: "⚡ 普通",
@@ -23783,7 +23799,7 @@ ${item.code}
         particleScale: 1,
         shakeScale: 1,
         riftChance: 0,
-        hint: "// 普通：完成度 +6%~14%，碎片 +1~3。"
+        hint: "// 普通：完成度 +6%~14%，可使用进化碎片 +1~3。"
       },
       hard: {
         label: "🔥 困难",
@@ -23792,7 +23808,7 @@ ${item.code}
         particleScale: 2,
         shakeScale: 1.75,
         riftChance: 0.24,
-        hint: "// 困难：完成度 +2%~6%，碎片 +0~2，偶发时空裂隙。"
+        hint: "// 困难：完成度 +2%~6%，可使用进化碎片 +0~2，偶发时空裂隙。"
       }
     });
     const WORLD_EVOLUTION_UI_THEMES = Object.freeze({
@@ -24890,7 +24906,7 @@ ${item.code}
       const coursePercent = Math.round((Math.min(snippets.length, snippet.order) / Math.max(1, snippets.length)) * 100);
       gameState.progress.worldEvolutionCompletion = Math.max(Number(gameState.progress.worldEvolutionCompletion) || 0, coursePercent);
       const gained = options.fixedError ? 2 : 1;
-      gameState.progress.worldEvolutionFragments = Math.min(20, (Number(gameState.progress.worldEvolutionFragments) || 0) + gained);
+      const usableGained = grantUsableWorldEvolutionFragments(gained, "tutorial-compile");
       autoSpendEvolutionFragmentsSmartly("compile");
       grantGrowthExperience?.(options.fixedError ? 20 : 10, "c-tutorial");
       addCTutorialLearningLog(`完成 ${snippet.chapterTitle} / ${snippet.title}，掌握：${snippet.concept}`);
@@ -24906,7 +24922,7 @@ ${item.code}
         showReward(`${snippet.chapterTitle} 完成，下一章已解锁。`);
         playWorldEvolutionMilestoneEffect?.(gameState.scene, Math.max(20, Math.round(coursePercent / 20) * 20), { replay: true });
       } else {
-        showReward(`编译成功：${snippet.title} · 🧩 +${gained}`);
+        showReward(`编译成功：${snippet.title} · 可使用进化碎片 +${usableGained}`);
       }
       return true;
     }
@@ -25221,11 +25237,11 @@ ${item.code}
       gameState.progress.successfulCompileStreak = (Number(gameState.progress.successfulCompileStreak) || 0) + 1;
       gameState.progress.bestCompileStreak = Math.max(Number(gameState.progress.bestCompileStreak) || 0, gameState.progress.successfulCompileStreak);
       if (gameState.progress.successfulCompileStreak === 3) {
-        gameState.progress.worldEvolutionFragments = Math.min(20, (Number(gameState.progress.worldEvolutionFragments) || 0) + 1);
-        showReward("三连击：连续成功3次，额外碎片 +1。");
+        grantUsableWorldEvolutionFragments(1, "compile-streak-3");
+        showReward("三连击：连续成功3次，可使用进化碎片 +1。");
       } else if (gameState.progress.successfulCompileStreak === 5) {
-        gameState.progress.worldEvolutionFragments = Math.min(20, (Number(gameState.progress.worldEvolutionFragments) || 0) + 2);
-        showReward("天才程序员：连续成功5次，额外碎片 +2。");
+        grantUsableWorldEvolutionFragments(2, "compile-streak-5");
+        showReward("天才程序员：连续成功5次，可使用进化碎片 +2。");
       } else if (!firstSuccess && !options.silent) {
         showReward(`小C：${getEncouragementQuote()}`);
       }
@@ -25367,7 +25383,7 @@ ${item.code}
     function generateLearningReport() {
       const snippets = flattenCTutorialSnippets();
       const learnedCount = new Set(gameState.progress.compiledHistory || []).size;
-      const html = `<!doctype html><meta charset="utf-8"><title>代码觉醒者学习报告</title><style>body{font-family:system-ui,\"Microsoft YaHei\",sans-serif;padding:32px;line-height:1.7;color:#0f172a}h1{color:#0369a1}.card{border:1px solid #bae6fd;border-radius:16px;padding:18px;margin:14px 0;background:#f8fafc}</style><h1>代码觉醒者学习报告</h1><div class="card"><strong>学习进度：</strong>${learnedCount}/${snippets.length}<br><strong>世界完成度：</strong>${Math.round(Number(gameState.progress.worldEvolutionCompletion) || 0)}%<br><strong>知识碎片：</strong>${Number(gameState.progress.worldEvolutionFragments) || 0}/20<br><strong>最佳连击：</strong>${Number(gameState.progress.bestCompileStreak) || 0}</div><div class="card"><strong>最近学习日志</strong><ul>${(gameState.progress.learningLog || []).slice(-10).map((entry) => `<li>${escapeHtml(entry.text || "")}</li>`).join("")}</ul></div>`;
+      const html = `<!doctype html><meta charset="utf-8"><title>代码觉醒者学习报告</title><style>body{font-family:system-ui,\"Microsoft YaHei\",sans-serif;padding:32px;line-height:1.7;color:#0f172a}h1{color:#0369a1}.card{border:1px solid #bae6fd;border-radius:16px;padding:18px;margin:14px 0;background:#f8fafc}</style><h1>代码觉醒者学习报告</h1><div class="card"><strong>学习进度：</strong>${learnedCount}/${snippets.length}<br><strong>世界完成度：</strong>${Math.round(Number(gameState.progress.worldEvolutionCompletion) || 0)}%<br><strong>可使用进化碎片：</strong>${Number(gameState.progress.worldEvolutionFragments) || 0}/20<br><strong>最佳连击：</strong>${Number(gameState.progress.bestCompileStreak) || 0}</div><div class="card"><strong>最近学习日志</strong><ul>${(gameState.progress.learningLog || []).slice(-10).map((entry) => `<li>${escapeHtml(entry.text || "")}</li>`).join("")}</ul></div>`;
       gameState.progress.learningReportGeneratedAt = new Date().toISOString();
       saveProgress();
       const reportWindow = window.open("", "_blank", "noopener,noreferrer");
@@ -25751,8 +25767,8 @@ ${item.code}
       gameState.progress.worldEvolutionRandomEventsSeen.push({ id: event.id, at: Date.now() });
       gameState.progress.worldEvolutionRandomEventsSeen = gameState.progress.worldEvolutionRandomEventsSeen.slice(-30);
       if (event.id === "extra_fragment") {
-        gameState.progress.worldEvolutionFragments = Math.min(20, (Number(gameState.progress.worldEvolutionFragments) || 0) + 2);
-        showReward("随机事件：数据流带来额外碎片 +2。");
+        grantUsableWorldEvolutionFragments(2, "random-extra-fragment");
+        showReward("随机事件：数据流带来可使用进化碎片 +2。");
         audioManager.tone(820, 0.08, "triangle", 0.014);
       } else if (event.id === "world_blessing") {
         gameState.progress.worldEvolutionBlessingUntil = Date.now() + 30000;
@@ -25761,8 +25777,8 @@ ${item.code}
       } else if (event.id === "void_rift") {
         const applyRift = () => {
           gameState.progress.worldEvolutionCompletion = Math.max(0, (Number(gameState.progress.worldEvolutionCompletion) || 0) - 3);
-          gameState.progress.worldEvolutionFragments = Math.min(20, (Number(gameState.progress.worldEvolutionFragments) || 0) + 1);
-          showReward("虚空裂隙已稳定：完成度 -3%，稀有碎片 +1。");
+          grantUsableWorldEvolutionFragments(1, "void-rift");
+          showReward("虚空裂隙已稳定：完成度 -3%，可使用进化碎片 +1。");
           updateWorldEvolutionUi();
           updateWorldEvolutionLayer(gameState.scene, true);
           saveProgress();
@@ -25788,8 +25804,8 @@ ${item.code}
       }
       closeBottomActionBar();
       if (success) {
-        gameState.progress.worldEvolutionFragments = Math.min(20, (Number(gameState.progress.worldEvolutionFragments) || 0) + 1);
-        showReward("时空裂隙已修复，稀有碎片 +1。");
+        grantUsableWorldEvolutionFragments(1, "hard-time-rift");
+        showReward("时空裂隙已修复，可使用进化碎片 +1。");
       } else {
         gameState.progress.worldEvolutionCompletion = Math.max(0, (Number(gameState.progress.worldEvolutionCompletion) || 0) - 2);
         showReward("时空裂隙未及时修复，完成度 -2%。");
@@ -25898,7 +25914,7 @@ ${item.code}
       ctx.fillRect(24, canvas.height - 98, canvas.width - 48, 70);
       ctx.fillStyle = "#f8fafc";
       ctx.font = "700 24px JetBrains Mono, monospace";
-      ctx.fillText(`代码觉醒者 · 世界完成度 ${completion}% · 碎片 ${gameState.progress.worldEvolutionFragments}/20`, 42, canvas.height - 54);
+      ctx.fillText(`代码觉醒者 · 世界完成度 ${completion}% · 可使用进化碎片 ${gameState.progress.worldEvolutionFragments}/20`, 42, canvas.height - 54);
       const url = canvas.toDataURL("image/png");
       const link = document.createElement("a");
       link.href = url;
@@ -26210,8 +26226,8 @@ ${item.code}
       const today = new Date().toISOString().slice(0, 10);
       if (gameState.progress.worldEvolutionDailyDate === today) return false;
       gameState.progress.worldEvolutionDailyDate = today;
-      gameState.progress.worldEvolutionFragments = Math.min(20, (Number(gameState.progress.worldEvolutionFragments) || 0) + 2);
-      showReward("每日编译挑战完成：进化碎片 +2。");
+      grantUsableWorldEvolutionFragments(2, "daily-challenge");
+      showReward("每日编译挑战完成：可使用进化碎片 +2。");
       return true;
     }
 
@@ -26237,7 +26253,7 @@ ${item.code}
       ctx.fillText(`${completion}%`, 70, 270);
       ctx.font = "700 28px JetBrains Mono, monospace";
       ctx.fillStyle = "#d1fae5";
-      ctx.fillText(`碎片 ${gameState.progress.worldEvolutionFragments}/20 · 分支 ${WORLD_EVOLUTION_QUANTUM_BRANCHES[gameState.progress.worldEvolutionBranch || "kind"].label}`, 70, 340);
+      ctx.fillText(`可使用进化碎片 ${gameState.progress.worldEvolutionFragments}/20 · 分支 ${WORLD_EVOLUTION_QUANTUM_BRANCHES[gameState.progress.worldEvolutionBranch || "kind"].label}`, 70, 340);
       ctx.fillText("我修复了破碎世界。", 70, 390);
       gameState.progress.lastShareCard = canvas.toDataURL("image/png");
       showReward("分享卡已生成，可在新窗口查看或保存。");
@@ -26248,7 +26264,7 @@ ${item.code}
 
     function copyWorldEvolutionShareText() {
       const completion = Math.round(Number(gameState.progress.worldEvolutionCompletion) || 0);
-      const text = `我修复了破碎世界！完成度${completion}%，碎片${gameState.progress.worldEvolutionFragments}/20。#代码觉醒者 #编程学习`;
+      const text = `我修复了破碎世界！完成度${completion}%，可使用进化碎片${gameState.progress.worldEvolutionFragments}/20。#代码觉醒者 #编程学习`;
       navigator.clipboard?.writeText?.(text).then(() => showReward("分享文案已复制。")).catch(() => showReward(text));
       return text;
     }
@@ -26325,8 +26341,8 @@ ${item.code}
       const payload = sanitizeImportedJson(event.newValue, null);
       if (!payload || Date.now() - Number(payload.at || 0) > 60000) return false;
       if ((Number(payload.completion) || 0) > (Number(gameState.progress.worldEvolutionCompletion) || 0)) {
-        gameState.progress.worldEvolutionFragments = Math.min(20, (Number(gameState.progress.worldEvolutionFragments) || 0) + 1);
-        showReward("另一个标签页传来了微弱知识碎片：+1。");
+        grantUsableWorldEvolutionFragments(1, "storage-sync");
+        showReward("另一个标签页传来了可使用进化碎片：+1。");
         saveProgress();
         updateInfoSideMenu();
       }
@@ -26341,11 +26357,10 @@ ${item.code}
 
     function handleWorldEvolutionWorldPointer(scene, pointer) {
       if (!gameState.worldEvolutionCreationMode || !scene?.add || !pointer?.worldX) return false;
-      if ((Number(gameState.progress.worldEvolutionFragments) || 0) <= 0) {
-        showReward("需要进化碎片才能造物。");
+      if (!spendUsableWorldEvolutionFragment(1, "creation-mode")) {
+        showReward("需要可使用进化碎片才能造物。");
         return false;
       }
-      gameState.progress.worldEvolutionFragments = Math.max(0, (Number(gameState.progress.worldEvolutionFragments) || 0) - 1);
       gameState.progress.worldEvolutionCreationCount = (Number(gameState.progress.worldEvolutionCreationCount) || 0) + 1;
       gameState.progress.worldEvolutionBrokenObjects ||= [];
       gameState.progress.worldEvolutionBrokenObjects.push({ x: Math.round(pointer.worldX), y: Math.round(pointer.worldY), at: Date.now() });
@@ -26355,6 +26370,40 @@ ${item.code}
       updateInfoSideMenu();
       checkWorldEvolutionAchievements();
       saveProgress();
+      return true;
+    }
+
+    const FRAGMENT_RESOURCE_TYPES = Object.freeze({
+      task: "task-fragment",
+      worldEvolution: "world-evolution-fragment",
+      usable: "usable-world-evolution-fragment"
+    });
+
+    function normalizeUsableWorldEvolutionFragments() {
+      gameState.progress.worldEvolutionFragments = Math.max(0, Math.min(20, Number(gameState.progress.worldEvolutionFragments) || 0));
+      return gameState.progress.worldEvolutionFragments;
+    }
+
+    function getUsableWorldEvolutionFragmentCount() {
+      return normalizeUsableWorldEvolutionFragments();
+    }
+
+    function grantUsableWorldEvolutionFragments(amount = 1, source = "world-evolution") {
+      const before = getUsableWorldEvolutionFragmentCount();
+      const gain = Math.max(0, Math.floor(Number(amount) || 0));
+      if (!gain) return 0;
+      const after = Math.min(20, before + gain);
+      gameState.progress.worldEvolutionFragments = after;
+      if (after > before) addWorldEvolutionDiary?.(`获得可使用进化碎片 +${after - before}：${source}。`);
+      return after - before;
+    }
+
+    function spendUsableWorldEvolutionFragment(amount = 1, source = "use") {
+      const cost = Math.max(1, Math.floor(Number(amount) || 1));
+      const before = getUsableWorldEvolutionFragmentCount();
+      if (before < cost) return false;
+      gameState.progress.worldEvolutionFragments = before - cost;
+      addWorldEvolutionDiary?.(`消耗可使用进化碎片 -${cost}：${source}。`);
       return true;
     }
 
@@ -26378,18 +26427,17 @@ ${item.code}
     }
 
     function useWorldEvolutionFragmentItem(kind = "hp", source = "auto") {
-      if ((Number(gameState.progress.worldEvolutionFragments) || 0) <= 0) {
-        if (source !== "auto-low-hp") showReward("没有可用的进化碎片。");
+      if (!spendUsableWorldEvolutionFragment(1, source)) {
+        if (source !== "auto-low-hp") showReward("没有可使用进化碎片。");
         return false;
       }
-      gameState.progress.worldEvolutionFragments = Math.max(0, gameState.progress.worldEvolutionFragments - 1);
       gameState.codeAccuracy = Math.min(getWorldEvolutionHpMax(), (Number(gameState.codeAccuracy) || 0) + 22);
       saveProgress();
       saveGame();
       updateStatusBars();
       updateInfoSideMenu();
       const message = source === "auto-low-hp"
-        ? "系统检测到 HP 过低，已自动消耗 1 个进化碎片恢复 HP。"
+        ? "系统检测到 HP 过低，已自动消耗 1 个可使用进化碎片恢复 HP。"
         : tWorldEvolution("restored");
       showReward(message);
       announceWorldEvolutionA11y(message);
@@ -26399,7 +26447,7 @@ ${item.code}
     function autoUseWorldEvolutionFragmentForLowHp(source = "status") {
       const hpMax = getWorldEvolutionHpMax();
       const hp = Math.max(0, Math.min(hpMax, Number(gameState.codeAccuracy) || 0));
-      const fragments = Number(gameState.progress.worldEvolutionFragments) || 0;
+      const fragments = getUsableWorldEvolutionFragmentCount();
       if (fragments <= 0 || hp >= hpMax) return false;
       if (hp / Math.max(1, hpMax) > AUTO_HP_FRAGMENT_THRESHOLD) return false;
       const now = performance.now();
@@ -26428,13 +26476,14 @@ ${item.code}
       normalizeWorldEvolutionState();
       let upgraded = 0;
       const upgradedNodes = [];
-      while ((Number(gameState.progress.worldEvolutionFragments) || 0) >= 2) {
+      while (getUsableWorldEvolutionFragmentCount() >= 2) {
         const nodeId = chooseSmartEvolutionTalent();
         if (!nodeId) break;
         const cost = SMART_EVOLUTION_TALENT_COSTS[nodeId] || 2;
-        if ((Number(gameState.progress.worldEvolutionFragments) || 0) < cost) break;
-        if ((Number(gameState.progress.worldEvolutionFragments) || 0) - cost < 1 && reason !== "compile") break;
-        gameState.progress.worldEvolutionFragments -= cost;
+        const available = getUsableWorldEvolutionFragmentCount();
+        if (available < cost) break;
+        if (available - cost < 1 && reason !== "compile") break;
+        if (!spendUsableWorldEvolutionFragment(cost, `smart-${nodeId}`)) break;
         gameState.progress.worldEvolutionTalents[nodeId] = Math.min(3, (Number(gameState.progress.worldEvolutionTalents[nodeId]) || 0) + 1);
         upgraded += 1;
         upgradedNodes.push(nodeId);
@@ -26455,14 +26504,13 @@ ${item.code}
       const rare = fragment.keyword === getStonePuzzleSpec(fragment.chapterId).answer;
       const gain = rare ? 2 : 1;
       gameState.progress.worldEvolutionCompletion = Math.min(100, previous + gain);
-      gameState.progress.worldEvolutionFragments = Math.min(20, (Number(gameState.progress.worldEvolutionFragments) || 0) + 1);
+      // 任务碎片只推进世界完成度，不进入可使用碎片池；HP/星盘只能消耗世界进化奖励碎片。
       gameState.progress.worldEvolutionGlobalContribution = (Number(gameState.progress.worldEvolutionGlobalContribution) || 0) + gain;
-      addWorldEvolutionDiary(`收集 ${fragment.keyword} 碎片，世界自动修复 +${gain}%。`);
+      addWorldEvolutionDiary(`收集任务碎片 ${fragment.keyword}，世界自动修复 +${gain}%。`);
       updateWorldEvolutionWeather(gameState.progress.worldEvolutionCompletion);
       updateWorldEvolutionRegions(gameState.progress.worldEvolutionCompletion);
       triggerWorldEvolutionMilestoneEffects(previous, gameState.progress.worldEvolutionCompletion, gameState.scene);
       triggerWorldEvolutionNarrative(previous, gameState.progress.worldEvolutionCompletion);
-      autoSpendEvolutionFragmentsSmartly("fragment");
       updateWorldEvolutionUi();
       updateWorldEvolutionLayer(gameState.scene, true);
       return gain;
@@ -26480,11 +26528,10 @@ ${item.code}
     function lightFragmentStarNode(nodeId = "efficiency") {
       const costs = { efficiency: 2, vitality: 2, spectacle: 3 };
       const cost = costs[nodeId] || 2;
-      if ((Number(gameState.progress.worldEvolutionFragments) || 0) < cost) {
-        showReward(`点亮 ${nodeId} 需要 ${cost} 个进化碎片。`);
+      if (!spendUsableWorldEvolutionFragment(cost, `star-${nodeId}`)) {
+        showReward(`点亮 ${nodeId} 需要 ${cost} 个可使用进化碎片。`);
         return false;
       }
-      gameState.progress.worldEvolutionFragments -= cost;
       gameState.progress.worldEvolutionTalents ||= { efficiency: 0, vitality: 0, spectacle: 0 };
       gameState.progress.worldEvolutionTalents[nodeId] = Math.min(3, (Number(gameState.progress.worldEvolutionTalents[nodeId]) || 0) + 1);
       saveProgress();
@@ -26495,7 +26542,7 @@ ${item.code}
 
     function equipEvolutionShard() {
       if ((Number(gameState.progress.worldEvolutionFragments) || 0) <= 0) {
-        showReward("至少需要 1 个进化碎片才能装配星核。");
+        showReward("至少需要 1 个可使用进化碎片才能装配星核。");
         return false;
       }
       gameState.progress.worldEvolutionEquipped = gameState.progress.worldEvolutionEquipped === "Compiler Starcore" ? "" : "Compiler Starcore";
@@ -26669,10 +26716,10 @@ ${item.code}
       dom.guardianQteChip?.classList.remove("active");
       dom.guardianQteChip?.setAttribute("aria-hidden", "true");
       if (success) {
-        gameState.progress.worldEvolutionFragments = Math.min(20, (Number(gameState.progress.worldEvolutionFragments) || 0) + 2);
+        grantUsableWorldEvolutionFragments(2, "guardian-qte");
         gameState.progress.worldEvolutionAchievements ||= [];
         if (!gameState.progress.worldEvolutionAchievements.includes("qte_guardian_flag")) gameState.progress.worldEvolutionAchievements.push("qte_guardian_flag");
-        showReward("世界守护者被稳定，进化碎片 +2。");
+        showReward("世界守护者被稳定，可使用进化碎片 +2。");
         unlockWorldEvolutionAchievement("qte_guardian");
         playWorldEvolutionMilestoneEffect(gameState.scene, 40, { replay: true });
       } else {
@@ -26809,7 +26856,7 @@ ${item.code}
       updateWorldEvolutionDifficultyUi();
       if (dom.infoWorldEvolutionText) dom.infoWorldEvolutionText.textContent = `${Math.round(completion)}%`;
       if (dom.infoWorldEvolutionFill) dom.infoWorldEvolutionFill.style.width = `${Math.round(completion)}%`;
-      if (dom.infoWorldEvolutionHint) dom.infoWorldEvolutionHint.textContent = `${getWorldEvolutionHint(completion)}\n进化碎片: ${fragments}/20`;
+      if (dom.infoWorldEvolutionHint) dom.infoWorldEvolutionHint.textContent = `${getWorldEvolutionHint(completion)}\n可使用进化碎片: ${fragments}/20`;
       if (dom.starChartFragmentText) dom.starChartFragmentText.textContent = `${fragments}/20`;
       if (dom.worldEvolutionBranchText) {
         const branch = WORLD_EVOLUTION_QUANTUM_BRANCHES[gameState.progress.worldEvolutionBranch || "kind"] || WORLD_EVOLUTION_QUANTUM_BRANCHES.kind;
@@ -26836,7 +26883,7 @@ ${item.code}
         dom.worldAdvanceButton.disabled = true;
         dom.worldAdvanceButton.hidden = true;
         dom.worldAdvanceButton.setAttribute?.("aria-disabled", "true");
-        dom.worldAdvanceButton.title = `世界完成度 ${Math.round(completion)}% · 进化碎片 ${fragments}/20`;
+        dom.worldAdvanceButton.title = `世界完成度 ${Math.round(completion)}% · 可使用进化碎片 ${fragments}/20`;
       }
       renderWorldEvolutionCodex();
       return completion;
@@ -26899,10 +26946,10 @@ ${item.code}
       const blessingBonus = Date.now() < (Number(gameState.progress.worldEvolutionBlessingUntil) || 0) ? 3 : 0;
       const chargeBonus = Math.max(1, Math.min(3, Number(chargeMultiplier) || 1));
       const gain = Math.min(100 - previous, Math.round((Phaser.Math.Between(config.completion[0], config.completion[1]) + efficiency * 2 + equippedBonus + blessingBonus) * chargeBonus));
-      const fragmentGain = Math.min(20 - gameState.progress.worldEvolutionFragments, Phaser.Math.Between(config.fragments[0], config.fragments[1]));
+      const fragmentGain = Math.min(20 - getUsableWorldEvolutionFragmentCount(), Phaser.Math.Between(config.fragments[0], config.fragments[1]));
       playWorldEvolutionCompileSound();
       gameState.progress.worldEvolutionCompletion = Math.min(100, previous + gain);
-      gameState.progress.worldEvolutionFragments = Math.min(20, gameState.progress.worldEvolutionFragments + fragmentGain);
+      const usableGained = grantUsableWorldEvolutionFragments(fragmentGain, "world-compile");
       gameState.progress.worldEvolutionCompileCount = (Number(gameState.progress.worldEvolutionCompileCount) || 0) + 1;
       gameState.progress.worldEvolutionGlobalContribution = (Number(gameState.progress.worldEvolutionGlobalContribution) || 0) + gain;
       autoSpendEvolutionFragmentsSmartly("compile");
@@ -26918,7 +26965,7 @@ ${item.code}
       updateWorldEvolutionUi();
       saveProgress();
       updateWorldEvolutionLayer(gameState.scene, true);
-      showReward(`${config.label} ${tWorldEvolution("advanced")} +${gain}% · 进化碎片 +${fragmentGain}`);
+      showReward(`${config.label} ${tWorldEvolution("advanced")} +${gain}% · 可使用进化碎片 +${usableGained}`);
       announceWorldEvolutionA11y(`${tWorldEvolution("advanced")} ${Math.round(gameState.progress.worldEvolutionCompletion)}%`);
       updateWorldEvolutionMusicMood();
       playWorldEvolutionRandomEffect(gameState.scene, config);
@@ -26950,7 +26997,7 @@ ${item.code}
       updateWorldEvolutionUi();
       renderSceneStatusMenu();
       if (dom.infoTaskText) dom.infoTaskText.textContent = getInfoMenuTaskText();
-      if (dom.infoFragmentText) dom.infoFragmentText.textContent = `碎片: ${getCourseFragmentProgressText()}`;
+      if (dom.infoFragmentText) dom.infoFragmentText.textContent = `任务碎片: ${getCourseFragmentProgressText()}`;
       renderFragmentLocationGuide();
       if (dom.infoHpText) dom.infoHpText.textContent = `${hp}/${hpMax}`;
       if (dom.infoHpFill) dom.infoHpFill.style.width = `${Math.min(100, (hp / hpMax) * 100)}%`;
@@ -38074,6 +38121,36 @@ ${item.code}
       return enabled;
     }
 
+    function isFragmentAvailableForGuidance(fragment) {
+      if (!fragment || fragment.collecting) return false;
+      const collectedKeys = Array.isArray(gameState.progress?.collectedFragmentKeys)
+        ? gameState.progress.collectedFragmentKeys
+        : [];
+      if (collectedKeys.includes(getFragmentKey(fragment))) return false;
+      if (fragment.visible === false || fragment.active === false) return false;
+      if (fragment.visual && (fragment.visual.visible === false || fragment.visual.active === false)) return false;
+      if (fragment.body && fragment.body.enable === false) return false;
+      if (fragment.chapterId && !isChapterFragmentUnlocked(fragment.chapterId)) return false;
+      return true;
+    }
+
+    function getFragmentGuidanceDistanceSq(player, fragment) {
+      if (!player || !Number.isFinite(player.x) || !Number.isFinite(player.y)) return 0;
+      if (!fragment || !Number.isFinite(fragment.x) || !Number.isFinite(fragment.y)) return Number.POSITIVE_INFINITY;
+      const dx = player.x - fragment.x;
+      const dy = player.y - fragment.y;
+      return dx * dx + dy * dy;
+    }
+
+    function getNextVisibleGuidanceFragment(scene = gameState.scene) {
+      const fragments = (scene?.codeFragments || []).filter(isFragmentAvailableForGuidance);
+      if (!fragments.length) return null;
+      const player = scene?.player;
+      return fragments.reduce((best, fragment) => (
+        getFragmentGuidanceDistanceSq(player, fragment) < getFragmentGuidanceDistanceSq(player, best) ? fragment : best
+      ), fragments[0]);
+    }
+
     function applyFragmentChapterVisibility(scene = gameState.scene) {
       if (!scene?.codeFragments) return 0;
       let visibleCount = 0;
@@ -38912,7 +38989,7 @@ ${item.code}
         return createGuidanceTargetData(task, state, target, guideType);
       }
       if (task.id === "collect_basic_fragments" || task.id === "collect_hidden_blocks") {
-        const fragment = scene.codeFragments?.find((item) => !gameState.progress.collectedFragmentKeys.includes(getFragmentKey(item)));
+        const fragment = getNextVisibleGuidanceFragment(scene);
         return createGuidanceTargetData(task, state, fragment, guideType);
       }
       if (task.id === "solve_for_sequence") return createGuidanceTargetData(task, state, scene.chapterObjects.loops?.stone, guideType);
@@ -40283,16 +40360,17 @@ ${item.code}
     function offerFireplaceFragmentRitual() {
       if (!gameState.codeInventory.length) {
         triggerErrorGlitch();
-        if (dom.roomStatusText) dom.roomStatusText.textContent = "// 没有碎片可以投入。";
+        if (dom.roomStatusText) dom.roomStatusText.textContent = "// 没有任务碎片记忆可以映照。";
         return false;
       }
-      const burned = gameState.codeInventory.pop();
+      const index = Math.max(0, Number(gameState.progress.roomFireplaceOfferings) || 0) % gameState.codeInventory.length;
+      const remembered = gameState.codeInventory[index];
       gameState.progress.roomFireplaceOfferings += 1;
-      gameState.worldVariables.code_fragments_collected = gameState.codeInventory.length;
+      gameState.worldVariables.code_fragments_collected = getCourseFragmentProgressCount();
       saveProgress();
       updateVariableWatch();
       openDeskCodeReview(false);
-      if (dom.roomStatusText) dom.roomStatusText.textContent = `// ${burned} 被投入壁炉，火光暖了一下。`;
+      if (dom.roomStatusText) dom.roomStatusText.textContent = `// ${remembered} 的任务碎片记忆映在壁炉上，没有被消耗。`;
       dom.playerRoomWindow?.animate([{ boxShadow: "0 0 12px #f97316" }, { boxShadow: "0 0 58px #fbbf24" }, { boxShadow: "0 0 12px transparent" }], { duration: 620, easing: "ease-out" });
       audioManager.tone(330, 0.1, "triangle", 0.028);
       return true;

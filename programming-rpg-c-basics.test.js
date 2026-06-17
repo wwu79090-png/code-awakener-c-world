@@ -23,6 +23,9 @@ function makeElement() {
     querySelectorAll() { return []; },
     appendChild() {},
     remove() {},
+    setAttribute() {},
+    getAttribute() { return ""; },
+    removeAttribute() {},
     animate() { return { onfinish: null }; },
     getContext() { return {}; }
   };
@@ -115,6 +118,12 @@ globalThis.__gameApi = {
   getNearestNpcInteraction: typeof getNearestNpcInteraction === "function" ? getNearestNpcInteraction : undefined,
   handleNpcInteraction: typeof handleNpcInteraction === "function" ? handleNpcInteraction : undefined,
   isBenignMediaPlayInterruption: typeof isBenignMediaPlayInterruption === "function" ? isBenignMediaPlayInterruption : undefined,
+  isFragmentAvailableForGuidance: typeof isFragmentAvailableForGuidance === "function" ? isFragmentAvailableForGuidance : undefined,
+  getNextVisibleGuidanceFragment: typeof getNextVisibleGuidanceFragment === "function" ? getNextVisibleGuidanceFragment : undefined,
+  getUsableWorldEvolutionFragmentCount: typeof getUsableWorldEvolutionFragmentCount === "function" ? getUsableWorldEvolutionFragmentCount : undefined,
+  spendUsableWorldEvolutionFragment: typeof spendUsableWorldEvolutionFragment === "function" ? spendUsableWorldEvolutionFragment : undefined,
+  useWorldEvolutionFragmentItem: typeof useWorldEvolutionFragmentItem === "function" ? useWorldEvolutionFragmentItem : undefined,
+  gameState: typeof gameState !== "undefined" ? gameState : undefined,
   C_TUTORIAL_COURSE: typeof C_TUTORIAL_COURSE !== "undefined" ? C_TUTORIAL_COURSE : undefined,
   QUEST_DATA: typeof QUEST_DATA !== "undefined" ? QUEST_DATA : undefined,
   getStonePuzzleSpec: typeof getStonePuzzleSpec === "function" ? getStonePuzzleSpec : undefined,
@@ -617,7 +626,7 @@ assert(/function repairFragmentProgressState/m.test(html), "fragment progress sh
 assert(/function getCourseFragmentProgressText/m.test(html), "fragment UI should use course fragment progress instead of raw inventory length");
 assert(/const alreadyCollected = gameState\.progress\.collectedFragmentKeys\.includes\(fragmentKey\)/m.test(html), "fragment collection should dedupe by unique fragment key, not keyword text");
 assert(/if \(!gameState\.codeInventory\.includes\(fragment\.keyword\)\) gameState\.codeInventory\.push\(fragment\.keyword\)/m.test(html), "fragment inventory should keep keyword strings unique");
-assert(/dom\.infoFragmentText\.textContent = `碎片: \$\{getCourseFragmentProgressText\(\)\}`/m.test(html), "side menu fragment count should never exceed the 14-course total");
+assert(/dom\.infoFragmentText\.textContent = `任务碎片: \$\{getCourseFragmentProgressText\(\)\}`/m.test(html), "side menu task fragment count should never exceed the course total");
 assert(/if \(interaction\?\.type === "lesson"\)[\s\S]*else tryFillStoneBlank\(this, interaction\.chapter\.id\)/m.test(html), "pressing E near a stone should try to fill the code blank directly");
 assert(/gate\.setActive\(true\)\.setVisible\(true\)\.setAlpha\(0\.34\)\.setTint\(0x64748b\)/m.test(html), "compile gates should remain visible as locked silhouettes before activation");
 assert(/const gateHintText = this\.add\.text[\s\S]*先修复石碑/m.test(html), "locked compile gates should show an explicit repair-stone hint");
@@ -829,6 +838,45 @@ assert(/collect_basic_fragments/m.test(html), "new player task should collect th
   );
   assert(repairedBeginnerInventory.repaired && repairedBeginnerInventory.codeInventory.includes("int"), "old saves with the previous scanf beginner fragment should be credited with int");
   assert(repairedBeginnerInventory.collectedFragmentKeys.includes("overview:int:1"), "old saves should mark the replacement first-stone int fragment as collected");
+}
+assert(typeof api.isFragmentAvailableForGuidance === "function", "fragment guidance availability helper should be exported for regression tests");
+assert(typeof api.getNextVisibleGuidanceFragment === "function", "visible fragment guidance selector should be exported for regression tests");
+{
+  const previousKeys = [...(api.gameState?.progress?.collectedFragmentKeys || [])];
+  try {
+    api.gameState.progress.collectedFragmentKeys = ["overview:printf:0"];
+    const makeFragment = (keyword, slot, overrides = {}) => ({
+      x: 0,
+      y: 0,
+      chapterId: "overview",
+      keyword,
+      fragmentSlot: slot,
+      visible: true,
+      active: true,
+      visual: { visible: true, active: true },
+      body: { enable: true },
+      ...overrides
+    });
+    const hidden = makeFragment("return", 2, { visible: false, x: 8 });
+    const collected = makeFragment("printf", 0, { x: 5 });
+    const disabledBody = makeFragment("int", 1, { body: { enable: false }, x: 4 });
+    const hiddenVisual = makeFragment("scanf", 3, { visual: { visible: false, active: true }, x: 3 });
+    const fartherVisible = makeFragment("while", 4, { x: 90, y: 0 });
+    const nearestVisible = makeFragment("for", 5, { x: 12, y: 0 });
+    assert(!api.isFragmentAvailableForGuidance(hidden), "hidden fragments should not be task-guidance targets");
+    assert(!api.isFragmentAvailableForGuidance(collected), "already collected fragments should not be task-guidance targets");
+    assert(!api.isFragmentAvailableForGuidance(disabledBody), "body-disabled fragments should not be task-guidance targets");
+    assert(!api.isFragmentAvailableForGuidance(hiddenVisual), "fragments with hidden visuals should not be task-guidance targets");
+    assert(api.isFragmentAvailableForGuidance(nearestVisible), "visible uncollected enabled fragments should be task-guidance targets");
+    const selected = api.getNextVisibleGuidanceFragment({
+      player: { x: 0, y: 0 },
+      codeFragments: [hidden, collected, disabledBody, hiddenVisual, fartherVisible, nearestVisible]
+    });
+    assert(selected === nearestVisible, "task guidance should choose the nearest visible uncollected fragment instead of pointing to empty ground");
+    assert(api.getNextVisibleGuidanceFragment({ player: { x: 0, y: 0 }, codeFragments: [hidden, collected, disabledBody, hiddenVisual] }) === null, "task guidance should return null when no visible fragment is available so fallback guidance can point to the next stone");
+  } finally {
+    api.gameState.progress.collectedFragmentKeys = previousKeys;
+  }
 }
 assert(/function createCoreNpcs/m.test(html), "scene should create core NPCs on the map");
 assert(/function updateNpcQuestIndicators/m.test(html), "NPCs should show task-state indicators");
@@ -1392,17 +1440,17 @@ assert(/启动公告只提示当前版本|历史版本改到主菜单查看/.tes
 assert(/STARTUP_ANNOUNCEMENT_AUTO_HIDE_MS\s*=\s*14000/m.test(html), "announcement should remain visible long enough to read the current update");
 assert(/function showStartupAnnouncement/m.test(html), "announcement should be controlled by a startup function");
 assert(/id="announcementCloseButton"/m.test(html), "announcement should include a minimal close control");
-assert(/World Build v1\.0\.35/m.test(html) || /GAME_VERSION\s*=\s*"v1\.0\.35"/m.test(html), "game version should increment when shipping a new update");
+assert(/World Build v1\.0\.36/m.test(html) || /GAME_VERSION\s*=\s*"v1\.0\.36"/m.test(html), "game version should increment when shipping a new update");
 assert(/UPDATE_HISTORY\s*=\s*Object\.freeze\(\[[\s\S]*v1\.0\.1[\s\S]*零基础新手指引[\s\S]*v1\.0\.0[\s\S]*手机端适配/m.test(html), "update history should keep detailed previous release notes");
 assert(/data-menu-action="history"[\s\S]*历史更新内容/.test(html) && /id="updateHistoryOverlay"/m.test(html) && /function renderUpdateHistoryList/m.test(html), "main menu should expose update history with detailed notes");
-assert(/GAME_VERSION\s*=\s*"v1\.0\.35"/m.test(html), "game version should increment for the audio play interruption hotfix release");
+assert(/GAME_VERSION\s*=\s*"v1\.0\.36"/m.test(html), "game version should increment for the fragment system and guidance release");
 assert(html.includes('const OFFICIAL_SITE_HREF = "./official-site.html";') && /data-menu-action="official"[\s\S]*访问官方网站/.test(html) && /action === "official"[\s\S]*openOfficialWebsite\(\)/m.test(html), "main menu should expose and handle an official website entry");
 assert(/SYSTEM_BOOT_FORCE_RELEASE_MS\s*=\s*3200/m.test(html) && /system-boot-force-release/m.test(html) && /SYSTEM_BOOT_FORCE_RELEASE_MS \+ 1400/m.test(html), "startup boot overlay should have tracked and native failsafe release timers");
 assert(/function markAppRendered\(reason = "script-started"\)[\s\S]*classList\?\.add\("app-rendered"\)[\s\S]*staticRescue/m.test(html), "normal script startup should hide the static rescue layer");
-assert(/html\.app-rendered \.static-rescue/m.test(html) && /safeMode=true&noAudio=true&v=1\.0\.35/m.test(html), "static rescue should only appear if the app script does not render");
+assert(/html\.app-rendered \.static-rescue/m.test(html) && /safeMode=true&noAudio=true&v=1\.0\.36/m.test(html), "static rescue should only appear if the app script does not render");
 assert(/isStrictSecurityMode\(\)[\s\S]*removeItem\?\.\("codeAwakenerStrictSecurity"\)[\s\S]*params\.get\("strictSecurity"\) === "1"/m.test(html), "stale localStorage strict-security flags should not white-screen normal browsers");
-assert(/UPDATE_ANNOUNCEMENT_PAGES\s*=\s*Object\.freeze\(\[\s*\{\s*title:\s*"> 消息 \/ 本次更新"[\s\S]*v1\.0\.35[\s\S]*音频播放中断蓝屏热修复[\s\S]*play\(\) Promise[\s\S]*414374792/m.test(html), "startup announcement should show only the current v1.0.35 audio play interruption hotfix update");
-assert(/id="announcementPageBody"[\s\S]*v1\.0\.35：音频播放中断蓝屏热修复[\s\S]*官方Q群：414374792/m.test(initialBodyMarkup), "static startup announcement placeholder should match the current v1.0.35 update before script hydration");
+assert(/UPDATE_ANNOUNCEMENT_PAGES\s*=\s*Object\.freeze\(\[\s*\{\s*title:\s*"> 消息 \/ 本次更新"[\s\S]*v1\.0\.36[\s\S]*碎片系统分账与卡关引导修复[\s\S]*任务碎片[\s\S]*可使用进化碎片[\s\S]*414374792/m.test(html), "startup announcement should show only the current v1.0.36 fragment taxonomy and guidance update");
+assert(/id="announcementPageBody"[\s\S]*v1\.0\.36：碎片系统分账与卡关引导修复[\s\S]*官方Q群：414374792/m.test(initialBodyMarkup), "static startup announcement placeholder should match the current v1.0.36 update before script hydration");
 assert(!/公告只保留关闭、课程锁定、自由模式通关后显示/m.test(initialBodyMarkup), "static startup announcement placeholder should not show stale update copy");
 assert(/UPDATE_HISTORY\s*=\s*Object\.freeze\(\[[\s\S]*v1\.0\.31[\s\S]*QQ音乐外部模式与自定义场景音乐[\s\S]*播放\/暂停切换[\s\S]*IndexedDB[\s\S]*414374792/m.test(html), "update history should record the v1.0.31 custom music connector release");
 assert(/UPDATE_HISTORY\s*=\s*Object\.freeze\(\[[\s\S]*v1\.0\.30[\s\S]*Pixabay 真实音乐与音效接入[\s\S]*Gamer Menu[\s\S]*音乐切换器[\s\S]*外部音频失败回退[\s\S]*414374792/m.test(html), "update history should record the v1.0.30 Pixabay music and sound-effect release");
@@ -1456,7 +1504,8 @@ assert(/UPDATE_HISTORY\s*=\s*Object\.freeze\(\[[\s\S]*v1\.0\.12[\s\S]*移除防�
 assert(/UPDATE_HISTORY\s*=\s*Object\.freeze\(\[[\s\S]*v1\.0\.11[\s\S]*防白屏高档位白色噪点闪烁修复[\s\S]*CRT 噪声[\s\S]*每6帧[\s\S]*最多18个/m.test(html), "update history should record the v1.0.11 anti-white-noise release");
 assert(/UPDATE_HISTORY\s*=\s*Object\.freeze\(\[[\s\S]*v1\.0\.33[\s\S]*NPC交互稳定与手机代码符号助手[\s\S]*NPC交互入口[\s\S]*手机端主编辑器新增常用英文代码符号栏[\s\S]*414374792/m.test(html), "update history should retain the v1.0.33 NPC stability and symbol helper release");
 assert(/UPDATE_HISTORY\s*=\s*Object\.freeze\(\[[\s\S]*v1\.0\.34[\s\S]*PC设备识别与E键交互热修复[\s\S]*宽屏 Windows 触屏电脑[\s\S]*物理键盘 E 键[\s\S]*414374792/m.test(html), "update history should retain the v1.0.34 PC detection and E-key hotfix release");
-assert(/UPDATE_ANNOUNCEMENT_PAGES\s*=\s*Object\.freeze\(\[[\s\S]*v1\.0\.35[\s\S]*The play\(\) request was interrupted by a call to pause\(\)[\s\S]*FATAL 运行异常[\s\S]*414374792/m.test(html), "startup announcement should describe the current audio interruption blue-screen hotfix update");
+assert(/UPDATE_HISTORY\s*=\s*Object\.freeze\(\[[\s\S]*v1\.0\.35[\s\S]*音频播放中断蓝屏热修复[\s\S]*The play\(\) request was interrupted by a call to pause\(\)[\s\S]*FATAL 终端蓝屏[\s\S]*414374792/m.test(html), "update history should retain the v1.0.35 audio interruption blue-screen hotfix release");
+assert(/UPDATE_ANNOUNCEMENT_PAGES\s*=\s*Object\.freeze\(\[[\s\S]*v1\.0\.36[\s\S]*碎片系统分账与卡关引导修复[\s\S]*任务碎片[\s\S]*可使用进化碎片[\s\S]*414374792/m.test(html), "startup announcement should describe the current fragment taxonomy and stuck-guidance update");
 assert(/id="announcementCloseButton"[\s\S]*>×<\/button>/m.test(html), "announcement close button should be a compact icon, not wrapping text");
 assert(/function isCTutorialChapterUnlocked/m.test(html) && /course-lesson-item[\s\S]*locked[\s\S]*disabled aria-disabled/m.test(html), "course progress should lock future chapters until the player reaches them");
 assert(/function isCTutorialFullyCompleted/m.test(html) && /const unlocked = isCTutorialFullyCompleted\(\)/m.test(html), "free mode editor should only unlock after full course completion");
@@ -2102,11 +2151,44 @@ assert(/function drawRandomPortraitExpression/m.test(html) && /eyebrowAngle/m.te
 assert(/WORLD_EVOLUTION_NARRATIVE_THRESHOLDS\s*=\s*Object\.freeze\(\[30,\s*60,\s*90\]\)/m.test(html), "world evolution should auto-trigger narrative at 30/60/90 percent");
 assert(/WORLD_EVOLUTION_EFFECT_THRESHOLDS\s*=\s*Object\.freeze\(\[20,\s*40,\s*60,\s*80,\s*100\]\)/m.test(html), "world evolution should define dedicated threshold performances");
 assert(!/function spendWorldEvolutionMp|spendWorldEvolutionMp\(|MP不足|internalMpCost|mpCost/.test(html), "compile advance must not consume or gate on MP");
-assert(/function useWorldEvolutionFragmentItem/m.test(html), "fragments should still restore HP");
+assert(/const FRAGMENT_RESOURCE_TYPES\s*=\s*Object\.freeze/m.test(html), "fragment resources should be explicitly separated by type");
+assert(/function useWorldEvolutionFragmentItem/m.test(html), "usable world-evolution fragments should still restore HP");
+assert(/function getUsableWorldEvolutionFragmentCount/m.test(html) && /function spendUsableWorldEvolutionFragment/m.test(html) && /function grantUsableWorldEvolutionFragments/m.test(html), "usable fragment reads and writes should go through centralized world-evolution helpers");
+assert(!/gameState\.codeInventory\.pop\(/m.test(html), "task fragment inventory must never be consumed as a usable item");
 assert(!/id="useHpShardButton"|碎片回复HP/.test(initialBodyMarkup) && !/useHpShardButton\?\.addEventListener/.test(html), "manual HP shard restore button should be removed from the menu");
 assert(/AUTO_HP_FRAGMENT_THRESHOLD\s*=\s*0\.35/m.test(html) && /function autoUseWorldEvolutionFragmentForLowHp/m.test(html), "low HP should automatically consume a fragment for recovery");
 assert(/function updateStatusBars\(\)[\s\S]*autoUseWorldEvolutionFragmentForLowHp\("status-bars"\)/m.test(html), "HP auto-recovery should run from status refreshes after damage");
 assert(!/id="fragmentStarChartButton"/m.test(initialBodyMarkup) && /function autoSpendEvolutionFragmentsSmartly/m.test(html), "fragment star chart should be removed from the menu and replaced by automatic smart upgrades");
+assert(/awardWorldEvolutionFromFragment[\s\S]*任务碎片只推进世界完成度，不进入可使用碎片池/m.test(html), "task fragments should advance learning/world progress without becoming consumable items");
+assert(!/function awardWorldEvolutionFromFragment\(fragment\)\s*\{[\s\S]*worldEvolutionFragments\s*=\s*Math\.min\(20,[\s\S]*autoSpendEvolutionFragmentsSmartly\("fragment"\)/m.test(html), "collecting task fragments must not grant or auto-spend usable world-evolution fragments");
+assert(api.getUsableWorldEvolutionFragmentCount, "usable fragment counter should be exported for regression tests");
+assert(api.spendUsableWorldEvolutionFragment, "usable fragment spender should be exported for regression tests");
+assert(api.useWorldEvolutionFragmentItem, "HP fragment use helper should be exported for regression tests");
+{
+  const previousInventory = [...(api.gameState.codeInventory || [])];
+  const previousKeys = [...(api.gameState.progress.collectedFragmentKeys || [])];
+  const previousUsable = Number(api.gameState.progress.worldEvolutionFragments) || 0;
+  const previousHp = Number(api.gameState.codeAccuracy) || 100;
+  try {
+    api.gameState.codeInventory = ["int", "return", "printf"];
+    api.gameState.progress.collectedFragmentKeys = ["overview:int:1", "overview:return:2", "overview:printf:0"];
+    api.gameState.progress.worldEvolutionFragments = 1;
+    api.gameState.codeAccuracy = 18;
+    assert(api.getUsableWorldEvolutionFragmentCount() === 1, "usable fragment counter should read only worldEvolutionFragments");
+    assert(api.useWorldEvolutionFragmentItem("hp", "test") === true, "HP recovery should use a usable world-evolution fragment");
+    assert(api.gameState.progress.worldEvolutionFragments === 0, "HP recovery should decrement usable world-evolution fragments");
+    assert(api.gameState.codeInventory.join("|") === "int|return|printf", "HP recovery must not consume task keyword inventory");
+    assert(api.gameState.progress.collectedFragmentKeys.length === 3, "HP recovery must not remove collected task fragment keys");
+    api.gameState.codeAccuracy = 18;
+    assert(api.useWorldEvolutionFragmentItem("hp", "test-empty") === false, "HP recovery should fail when no usable fragments exist");
+    assert(api.gameState.codeInventory.join("|") === "int|return|printf", "failed HP recovery still must not consume task fragments");
+  } finally {
+    api.gameState.codeInventory = previousInventory;
+    api.gameState.progress.collectedFragmentKeys = previousKeys;
+    api.gameState.progress.worldEvolutionFragments = previousUsable;
+    api.gameState.codeAccuracy = previousHp;
+  }
+}
 assert(!/id="heroCustomizeButton"/m.test(initialBodyMarkup) && /function applyPostGenesisSetup/m.test(html), "hero avatar customization should move to the post-creation setup flow");
 assert(/function maybeSpawnWorldGuardianQte/m.test(html) && /function resolveWorldGuardianQte/m.test(html), "compile loop should spawn and resolve guardian QTE events");
 assert(/WORLD_EVOLUTION_SAVE_SLOT_KEY/m.test(html) && /function saveWorldEvolutionSlot/m.test(html) && /function loadWorldEvolutionSlot/m.test(html), "world evolution should support localStorage save slots");
@@ -2147,7 +2229,7 @@ assert(!/id="worldEvolutionMirrorText"/m.test(initialBodyMarkup), "world mirror 
 assert(/WORLD_EVOLUTION_MEMORY_FRAGMENTS\s*=\s*Object\.freeze/m.test(html) && /function unlockWorldEvolutionMemoryFragment/m.test(html), "world evolution should collect story fragments into a codex");
 assert(/FRAGMENT_VISUAL_LIBRARY\s*=\s*Object\.freeze/m.test(html) && /image:\s*FRAGMENT_VISUAL_LIBRARY/m.test(html), "each memory fragment should have a visual image entry");
 assert(/function getFragmentWorldPosition/m.test(html) && /function renderFragmentLocationGuide/m.test(html) && /id="fragmentLocationList"/m.test(html), "fragment guidance should list concrete world positions");
-assert(/function awardWorldEvolutionFromFragment/m.test(html) && /autoSpendEvolutionFragmentsSmartly\("fragment"/m.test(html), "collecting fragments should automatically advance and strengthen world evolution");
+assert(/function awardWorldEvolutionFromFragment/m.test(html) && /任务碎片只推进世界完成度，不进入可使用碎片池/m.test(html), "collecting task fragments should advance learning/world progress without becoming usable-spend fragments");
 assert(/NPC_ACTIONS\s*=\s*Object\.freeze\(\[[\s\S]*id:\s*"talk"[\s\S]*id:\s*"task"[\s\S]*id:\s*"shop"[\s\S]*id:\s*"hint"[\s\S]*id:\s*"close"/m.test(html), "NPC interactions should offer talk, task, shop, hint, and close choices");
 assert(/id="choiceCloseButton"[\s\S]*aria-label="关闭NPC交互"/m.test(html) && /dom\.choiceCloseButton\?\.addEventListener\("click", closeNpcActionChooser\)/m.test(html), "NPC action chooser should expose a visible close control");
 assert(/function openNpcActionChooser/m.test(html) && /data-npc-action/m.test(html) && /function performNpcAction\(scene, npc, actionId = "talk"\)[\s\S]*actionId === "close"[\s\S]*closeNpcActionChooser\(\)/m.test(html), "NPC action chooser should route the selected interaction mode");
