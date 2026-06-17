@@ -739,6 +739,12 @@ assert(/id="infoMenuToggle"/m.test(html), "playfield should expose only a compac
 assert(/id="keymapGlassBar"/m.test(html), "playfield should expose a transparent top keymap bar");
 assert(/class="keymap-glass-bar"/m.test(html), "keymap bar should use the non-blocking glass style");
 assert(/pointer-events:\s*none;[\s\S]*opacity:\s*0\.78/m.test(html), "keymap bar should not block the game view or pointer input");
+assert(/id="infoSceneStatusPanel"/m.test(html), "info side menu should include a scene status panel for weather and day-night");
+assert(/id="infoWeatherIcon"[\s\S]*id="infoWeatherText"[\s\S]*id="infoDayNightIcon"[\s\S]*id="infoDayNightText"/m.test(html), "scene status menu should expose weather and day-night icon/text fields");
+assert(/function renderSceneStatusMenu/m.test(html), "scene status menu should render current weather and day-night labels");
+assert(/getCurrentWeatherInfo\(\)[\s\S]*document\.body\.dataset\.weather/m.test(html), "scene status should read the active weather dataset");
+assert(/getCurrentDayNightInfo\(\)[\s\S]*worldStateMachine\.state/m.test(html), "scene status should read the active day-night state");
+assert(/renderSceneStatusMenu\(\)/m.test(html), "info side menu refresh should update scene status icons");
 assert(/renderTopKeymap\(\)/m.test(html), "shortcut manager should render the top keymap from current bindings");
 assert(/flashTopKeymap\(event\)/m.test(html), "shortcut manager should animate key feedback when the player presses a mapped key");
 assert(/shortcutManager\.flashTopKeymap\(event\)/m.test(html), "global keydown should feed visual keymap feedback");
@@ -1122,6 +1128,11 @@ assert(/BGM_VARIATION_QUEUE_MAX\s*=\s*3/m.test(html), "BGM event variation queue
 assert(/drone:\s*createLayer\(0\)/m.test(html) && !/bassNote/.test(html), "BGM should not play a repeating low-frequency bass/drone pulse");
 assert(/function startAmbientSoundscape\(\)[\s\S]*620 \+ Math\.random\(\) \* 120/m.test(html) && !/72 \+ Math\.random\(\) \* 16/.test(html), "ambient music should avoid low-frequency thumping tones");
 assert(/playNoisePulse\(ctx\)\s*\{\s*return false;\s*\}/m.test(html), "procedural music should not emit recurring noise pulses");
+assert(/let lastDayNightMusicState\s*=\s*null/m.test(html) && /function updateMusicForDayNight\(night = false\)[\s\S]*if \(lastDayNightMusicState === targetState\) return targetState/m.test(html), "day-night music should only queue transition cues when the state changes");
+assert(!/audioManager\.tone\(55,\s*0\.16,\s*"sine"/.test(html), "day-night music should not emit an unthrottled 55Hz thump");
+assert(/playMusicPad\(frequency,[\s\S]*linearRampToValueAtTime\(targetGain,\s*startAt \+ attack\)/m.test(html), "BGM notes should use a slow pad envelope instead of short percussive tones");
+assert(/getBgmTickInterval\(section, mode = this\.bgmMode\)[\s\S]*const floor = mode === "battle" \? 760 : mode === "puzzle" \? 900 : 1040/m.test(html), "BGM should use slower non-percussive phrase intervals");
+assert(/if \(this\.bgmTimer && this\.bgmMode === mode\) \{[\s\S]*return true;[\s\S]*\}/m.test(html) && !/now - this\.lastBgmRestartAt < 1400/.test(html), "same-mode BGM requests should not restart the loop every few seconds");
 assert(/function playLongCompileOvertone\(\)[\s\S]*linearRampToValueAtTime\(targetGain[\s\S]*setTargetAtTime\(0\.0001/m.test(html), "long compile overtone should use a soft envelope instead of an instant gain jump");
 assert(/canPlayEvent\(key, cooldownMs = 120\)/m.test(html) && /shouldDropSfxBurst\(frequency = 0, type = "sine", gainValue = 0\)/m.test(html), "SFX events should have cooldown and burst protection");
 assert(/typewriterTick\(\)[\s\S]*canPlayEvent\?\.\("typewriterTick"[\s\S]*"triangle"/m.test(html), "typewriter sounds should avoid harsh high-gain square waves");

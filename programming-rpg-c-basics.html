@@ -14,7 +14,7 @@
   <meta http-equiv="Cache-Control" content="no-store, max-age=0, must-revalidate">
   <meta http-equiv="Pragma" content="no-cache">
   <meta http-equiv="Expires" content="0">
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self' file:; base-uri 'self'; object-src 'none'; frame-ancestors 'none'; script-src 'self' 'nonce-code-awakener-inline' file: 'sha256-eVLbpWX6cm423V1tUD8me1nnVSct8sOTDVHzf8Fepeg='; style-src 'self' 'nonce-code-awakener-inline' file: 'sha256-K7+2PGjMcfloKHQpVEzuwP4olMk696bwWZVV6Qfdscg='; style-src-attr 'unsafe-inline'; font-src 'self' file: data:; img-src 'self' file: data: blob:; media-src 'self' file: data: blob:; worker-src 'self' file: blob:; child-src 'self' file: blob:; connect-src 'self' file: http://localhost:8000 http://127.0.0.1:8000;">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self' file:; base-uri 'self'; object-src 'none'; frame-ancestors 'none'; script-src 'self' 'nonce-code-awakener-inline' file: 'sha256-61h8180p1+zH+J9mydlxKGuIk603IhU0gbx9Y/v5qjY='; style-src 'self' 'nonce-code-awakener-inline' file: 'sha256-yVOtiLuRDlaD4MLtyyFQJmzSElvrztqUwo762jeYNtc='; style-src-attr 'unsafe-inline'; font-src 'self' file: data:; img-src 'self' file: data: blob:; media-src 'self' file: data: blob:; worker-src 'self' file: blob:; child-src 'self' file: blob:; connect-src 'self' file: http://localhost:8000 http://127.0.0.1:8000;">
   <title>编程学习 RPG：C 语言启航村</title>
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%23020617'/%3E%3Cpath d='M22 20 10 32l12 12M42 20l12 12-12 12' fill='none' stroke='%2300ff88' stroke-width='6' stroke-linecap='round' stroke-linejoin='round'/%3E%3Cpath d='m36 16-8 32' stroke='%2300ccff' stroke-width='5' stroke-linecap='round'/%3E%3C/svg%3E">
   <script src="./vendor/phaser.min.js"></script>
@@ -2893,6 +2893,55 @@
       justify-content: space-between;
       gap: 10px;
       color: #bfdbfe;
+    }
+
+    .scene-status-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 8px;
+    }
+
+    .scene-status-card {
+      display: grid;
+      grid-template-columns: 36px minmax(0, 1fr);
+      gap: 8px;
+      align-items: center;
+      min-height: 64px;
+      padding: 9px;
+      border: 1px solid rgba(125, 211, 252, 0.18);
+      border-radius: 14px;
+      background:
+        radial-gradient(circle at 20% 18%, rgba(103, 232, 249, 0.12), transparent 34%),
+        rgba(15, 23, 42, 0.42);
+    }
+
+    .scene-status-icon {
+      display: grid;
+      place-items: center;
+      width: 36px;
+      height: 36px;
+      border-radius: 12px;
+      border: 1px solid rgba(250, 204, 21, 0.24);
+      background: rgba(2, 6, 23, 0.42);
+      font-size: 20px;
+      line-height: 1;
+    }
+
+    .scene-status-copy {
+      min-width: 0;
+      display: grid;
+      gap: 2px;
+    }
+
+    .scene-status-label {
+      color: #fef3c7;
+      font: 800 12px/1.25 var(--font-code);
+    }
+
+    .scene-status-detail {
+      color: rgba(191, 219, 254, 0.78);
+      font: 10px/1.35 var(--font-code);
+      white-space: normal;
     }
 
     .info-menu-meter {
@@ -10550,6 +10599,26 @@
           <div class="info-menu-meter"><span id="infoWorldEvolutionFill"></span></div>
           <div id="infoWorldEvolutionHint">// 主线学习：手机触摸石碑；键盘靠近后按 E，再在编辑器里运行代码。</div>
         </section>
+        <section id="infoSceneStatusPanel" class="info-menu-section">
+          <strong>场景状态</strong>
+          <p class="menu-help">这里显示当前场景天气和白天 / 夜晚状态。天气会影响画面氛围，昼夜会改变地图光照。</p>
+          <div class="scene-status-grid" aria-label="当前场景天气与昼夜">
+            <div class="scene-status-card">
+              <span id="infoWeatherIcon" class="scene-status-icon" aria-hidden="true">☀️</span>
+              <span class="scene-status-copy">
+                <span id="infoWeatherText" class="scene-status-label">天气：清朗</span>
+                <span id="infoWeatherDetail" class="scene-status-detail">视野清晰，适合找石碑和碎片。</span>
+              </span>
+            </div>
+            <div class="scene-status-card">
+              <span id="infoDayNightIcon" class="scene-status-icon" aria-hidden="true">☀️</span>
+              <span class="scene-status-copy">
+                <span id="infoDayNightText" class="scene-status-label">时间：白天</span>
+                <span id="infoDayNightDetail" class="scene-status-detail">光照稳定，地图目标更容易辨认。</span>
+              </span>
+            </div>
+          </div>
+        </section>
         <section class="info-menu-section">
           <strong>任务提示</strong>
           <p class="menu-help">告诉你下一步该做什么。看不懂方向时，优先看这里，再沿着地图上的高亮目标前进。</p>
@@ -11385,6 +11454,8 @@ int main() {
           "// 正常启动会立刻隐藏静态救援层；异常时仍保留安全启动和强制刷新入口。",
           "// 音乐停止双 BGM 叠加，music bus 与程序化音乐导演整体削峰，减少背景音乐炸响。",
           "// 移除背景音乐循环低频 bass/drone/noise pulse，解决一直“咚咚咚”的重复节拍。",
+          "// 背景旋律改为慢起音 pad，同一 BGM 不再每几秒重启打点；昼夜音乐只在状态变化时触发。",
+          "// 局内学习面板新增场景状态：用图标显示当前天气、白天或夜晚。",
           "// 音效系统加入柔和包络、独立低通、事件冷却和爆音削峰，减少重复乱叫。",
           "// HP 过低时系统会自动使用进化碎片恢复，菜单里的手动碎片回复按钮已移除。",
           "// 作者：杀戮，QQ：3424636983，官方Q群：414374792。"
@@ -11401,6 +11472,8 @@ int main() {
           "新增启动渲染标记：主脚本正常执行后立即隐藏静态救援层，避免网页正常却误弹 CODE AWAKENER 救援提示。",
           "音乐停止双 BGM 叠加，降低 music bus、三层 BGM、程序化音乐导演和事件变奏增益；音效加入独立 SFX 低通、柔和包络、事件冷却和爆音削峰。",
           "移除背景音乐里的循环低频 bass、drone 和 noise pulse，避免无论音量大小都能听到的“咚咚咚”重复节拍。",
+          "背景旋律改为慢起音 pad，同一 BGM 请求不再每几秒强制重启；昼夜音乐只在白天/夜晚变化时触发，避免固定循环打点。",
+          "局内学习面板新增场景状态卡片，用图标和文字告诉玩家当前天气、白天或夜晚状态。",
           "菜单移除“碎片回复HP”，系统检测到 HP 过低时会自动消耗进化碎片恢复。官方Q群：414374792。"
         ]
       },
@@ -11765,6 +11838,7 @@ int main() {
     const INFO_MENU_SECTION_ICON_MAP = Object.freeze({
       "课程进度": { icon: "📚", purpose: "查看C语言路线" },
       "世界进化": { icon: "🌍", purpose: "观察世界修复" },
+      "场景状态": { icon: "🌦️", purpose: "查看天气和昼夜" },
       "任务提示": { icon: "🧭", purpose: "确认下一步目标" },
       "知识碎片": { icon: "💎", purpose: "查看碎片位置" },
       "容错状态": { icon: "❤️", purpose: "查看调试容错" },
@@ -11776,9 +11850,9 @@ int main() {
         id: "now",
         icon: "🧭",
         title: "当前任务",
-        desc: "下一步、课程、世界进度",
+        desc: "下一步、场景、课程进度",
         open: true,
-        sections: ["任务提示", "课程进度", "世界进化"]
+        sections: ["任务提示", "场景状态", "课程进度", "世界进化"]
       },
       {
         id: "fragments",
@@ -12500,7 +12574,7 @@ return 0;`;
       directSaveAs: "reduced-by-inline-resources"
     });
     const SECURITY_CONFIG = Object.freeze({
-      expectedScriptHash: "ip3PmkR9Z4kwNwiUHUVW+boqgN/JpP1lgn650YU0hfo=",
+      expectedScriptHash: "TzxB0WN/BiWbu1zY4c2n9q2sXmmQziQBY4UIslvoSVY=",
       selfCheckIntervalMs: 45000,
       tamperRefreshMs: 5000,
       devToolsRefreshMs: 2000,
@@ -12728,6 +12802,25 @@ return 0;`;
       snow: { id: "snow", label: "雪尘", className: "weather-snow", audio: "hushed-snow" },
       fog: { id: "fog", label: "编译雾", className: "weather-fog", audio: "mono-fog" },
       sandstorm: { id: "sandstorm", label: "沙暴", className: "weather-sandstorm", audio: "grain-wind" }
+    });
+    const WEATHER_MENU_ICONS = Object.freeze({
+      clear: "☀️",
+      rain: "🌧️",
+      snow: "❄️",
+      fog: "🌫️",
+      sandstorm: "🟫"
+    });
+    const WEATHER_MENU_DETAILS = Object.freeze({
+      clear: "视野清晰，适合找石碑和碎片。",
+      rain: "雨声会压低环境色，注意发光目标。",
+      snow: "雪尘让远景更冷，沿数据总线前进。",
+      fog: "编译雾会降低辨识度，优先看任务提示。",
+      sandstorm: "沙暴颗粒较强，留意高亮路线。"
+    });
+    const DAY_NIGHT_MENU_STATES = Object.freeze({
+      day: { icon: "☀️", label: "白天", detail: "光照稳定，地图目标更容易辨认。" },
+      night: { icon: "🌙", label: "夜晚", detail: "环境更暗，石碑和碎片会更依赖霓虹轮廓。" },
+      story: { icon: "✦", label: "剧情相位", detail: "剧情演出中，跟随当前提示继续操作。" }
     });
     const NPC_STORY_ARCS = Object.freeze({
       mentor: { name: "导师", beats: ["相遇", "背叛", "牺牲", "救赎"], reward: "导师回忆技能卡" },
@@ -16484,18 +16577,56 @@ return 0;`;
       getBgmTickInterval(section, mode = this.bgmMode) {
         const base = Number(section?.interval) || 420;
         const swing = Math.sin((this.noteIndex + this.bgmSectionOffset * 7) * 0.73) * BGM_DYNAMIC_SWING_MS;
-        const phraseRest = this.noteIndex % 16 === 15 ? 120 : this.noteIndex % 8 === 7 ? 58 : 0;
-        const floor = mode === "battle" ? 230 : mode === "puzzle" ? 300 : 330;
-        return Math.round(Math.max(floor, base + swing + phraseRest));
+        const phraseRest = this.noteIndex % 16 === 15 ? 260 : this.noteIndex % 8 === 7 ? 140 : 0;
+        const floor = mode === "battle" ? 760 : mode === "puzzle" ? 900 : 1040;
+        return Math.round(Math.max(floor, base * 2.35 + swing + phraseRest));
+      }
+
+      getSoftBgmFrequency(frequency = 440) {
+        let resolved = Number(frequency) || 440;
+        while (resolved < 330) resolved *= 2;
+        while (resolved > 1180) resolved /= 2;
+        return resolved;
       }
 
       getGentleMusicWave(type = "triangle") {
         return type === "square" || type === "sawtooth" ? "triangle" : type;
       }
 
+      playMusicPad(frequency, duration = 0.82, type = "sine", gainValue = 0.018, destination = null, pan = 0) {
+        const ctx = this.ensureContext();
+        if (!ctx) return false;
+        const resolvedDestination = destination || this.musicBus || this.filter;
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        const panner = ctx.createStereoPanner ? ctx.createStereoPanner() : null;
+        osc.type = this.getGentleMusicWave(type);
+        osc.frequency.setValueAtTime(this.getSoftBgmFrequency(frequency), ctx.currentTime);
+        const startAt = ctx.currentTime;
+        const safeDuration = Math.max(0.38, duration);
+        const attack = Math.min(0.22, safeDuration * 0.32);
+        const release = Math.min(0.46, safeDuration * 0.62);
+        const targetGain = Math.min(0.026, gainValue * this.musicEventGain);
+        gain.gain.cancelScheduledValues(startAt);
+        gain.gain.setValueAtTime(0.0001, startAt);
+        gain.gain.linearRampToValueAtTime(targetGain, startAt + attack);
+        gain.gain.setTargetAtTime(0.0001, Math.max(startAt + attack, startAt + safeDuration - release), Math.max(0.04, release / 3));
+        osc.connect(gain);
+        if (panner) {
+          panner.pan.value = Math.max(-0.55, Math.min(0.55, pan));
+          gain.connect(panner);
+          panner.connect(resolvedDestination);
+        } else {
+          gain.connect(resolvedDestination);
+        }
+        osc.start(startAt);
+        osc.stop(startAt + safeDuration + release + 0.08);
+        return true;
+      }
+
       playBgm(mode = "town") {
         const now = performance.now();
-        if (this.bgmTimer && this.bgmMode === mode && now - this.lastBgmRestartAt < 1400) {
+        if (this.bgmTimer && this.bgmMode === mode) {
           this.applyMusicLayerMix(mode, this.editorAudioFocus);
           return true;
         }
@@ -16517,15 +16648,17 @@ return 0;`;
           const section = this.getAdaptiveBgmSection(mode);
           const melody = section.melody || themeSections[0].melody;
           const counter = section.counter || [];
-          const note = melody[this.noteIndex % melody.length];
+          const note = this.getSoftBgmFrequency(melody[this.noteIndex % melody.length]);
           const counterEvery = section.counterEvery || 4;
-          this.tone(note, 0.12, this.getGentleMusicWave(section.wave || "triangle"), mode === "battle" ? 0.052 : 0.044, layers.theme || "music", Math.sin(this.noteIndex * 0.7) * 0.18);
+          const padDuration = mode === "battle" ? 0.58 : mode === "puzzle" ? 0.78 : 0.96;
+          const padGain = mode === "battle" ? 0.02 : 0.016;
+          this.playMusicPad(note, padDuration, section.wave || "triangle", padGain, layers.theme || "music", Math.sin(this.noteIndex * 0.7) * 0.16);
           if (counter.length && this.noteIndex % counterEvery === 1) {
-            this.tone(counter[this.noteIndex % counter.length], 0.1, "sine", 0.014, layers.theme || "music", 0.16);
+            this.playMusicPad(counter[this.noteIndex % counter.length], 0.52, "sine", 0.007, layers.theme || "music", 0.16);
           }
-          if (this.noteIndex % 8 === 0) {
+          if (this.noteIndex % 12 === 0) {
             [1.25, 1.5].forEach((ratio, index) => {
-              window.setTimeout(() => this.tone(note * ratio, 0.12, "sine", 0.01, layers.theme || "music", 0.14), index * 72);
+              window.setTimeout(() => this.playMusicPad(note * ratio, 0.38, "sine", 0.005, layers.theme || "music", 0.14), index * 180);
             });
           }
           const nextInterval = this.getBgmTickInterval(section, mode);
@@ -16811,11 +16944,17 @@ return 0;`;
       window.setTimeout(() => setMoodIntensity(0.24), 2000);
     }
 
+    let lastDayNightMusicState = null;
     function updateMusicForDayNight(night = false) {
+      const targetState = night ? "night" : "day";
+      if (lastDayNightMusicState === targetState) return targetState;
+      lastDayNightMusicState = targetState;
       audioManager.queueBgmVariation(night ? "night" : "day");
       audioManager.playBgm(night ? "night" : "town");
       applyMusicMood(night ? WORLD_MOOD.calm : WORLD_MOOD.explore, night ? 0.32 : 0.22);
-      if (night) audioManager.tone(55, 0.16, "sine", 0.006);
+      if (night) audioManager.tone(660, 0.12, "sine", 0.004, "music");
+      if (dom.infoSideMenu?.classList.contains("active")) renderSceneStatusMenu();
+      return targetState;
     }
 
     function renderMusicLogEntry(chord = "i", motif = "seeded-fragment") {
@@ -18375,6 +18514,13 @@ int main(void) {
       infoWorldEvolutionText: document.getElementById("infoWorldEvolutionText"),
       infoWorldEvolutionFill: document.getElementById("infoWorldEvolutionFill"),
       infoWorldEvolutionHint: document.getElementById("infoWorldEvolutionHint"),
+      infoSceneStatusPanel: document.getElementById("infoSceneStatusPanel"),
+      infoWeatherIcon: document.getElementById("infoWeatherIcon"),
+      infoWeatherText: document.getElementById("infoWeatherText"),
+      infoWeatherDetail: document.getElementById("infoWeatherDetail"),
+      infoDayNightIcon: document.getElementById("infoDayNightIcon"),
+      infoDayNightText: document.getElementById("infoDayNightText"),
+      infoDayNightDetail: document.getElementById("infoDayNightDetail"),
       worldEvolutionDifficultyHint: document.getElementById("worldEvolutionDifficultyHint"),
       worldAdvanceButton: document.getElementById("worldAdvanceButton"),
       codeBlockModePanel: document.getElementById("codeBlockModePanel"),
@@ -24354,6 +24500,36 @@ ${item.code}
       return completion;
     }
 
+    function getCurrentWeatherInfo() {
+      const activeWeatherId = document.body.dataset.weather || "clear";
+      const weather = Object.values(ULTIMATE_WEATHER_STATES).find((item) => item.id === activeWeatherId) || ULTIMATE_WEATHER_STATES.clear;
+      return {
+        ...weather,
+        icon: WEATHER_MENU_ICONS[weather.id] || "🌦️",
+        detail: WEATHER_MENU_DETAILS[weather.id] || "当前场景天气会影响画面氛围。"
+      };
+    }
+
+    function getCurrentDayNightInfo() {
+      const state = worldStateMachine.state || WORLD_STATES.day;
+      return DAY_NIGHT_MENU_STATES[state] || DAY_NIGHT_MENU_STATES.day;
+    }
+
+    function renderSceneStatusMenu() {
+      if (!dom.infoSceneStatusPanel) return false;
+      const weather = getCurrentWeatherInfo();
+      const dayNight = getCurrentDayNightInfo();
+      dom.infoSceneStatusPanel.dataset.weather = weather.id;
+      dom.infoSceneStatusPanel.dataset.dayNight = worldStateMachine.state || WORLD_STATES.day;
+      if (dom.infoWeatherIcon) dom.infoWeatherIcon.textContent = weather.icon;
+      if (dom.infoWeatherText) dom.infoWeatherText.textContent = `天气：${weather.label}`;
+      if (dom.infoWeatherDetail) dom.infoWeatherDetail.textContent = weather.detail;
+      if (dom.infoDayNightIcon) dom.infoDayNightIcon.textContent = dayNight.icon;
+      if (dom.infoDayNightText) dom.infoDayNightText.textContent = `时间：${dayNight.label}`;
+      if (dom.infoDayNightDetail) dom.infoDayNightDetail.textContent = dayNight.detail;
+      return { weather, dayNight };
+    }
+
     function triggerWorldEvolutionMilestoneEffects(previousCompletion, nextCompletion, scene = gameState.scene) {
       const milestones = [];
       for (let milestone = Math.floor(previousCompletion / 10) * 10 + 10; milestone <= nextCompletion; milestone += 10) {
@@ -24430,6 +24606,7 @@ ${item.code}
       const growthLevel = getPlayerGrowthLevel();
       const growthExp = getPlayerGrowthExpIntoLevel();
       updateWorldEvolutionUi();
+      renderSceneStatusMenu();
       if (dom.infoTaskText) dom.infoTaskText.textContent = getInfoMenuTaskText();
       if (dom.infoFragmentText) dom.infoFragmentText.textContent = `碎片: ${getCourseFragmentProgressText()}`;
       renderFragmentLocationGuide();
@@ -25802,6 +25979,7 @@ ${item.code}
       document.body.classList.add(weather.className);
       document.body.dataset.weather = weather.id;
       if (dom.worldWeatherChip) dom.worldWeatherChip.textContent = `天气：${weather.label}`;
+      if (dom.infoSideMenu?.classList.contains("active")) renderSceneStatusMenu();
       adaptiveSymphonicAudioDirector?.setHorizontalMusicScene(weather.audio);
       return weather;
     }
@@ -36171,7 +36349,8 @@ ${item.code}
       scene.dayNightTime += 0.002;
       const camera = scene.cameras.main;
       const alpha = 0.06 + (Math.sin(scene.dayNightTime) + 1) * 0.035;
-      transitionWorldState(Math.sin(scene.dayNightTime) > 0.38 ? WORLD_STATES.night : WORLD_STATES.day);
+      const changed = transitionWorldState(Math.sin(scene.dayNightTime) > 0.38 ? WORLD_STATES.night : WORLD_STATES.day);
+      if (changed && dom.infoSideMenu?.classList.contains("active")) renderSceneStatusMenu();
       scene.dayNightOverlay.clear();
       if (!gameState.settings.lighting) return;
       scene.dayNightOverlay.fillStyle(0x0f172a, alpha);
