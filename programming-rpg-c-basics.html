@@ -11,10 +11,13 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; base-uri 'self'; object-src 'none'; frame-ancestors 'none'; script-src 'self' 'nonce-code-awakener-inline' 'sha256-Ki5BVjXttt+ZdWx+z7jZVqUelhGQbxqYFUxAZNZVeUw='; style-src 'self' 'nonce-code-awakener-inline' 'sha256-DlaE08OOi6AJKJSeQ0IDjOj1/4y4GVZY2mb18DK/rLU='; style-src-attr 'unsafe-inline'; font-src 'self' data:; img-src 'self' data: blob:; media-src 'self' data: blob:; worker-src 'self' blob:; child-src 'self' blob:; connect-src 'self' http://localhost:8000 http://127.0.0.1:8000;">
+  <meta http-equiv="Cache-Control" content="no-store, max-age=0, must-revalidate">
+  <meta http-equiv="Pragma" content="no-cache">
+  <meta http-equiv="Expires" content="0">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self' file:; base-uri 'self'; object-src 'none'; frame-ancestors 'none'; script-src 'self' 'nonce-code-awakener-inline' file: 'sha256-hGB0SmUV4ljvi/+K4wALp7HWlb3j61JDT5JHagFad1Q='; style-src 'self' 'nonce-code-awakener-inline' file: 'sha256-K7+2PGjMcfloKHQpVEzuwP4olMk696bwWZVV6Qfdscg='; style-src-attr 'unsafe-inline'; font-src 'self' file: data:; img-src 'self' file: data: blob:; media-src 'self' file: data: blob:; worker-src 'self' file: blob:; child-src 'self' file: blob:; connect-src 'self' file: http://localhost:8000 http://127.0.0.1:8000;">
   <title>编程学习 RPG：C 语言启航村</title>
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%23020617'/%3E%3Cpath d='M22 20 10 32l12 12M42 20l12 12-12 12' fill='none' stroke='%2300ff88' stroke-width='6' stroke-linecap='round' stroke-linejoin='round'/%3E%3Cpath d='m36 16-8 32' stroke='%2300ccff' stroke-width='5' stroke-linecap='round'/%3E%3C/svg%3E">
-  <script src="./vendor/phaser.min.js" integrity="sha384-Fi7F0CYQBHYa+s2vvYJeiqvOQf3tuZ28vafRGXvMt7ijxNTVf3+eXPkNRIUi9JD2"></script>
+  <script src="./vendor/phaser.min.js"></script>
   <script src="./vendor/phaser-loader.js"></script>
   <style nonce="code-awakener-inline">
     :root {
@@ -641,6 +644,74 @@
     .menu-screen.active {
       display: flex;
       animation: menuScaleIn 300ms cubic-bezier(0.34, 1.56, 0.64, 1) both;
+    }
+
+    .static-rescue {
+      position: fixed;
+      inset: 0;
+      z-index: 2147483000;
+      display: grid;
+      place-items: center;
+      padding: 24px;
+      background:
+        radial-gradient(circle at 20% 20%, rgba(56, 189, 248, 0.18), transparent 28%),
+        radial-gradient(circle at 80% 70%, rgba(34, 197, 94, 0.16), transparent 30%),
+        #020617;
+      color: #dfffee;
+      font: 14px/1.8 "JetBrains Mono", "Consolas", monospace;
+      opacity: 0;
+      pointer-events: none;
+      animation: staticRescueReveal 1ms steps(1, end) 6500ms forwards;
+    }
+
+    html.app-rendered .static-rescue {
+      display: none;
+    }
+
+    .static-rescue-panel {
+      width: min(560px, 92vw);
+      border: 1px solid rgba(34, 197, 94, 0.46);
+      border-radius: 8px;
+      padding: 22px;
+      background: rgba(2, 6, 23, 0.92);
+      box-shadow: 0 0 42px rgba(34, 197, 94, 0.22);
+    }
+
+    .static-rescue h1 {
+      margin: 0 0 12px;
+      color: #86efac;
+      font-size: clamp(20px, 5vw, 34px);
+      letter-spacing: 0;
+    }
+
+    .static-rescue p {
+      margin: 8px 0;
+      color: #bae6fd;
+    }
+
+    .static-rescue-actions {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+      margin-top: 18px;
+    }
+
+    .static-rescue-actions a {
+      display: grid;
+      min-height: 44px;
+      place-items: center;
+      border: 1px solid rgba(125, 211, 252, 0.48);
+      border-radius: 6px;
+      color: #ecfeff;
+      text-decoration: none;
+      background: rgba(14, 165, 233, 0.16);
+    }
+
+    @keyframes staticRescueReveal {
+      to {
+        opacity: 1;
+        pointer-events: auto;
+      }
     }
 
     .menu-backdrop {
@@ -9981,6 +10052,18 @@
   </style>
 </head>
 <body>
+  <aside id="staticRescue" class="static-rescue" role="alert" aria-label="安全启动救援">
+    <div class="static-rescue-panel">
+      <h1>CODE AWAKENER</h1>
+      <p>&gt; 如果这里一直空白，说明浏览器缓存、旧存档或脚本自检阻塞了启动。</p>
+      <p>&gt; 使用下面入口可以绕过旧缓存并关闭重型特效，学习进度仍会保留。</p>
+      <div class="static-rescue-actions">
+        <a href="./programming-rpg-c-basics.html?safeMode=true&noAudio=true&v=1.0.28">安全启动</a>
+        <a href="./programming-rpg-c-basics.html?v=1.0.28">强制刷新</a>
+      </div>
+      <p>作者：杀戮 · QQ：3424636983 · 官方Q群：414374792</p>
+    </div>
+  </aside>
   <main id="game-shell">
     <div id="game"></div>
     <div id="postProcessOverlay" class="post-process-overlay"></div>
@@ -10144,7 +10227,7 @@
       <canvas id="menuFxCanvas" width="1280" height="720"></canvas>
       <div class="main-menu-card glass-panel">
         <h1 class="game-logo">CODE AWAKENER<br>C 语言启航村</h1>
-        <div class="version-label" id="versionLabel">World Build v1.0.27 · develop.fan C Basics</div>
+        <div class="version-label" id="versionLabel">World Build v1.0.28 · develop.fan C Basics</div>
         <label class="boot-command"><span>&gt;</span><input id="bootCommandInput" value="start_game.exe" autocomplete="off" spellcheck="false" aria-label="启动命令"></label>
         <nav class="menu-list" id="mainMenuList" aria-label="主菜单选项">
           <span id="menuHighlight" class="menu-highlight"></span>
@@ -10230,7 +10313,7 @@
           <div class="settings-content">
             <section class="settings-section active" data-settings-section="audio">
               <h3 class="settings-section-title">Audio Mix</h3>
-              <p class="settings-section-desc">音乐保持清晰靠前，音效已做瞬态限幅，避免短音叠加刺耳。</p>
+              <p class="settings-section-desc">音乐与音效已做分层限幅、柔和包络和防叠加处理，避免爆音刺耳。</p>
               <label class="setting-row">主音量 <input id="masterVolumeSlider" type="range" min="0" max="140" step="1"> <span id="masterVolumeValue">100</span></label>
               <label class="setting-row">音乐音量 <input id="musicVolumeSlider" type="range" min="0" max="140" step="1"> <span id="musicVolumeValue">100</span></label>
               <label class="setting-row">音效音量 <input id="sfxVolumeSlider" type="range" min="0" max="140" step="1"> <span id="sfxVolumeValue">100</span></label>
@@ -10480,12 +10563,9 @@
         </section>
         <section class="info-menu-section">
           <strong>容错状态</strong>
-          <p class="menu-help">HP是调试容错生命。编译不会消耗能量；碎片按钮只用于紧急恢复容错状态。</p>
+          <p class="menu-help">HP是调试容错生命。系统检测到 HP 过低时会自动消耗进化碎片恢复，不需要手动操作。</p>
           <div class="info-menu-row"><span>HP</span><span id="infoHpText">100</span></div>
           <div class="info-menu-meter"><span id="infoHpFill"></span></div>
-          <div class="info-menu-actions">
-            <button id="useHpShardButton" class="pixel-button secondary" type="button">碎片回复HP</button>
-          </div>
         </section>
         <section class="info-menu-section">
           <strong>成长 / 惩罚</strong>
@@ -10787,9 +10867,10 @@ int main(void) {
       <button id="announcementCloseButton" class="announcement-close" type="button" aria-label="关闭公告">×</button>
       <h2 id="startupAnnouncementTitle" class="startup-announcement-title">> 消息 / 本次更新</h2>
       <div id="announcementPageBody" class="startup-announcement-body">
-        <p>// v1.0.27：启动白屏/遮罩卡住热修复。</p>
-        <p>// 启动终端增加硬兜底，计时器被降频也会自动释放菜单。</p>
-        <p>// 修复界面像白屏、黑屏或一直停在启动层的问题。</p>
+        <p>// v1.0.28：本地白屏与音乐爆音热修复。</p>
+        <p>// 修复 file 本地打开时 CSP/自检哈希不同步导致的白屏。</p>
+        <p>// 音乐不再双 BGM 叠加，音效加入柔和包络和事件冷却。</p>
+        <p>// HP 过低时系统会自动消耗进化碎片恢复，菜单手动按钮已移除。</p>
         <p>// 作者：杀戮，QQ：3424636983。</p>
         <p>// 官方Q群：414374792。</p>
         <p>// 作者：杀戮</p>
@@ -11177,7 +11258,17 @@ int main() {
 
   <script nonce="code-awakener-inline">
     "use strict";
+    function markAppRendered(reason = "script-started") {
+      document.documentElement?.classList?.add("app-rendered");
+      const rescue = document.getElementById("staticRescue");
+      rescue?.setAttribute?.("aria-hidden", "true");
+      if (rescue?.style) rescue.style.display = "none";
+      return reason;
+    }
+    markAppRendered();
+
     function showPhaserMissingFallback() {
+      markAppRendered("phaser-fallback");
       const mount = document.getElementById("game");
       if (!mount) return;
       mount.innerHTML = '<div style="display:grid;place-items:center;width:100%;height:100%;padding:24px;background:#020617;color:#bbf7d0;font:14px/1.8 JetBrains Mono,monospace;text-align:center;">Phaser 渲染核心未加载成功。请检查网络或刷新页面，学习进度不会丢失。</div>';
@@ -11283,21 +11374,34 @@ int main() {
     const SAVE_CLEAR_CONFIRM_MS = 3000;
     const STARTUP_ANNOUNCEMENT_AUTO_HIDE_MS = 14000;
     const SYSTEM_BOOT_FORCE_RELEASE_MS = 3200;
-    const GAME_VERSION = "v1.0.27";
+    const GAME_VERSION = "v1.0.28";
     const OFFICIAL_SITE_HREF = "./official-site.html";
     const UPDATE_ANNOUNCEMENT_PAGES = Object.freeze([
       {
         title: "> 消息 / 本次更新",
         lines: [
-          "// v1.0.27：启动白屏/遮罩卡住热修复。",
-          "// 启动终端现在有硬兜底，低性能、切后台或计时器降频时也会自动释放菜单。",
-          "// 修复玩家看到游戏界面像白屏、黑屏或一直停在启动层的问题。",
-          "// 同步保留 v1.0.26 的音乐动态段落、事件乐句、音效限幅和降噪。",
+          "// v1.0.28：本地白屏与音乐爆音热修复。",
+          "// 修复 file 本地打开时 CSP、style、script、自检哈希不同步导致的白屏。",
+          "// 正常启动会立刻隐藏静态救援层；异常时仍保留安全启动和强制刷新入口。",
+          "// 音乐停止双 BGM 叠加，music bus 与程序化音乐导演整体削峰，减少背景音乐炸响。",
+          "// 音效系统加入柔和包络、独立低通、事件冷却和爆音削峰，减少重复乱叫。",
+          "// HP 过低时系统会自动使用进化碎片恢复，菜单里的手动碎片回复按钮已移除。",
           "// 作者：杀戮，QQ：3424636983，官方Q群：414374792。"
         ]
       }
     ]);
     const UPDATE_HISTORY = Object.freeze([
+      {
+        version: "v1.0.28",
+        date: "2026-06-17",
+        title: "本地白屏与音乐爆音热修复",
+        details: [
+          "修复本地 file 地址打开时，源码已改但 CSP/style/script/脚本自检哈希未同步导致的白屏。",
+          "新增启动渲染标记：主脚本正常执行后立即隐藏静态救援层，避免网页正常却误弹 CODE AWAKENER 救援提示。",
+          "音乐停止双 BGM 叠加，降低 music bus、三层 BGM、程序化音乐导演和事件变奏增益；音效加入独立 SFX 低通、柔和包络、事件冷却和爆音削峰。",
+          "菜单移除“碎片回复HP”，系统检测到 HP 过低时会自动消耗进化碎片恢复。官方Q群：414374792。"
+        ]
+      },
       {
         version: "v1.0.27",
         date: "2026-06-17",
@@ -11793,7 +11897,7 @@ int main() {
     const MAX_BEAT_SYNC_ERROR_MS = 16;
     const BGM_DUCK_DB = -8;
     const BGM_SECTION_STEPS = 32;
-    const BGM_VARIATION_QUEUE_MAX = 8;
+    const BGM_VARIATION_QUEUE_MAX = 3;
     const BGM_DYNAMIC_SWING_MS = 54;
     const AUDIO_FOOTSTEP_COOLDOWN_MS = 420;
     const AUDIO_HOVER_COOLDOWN_MS = 180;
@@ -11930,9 +12034,9 @@ int main() {
       ])
     });
     const BGM_EVENT_VARIATIONS = Object.freeze({
-      pickup: Object.freeze({ name: "pickup-ornament", melody: [1175, 1480, 1760, 1976], bass: [147], counter: [2349], wave: "sine", bassWave: "triangle", counterEvery: 2, accentEvery: 2 }),
-      compilePass: Object.freeze({ name: "compile-pass-rise", melody: [523, 659, 784, 988, 1175, 1319], bass: [131, 196], counter: [1568, 1760], wave: "triangle", bassWave: "sine", counterEvery: 2, accentEvery: 3 }),
-      compileError: Object.freeze({ name: "compile-error-fold", melody: [185, 175, 147, 139, 123], bass: [46, 55], counter: [370, 277], wave: "sawtooth", bassWave: "square", counterEvery: 2, accentEvery: 2 }),
+      pickup: Object.freeze({ name: "pickup-ornament", melody: [587, 740, 880, 988], bass: [147], counter: [1175], wave: "sine", bassWave: "sine", counterEvery: 3, accentEvery: 4 }),
+      compilePass: Object.freeze({ name: "compile-pass-rise", melody: [392, 523, 659, 784, 880], bass: [131, 196], counter: [1046], wave: "triangle", bassWave: "sine", counterEvery: 3, accentEvery: 4 }),
+      compileError: Object.freeze({ name: "compile-error-fold", melody: [185, 175, 147, 139, 123], bass: [55], counter: [277], wave: "triangle", bassWave: "sine", counterEvery: 4, accentEvery: 5 }),
       night: Object.freeze({ name: "night-turn", melody: [440, 392, 330, 294], bass: [55], counter: [659], wave: "sine", bassWave: "sine", counterEvery: 4, accentEvery: 6 }),
       day: Object.freeze({ name: "day-turn", melody: [392, 440, 523, 659], bass: [98, 123], counter: [784], wave: "triangle", bassWave: "sine", counterEvery: 3, accentEvery: 4 })
     });
@@ -12394,7 +12498,7 @@ return 0;`;
       directSaveAs: "reduced-by-inline-resources"
     });
     const SECURITY_CONFIG = Object.freeze({
-      expectedScriptHash: "0vmyNghwLBV4gNSLPBYUp+AIecMSv20qrEA8su00RIY=",
+      expectedScriptHash: "NnT+1I/HIH1NKlF6W8y4XU2l/zYbT3W889fXGThlQws=",
       selfCheckIntervalMs: 45000,
       tamperRefreshMs: 5000,
       devToolsRefreshMs: 2000,
@@ -16036,6 +16140,7 @@ return 0;`;
         this.ctx = null;
         this.master = null;
         this.filter = null;
+        this.sfxFilter = null;
         this.musicBus = null;
         this.musicLayers = null;
         this.sfxBus = null;
@@ -16050,16 +16155,21 @@ return 0;`;
         this.lastUiHoverAt = 0;
         this.lastTypeAt = 0;
         this.lastBgmPingAt = 0;
+        this.lastBgmRestartAt = 0;
         this.lastMusicResumeAt = 0;
         this.bufferPool = new AudioBufferPool();
         this.wantMusic = false;
-        this.masterBaseGain = 0.52;
-        this.musicBusScale = 1.62;
+        this.masterBaseGain = 0.42;
+        this.musicBusScale = 0.76;
         this.sfxBusScale = 0.32;
-        this.musicEventGain = 1.05;
-        this.sfxEventGain = 0.38;
+        this.musicEventGain = 0.58;
+        this.sfxEventGain = 0.3;
         this.lastBrightSfxAt = 0;
         this.lastNoiseSfxAt = 0;
+        this.lastSfxAt = 0;
+        this.sfxBurstWindowAt = 0;
+        this.sfxBurstCount = 0;
+        this.eventCooldowns = new Map();
         this.editorAudioFocus = false;
         this.audioDisabled = window.location?.search?.includes("noAudio=true") || Boolean(typeof navigator !== "undefined" && navigator.webdriver);
       }
@@ -16085,11 +16195,15 @@ return 0;`;
           this.ctx = new AudioContextClass();
           this.master = this.ctx.createGain();
           this.filter = this.ctx.createBiquadFilter();
+          this.sfxFilter = this.ctx.createBiquadFilter();
           this.limiter = this.ctx.createDynamicsCompressor();
           this.musicBus = this.ctx.createGain();
           this.sfxBus = this.ctx.createGain();
           this.filter.type = "lowpass";
           this.filter.frequency.value = 3900;
+          this.sfxFilter.type = "lowpass";
+          this.sfxFilter.frequency.value = 1650;
+          this.sfxFilter.Q.value = 0.55;
           this.limiter.threshold.value = -18;
           this.limiter.knee.value = 18;
           this.limiter.ratio.value = 12;
@@ -16099,8 +16213,9 @@ return 0;`;
           this.musicBus.gain.value = 1;
           this.sfxBus.gain.value = 1;
           this.musicBus.connect(this.filter);
-          this.sfxBus.connect(this.filter);
+          this.sfxBus.connect(this.sfxFilter);
           this.filter.connect(this.limiter);
+          this.sfxFilter.connect(this.limiter);
           this.limiter.connect(this.master);
           this.master.connect(this.ctx.destination);
           this.createMusicLayers();
@@ -16121,9 +16236,9 @@ return 0;`;
           return layer;
         };
         this.musicLayers = {
-          drone: createLayer(0.46),
-          ambience: createLayer(0.38),
-          theme: createLayer(0.72)
+          drone: createLayer(0.22),
+          ambience: createLayer(0.16),
+          theme: createLayer(0.34)
         };
         return this.musicLayers;
       }
@@ -16134,8 +16249,8 @@ return 0;`;
         const music = Math.max(0, Math.min(1.4, gameState.settings.musicVolume / 100));
         const sfx = Math.max(0, Math.min(1.4, gameState.settings.sfxVolume / 100));
         this.master.gain.value = this.masterBaseGain * master;
-        if (this.musicBus) this.musicBus.gain.value = Math.min(2.1, music * this.musicBusScale);
-        if (this.sfxBus) this.sfxBus.gain.value = Math.min(0.46, sfx * this.sfxBusScale);
+        if (this.musicBus) this.musicBus.gain.value = Math.min(0.86, music * this.musicBusScale);
+        if (this.sfxBus) this.sfxBus.gain.value = Math.min(0.36, sfx * this.sfxBusScale);
         this.applyMusicLayerMix(this.bgmMode, this.editorAudioFocus);
         this.proceduralMusic?.applyVolume?.();
       }
@@ -16146,18 +16261,42 @@ return 0;`;
         if (!ctx || !layers) return false;
         const complexity = gameState.settings.musicComplexity || "full";
         const mixes = {
-          town: { drone: 0.52, ambience: 0.42, theme: 0.76 },
-          puzzle: { drone: 0.62, ambience: 0.24, theme: 0.34 },
-          battle: { drone: 0.72, ambience: 0.28, theme: 0.86 }
+          town: { drone: 0.28, ambience: 0.2, theme: 0.38 },
+          puzzle: { drone: 0.3, ambience: 0.14, theme: 0.24 },
+          battle: { drone: 0.34, ambience: 0.16, theme: 0.42 }
         };
         const mix = { ...(mixes[mode] || mixes.town) };
-        if (focus) Object.assign(mix, { drone: 0.58, ambience: 0.18, theme: 0.16 });
+        if (focus) Object.assign(mix, { drone: 0.26, ambience: 0.08, theme: 0.12 });
         if (complexity === "reduced") mix.ambience *= 0.5;
         if (complexity === "off") Object.assign(mix, { drone: 0, ambience: 0, theme: 0 });
         Object.entries(mix).forEach(([key, value]) => {
           layers[key]?.gain?.setTargetAtTime?.(value, ctx.currentTime, 0.18);
         });
         return true;
+      }
+
+      canPlayEvent(key, cooldownMs = 120) {
+        const now = performance.now();
+        const last = this.eventCooldowns.get(key) || 0;
+        if (now - last < cooldownMs) return false;
+        this.eventCooldowns.set(key, now);
+        return true;
+      }
+
+      shouldDropSfxBurst(frequency = 0, type = "sine", gainValue = 0) {
+        const now = performance.now();
+        if (now - this.sfxBurstWindowAt > 180) {
+          this.sfxBurstWindowAt = now;
+          this.sfxBurstCount = 0;
+        }
+        this.sfxBurstCount += 1;
+        if (this.sfxBurstCount > 4) return true;
+        if (now - this.lastSfxAt < 14 && frequency >= 420) return true;
+        if (frequency >= 900 && now - this.lastBrightSfxAt < 170) return true;
+        if ((type === "square" || type === "sawtooth") && gainValue >= 0.045 && now - this.lastBrightSfxAt < 260) return true;
+        this.lastSfxAt = now;
+        if (frequency >= 900 || type === "square" || type === "sawtooth") this.lastBrightSfxAt = now;
+        return false;
       }
 
       tone(frequency, duration = 0.08, type = "square", gainValue = 0.08, destination = null, pan = 0) {
@@ -16180,14 +16319,19 @@ return 0;`;
         const sliderScale = channel === "music" ? 1 : gameState.settings.sfxVolume / 100;
         let adjustedGain = gainValue * levelScale * sliderScale;
         if (channel !== "music") {
-          const now = performance.now();
-          if (frequency >= 900 && now - this.lastBrightSfxAt < 120) return;
-          if (frequency >= 900) this.lastBrightSfxAt = now;
+          if (this.shouldDropSfxBurst(frequency, type, gainValue)) return;
           if (type === "sawtooth" || type === "square") adjustedGain *= 0.58;
         }
-        const cap = channel === "music" ? 0.28 : 0.032;
-        gain.gain.setValueAtTime(Math.min(cap, adjustedGain), ctx.currentTime);
-        gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + duration);
+        const cap = channel === "music" ? 0.28 : 0.024;
+        const targetGain = Math.min(cap, adjustedGain);
+        const startAt = ctx.currentTime;
+        const safeDuration = Math.max(0.012, duration);
+        const attack = Math.min(channel === "music" ? 0.012 : 0.012, safeDuration * 0.45);
+        const release = Math.min(channel === "music" ? 0.08 : 0.055, safeDuration * 0.75);
+        gain.gain.cancelScheduledValues(startAt);
+        gain.gain.setValueAtTime(0.0001, startAt);
+        gain.gain.linearRampToValueAtTime(targetGain, startAt + attack);
+        gain.gain.setTargetAtTime(0.0001, Math.max(startAt + attack, startAt + safeDuration - release), Math.max(0.006, release / 3));
         osc.connect(gain);
         if (panner) {
           panner.pan.value = Math.max(-0.85, Math.min(0.85, pan));
@@ -16197,7 +16341,7 @@ return 0;`;
           gain.connect(resolvedDestination);
         }
         osc.start();
-        osc.stop(ctx.currentTime + duration);
+        osc.stop(startAt + safeDuration + release + 0.02);
       }
 
       noise(duration = 0.04, gainValue = 0.04, pan = 0, destination = null, channel = "sfx") {
@@ -16222,12 +16366,19 @@ return 0;`;
         const sliderScale = outputChannel === "music" ? 1 : gameState.settings.sfxVolume / 100;
         if (outputChannel !== "music") {
           const now = performance.now();
-          if (now - this.lastNoiseSfxAt < 110) return;
+          if (now - this.lastNoiseSfxAt < 170 || this.shouldDropSfxBurst(0, "noise", gainValue)) return;
           this.lastNoiseSfxAt = now;
         }
-        const cap = outputChannel === "music" ? 0.14 : 0.014;
-        gain.gain.setValueAtTime(Math.min(cap, gainValue * outputScale * sliderScale), ctx.currentTime);
-        gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + duration);
+        const cap = outputChannel === "music" ? 0.14 : 0.009;
+        const targetGain = Math.min(cap, gainValue * outputScale * sliderScale);
+        const startAt = ctx.currentTime;
+        const safeDuration = Math.max(0.012, duration);
+        const attack = Math.min(outputChannel === "music" ? 0.018 : 0.014, safeDuration * 0.45);
+        const release = Math.min(outputChannel === "music" ? 0.12 : 0.07, safeDuration * 0.8);
+        gain.gain.cancelScheduledValues(startAt);
+        gain.gain.setValueAtTime(0.0001, startAt);
+        gain.gain.linearRampToValueAtTime(targetGain, startAt + attack);
+        gain.gain.setTargetAtTime(0.0001, Math.max(startAt + attack, startAt + safeDuration - release), Math.max(0.008, release / 3));
         source.connect(gain);
         if (panner) {
           panner.pan.value = Math.max(-0.85, Math.min(0.85, pan));
@@ -16237,6 +16388,7 @@ return 0;`;
           gain.connect(resolvedDestination);
         }
         source.start();
+        source.stop(startAt + safeDuration + release + 0.02);
       }
 
       startBgm() {
@@ -16335,7 +16487,17 @@ return 0;`;
         return Math.round(Math.max(floor, base + swing + phraseRest));
       }
 
+      getGentleMusicWave(type = "triangle") {
+        return type === "square" || type === "sawtooth" ? "triangle" : type;
+      }
+
       playBgm(mode = "town") {
+        const now = performance.now();
+        if (this.bgmTimer && this.bgmMode === mode && now - this.lastBgmRestartAt < 1400) {
+          this.applyMusicLayerMix(mode, this.editorAudioFocus);
+          return true;
+        }
+        this.lastBgmRestartAt = now;
         this.bgmMode = mode;
         if (!this.ensureBgmRunning(mode, true)) return;
         if (!this.ensureContext()) return;
@@ -16358,17 +16520,17 @@ return 0;`;
           const bassNote = bass[this.noteIndex % bass.length];
           const counterEvery = section.counterEvery || 4;
           const accentEvery = section.accentEvery || 6;
-          this.tone(note, 0.14, section.wave || "triangle", mode === "battle" ? 0.12 : 0.105, layers.theme || "music", Math.sin(this.noteIndex * 0.7) * 0.24);
-          if (this.noteIndex % 2 === 0) this.tone(bassNote, 0.22, section.bassWave || "sine", mode === "puzzle" ? 0.082 : 0.076, layers.drone || "music", -0.18);
+          this.tone(note, 0.12, this.getGentleMusicWave(section.wave || "triangle"), mode === "battle" ? 0.052 : 0.044, layers.theme || "music", Math.sin(this.noteIndex * 0.7) * 0.18);
+          if (this.noteIndex % 2 === 0) this.tone(bassNote, 0.18, this.getGentleMusicWave(section.bassWave || "sine"), mode === "puzzle" ? 0.032 : 0.028, layers.drone || "music", -0.14);
           if (counter.length && this.noteIndex % counterEvery === 1) {
-            this.tone(counter[this.noteIndex % counter.length], 0.12, "sine", 0.034, layers.theme || "music", 0.22);
+            this.tone(counter[this.noteIndex % counter.length], 0.1, "sine", 0.014, layers.theme || "music", 0.16);
           }
           if (this.noteIndex % 8 === 0) {
             [1.25, 1.5].forEach((ratio, index) => {
-              window.setTimeout(() => this.tone(note * ratio, 0.18, "sine", 0.026, layers.theme || "music", 0.18), index * 58);
+              window.setTimeout(() => this.tone(note * ratio, 0.12, "sine", 0.01, layers.theme || "music", 0.14), index * 72);
             });
           }
-          if (this.noteIndex % accentEvery === 1) this.noise(0.012, mode === "battle" ? 0.011 : 0.007, 0, layers.ambience || null, "music");
+          if (this.noteIndex % accentEvery === 1) this.noise(0.01, mode === "battle" ? 0.004 : 0.0025, 0, layers.ambience || null, "music");
           const nextInterval = this.getBgmTickInterval(section, mode);
           this.noteIndex += 1;
           this.bgmTimer = window.setTimeout(tick, nextInterval);
@@ -16388,8 +16550,9 @@ return 0;`;
       }
 
       dialogOpen() {
-        this.tone(640, 0.04, "triangle", 0.038);
-        window.setTimeout(() => this.noise(0.03, 0.025), 28);
+        if (!this.canPlayEvent("dialogOpen", 220)) return;
+        this.tone(560, 0.045, "triangle", 0.022);
+        window.setTimeout(() => this.noise(0.022, 0.011), 28);
       }
 
       type() {
@@ -16401,37 +16564,43 @@ return 0;`;
       }
 
       murmur(index) {
-        this.tone(280 + (index % 5) * 38, 0.045, "triangle", 0.035);
+        if (!this.canPlayEvent("murmur", 90)) return;
+        this.tone(260 + (index % 5) * 30, 0.04, "sine", 0.014);
       }
 
       ding() {
-        this.tone(880, 0.08, "sine", 0.052);
-        window.setTimeout(() => this.tone(1320, 0.1, "sine", 0.038), 55);
+        if (!this.canPlayEvent("ding", 180)) return;
+        this.tone(760, 0.075, "sine", 0.026);
+        window.setTimeout(() => this.tone(1040, 0.08, "sine", 0.016), 55);
       }
 
       settingsOpen() {
-        this.noise(0.04, 0.025);
-        this.tone(520, 0.055, "triangle", 0.04);
-        window.setTimeout(() => this.tone(780, 0.075, "triangle", 0.032), 58);
+        if (!this.canPlayEvent("settingsOpen", 360)) return;
+        this.noise(0.028, 0.01);
+        this.tone(440, 0.055, "triangle", 0.018);
+        window.setTimeout(() => this.tone(620, 0.07, "sine", 0.012), 58);
       }
 
       compileFlash() {
-        this.noise(0.035, 0.035);
-        this.tone(980, 0.055, "sawtooth", 0.045);
-        window.setTimeout(() => this.tone(1480, 0.06, "square", 0.028), 42);
+        if (!this.canPlayEvent("compileFlash", 120)) return;
+        this.noise(0.026, 0.012);
+        this.tone(720, 0.055, "triangle", 0.018);
+        window.setTimeout(() => this.tone(980, 0.06, "sine", 0.012), 42);
       }
 
       compileSuccess() {
-        this.noise(0.06, 0.03);
+        if (!this.canPlayEvent("compileSuccess", 620)) return;
+        this.noise(0.045, 0.012);
         [420, 620, 940, 1280].forEach((note, index) => {
-          window.setTimeout(() => this.tone(note, 0.08, "triangle", 0.04), index * 46);
+          window.setTimeout(() => this.tone(note, 0.08, index >= 2 ? "sine" : "triangle", 0.018), index * 52);
         });
         playLongCompileOvertone();
       }
 
       pickupSpark() {
+        if (!this.canPlayEvent("pickupSpark", 180)) return;
         [1120, 1480, 1760].forEach((note, index) => {
-          window.setTimeout(() => this.tone(note, 0.045, "sine", 0.035), index * 34);
+          window.setTimeout(() => this.tone(note * 0.82, 0.05, "sine", 0.012), index * 44);
         });
       }
 
@@ -16454,29 +16623,34 @@ return 0;`;
       }
 
       uiClick() {
-        this.tone(360, 0.038, "triangle", 0.018);
-        window.setTimeout(() => this.tone(520, 0.03, "triangle", 0.012), 38);
+        if (!this.canPlayEvent("uiClick", 70)) return;
+        this.tone(330, 0.035, "triangle", 0.01);
+        window.setTimeout(() => this.tone(470, 0.03, "sine", 0.007), 42);
       }
 
       run() {
-        this.tone(180, 0.06, "sawtooth", 0.052);
-        window.setTimeout(() => this.tone(260, 0.08, "sawtooth", 0.045), 80);
+        if (!this.canPlayEvent("run", 260)) return;
+        this.tone(170, 0.06, "triangle", 0.018);
+        window.setTimeout(() => this.tone(230, 0.08, "sine", 0.012), 80);
       }
 
       success() {
+        if (!this.canPlayEvent("success", 380)) return;
         [523, 659, 784].forEach((note, index) => {
-          window.setTimeout(() => this.tone(note, 0.14, "square", 0.065), index * 85);
+          window.setTimeout(() => this.tone(note, 0.12, "triangle", 0.02), index * 90);
         });
       }
 
       error() {
-        this.tone(160, 0.12, "sawtooth", 0.062);
-        window.setTimeout(() => this.tone(120, 0.12, "sawtooth", 0.052), 95);
+        if (!this.canPlayEvent("error", 360)) return;
+        this.tone(150, 0.1, "triangle", 0.018);
+        window.setTimeout(() => this.tone(118, 0.1, "sine", 0.012), 100);
       }
 
       card() {
+        if (!this.canPlayEvent("card", 300)) return;
         [784, 988, 1175].forEach((note, index) => {
-          window.setTimeout(() => this.tone(note, 0.1, "square", 0.055), index * 70);
+          window.setTimeout(() => this.tone(note * 0.88, 0.09, "triangle", 0.018), index * 76);
         });
       }
     }
@@ -16494,7 +16668,9 @@ return 0;`;
     function startCyberLofiBgm() {
       audioManager.playBgm("town");
       audioManager.setExplorationIntensity(0.18);
-      getProceduralMusicDirector()?.start(gameState.worldSeed);
+      const director = getProceduralMusicDirector();
+      director?.stop?.();
+      director?.setMood?.(WORLD_MOOD.explore);
       applyMusicMood(WORLD_MOOD.explore, 0.24);
       startAmbientSoundscape();
     }
@@ -16514,14 +16690,18 @@ return 0;`;
       const osc = ctx.createOscillator();
       const gain = ctx.createGain();
       osc.type = "sine";
-      osc.frequency.setValueAtTime(392, ctx.currentTime);
-      gain.gain.setValueAtTime(0.045 * (gameState.settings.sfxVolume / 100), ctx.currentTime);
-      gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 5);
+      const startAt = ctx.currentTime;
+      osc.frequency.setValueAtTime(392, startAt);
+      const targetGain = Math.min(0.018, 0.024 * (gameState.settings.sfxVolume / 100));
+      gain.gain.cancelScheduledValues(startAt);
+      gain.gain.setValueAtTime(0.0001, startAt);
+      gain.gain.linearRampToValueAtTime(targetGain, startAt + 0.14);
+      gain.gain.setTargetAtTime(0.0001, startAt + 3.2, 0.42);
       osc.connect(gain);
       const musicTarget = audioManager.musicBus || audioManager.filter;
       gain.connect(musicTarget);
-      osc.start();
-      osc.stop(ctx.currentTime + 5);
+      osc.start(startAt);
+      osc.stop(startAt + 4.4);
       return true;
     }
 
@@ -16556,8 +16736,9 @@ return 0;`;
     }
 
     function typewriterTick() {
-      audioManager.tone(1240 + Math.random() * 180, 0.018, "square", 0.05, "sfx");
-      audioManager.noise(0.014, 0.007, 0, null, "sfx");
+      if (!audioManager.canPlayEvent?.("typewriterTick", 58)) return;
+      audioManager.tone(720 + Math.random() * 80, 0.014, "triangle", 0.009, "sfx");
+      audioManager.noise(0.01, 0.004, 0, null, "sfx");
     }
 
     function invalidSoft() {
@@ -16568,7 +16749,7 @@ return 0;`;
     function compileSuccess() {
       audioManager.compileSuccess();
       triggerMusicCompilePass();
-      window.setTimeout(() => audioManager.tone(1480, 0.16, "sine", 0.018), 120);
+      window.setTimeout(() => audioManager.tone(1040, 0.1, "sine", 0.01), 140);
     }
 
     function applyMusicMood(mood = WORLD_MOOD.explore, intensity = null) {
@@ -16596,7 +16777,7 @@ return 0;`;
       audioManager.queueBgmVariation("pickup");
       const director = getProceduralMusicDirector();
       const note = director?.motif?.[director.step % director.motif.length] || 880;
-      audioManager.tone(note * 2, 0.09, "triangle", 0.022);
+      audioManager.tone(note * 1.25, 0.07, "sine", 0.008);
       director.firstPickupMotif ||= note;
     }
 
@@ -16605,7 +16786,7 @@ return 0;`;
       audioManager.queueBgmVariation("compilePass");
       duckBgmForCue(500);
       applyMusicMood(WORLD_MOOD.triumph, 0.84);
-      [0, 4, 7, 11].forEach((semi, index) => window.setTimeout(() => audioManager.tone(523.25 * midiRatio(semi), 0.12, "triangle", 0.032), index * 62));
+      [0, 4, 7, 11].forEach((semi, index) => window.setTimeout(() => audioManager.tone(392 * midiRatio(semi), 0.09, "triangle", 0.012), index * 76));
       navigator.vibrate?.(5);
     }
 
@@ -16614,8 +16795,8 @@ return 0;`;
       audioManager.queueBgmVariation("compileError");
       duckBgmForCue(500);
       applyMusicMood(WORLD_MOOD.tension, 0.72);
-      audioManager.tone(185, 0.09, "sawtooth", 0.024);
-      window.setTimeout(() => audioManager.tone(185 * midiRatio(6), 0.08, "sawtooth", 0.02), 48);
+      audioManager.tone(185, 0.08, "triangle", 0.016);
+      window.setTimeout(() => audioManager.tone(185 * midiRatio(5), 0.07, "sine", 0.012), 56);
     }
 
     function pauseProceduralMusic() {
@@ -16638,7 +16819,7 @@ return 0;`;
       audioManager.queueBgmVariation(night ? "night" : "day");
       audioManager.playBgm(night ? "night" : "town");
       applyMusicMood(night ? WORLD_MOOD.calm : WORLD_MOOD.explore, night ? 0.32 : 0.22);
-      if (night) audioManager.tone(55, 0.22, "sine", 0.012);
+      if (night) audioManager.tone(55, 0.16, "sine", 0.006);
     }
 
     function renderMusicLogEntry(chord = "i", motif = "seeded-fragment") {
@@ -18210,7 +18391,6 @@ int main(void) {
       fragmentStarChartPanel: document.getElementById("fragmentStarChartPanel"),
       starChartFragmentText: document.getElementById("starChartFragmentText"),
       equipEvolutionShardButton: document.getElementById("equipEvolutionShardButton"),
-      useHpShardButton: document.getElementById("useHpShardButton"),
       heroCustomizeButton: document.getElementById("heroCustomizeButton"),
       heroAvatarCanvas: document.getElementById("heroAvatarCanvas"),
       regenerateHeroAvatarButton: document.getElementById("regenerateHeroAvatarButton"),
@@ -19721,7 +19901,8 @@ int main(void) {
     }
 
     function playCodeGenesisTypeSound() {
-      audioManager?.tone?.(720 + Math.random() * 90, 0.012, "square", 0.01, "sfx");
+      if (!audioManager?.canPlayEvent?.("codeGenesisType", 46)) return false;
+      audioManager?.tone?.(620 + Math.random() * 70, 0.012, "triangle", 0.006, "sfx");
       return true;
     }
 
@@ -19733,7 +19914,7 @@ int main(void) {
 
     function playCodeGenesisAscensionSound() {
       [110, 146.8, 196, 261.6, 392].forEach((frequency, index) => {
-        trackedSetTimeout(() => audioManager?.tone?.(frequency, 0.32, "sawtooth", 0.025 + index * 0.006, "sfx"), index * 260, `genesis-ascend-${index}`);
+        trackedSetTimeout(() => audioManager?.tone?.(frequency, 0.22, "triangle", 0.012 + index * 0.002, "sfx"), index * 280, `genesis-ascend-${index}`);
       });
       trackedSetTimeout(() => audioManager?.tone?.(523.25, 3, "sine", 0.018, "music"), 1400, "genesis-reverb-overtone");
       return true;
@@ -20541,7 +20722,8 @@ ${item.code}
     function isStrictSecurityMode() {
       try {
         const params = new URLSearchParams(window.location?.search || "");
-        return params.get("strictSecurity") === "1" || localStorage?.getItem?.("codeAwakenerStrictSecurity") === "1";
+        try { localStorage?.removeItem?.("codeAwakenerStrictSecurity"); } catch (error) { void error; }
+        return params.get("strictSecurity") === "1";
       } catch (error) {
         return false;
       }
@@ -23087,11 +23269,11 @@ ${item.code}
       if (event.id === "extra_fragment") {
         gameState.progress.worldEvolutionFragments = Math.min(20, (Number(gameState.progress.worldEvolutionFragments) || 0) + 2);
         showReward("随机事件：数据流带来额外碎片 +2。");
-        audioManager.tone(920, 0.09, "triangle", 0.04);
+        audioManager.tone(820, 0.08, "triangle", 0.014);
       } else if (event.id === "world_blessing") {
         gameState.progress.worldEvolutionBlessingUntil = Date.now() + 30000;
         showReward("随机事件：世界祝福，30秒内编译效率提升。");
-        audioManager.tone(660, 0.16, "sine", 0.045);
+        audioManager.tone(620, 0.12, "sine", 0.016);
       } else if (event.id === "void_rift") {
         const applyRift = () => {
           gameState.progress.worldEvolutionCompletion = Math.max(0, (Number(gameState.progress.worldEvolutionCompletion) || 0) - 3);
@@ -23149,9 +23331,10 @@ ${item.code}
 
     function playWorldEvolutionCompileSound() {
       try {
-        audioManager.tone(96, 0.12, "sawtooth", 0.035);
-        trackedSetTimeout(() => audioManager.tone(1180, 0.05, "triangle", 0.035), 70, "world-evolution-crystal-a");
-        trackedSetTimeout(() => audioManager.tone(1480, 0.06, "triangle", 0.028), 125, "world-evolution-crystal-b");
+        if (!audioManager.canPlayEvent?.("worldEvolutionCompile", 260)) return false;
+        audioManager.tone(110, 0.1, "triangle", 0.014);
+        trackedSetTimeout(() => audioManager.tone(820, 0.045, "sine", 0.014), 80, "world-evolution-crystal-a");
+        trackedSetTimeout(() => audioManager.tone(1040, 0.05, "sine", 0.012), 150, "world-evolution-crystal-b");
         return true;
       } catch (error) {
         reportSoftError(error, ERROR_LEVELS.recoverable, { source: "world-evolution-audio" });
@@ -23692,6 +23875,10 @@ ${item.code}
     }
 
     /* ===== 容错状态系统 ===== */
+    const AUTO_HP_FRAGMENT_THRESHOLD = 0.35;
+    const AUTO_HP_FRAGMENT_COOLDOWN_MS = 2200;
+    let lastAutoHpFragmentRecoveryAt = 0;
+
     function getWorldEvolutionHpMax() {
       const vitality = Number(gameState.progress.worldEvolutionTalents?.vitality) || 0;
       return 100 + vitality * 10;
@@ -23706,20 +23893,37 @@ ${item.code}
       return gameState.codeAccuracy;
     }
 
-    function useWorldEvolutionFragmentItem(kind = "hp") {
+    function useWorldEvolutionFragmentItem(kind = "hp", source = "auto") {
       if ((Number(gameState.progress.worldEvolutionFragments) || 0) <= 0) {
-        showReward("没有可用的进化碎片。");
+        if (source !== "auto-low-hp") showReward("没有可用的进化碎片。");
         return false;
       }
       gameState.progress.worldEvolutionFragments = Math.max(0, gameState.progress.worldEvolutionFragments - 1);
-      gameState.codeAccuracy = Math.min(getWorldEvolutionHpMax(), (Number(gameState.codeAccuracy) || 0) + 18);
+      gameState.codeAccuracy = Math.min(getWorldEvolutionHpMax(), (Number(gameState.codeAccuracy) || 0) + 22);
       saveProgress();
       saveGame();
       updateStatusBars();
       updateInfoSideMenu();
-      showReward(tWorldEvolution("restored"));
-      announceWorldEvolutionA11y(tWorldEvolution("restored"));
+      const message = source === "auto-low-hp"
+        ? "系统检测到 HP 过低，已自动消耗 1 个进化碎片恢复 HP。"
+        : tWorldEvolution("restored");
+      showReward(message);
+      announceWorldEvolutionA11y(message);
       return true;
+    }
+
+    function autoUseWorldEvolutionFragmentForLowHp(source = "status") {
+      const hpMax = getWorldEvolutionHpMax();
+      const hp = Math.max(0, Math.min(hpMax, Number(gameState.codeAccuracy) || 0));
+      const fragments = Number(gameState.progress.worldEvolutionFragments) || 0;
+      if (fragments <= 0 || hp >= hpMax) return false;
+      if (hp / Math.max(1, hpMax) > AUTO_HP_FRAGMENT_THRESHOLD) return false;
+      const now = performance.now();
+      if (now - lastAutoHpFragmentRecoveryAt < AUTO_HP_FRAGMENT_COOLDOWN_MS) return false;
+      lastAutoHpFragmentRecoveryAt = now;
+      const restored = useWorldEvolutionFragmentItem("hp", "auto-low-hp");
+      if (restored) addWorldEvolutionDiary(`系统低 HP 自动恢复：${source}。`);
+      return restored;
     }
 
     const SMART_EVOLUTION_TALENT_COSTS = Object.freeze({ efficiency: 2, vitality: 2, spectacle: 3 });
@@ -24749,6 +24953,7 @@ ${item.code}
     }
 
     function updateStatusBars() {
+      autoUseWorldEvolutionFragmentForLowHp("status-bars");
       const hpMax = getWorldEvolutionHpMax();
       const hp = Math.max(0, Math.min(hpMax, Number(gameState.codeAccuracy) || 0));
       if (dom.hpMeter) dom.hpMeter.style.transform = `scaleX(${Math.max(0.18, hp / hpMax)})`;
@@ -25269,7 +25474,7 @@ ${item.code}
         if (event.fired || elapsedMs < event.atMs) return;
         event.fired = true;
         if (event.type === "footstep") audioManager.step(event.surface || "stone");
-        if (event.type === "relay") audioManager.tone(event.frequency || ANIM_CONFIG.relayClick.frequency, 0.01, "square", 0.02);
+        if (event.type === "relay") audioManager.tone(event.frequency || ANIM_CONFIG.relayClick.frequency, 0.012, "triangle", 0.008);
         if (event.type === "success") audioManager.compileSuccess();
       });
       if (deltaMs > 16.67 * 2) audioManager.filter?.frequency?.setTargetAtTime?.(2600, audioManager.ctx?.currentTime || 0, 0.04);
@@ -26555,6 +26760,7 @@ ${item.code}
     }
 
     function showStartupAnnouncement() {
+      markAppRendered("startup-announcement");
       if (!dom.startupAnnouncement) return false;
       renderStartupAnnouncementPage(0);
       dom.startupAnnouncement.classList.remove("closing");
@@ -26641,6 +26847,7 @@ ${item.code}
     }
 
     function playSystemBootLog() {
+      markAppRendered("system-boot");
       if (!dom.systemBootOverlay || !dom.systemBootText) return showStartupAnnouncement();
       systemBootLogFinished = false;
       if (systemBootFailsafeTimer) timerTracker.clear(systemBootFailsafeTimer);
@@ -26651,10 +26858,16 @@ ${item.code}
           finishSystemBootLog();
         }
       }, SYSTEM_BOOT_FORCE_RELEASE_MS, "system-boot-force-release");
+      window.setTimeout(() => {
+        if (!systemBootLogFinished && dom.systemBootOverlay?.classList.contains("active")) {
+          finishSystemBootLog();
+        }
+      }, SYSTEM_BOOT_FORCE_RELEASE_MS + 1400);
       return true;
     }
 
     function finishSystemBootLog() {
+      markAppRendered("system-boot-finished");
       if (systemBootLogFinished) return false;
       systemBootLogFinished = true;
       if (systemBootFailsafeTimer) {
@@ -26836,8 +27049,9 @@ ${item.code}
       }
 
       playUnlockAudio(profile) {
-        audioManager.tone(72, 0.22, "sawtooth", profile.flash ? 0.08 : 0.04);
-        trackedSetTimeout(() => audioManager.compileSuccess(), 120, "road-unlock-audio");
+        if (!audioManager.canPlayEvent?.("roadUnlock", 760)) return;
+        audioManager.tone(96, 0.14, "triangle", profile.flash ? 0.02 : 0.014);
+        trackedSetTimeout(() => audioManager.compileSuccess(), 160, "road-unlock-audio");
       }
 
       drawGroundCrack(scene, points, style, profile) {
@@ -26891,7 +27105,7 @@ ${item.code}
 
       playScreenPulse(scene, profile) {
         if (profile.flash) playSoftSceneWash(scene, { color: 0xfacc15, duration: 220, alpha: 0.12, label: "road-soft-wash" });
-        audioManager.tone(128, 0.36, "triangle", profile.flash ? 0.06 : 0.035);
+        audioManager.tone(144, 0.2, "sine", profile.flash ? 0.018 : 0.012);
         return true;
       }
 
@@ -26989,7 +27203,7 @@ ${item.code}
 
       playCodeRain() {
         if (dom.worldRecompileRain) dom.worldRecompileRain.textContent = Array.from({ length: 18 }, (_, row) => collectLearnedCConceptsForRain().slice(row, row + 7).join("   ")).join("\n");
-        audioManager.noise(0.4, 0.035, 0, null, "sfx");
+        audioManager.noise(0.16, 0.01, 0, null, "sfx");
         return waitForRoadCompiler(3000, "world-code-rain");
       }
 
@@ -27006,7 +27220,7 @@ ${item.code}
           dom.worldRecompileSubtitle.innerHTML = "<span>世界一 · 重构完毕</span><span>—— 你，已不再是修复师。</span><span>—— 你是创造者。</span>";
           dom.worldRecompileSubtitle.classList.add("active");
         }
-        audioManager.tone(96, 1.2, "sine", 0.08);
+        audioManager.tone(110, 0.42, "sine", 0.018);
         return waitForRoadCompiler(2700, "world-golden-arrival");
       }
 
@@ -30794,11 +31008,11 @@ ${item.code}
     function playEditorKeySound(event) {
       if (event.ctrlKey || event.metaKey || event.altKey) return;
       const keyMap = {
-        Enter: () => { audioManager.noise(0.025, 0.036); audioManager.tone(260, 0.026, "triangle", 0.022); },
-        Backspace: () => audioManager.tone(190, 0.025, "triangle", 0.026),
-        Delete: () => audioManager.tone(170, 0.025, "triangle", 0.022),
-        " ": () => audioManager.noise(0.016, 0.018),
-        Tab: () => audioManager.tone(420, 0.03, "square", 0.022)
+        Enter: () => { audioManager.noise(0.018, 0.012); audioManager.tone(260, 0.024, "triangle", 0.012); },
+        Backspace: () => audioManager.tone(190, 0.022, "triangle", 0.012),
+        Delete: () => audioManager.tone(170, 0.022, "triangle", 0.01),
+        " ": () => audioManager.noise(0.012, 0.006),
+        Tab: () => audioManager.tone(420, 0.026, "triangle", 0.01)
       };
       if (keyMap[event.key]) {
         keyMap[event.key]();
@@ -30806,8 +31020,8 @@ ${item.code}
       }
       if (event.key.length === 1) {
         const pitch = 620 + (event.key.charCodeAt(0) % 5) * 36 + Math.random() * 18;
-        audioManager.noise(0.012, 0.014 + Math.random() * 0.012);
-        audioManager.tone(pitch, 0.015, "triangle", 0.012);
+        audioManager.noise(0.01, 0.005 + Math.random() * 0.004);
+        audioManager.tone(pitch, 0.014, "triangle", 0.007);
       }
     }
 
@@ -35092,7 +35306,7 @@ ${item.code}
       dom.saveToast?.classList.remove("show");
       if (dom.saveToast) void dom.saveToast.offsetWidth;
       dom.saveToast?.classList.add("show");
-      audioManager.noise(0.025, 0.018);
+      audioManager.noise(0.018, 0.008);
       window.setTimeout(() => dom.saveToast?.classList.remove("show"), 1600);
     }
 
@@ -35474,7 +35688,7 @@ ${item.code}
       return Array.from({ length }, () => MUSIC_PENTATONIC_SCALE[rng.int(0, MUSIC_PENTATONIC_SCALE.length - 1)]);
     }
 
-    function createUnisonOscillators(ctx, frequency, type = "triangle", count = 3) {
+    function createUnisonOscillators(ctx, frequency, type = "triangle", count = 2) {
       return Array.from({ length: count }, (_, index) => {
         const osc = ctx.createOscillator();
         osc.type = type;
@@ -35540,8 +35754,9 @@ ${item.code}
         this.reverb = createSchroederReverb(ctx);
         this.periodicWave = createBreathingPeriodicWave(ctx, 0.5);
         this.saturator.curve = createSoftClipCurve();
-        this.compressor.threshold.value = -3;
-        this.compressor.ratio.value = 20;
+        this.compressor.threshold.value = -12;
+        this.compressor.knee.value = 18;
+        this.compressor.ratio.value = 10;
         this.musicGain.connect(this.saturator);
         this.saturator.connect(this.reverb.input);
         this.reverb.output.connect(this.compressor);
@@ -35592,33 +35807,33 @@ ${item.code}
       playHarmony(ctx) {
         const harmony = MUSIC_HARMONY_PROGRESSION[Math.floor(this.step / 8) % 4];
         const root = harmony.root * (this.step % 32 > 24 && harmony.substitutes ? 0.9439 : 1);
-        this.playUnison(root, 0.36, this.waveType(), 0.01 + this.moodIntensity * 0.011);
+        this.playUnison(root, 0.3, this.waveType(), 0.004 + this.moodIntensity * 0.004);
         if (this.step % 4 === 0) {
           (harmony.chord || [0, 3, 7]).forEach((semi, index) => {
             window.setTimeout(() => {
-              this.playUnison(root * midiRatio(semi + 12), 0.18, "sine", 0.004 + this.moodIntensity * 0.004);
-            }, index * 54);
+              this.playUnison(root * midiRatio(semi + 12), 0.14, "sine", 0.0025 + this.moodIntensity * 0.0025);
+            }, index * 70);
           });
         }
         if (this.step % 16 === 12 && harmony.substitutes) {
-          this.playUnison(root * midiRatio(-1), 0.28, "triangle", 0.007 + this.moodIntensity * 0.004);
+          this.playUnison(root * midiRatio(-1), 0.22, "triangle", 0.003 + this.moodIntensity * 0.003);
         }
       }
 
       playMotifNote(_ctx, frequency) {
         const transforms = [0.5, 1, 1.25, 1.5, 1];
         const transform = transforms[this.step % transforms.length];
-        const gain = this.mood === WORLD_MOOD.battle ? 0.014 : 0.01;
-        this.playUnison(frequency * transform, 0.18, "triangle", gain);
+        const gain = this.mood === WORLD_MOOD.battle ? 0.006 : 0.0045;
+        this.playUnison(frequency * transform, 0.15, "triangle", gain);
         if (this.step % 4 === 1) {
-          window.setTimeout(() => this.playUnison(frequency * transform * 1.5, 0.12, "sine", gain * 0.46), 360);
+          window.setTimeout(() => this.playUnison(frequency * transform * 1.25, 0.1, "sine", gain * 0.35), 380);
         }
       }
 
       playNoisePulse(ctx) {
         if (gameState.settings.musicComplexity === "reduced") return;
-        this.manager.noise(0.012, this.mood === WORLD_MOOD.battle ? 0.007 : 0.003, Math.sin(this.step) * 0.6, null, "music");
-        this.musicGain.gain.setTargetAtTime(this.targetGain() * 0.72, ctx.currentTime, 0.025);
+        this.manager.noise(0.01, this.mood === WORLD_MOOD.battle ? 0.0028 : 0.0016, Math.sin(this.step) * 0.5, null, "music");
+        this.musicGain.gain.setTargetAtTime(this.targetGain() * 0.68, ctx.currentTime, 0.035);
         this.musicGain.gain.setTargetAtTime(this.targetGain(), ctx.currentTime + 0.08, 0.09);
       }
 
@@ -35627,13 +35842,17 @@ ${item.code}
         if (!ctx || !this.musicGain) return;
         const gain = ctx.createGain();
         this.recordMidiEvent(frequency, duration);
-        gain.gain.setValueAtTime(gainValue, ctx.currentTime);
-        gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + duration);
-        createUnisonOscillators(ctx, frequency, type, gameState.settings.musicComplexity === "reduced" ? 1 : 3).forEach((osc) => {
+        const startAt = ctx.currentTime;
+        const safeDuration = Math.max(0.08, duration);
+        const targetGain = Math.min(0.0065, gainValue);
+        gain.gain.setValueAtTime(0.0001, startAt);
+        gain.gain.linearRampToValueAtTime(targetGain, startAt + 0.035);
+        gain.gain.setTargetAtTime(0.0001, Math.max(startAt + 0.05, startAt + safeDuration - 0.09), 0.05);
+        createUnisonOscillators(ctx, frequency, type === "sawtooth" || type === "square" ? "triangle" : type, gameState.settings.musicComplexity === "reduced" ? 1 : 2).forEach((osc) => {
           if (this.periodicWave && type === "triangle") osc.setPeriodicWave(this.periodicWave);
           osc.connect(gain);
-          osc.start();
-          osc.stop(ctx.currentTime + duration);
+          osc.start(startAt);
+          osc.stop(startAt + safeDuration + 0.08);
           this.nodes.push(osc);
         });
         gain.connect(this.musicGain);
@@ -35641,7 +35860,7 @@ ${item.code}
 
       waveType() {
         const progress = Math.min(1, gameState.progress.cleared.length / chapters.length);
-        return progress > 0.66 || this.mood === WORLD_MOOD.battle ? "sawtooth" : "sine";
+        return progress > 0.66 || this.mood === WORLD_MOOD.battle ? "triangle" : "sine";
       }
 
       restBeat() {
@@ -35653,7 +35872,7 @@ ${item.code}
       }
 
       targetGain() {
-        return 0.16 * (0.55 + this.moodIntensity * 0.55);
+        return 0.055 * (0.45 + this.moodIntensity * 0.35);
       }
 
       applyVolume() {
@@ -35686,8 +35905,8 @@ ${item.code}
       }
 
       getStepMs() {
-        const base = this.mood === WORLD_MOOD.tension || this.mood === WORLD_MOOD.battle ? 220 : 310;
-        const swing = Math.sin(this.step * 0.81) * 26;
+        const base = this.mood === WORLD_MOOD.tension || this.mood === WORLD_MOOD.battle ? 330 : 420;
+        const swing = Math.sin(this.step * 0.81) * 22;
         const phraseRest = this.step % 16 === 15 ? 110 : this.step % 8 === 7 ? 52 : 0;
         return Math.round(base + swing + phraseRest);
       }
@@ -38981,7 +39200,6 @@ ${item.code}
       button.addEventListener("click", () => lightFragmentStarNode(button.dataset.starNode));
     });
     dom.equipEvolutionShardButton?.addEventListener("click", equipEvolutionShard);
-    dom.useHpShardButton?.addEventListener("click", () => useWorldEvolutionFragmentItem("hp"));
     dom.heroCustomizeButton?.addEventListener("click", () => applyHeroStylePreset("random"));
     dom.regenerateHeroAvatarButton?.addEventListener("click", regenerateHeroAvatar);
     document.querySelectorAll("[data-world-difficulty]").forEach((button) => {

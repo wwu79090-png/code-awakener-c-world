@@ -1114,6 +1114,15 @@ assert(/function updateMusicForDayNight/m.test(html), "day-night lighting should
 assert(/ADAPTIVE_BGM_THEMES\s*=\s*Object\.freeze\(\{[\s\S]*town:[\s\S]*puzzle:[\s\S]*battle:[\s\S]*night:/m.test(html), "BGM should provide multiple adaptive scene themes");
 assert(/BGM_EVENT_VARIATIONS\s*=\s*Object\.freeze\(\{[\s\S]*pickup[\s\S]*compilePass[\s\S]*compileError[\s\S]*night[\s\S]*day/m.test(html), "BGM should queue event variations instead of looping one short melody");
 assert(/queueBgmVariation\(kind = "pickup"\)/m.test(html) && /getAdaptiveBgmSection\(mode = this\.bgmMode\)/m.test(html), "AudioManager should rotate sections and event variations");
+assert(/this\.sfxFilter\s*=\s*this\.ctx\.createBiquadFilter\(\)[\s\S]*this\.sfxFilter\.type\s*=\s*"lowpass"[\s\S]*this\.sfxBus\.connect\(this\.sfxFilter\)/m.test(html), "SFX should have an independent low-pass bus instead of sharing the music filter");
+assert(/this\.musicBusScale\s*=\s*0\.76/m.test(html) && /this\.musicEventGain\s*=\s*0\.58/m.test(html), "music bus should be capped below the old clipping-prone gain");
+assert(/startCyberLofiBgm\(\)[\s\S]*audioManager\.playBgm\("town"\)[\s\S]*director\?\.stop\?\.\(\)/m.test(html), "startup music should not run adaptive BGM and procedural director as simultaneous beds");
+assert(/getGentleMusicWave\(type = "triangle"\)[\s\S]*square[\s\S]*sawtooth[\s\S]*"triangle"/m.test(html), "BGM playback should soften square and sawtooth waves");
+assert(/BGM_VARIATION_QUEUE_MAX\s*=\s*3/m.test(html), "BGM event variation queue should be bounded to prevent stacked music bursts");
+assert(/function playLongCompileOvertone\(\)[\s\S]*linearRampToValueAtTime\(targetGain[\s\S]*setTargetAtTime\(0\.0001/m.test(html), "long compile overtone should use a soft envelope instead of an instant gain jump");
+assert(/canPlayEvent\(key, cooldownMs = 120\)/m.test(html) && /shouldDropSfxBurst\(frequency = 0, type = "sine", gainValue = 0\)/m.test(html), "SFX events should have cooldown and burst protection");
+assert(/typewriterTick\(\)[\s\S]*canPlayEvent\?\.\("typewriterTick"[\s\S]*"triangle"/m.test(html), "typewriter sounds should avoid harsh high-gain square waves");
+assert(!/audioManager\.noise\(0\.4, 0\.035/.test(html) && !/audioManager\.tone\(96, 1\.2/.test(html), "world recompilation audio should not use long loud noise or long low-frequency tones");
 assert(/function renderMusicLogEntry/m.test(html), "code log should be able to record music structure");
 assert(/id="musicVolumeSlider"/m.test(html), "settings should expose independent music volume");
 assert(/id="musicComplexitySelect"/m.test(html), "settings should expose music complexity control");
@@ -1275,15 +1284,19 @@ assert(/启动公告只提示当前版本|历史版本改到主菜单查看/.tes
 assert(/STARTUP_ANNOUNCEMENT_AUTO_HIDE_MS\s*=\s*14000/m.test(html), "announcement should remain visible long enough to read the current update");
 assert(/function showStartupAnnouncement/m.test(html), "announcement should be controlled by a startup function");
 assert(/id="announcementCloseButton"/m.test(html), "announcement should include a minimal close control");
-assert(/World Build v1\.0\.27/m.test(html) || /GAME_VERSION\s*=\s*"v1\.0\.27"/m.test(html), "game version should increment when shipping a new update");
+assert(/World Build v1\.0\.28/m.test(html) || /GAME_VERSION\s*=\s*"v1\.0\.28"/m.test(html), "game version should increment when shipping a new update");
 assert(/UPDATE_HISTORY\s*=\s*Object\.freeze\(\[[\s\S]*v1\.0\.1[\s\S]*零基础新手指引[\s\S]*v1\.0\.0[\s\S]*手机端适配/m.test(html), "update history should keep detailed previous release notes");
 assert(/data-menu-action="history">历史更新内容/.test(html) && /id="updateHistoryOverlay"/m.test(html) && /function renderUpdateHistoryList/m.test(html), "main menu should expose update history with detailed notes");
-assert(/GAME_VERSION\s*=\s*"v1\.0\.27"/m.test(html), "game version should increment for the boot white-screen hotfix release");
+assert(/GAME_VERSION\s*=\s*"v1\.0\.28"/m.test(html), "game version should increment for the boot white-screen and audio hotfix release");
 assert(html.includes('const OFFICIAL_SITE_HREF = "./official-site.html";') && html.includes('data-menu-action="official">访问官方网站') && /action === "official"[\s\S]*openOfficialWebsite\(\)/m.test(html), "main menu should expose and handle an official website entry");
-assert(/SYSTEM_BOOT_FORCE_RELEASE_MS\s*=\s*3200/m.test(html) && /system-boot-force-release/m.test(html), "startup boot overlay should have a hard failsafe release timer");
-assert(/UPDATE_ANNOUNCEMENT_PAGES\s*=\s*Object\.freeze\(\[\s*\{\s*title:\s*"> 消息 \/ 本次更新"[\s\S]*v1\.0\.27[\s\S]*启动白屏[\s\S]*遮罩卡住[\s\S]*自动释放菜单[\s\S]*414374792/m.test(html), "startup announcement should show only the current v1.0.27 boot hotfix update");
-assert(/id="announcementPageBody"[\s\S]*v1\.0\.27：启动白屏\/遮罩卡住热修复[\s\S]*官方Q群：414374792/m.test(initialBodyMarkup), "static startup announcement placeholder should match the current v1.0.27 update before script hydration");
+assert(/SYSTEM_BOOT_FORCE_RELEASE_MS\s*=\s*3200/m.test(html) && /system-boot-force-release/m.test(html) && /SYSTEM_BOOT_FORCE_RELEASE_MS \+ 1400/m.test(html), "startup boot overlay should have tracked and native failsafe release timers");
+assert(/function markAppRendered\(reason = "script-started"\)[\s\S]*classList\?\.add\("app-rendered"\)[\s\S]*staticRescue/m.test(html), "normal script startup should hide the static rescue layer");
+assert(/html\.app-rendered \.static-rescue/m.test(html) && /safeMode=true&noAudio=true&v=1\.0\.28/m.test(html), "static rescue should only appear if the app script does not render");
+assert(/isStrictSecurityMode\(\)[\s\S]*removeItem\?\.\("codeAwakenerStrictSecurity"\)[\s\S]*params\.get\("strictSecurity"\) === "1"/m.test(html), "stale localStorage strict-security flags should not white-screen normal browsers");
+assert(/UPDATE_ANNOUNCEMENT_PAGES\s*=\s*Object\.freeze\(\[\s*\{\s*title:\s*"> 消息 \/ 本次更新"[\s\S]*v1\.0\.28[\s\S]*本地白屏[\s\S]*音乐爆音[\s\S]*414374792/m.test(html), "startup announcement should show only the current v1.0.28 boot and audio hotfix update");
+assert(/id="announcementPageBody"[\s\S]*v1\.0\.28：本地白屏与音乐爆音热修复[\s\S]*官方Q群：414374792/m.test(initialBodyMarkup), "static startup announcement placeholder should match the current v1.0.28 update before script hydration");
 assert(!/公告只保留关闭、课程锁定、自由模式通关后显示/m.test(initialBodyMarkup), "static startup announcement placeholder should not show stale update copy");
+assert(/UPDATE_HISTORY\s*=\s*Object\.freeze\(\[[\s\S]*v1\.0\.28[\s\S]*本地白屏与音乐爆音热修复[\s\S]*CSP\/style\/script[\s\S]*双 BGM 叠加[\s\S]*爆音削峰/m.test(html), "update history should record the v1.0.28 local white-screen and audio hotfix release");
 assert(/UPDATE_HISTORY\s*=\s*Object\.freeze\(\[[\s\S]*v1\.0\.27[\s\S]*启动白屏遮罩热修复[\s\S]*硬兜底释放时间[\s\S]*卡在启动层/m.test(html), "update history should record the v1.0.27 boot white-screen hotfix release");
 assert(/UPDATE_HISTORY\s*=\s*Object\.freeze\(\[[\s\S]*v1\.0\.26[\s\S]*音乐特色升级与音效降噪[\s\S]*动态段落调度[\s\S]*重复叠加/m.test(html), "update history should record the v1.0.26 music and audio hotfix release");
 assert(/UPDATE_HISTORY\s*=\s*Object\.freeze\(\[[\s\S]*v1\.0\.25[\s\S]*主线引导、碎片定位与音乐重整[\s\S]*菜单收敛[\s\S]*音乐系统加入多段主题/m.test(html), "update history should record the v1.0.25 mainline UX and music release");
@@ -1329,7 +1342,7 @@ assert(!/id="announcementExpandButton"/m.test(html) && !/announcementExpandButto
 assert(/UPDATE_HISTORY\s*=\s*Object\.freeze\(\[[\s\S]*v1\.0\.13[\s\S]*手机版设置入口[\s\S]*误开菜单[\s\S]*公告折叠状态/m.test(html), "update history should record the v1.0.13 mobile settings and announcement fix");
 assert(/UPDATE_HISTORY\s*=\s*Object\.freeze\(\[[\s\S]*v1\.0\.12[\s\S]*移除防白屏手动选项[\s\S]*CRT 雪花噪声 canvas 默认隐藏/m.test(html), "update history should record the v1.0.12 anti-white-screen option removal");
 assert(/UPDATE_HISTORY\s*=\s*Object\.freeze\(\[[\s\S]*v1\.0\.11[\s\S]*防白屏高档位白色噪点闪烁修复[\s\S]*CRT 噪声[\s\S]*每6帧[\s\S]*最多18个/m.test(html), "update history should record the v1.0.11 anti-white-noise release");
-assert(/UPDATE_ANNOUNCEMENT_PAGES\s*=\s*Object\.freeze\(\[[\s\S]*启动白屏[\s\S]*硬兜底[\s\S]*自动释放菜单[\s\S]*启动层/m.test(html), "startup announcement should describe the current boot white-screen hotfix update");
+assert(/UPDATE_ANNOUNCEMENT_PAGES\s*=\s*Object\.freeze\(\[[\s\S]*本地白屏[\s\S]*CSP[\s\S]*双 BGM 叠加[\s\S]*音效系统[\s\S]*爆音削峰/m.test(html), "startup announcement should describe the current boot and audio hotfix update");
 assert(/id="announcementCloseButton"[\s\S]*>×<\/button>/m.test(html), "announcement close button should be a compact icon, not wrapping text");
 assert(/function isCTutorialChapterUnlocked/m.test(html) && /course-lesson-item[\s\S]*locked[\s\S]*disabled aria-disabled/m.test(html), "course progress should lock future chapters until the player reaches them");
 assert(/function isCTutorialFullyCompleted/m.test(html) && /const unlocked = isCTutorialFullyCompleted\(\)/m.test(html), "free mode editor should only unlock after full course completion");
@@ -1606,13 +1619,14 @@ assert(!/unsafe-inline/.test(styleSrcDirective), "CSP style-src should avoid bro
 assert(/style-src-attr 'unsafe-inline'/.test(cspContent), "CSP should allow runtime style attributes used by game animations without relaxing script execution");
 assert(cspContent.includes(sha256Directive(rawStyleContent)), "CSP style hash must match raw browser style content");
 assert(cspContent.includes(sha256Directive(rawInlineScriptContent)), "CSP script hash must match raw browser script content");
+assert(/default-src 'self' file:/.test(cspContent) && /script-src 'self' 'nonce-code-awakener-inline' file:/.test(cspContent), "CSP should allow same-directory file:// resources for local launches");
 {
   const expectedScriptHash = rawInlineScriptContent.match(/expectedScriptHash:\s*"([^"]+)"/)?.[1] || "";
   const normalizedScript = rawInlineScriptContent.replaceAll(expectedScriptHash, "__GAME_SCRIPT_HASH__");
   const actualScriptHash = crypto.createHash("sha256").update(normalizedScript, "utf8").digest("base64");
   assert(expectedScriptHash === actualScriptHash, "tamper self-check hash must match raw browser script content");
 }
-assert(/<script src="\.\/vendor\/phaser\.min\.js" integrity="sha384-Fi7F0CYQBHYa\+s2vvYJeiqvOQf3tuZ28vafRGXvMt7ijxNTVf3\+eXPkNRIUi9JD2"><\/script>/m.test(html), "game should load Phaser from the local vendor bundle for faster domestic delivery");
+assert(/<script src="\.\/vendor\/phaser\.min\.js"><\/script>/m.test(html), "game should load Phaser from the local vendor bundle without SRI so file:// launches are not blocked");
 assert(fs.existsSync("vendor/phaser.min.js"), "local Phaser vendor bundle should exist");
 assert(/<script src="\.\/vendor\/phaser-loader\.js"><\/script>/m.test(html) && fs.existsSync("vendor/phaser-loader.js"), "game should include a local Phaser fallback loader for alternate deploy paths");
 {
@@ -1925,6 +1939,9 @@ assert(/WORLD_EVOLUTION_NARRATIVE_THRESHOLDS\s*=\s*Object\.freeze\(\[30,\s*60,\s
 assert(/WORLD_EVOLUTION_EFFECT_THRESHOLDS\s*=\s*Object\.freeze\(\[20,\s*40,\s*60,\s*80,\s*100\]\)/m.test(html), "world evolution should define dedicated threshold performances");
 assert(!/function spendWorldEvolutionMp|spendWorldEvolutionMp\(|MP不足|internalMpCost|mpCost/.test(html), "compile advance must not consume or gate on MP");
 assert(/function useWorldEvolutionFragmentItem/m.test(html), "fragments should still restore HP");
+assert(!/id="useHpShardButton"|碎片回复HP/.test(initialBodyMarkup) && !/useHpShardButton\?\.addEventListener/.test(html), "manual HP shard restore button should be removed from the menu");
+assert(/AUTO_HP_FRAGMENT_THRESHOLD\s*=\s*0\.35/m.test(html) && /function autoUseWorldEvolutionFragmentForLowHp/m.test(html), "low HP should automatically consume a fragment for recovery");
+assert(/function updateStatusBars\(\)[\s\S]*autoUseWorldEvolutionFragmentForLowHp\("status-bars"\)/m.test(html), "HP auto-recovery should run from status refreshes after damage");
 assert(!/id="fragmentStarChartButton"/m.test(initialBodyMarkup) && /function autoSpendEvolutionFragmentsSmartly/m.test(html), "fragment star chart should be removed from the menu and replaced by automatic smart upgrades");
 assert(!/id="heroCustomizeButton"/m.test(initialBodyMarkup) && /function applyPostGenesisSetup/m.test(html), "hero avatar customization should move to the post-creation setup flow");
 assert(/function maybeSpawnWorldGuardianQte/m.test(html) && /function resolveWorldGuardianQte/m.test(html), "compile loop should spawn and resolve guardian QTE events");
