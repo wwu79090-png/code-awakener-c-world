@@ -14,8 +14,8 @@
   <meta http-equiv="Cache-Control" content="no-store, max-age=0, must-revalidate">
   <meta http-equiv="Pragma" content="no-cache">
   <meta http-equiv="Expires" content="0">
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self' file:; base-uri 'self'; object-src 'none'; script-src 'self' 'nonce-code-awakener-inline' file: 'sha256-eaEFLePjStw+ZmN/EJ9HqWS0YCt1xJqlCk2KLrLT+R4='; style-src 'self' 'nonce-code-awakener-inline' file: 'sha256-dNEdHkr1ok5NB6FEcLO3MaeTZLVTxtzitIVd9qD5+vY='; style-src-attr 'unsafe-inline'; font-src 'self' file: data:; img-src 'self' file: data: blob: https://cdn.pixabay.com; media-src 'self' file: data: blob: https: http: https://cdn.pixabay.com; worker-src 'self' file: blob:; child-src 'self' file: blob:; connect-src 'self' file: http://localhost:8000 http://127.0.0.1:8000 https://cdn.pixabay.com https://pixabay.com;">
-  <title>编程学习 RPG：C 语言启航村</title>
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self' file:; base-uri 'self'; object-src 'none'; script-src 'self' 'nonce-code-awakener-inline' file: 'sha256-irU4GAGv14CJ0QiuazVedhaxosuNX5T8mb8R87IYxa4='; style-src 'self' 'nonce-code-awakener-inline' file: 'sha256-Rc5vXjwS9grx3h88ScCfSkGjWBcsmZvC1xN+/CQvm3M='; style-src-attr 'unsafe-inline'; font-src 'self' file: data:; img-src 'self' file: data: blob: https://cdn.pixabay.com; media-src 'self' file: data: blob: https: http: https://cdn.pixabay.com; worker-src 'self' file: blob:; child-src 'self' file: blob:; connect-src 'self' file: http://localhost:8000 http://127.0.0.1:8000 http://localhost:9966 http://127.0.0.1:9966 http://localhost:9977 http://127.0.0.1:9977 https://cdn.pixabay.com https://pixabay.com;">
+  <title>代码觉醒者：Main Corridor</title>
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%23020617'/%3E%3Cpath d='M22 20 10 32l12 12M42 20l12 12-12 12' fill='none' stroke='%2300ff88' stroke-width='6' stroke-linecap='round' stroke-linejoin='round'/%3E%3Cpath d='m36 16-8 32' stroke='%2300ccff' stroke-width='5' stroke-linecap='round'/%3E%3C/svg%3E">
   <script src="./vendor/phaser.min.js"></script>
   <script src="./vendor/phaser-loader.js"></script>
@@ -86,18 +86,18 @@
       cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'%3E%3Crect x='10' y='4' width='3' height='16' fill='%2338bdf8'/%3E%3Crect x='14' y='18' width='6' height='2' fill='%23a855f7'/%3E%3C/svg%3E") 10 4, text;
     }
 
-    :where(.menu-list, .pause-panel, .settings-panel, .world-select-panel, .update-history-list, .info-side-menu, .dialog-box, .custom-music-panel, .music-dynamic-island) {
+    :where(.menu-list, .pause-panel, .settings-panel, .world-select-panel, .update-history-list, .info-side-menu, .dialog-box, .custom-music-panel, .music-dynamic-island, .task-panel, .code-explain-panel, .code-explain-body, .editor-notes-panel, .editor-rich-console, #consoleOutput, #devConsoleOutput) {
       scrollbar-width: thin;
       scrollbar-color: var(--hud-scroll-thumb) var(--hud-scroll-track);
       scrollbar-gutter: stable;
     }
 
-    :where(.menu-list, .pause-panel, .settings-panel, .world-select-panel, .update-history-list, .info-side-menu, .dialog-box, .custom-music-panel, .music-dynamic-island)::-webkit-scrollbar {
+    :where(.menu-list, .pause-panel, .settings-panel, .world-select-panel, .update-history-list, .info-side-menu, .dialog-box, .custom-music-panel, .music-dynamic-island, .task-panel, .code-explain-panel, .code-explain-body, .editor-notes-panel, .editor-rich-console, #consoleOutput, #devConsoleOutput)::-webkit-scrollbar {
       width: 10px;
       height: 10px;
     }
 
-    :where(.menu-list, .pause-panel, .settings-panel, .world-select-panel, .update-history-list, .info-side-menu, .dialog-box, .custom-music-panel, .music-dynamic-island)::-webkit-scrollbar-track {
+    :where(.menu-list, .pause-panel, .settings-panel, .world-select-panel, .update-history-list, .info-side-menu, .dialog-box, .custom-music-panel, .music-dynamic-island, .task-panel, .code-explain-panel, .code-explain-body, .editor-notes-panel, .editor-rich-console, #consoleOutput, #devConsoleOutput)::-webkit-scrollbar-track {
       border: 1px solid rgba(56, 189, 248, 0.12);
       border-radius: 999px;
       background:
@@ -106,7 +106,7 @@
       box-shadow: inset 0 0 14px rgba(2, 6, 23, 0.58);
     }
 
-    :where(.menu-list, .pause-panel, .settings-panel, .world-select-panel, .update-history-list, .info-side-menu, .dialog-box, .custom-music-panel, .music-dynamic-island)::-webkit-scrollbar-thumb {
+    :where(.menu-list, .pause-panel, .settings-panel, .world-select-panel, .update-history-list, .info-side-menu, .dialog-box, .custom-music-panel, .music-dynamic-island, .task-panel, .code-explain-panel, .code-explain-body, .editor-notes-panel, .editor-rich-console, #consoleOutput, #devConsoleOutput)::-webkit-scrollbar-thumb {
       border: 2px solid rgba(2, 6, 23, 0.74);
       border-radius: 999px;
       background:
@@ -115,7 +115,7 @@
       box-shadow: 0 0 14px rgba(56, 189, 248, 0.3);
     }
 
-    :where(.menu-list, .pause-panel, .settings-panel, .world-select-panel, .update-history-list, .info-side-menu, .dialog-box, .custom-music-panel, .music-dynamic-island)::-webkit-scrollbar-thumb:hover {
+    :where(.menu-list, .pause-panel, .settings-panel, .world-select-panel, .update-history-list, .info-side-menu, .dialog-box, .custom-music-panel, .music-dynamic-island, .task-panel, .code-explain-panel, .code-explain-body, .editor-notes-panel, .editor-rich-console, #consoleOutput, #devConsoleOutput)::-webkit-scrollbar-thumb:hover {
       background:
         linear-gradient(180deg, #fef08a, var(--hud-scroll-thumb-hot) 48%, #38bdf8),
         rgba(34, 197, 94, 0.9);
@@ -5803,6 +5803,10 @@
     .code-explain-panel {
       min-width: 0;
       overflow: auto;
+      scrollbar-gutter: stable both-edges;
+      overscroll-behavior: contain;
+      overflow-wrap: anywhere;
+      -webkit-overflow-scrolling: touch;
       background: #202020;
       border-left: 1px solid #303030;
       color: #d4d4d4;
@@ -10237,6 +10241,139 @@
       opacity: 0 !important;
     }
 
+    .visual-button-focus-pulse {
+      position: fixed;
+      width: 18px;
+      height: 18px;
+      border: 2px solid rgba(250, 204, 21, 0.95);
+      border-radius: 999px;
+      pointer-events: none;
+      transform: translate(-50%, -50%);
+      opacity: 0;
+      z-index: 1400;
+      box-shadow: 0 0 18px rgba(250, 204, 21, 0.72), 0 0 42px rgba(56, 189, 248, 0.38);
+    }
+
+    .visual-button-focus-pulse.active {
+      opacity: 1;
+      animation: visualButtonFocusPulse 1180ms ease-out infinite;
+    }
+
+    @keyframes visualButtonFocusPulse {
+      0% { width: 18px; height: 18px; opacity: 0.92; }
+      70% { width: 96px; height: 96px; opacity: 0.22; }
+      100% { width: 118px; height: 118px; opacity: 0; }
+    }
+
+    .compiler-cabin-cinematic-stage {
+      position: fixed;
+      inset: 0;
+      z-index: 1320;
+      display: grid;
+      place-items: center;
+      pointer-events: none;
+      opacity: 0;
+      background:
+        linear-gradient(90deg, rgba(2, 6, 23, 0.92), rgba(8, 19, 34, 0.84)),
+        repeating-linear-gradient(90deg, rgba(56, 189, 248, 0.08) 0 2px, transparent 2px 120px);
+      transition: opacity 360ms ease;
+    }
+
+    .compiler-cabin-cinematic-stage.active {
+      opacity: 1;
+    }
+
+    .compiler-cabin-rail {
+      position: absolute;
+      left: 10vw;
+      right: 10vw;
+      top: 50%;
+      height: 4px;
+      background: linear-gradient(90deg, transparent, rgba(250, 204, 21, 0.88), rgba(56, 189, 248, 0.92), transparent);
+      box-shadow: 0 0 28px rgba(250, 204, 21, 0.44);
+    }
+
+    .compiler-cabin-rail span {
+      position: absolute;
+      top: -7px;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: #facc15;
+      box-shadow: 0 0 24px rgba(250, 204, 21, 0.8);
+      animation: compilerCabinPacket 6000ms linear infinite;
+    }
+
+    .compiler-cabin-rail span:nth-child(2) { animation-delay: 900ms; background: #38bdf8; }
+    .compiler-cabin-rail span:nth-child(3) { animation-delay: 1800ms; }
+    .compiler-cabin-rail span:nth-child(4) { animation-delay: 2700ms; background: #22c55e; }
+
+    @keyframes compilerCabinPacket {
+      from { left: 0; transform: scale(0.8); opacity: 0.2; }
+      18% { opacity: 1; }
+      to { left: 100%; transform: scale(1.18); opacity: 0; }
+    }
+
+    .compiler-cabin-core {
+      width: min(42vw, 420px);
+      aspect-ratio: 1;
+      border: 2px solid rgba(56, 189, 248, 0.7);
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      box-shadow: inset 0 0 56px rgba(56, 189, 248, 0.16), 0 0 64px rgba(34, 197, 94, 0.18);
+    }
+
+    .compiler-cabin-core i {
+      grid-area: 1 / 1;
+      width: 42%;
+      aspect-ratio: 1;
+      border: 2px solid rgba(250, 204, 21, 0.7);
+      border-radius: 18px;
+      animation: compilerCoreOrbit 5200ms ease-in-out infinite;
+    }
+
+    .compiler-cabin-core i:nth-child(2) { width: 58%; animation-delay: 640ms; border-color: rgba(56, 189, 248, 0.7); }
+    .compiler-cabin-core i:nth-child(3) { width: 74%; animation-delay: 1280ms; border-color: rgba(34, 197, 94, 0.62); }
+
+    @keyframes compilerCoreOrbit {
+      0%, 100% { transform: rotate(0deg) scale(0.9); opacity: 0.48; }
+      50% { transform: rotate(90deg) scale(1.08); opacity: 0.92; }
+    }
+
+    .compiler-cabin-code {
+      position: absolute;
+      bottom: 17vh;
+      left: 50%;
+      transform: translateX(-50%);
+      margin: 0;
+      padding: 10px 16px;
+      color: #e0f2fe;
+      background: rgba(2, 6, 23, 0.42);
+      border: 1px solid rgba(56, 189, 248, 0.28);
+      border-radius: 8px;
+      box-shadow: 0 0 28px rgba(56, 189, 248, 0.18);
+    }
+
+    .code-deconstruct-line {
+      font-family: "JetBrains Mono", "Fira Code", monospace;
+      font-size: 14px;
+      line-height: 1.8;
+      word-break: break-all;
+    }
+
+    .code-deconstruct-active {
+      color: #fef3c7;
+      background: rgba(250, 204, 21, 0.22);
+      box-shadow: 0 0 14px rgba(250, 204, 21, 0.48);
+    }
+
+    .code-deconstruct-active.circle-zoom {
+      border: 1px solid rgba(56, 189, 248, 0.8);
+      border-radius: 999px;
+      padding: 1px 3px;
+    }
+
     @media (max-width: 768px) {
       .memory-core-skip {
         min-width: 72px;
@@ -11573,8 +11710,8 @@
       <div class="menu-backdrop"></div>
       <canvas id="menuFxCanvas" width="1280" height="720"></canvas>
       <div class="main-menu-card glass-panel">
-        <h1 class="game-logo">CODE AWAKENER<br>C 语言启航村</h1>
-        <div class="version-label" id="versionLabel">World Build v1.1.2 · develop.fan C Basics</div>
+        <h1 class="game-logo">CODE AWAKENER<br>Main Corridor</h1>
+        <div class="version-label" id="versionLabel">World Build v1.2.0 · develop.fan C Basics</div>
         <div id="musicSwitcher" class="music-switcher" aria-label="音乐主题切换器">
           <div class="music-switcher-copy">
             <span class="music-switcher-kicker">♪ 当前音乐主题</span>
@@ -11599,7 +11736,7 @@
             <label class="custom-music-field">场景
               <select id="customMusicSceneSelect">
                 <option value="menu">主菜单</option>
-                <option value="town">启航村探索</option>
+                <option value="town">Main Corridor</option>
                 <option value="puzzle">代码编辑</option>
                 <option value="battle">战斗 / 追逐</option>
                 <option value="night">夜晚地图</option>
@@ -11681,7 +11818,7 @@
         <div id="inGameMusicCard" class="music-switcher pause-music-card" aria-label="局内音乐播放器">
           <div class="music-switcher-copy">
             <span class="music-switcher-kicker">♪ 局内音乐播放器</span>
-            <strong id="inGameMusicTitle" class="music-switcher-title">启航村探索 · 8-Bit Retro</strong>
+            <strong id="inGameMusicTitle" class="music-switcher-title">Main Corridor · 8-Bit Retro</strong>
             <span id="inGameMusicMeta" class="music-switcher-meta">8-bit 冒险 · The_Mountain · Pixabay</span>
           </div>
           <div id="inGameMusicVisualizer" class="music-visualizer" aria-hidden="true">
@@ -11701,7 +11838,7 @@
             <label class="custom-music-field">场景
               <select id="pauseCustomMusicSceneSelect">
                 <option value="menu">主菜单</option>
-                <option value="town">启航村探索</option>
+                <option value="town">Main Corridor</option>
                 <option value="puzzle">代码编辑</option>
                 <option value="battle">战斗 / 追逐</option>
                 <option value="night">夜晚地图</option>
@@ -11862,7 +11999,7 @@
               <p class="settings-section-desc">建议按 F11 进入全屏模式获得最佳体验。请勿使用 Ctrl+W/N/T 等浏览器快捷操作，以免意外关闭游戏。</p>
               <ul class="control-help-list">
                 <li><code>方向键</code> 移动角色</li>
-                <li><code>E</code> 与 NPC、石碑、门交互</li>
+                <li><code>E</code> 与学习舱、编译门交互</li>
                 <li><code>ESC</code> 暂停或关闭编辑器</li>
                 <li><code>1/2/3/4</code> 使用快捷技能卡插入代码片段</li>
                 <li><code>Tab</code> 探索中打开/关闭功能菜单；编辑器中切换文件或接受补全</li>
@@ -11982,7 +12119,7 @@
           <p class="menu-help">这里只展示世界修复状态。收集碎片和编译成功会自动推进世界，不需要手动点星盘。</p>
           <div class="info-menu-row"><span>完成度</span><span id="infoWorldEvolutionText">0%</span></div>
           <div class="info-menu-meter"><span id="infoWorldEvolutionFill"></span></div>
-          <div id="infoWorldEvolutionHint">// 主线学习：手机触摸石碑；键盘靠近后按 E，再在编辑器里运行代码。</div>
+          <div id="infoWorldEvolutionHint">// 主线学习：沿地面光流进入学习舱，再在编辑器里运行代码。</div>
         </section>
         <section id="infoSceneStatusPanel" class="info-menu-section">
           <strong>场景状态</strong>
@@ -11992,7 +12129,7 @@
               <span id="infoWeatherIcon" class="scene-status-icon" aria-hidden="true">☀️</span>
               <span class="scene-status-copy">
                 <span id="infoWeatherText" class="scene-status-label">天气：清朗</span>
-                <span id="infoWeatherDetail" class="scene-status-detail">视野清晰，适合找石碑和碎片。</span>
+                <span id="infoWeatherDetail" class="scene-status-detail">视野清晰，适合沿 Main Corridor 前进。</span>
               </span>
             </div>
             <div class="scene-status-card">
@@ -12006,14 +12143,14 @@
         </section>
         <section class="info-menu-section">
           <strong>任务提示</strong>
-          <p class="menu-help">告诉你下一步该做什么。看不懂方向时，优先看这里，再沿着地图上的高亮目标前进。</p>
+          <p class="menu-help">告诉你下一步该做什么。看不懂方向时，优先沿地面光流前进。</p>
           <div id="infoTaskText">// 当前任务：等待初始化</div>
         </section>
         <section class="info-menu-section">
-          <strong>知识碎片</strong>
-          <p class="menu-help">每个碎片都会显示具体位置、方向和收集状态，找不到时先看这里。</p>
-          <div id="infoFragmentText">碎片: 0/14</div>
-          <div id="fragmentLocationList" class="fragment-location-list" aria-label="知识碎片具体位置">// 碎片位置正在扫描。</div>
+          <strong>代码光点</strong>
+          <p class="menu-help">这里显示学习舱周围的代码光点状态；主线仍按走廊顺序推进。</p>
+          <div id="infoFragmentText">光点: 0/14</div>
+          <div id="fragmentLocationList" class="fragment-location-list" aria-label="代码光点具体位置">// 光点位置正在扫描。</div>
         </section>
         <section class="info-menu-section">
           <strong>容错状态</strong>
@@ -12061,7 +12198,7 @@
         <button id="variableWatchToggle" class="watch-toggle" type="button" aria-label="最小化变量监控">_</button>
         <div id="variableWatchContent" class="variable-watch-content">
           <strong>Watch: C World</strong>
-          <div><code>world</code> = "C 语言启航村"</div>
+          <div><code>world</code> = "Main Corridor"</div>
           <div><code>next_token</code> = 靠近知识碎片自动收集</div>
           <div><code>compiler</code> = 等待补全</div>
         </div>
@@ -12080,7 +12217,7 @@
           <button id="achievementButton" class="hud-button" type="button">成就殿堂</button>
         </div>
       </div>
-      <div id="bottomHintBar" class="hud-chip ide-status-bar dynamic-island-hint">方向键移动　靠近知识碎片自动收集　点击石碑空缺补全　空格跳过教学　ESC 暂停/关闭编辑器</div>
+      <div id="bottomHintBar" class="hud-chip ide-status-bar dynamic-island-hint">方向键移动　跟随地面光流　学习舱按顺序点亮　空格跳过教学　ESC 暂停/关闭编辑器</div>
       <div id="fragmentGuideToast" class="fragment-guide-toast" aria-live="polite" aria-hidden="true">
         <strong>发现知识碎片</strong>
         <span>靠近它会自动收集，用来解锁技能卡提示。</span>
@@ -12322,11 +12459,11 @@ int main(void) {
       <button id="announcementCloseButton" class="announcement-close" type="button" aria-label="关闭公告">×</button>
       <h2 id="startupAnnouncementTitle" class="startup-announcement-title">> 消息 / 本次更新</h2>
       <div id="announcementPageBody" class="startup-announcement-body">
-        <p>// v1.1.2：编译失败诊断改为精确输出对比，不再把运行结果不符误指向第 1 行。</p>
-        <p>// 系统日志会展示预期输出、实际输出和首个差异字符，方便直接修改 printf/puts 文本。</p>
-        <p>// 编辑器 HP 归零后会保留代码并显示恢复步骤：使用回血道具，或回出生点/房间床休息。</p>
-        <p>// 导师解析折叠按钮改为独立网格列，窄面板下不会遮挡“导师解析”标题。</p>
-        <p>// 已通过静态测试、浏览器复现验证和截图级 UI 检查。</p>
+        <p>// v1.2.0：第一世界重构为 Main Corridor 单一走廊，学习舱按顺序点亮。</p>
+        <p>// 《认识你的编译器》加入 1 分 30 秒交互式电影教学，结束后自动进入实操。</p>
+        <p>// printf("Hello World!"); 已加入字符级解构：函数圈选、参数闪烁、分号叮声。</p>
+        <p>// 配音管线改为 ChatTTS 系统播报 + EmotiVoice 导师语音，浏览器自带 TTS 已禁用。</p>
+        <p>// 视觉引导改为地面金色光流、按钮中心脉冲和走廊 LED 变绿。</p>
         <p>// 作者：杀戮，QQ：3424636983，官方Q群：414374792。</p>
         <p class="announcement-dismiss-hint">- 点击任意处关闭</p>
       </div>
@@ -12383,11 +12520,11 @@ int main(void) {
       <div class="absolute-guide-stack">
         <article id="absoluteGuidePrompt" class="absolute-guide-chip primary">
           <span class="absolute-guide-tag">现在只做这一步</span>
-          <strong>欢迎，先靠近第一块石碑。</strong>
+          <strong>欢迎，先进入第一座学习舱。</strong>
         </article>
         <article id="absoluteGuideTarget" class="absolute-guide-chip target">
           <span class="absolute-guide-tag">目标</span>
-          <strong>手机触摸 / 键盘按 E 与石碑交互</strong>
+          <strong>沿地面光流靠近学习舱</strong>
         </article>
         <article id="absoluteGuideFeedback" class="absolute-guide-chip feedback">
           <span class="absolute-guide-tag">反馈</span>
@@ -12410,7 +12547,7 @@ int main(void) {
         <div class="titlebar">
           <span class="pixel-screw"></span>
           <div class="window-dots"><span class="dot"></span><span class="dot"></span><span class="dot"></span></div>
-          Code Gate - C 语言启航村
+          Code Gate - Main Corridor
           <span class="editor-title-spacer"></span>
           <div id="editorHpChip" class="editor-hp-chip" role="status" aria-live="polite">
             <span id="editorHpText">HP 3/3</span>
@@ -12804,7 +12941,7 @@ int main() {
     const PET_CLICK_COOLDOWN_MS = 500;
     const FRAGMENT_COLLECT_RADIUS = 40; // px，玩家进入该半径后自动吸附收集。
     const FRAGMENT_MAGNET_RADIUS = 96; // px，提前放大与抖动，提示即将收集。
-    const FRAGMENT_GUIDE_TEXT = "发现知识碎片！靠近它会自动收集，用来解锁技能卡提示。";
+    const FRAGMENT_GUIDE_TEXT = "发现代码光点！靠近它会自动记录，用来补充技能卡提示。";
     const COMPILE_LIFE_RULES = Object.freeze({
       initialLives: 3,
       initialMax: 3,
@@ -12838,22 +12975,34 @@ int main() {
     const SAVE_CLEAR_CONFIRM_MS = 3000;
     const STARTUP_ANNOUNCEMENT_AUTO_HIDE_MS = 14000;
     const SYSTEM_BOOT_FORCE_RELEASE_MS = 3200;
-    const GAME_VERSION = "v1.1.2";
+    const GAME_VERSION = "v1.2.0";
     const OFFICIAL_SITE_HREF = "./official-site.html";
     const UPDATE_ANNOUNCEMENT_PAGES = Object.freeze([
       {
         title: "> 消息 / 本次更新",
         lines: [
-          "// v1.1.2：编译失败诊断改为精确输出对比，不再把运行结果不符误指向第 1 行。",
-          "// 系统日志会展示预期输出、实际输出和首个差异字符，方便直接修改 printf/puts 文本。",
-          "// 编辑器 HP 归零后会保留代码并显示恢复步骤：使用回血道具，或回出生点/房间床休息。",
-          "// 导师解析折叠按钮改为独立网格列，窄面板下不会遮挡“导师解析”标题。",
-          "// 安全启动、强制刷新、CSP 和脚本自检已同步到 v1.1.2，方便绕过旧缓存。",
+          "// v1.2.0：第一世界重构为 Main Corridor 单一走廊，学习舱按顺序点亮，不再自由寻找。",
+          "// 第一个学习舱《认识你的编译器》加入 1 分 30 秒交互式电影教学，结束后自动进入实操。",
+          "// printf(\"Hello World!\"); 已加入字符级解构：整体释义、函数圈选、括号/参数闪烁、分号叮声。",
+          "// 配音管线改为 ChatTTS 系统播报 + EmotiVoice 导师语音，浏览器自带 TTS 已禁用。",
+          "// 视觉引导改为地面金色光流、按钮中心脉冲和走廊 LED 变绿，减少文字提示干扰。",
           "// 作者：杀戮，QQ：3424636983，官方Q群：414374792。"
         ]
       }
     ]);
     const UPDATE_HISTORY = Object.freeze([
+      {
+        version: "v1.2.0",
+        date: "2026-06-17",
+        title: "第一世界 Main Corridor 重构",
+        details: [
+          "废除第一世界散乱探索和石碑填空主线，改为单一无分叉 Main Corridor，学习舱按固定顺序排列。",
+          "新增《认识你的编译器》1 分 30 秒交互式电影教学，覆盖编程像发快递、编译器展示和编译过程演示。",
+          "新增 printf(\"Hello World!\"); 字符级解构时间线，包含整体释义、printf 圈选放大、括号与参数闪烁、分号叮声音效。",
+          "配音系统选定 ChatTTS 与 EmotiVoice，建立系统播报音和导师语音的开源引擎适配流程，并禁用浏览器自带 TTS。",
+          "视觉引导系统改为地面金色光流、按钮中心脉冲和走廊 LED 交互变绿。官方Q群：414374792。"
+        ]
+      },
       {
         version: "v1.1.2",
         date: "2026-06-17",
@@ -13770,7 +13919,7 @@ int main() {
         "课程从 C 语言概述开始：先认识 C 语言简介、历史发展、特点优势和应用场景，再进入开发环境。",
         "你会先写第一个 Hello World，理解 #include、main 函数、printf 输出、编译和运行程序。",
         "后续路线会按网站目录推进：基础语法、数据类型和变量、运算符、控制流、函数、数组、指针、结构体、文件、内存管理、预处理器、标准库和最佳实践。",
-        "现在跟随地面引导线前往入口石碑，补全 int main(void) 中缺失的关键字，让编译之门确认你进入了 C 世界。"
+        "现在跟随地面光流前往《认识你的编译器》学习舱，理解编译器如何把源代码送到终端。"
       ])
     });
     const OPENING_NARRATIVE_LINES = Object.freeze([
@@ -13785,8 +13934,8 @@ int main() {
     ]);
     const OPENING_MENTOR_LINES = Object.freeze([
       "你终于来了……这片运行时等了很久。",
-      "记忆核心碎成了关键字：变量、输入输出、条件、循环、函数。它们散落在石碑周围。",
-      "先去找第一块碎片吧。靠近它会自动收集，任务日志会告诉你下一步。",
+      "记忆核心被拆成了顺序学习舱：编译器、第一行代码、语法、变量、控制流。",
+      "先沿地面光流进入第一座学习舱。系统会按顺序点亮下一步。",
       ...C_COURSE_INTRO_GUIDE.lines
     ]);
     const PLAYER_SKIN_PRESETS = Object.freeze({
@@ -13991,6 +14140,39 @@ return 0;`;
       ko: "nova",
       "ko-KR": "nova"
     });
+    const FIRST_WORLD_TTS_ENGINE_EVALUATION = Object.freeze([
+      { engine: "GPT-SoVITS", naturalness: 9, emotionControl: 7, cloneSupport: "zero-shot/few-shot", note: "声音相似度强，但情绪导演需要额外提示和样本治理。" },
+      { engine: "OpenVoice", naturalness: 7, emotionControl: 7, cloneSupport: "voice-clone", note: "跨语言克隆灵活，中文教学长句稳定性不作为首选。" },
+      { engine: "Real-Time-Voice-Cloning", naturalness: 5, emotionControl: 3, cloneSupport: "speaker-encoder", note: "技术经典但输出年代感明显，不适合高拟真第一世界。" },
+      { engine: "Coqui TTS", naturalness: 7, emotionControl: 5, cloneSupport: "multi-model", note: "模型生态丰富，但项目维护和情绪提示一致性不如专用方案。" },
+      { engine: "ChatTTS", naturalness: 8, emotionControl: 8, cloneSupport: "speaker-sample", note: "中文/英文对话韵律自然，适合干净系统播报和短句提示。" },
+      { engine: "EmotiVoice", naturalness: 8, emotionControl: 9, cloneSupport: "multi-voice-prompt", note: "情绪提示词直观，适合导师语音的起伏和鼓励语气。" },
+      { engine: "YouDub", naturalness: 6, emotionControl: 5, cloneSupport: "dubbing-pipeline", note: "偏视频翻译/配音流程，游戏内按需播报集成成本偏高。" },
+      { engine: "VideoLingo", naturalness: 6, emotionControl: 5, cloneSupport: "dubbing-pipeline", note: "偏长视频本地化，不适合低延迟教学触发。" },
+      { engine: "Fish Speech", naturalness: 9, emotionControl: 8, cloneSupport: "short-reference-clone", note: "自然度很强，但资源占用高，第一阶段作为候补高配方案。" },
+      { engine: "VoxCPM", naturalness: 8, emotionControl: 7, cloneSupport: "prompted-speech", note: "表现有潜力，但生态和游戏接入成熟度低于 ChatTTS/EmotiVoice。" }
+    ]);
+    const CODE_AWAKENER_TTS_ENGINES = Object.freeze({
+      browserSpeechSynthesisAllowed: false,
+      system: Object.freeze({
+        role: "system",
+        engine: "ChatTTS",
+        endpointStorageKey: "codeAwakenerChatTtsEndpoint",
+        defaultEndpoint: "http://localhost:9966/tts",
+        voiceId: "system_clean_siri_like",
+        cloneFile: "assets/voice-clones/system-chattts-clean.wav",
+        emotionPrompt: "calm, clean, neutral, siri-like, precise pacing"
+      }),
+      mentor: Object.freeze({
+        role: "mentor",
+        engine: "EmotiVoice",
+        endpointStorageKey: "codeAwakenerEmotiVoiceEndpoint",
+        defaultEndpoint: "http://localhost:9977/tts",
+        voiceId: "mentor_warm_emotional",
+        cloneFile: "assets/voice-clones/mentor-emotivoice-warm.wav",
+        emotionPrompt: "happy, excited, calm, serious, warm teacher, expressive intonation"
+      })
+    });
     const EDGE_TTS_MODULE_URL = "https://edge-tts.com/_astro/edge-tts.CRIlRyMu.js";
     const EDGE_TTS_FEMALE_VOICES = Object.freeze({
       "zh-CN": "zh-CN-XiaoxiaoNeural",
@@ -14081,9 +14263,9 @@ return 0;`;
       collect_basic_fragments: {
         id: "collect_basic_fragments",
         type: TASK_TYPES.main,
-        title: "找到3个基础语法碎片",
-        description: "向导师接取任务后，收集 int、return、printf 三个基础语法碎片。",
-        requirement: { keywords: ["int", "return", "printf"], requiredAmount: 3 },
+        title: "进入第一座学习舱",
+        description: "沿 Main Corridor 的地面光流进入《认识你的编译器》学习舱。",
+        requirement: { clearedChapter: "overview", requiredAmount: 1 },
         reward: { exp: 50, codeBlock: "int main(void)", skin: "hackerGreen" },
         next: ["pass_compile_gate"]
       },
@@ -14091,7 +14273,7 @@ return 0;`;
         id: "pass_compile_gate",
         type: TASK_TYPES.main,
         title: "通过第一座编译之门",
-        description: "完成第一座 C 语言概述石碑，再让编译守卫确认你可以继续前进。",
+        description: "完成《认识你的编译器》学习舱，再通过第一座编译门。",
         requirement: { clearedChapter: "overview", requiredAmount: 1 },
         reward: { exp: 80, codeBlock: "return 0;", skin: "neonBlue" },
         next: ["collect_hidden_blocks"]
@@ -14099,8 +14281,8 @@ return 0;`;
       collect_hidden_blocks: {
         id: "collect_hidden_blocks",
         type: TASK_TYPES.collect,
-        title: "支线：隐藏代码块",
-        description: "替碎片商人登记 5 个任意代码碎片，换取独立的交易碎片。",
+        title: "支线：代码块复习",
+        description: "在后续学习舱里登记代码块，换取独立的练习资源。",
         requirement: { anyKeywordCount: 5, requiredAmount: 5 },
         reward: { exp: 30, codeBlock: "printf", tradeFragments: 3 },
         next: ["solve_for_sequence"]
@@ -14109,7 +14291,7 @@ return 0;`;
         id: "solve_for_sequence",
         type: TASK_TYPES.puzzle,
         title: "解谜：循环指令序列",
-        description: "在石碑上补全 for 循环，让 move() 执行 5 次。",
+        description: "在循环学习舱里演示 for 循环，让 move() 执行 5 次。",
         requirement: { puzzle: "for (int i = 0; i < 5; i++) { move(); }", requiredAmount: 1 },
         reward: { exp: 70, codeBlock: "for loop", skin: "" },
         next: []
@@ -14150,7 +14332,7 @@ return 0;`;
       directSaveAs: "reduced-by-inline-resources"
     });
     const SECURITY_CONFIG = Object.freeze({
-      expectedScriptHash: "Kmw/+h0Lt567TR6e6eecHicPqR8F7/ezTiSw528hl54=",
+      expectedScriptHash: "vdWzla6AtRsGw6/pvdOa6yVzxsqqKAVXEMc1UETeyw0=",
       selfCheckIntervalMs: 45000,
       tamperRefreshMs: 5000,
       devToolsRefreshMs: 2000,
@@ -14390,7 +14572,7 @@ return 0;`;
       sandstorm: "🟫"
     });
     const WEATHER_MENU_DETAILS = Object.freeze({
-      clear: "视野清晰，适合找石碑和碎片。",
+      clear: "视野清晰，适合沿 Main Corridor 前进。",
       rain: "雨声会压低环境色，注意发光目标。",
       snow: "雪尘让远景更冷，沿数据总线前进。",
       fog: "编译雾会降低辨识度，优先看任务提示。",
@@ -14398,7 +14580,7 @@ return 0;`;
     });
     const DAY_NIGHT_MENU_STATES = Object.freeze({
       day: { icon: "☀️", label: "白天", detail: "光照稳定，地图目标更容易辨认。" },
-      night: { icon: "🌙", label: "夜晚", detail: "环境更暗，石碑和碎片会更依赖霓虹轮廓。" },
+      night: { icon: "🌙", label: "夜晚", detail: "环境更暗，学习舱和编译门会更依赖霓虹轮廓。" },
       story: { icon: "✦", label: "剧情相位", detail: "剧情演出中，跟随当前提示继续操作。" }
     });
     const NPC_STORY_ARCS = Object.freeze({
@@ -17278,7 +17460,7 @@ return 0;`;
       }),
       town: Object.freeze({
         id: "eight-bit-retro",
-        sceneLabel: "启航村探索",
+        sceneLabel: "Main Corridor",
         themeLabel: "8-bit 冒险",
         title: "8-Bit Retro",
         creator: "The_Mountain",
@@ -17415,7 +17597,7 @@ return 0;`;
       editorFontSize: 14,
       language: "zh-CN",
       worldEvolutionLanguage: "zh-CN",
-      voiceEnabled: false,
+      voiceEnabled: true,
       ttsfmEndpoint: TTSFM_CONFIG.endpoint,
       browserSpeechFallback: false,
       worldEvolutionTheme: "deepStar",
@@ -20057,16 +20239,25 @@ int main(void) {
 
 路径来源：开发爱好者 C 语言从入门到精通 1. C 语言概述。
 
-要求：
-1. 引入 stdio.h。
-2. 定义 int main(void)。
-3. 使用 printf 输出 C language。
-4. 用 return 0; 正常结束。`
+0 基础照着做：
+先不用理解所有符号，本关只要让电脑在终端显示一行文字。
+只改 main.c，不要改 README.md；README.md 只是任务说明。
+
+步骤：
+1. 打开 main.c，第 1 行保留 #include <stdio.h>。
+2. 找到 int main(void) 后面的 { 和 return 0;。
+3. 在 return 0; 上面新增一行：printf("C language");。
+4. 点击“运行代码”，终端只显示 C language 就算通过。
+
+常见错误：
+1. 不要使用中文引号，要用英文双引号 " "。
+2. 不要漏掉最后的英文分号 ;。
+3. 不要把 printf 写到 main 函数外面。`
         },
-        taskGoal: "请输出 <code>C language</code>，完成 C 语言概述的第一步。",
-        taskTarget: "目标结构：<code>#include &lt;stdio.h&gt;</code>、<code>int main(void)</code>、<code>printf(\"C language\")</code>、<code>return 0;</code>",
+        taskGoal: "0 基础目标：先让终端精确显示 <code>C language</code>，其它内容都不要输出。",
+        taskTarget: "照着 4 步检查：第 1 行保留 <code>#include &lt;stdio.h&gt;</code>；第 3 行看到 <code>int main(void)</code>；把 <code>printf(\"C language\");</code> 放进花括号里、<code>return 0;</code> 上面；最后点击运行。",
         taskExample: "<code>printf(\"C language\");</code>",
-        taskHint: "导师提示：先知道 C 语言做什么，再写第一行代码。printf 会把文字打印到终端。",
+        taskHint: "导师提示：如果你完全没学过 C，就把 <code>printf(\"C language\");</code> 理解成“让电脑说出引号里的文字”。先能运行，再慢慢理解每个符号。",
         validator: "overview"
       },
       {
@@ -20846,6 +21037,54 @@ int main(void) {
 
     const chapterById = Object.fromEntries(chapters.map((chapter) => [chapter.id, chapter]));
     const FIRST_MAINLINE_CHAPTER_ID = chapters[0]?.id || "overview";
+    const MAIN_CORRIDOR_POD_LABELS = Object.freeze([
+      "认识你的编译器",
+      "第一行代码：Hello World",
+      "语法结束符",
+      "变量存储舱",
+      "表达式计算舱",
+      "条件判断舱",
+      "循环控制舱",
+      "函数调用舱",
+      "数组索引舱",
+      "指针地址舱",
+      "结构体字段舱",
+      "文件读写舱",
+      "内存管理舱",
+      "宏定义预处理舱",
+      "标准库调用舱",
+      "最佳实践终端舱"
+    ]);
+
+    const MAIN_CORRIDOR_MAP_LAYOUT = Object.freeze({
+      id: "main-corridor",
+      mode: "single-corridor",
+      branching: false,
+      freeSearch: false,
+      title: "Main Corridor",
+      worldTitle: "世界一：C语言基础",
+      exitLabel: "编译之门",
+      entrance: Object.freeze({ x: 180, y: 360 }),
+      startX: 330,
+      laneY: 360,
+      spacing: 178,
+      gateOffsetX: 86,
+      podRadius: 54,
+      corridorHalfWidth: 92,
+      arrowStates: Object.freeze({
+        completed: Object.freeze({ arrowColor: "#facc15", hex: 0xfacc15 }),
+        challenge: Object.freeze({ arrowColor: "#38bdf8", hex: 0x38bdf8 }),
+        locked: Object.freeze({ arrowColor: "#334155", hex: 0x334155 })
+      })
+    });
+
+    chapters.forEach((chapter, index) => {
+      const podLabel = MAIN_CORRIDOR_POD_LABELS[index] || chapter.title || `学习舱 ${String(index + 1).padStart(2, "0")}`;
+      chapter.podLabel = podLabel;
+      chapter.stoneLabel = podLabel;
+      chapter.gateLabel = index === chapters.length - 1 ? "编译之门" : `编译门 ${String(index + 1).padStart(2, "0")}`;
+      chapter.worldNodeKind = "learning-pod";
+    });
 
     function getChapterObjects(scene, chapterId = FIRST_MAINLINE_CHAPTER_ID) {
       if (!scene?.chapterObjects) return null;
@@ -20855,14 +21094,44 @@ int main(void) {
     const DATA_BUS_MAP_LAYOUT = Object.freeze({
       title: "世界一：C语言基础",
       exitLabel: "出口",
-      entrance: Object.freeze({ x: 180, y: 360 }),
-      startX: 350,
-      y: 360,
-      spacing: 142,
-      gateOffsetX: 72,
-      nodeRadius: 58,
-      arenaRadius: 86
+      entrance: MAIN_CORRIDOR_MAP_LAYOUT.entrance,
+      startX: MAIN_CORRIDOR_MAP_LAYOUT.startX,
+      y: MAIN_CORRIDOR_MAP_LAYOUT.laneY,
+      spacing: MAIN_CORRIDOR_MAP_LAYOUT.spacing,
+      gateOffsetX: MAIN_CORRIDOR_MAP_LAYOUT.gateOffsetX,
+      nodeRadius: MAIN_CORRIDOR_MAP_LAYOUT.podRadius,
+      arenaRadius: 82
     });
+
+    function getLearningPodProgressState(chapterId) {
+      const index = chapters.findIndex((chapter) => chapter.id === chapterId);
+      if (isCleared(chapterId)) return "completed";
+      if (index === getCurrentMainlineChapterIndex()) return isLearned(chapterId) ? "challenge" : "available";
+      if (index < getCurrentMainlineChapterIndex()) return "completed";
+      return "locked";
+    }
+
+    function getPureVisualGuideCue(state = "locked") {
+      const normalized = state === "available" ? "challenge" : state;
+      const cue = MAIN_CORRIDOR_MAP_LAYOUT.arrowStates[normalized] || MAIN_CORRIDOR_MAP_LAYOUT.arrowStates.locked;
+      return {
+        state,
+        arrowColor: cue.arrowColor,
+        hex: cue.hex,
+        flow: normalized === "challenge" ? "active-pulse" : normalized === "completed" ? "steady-gold" : "dim-locked",
+        led: normalized === "challenge" ? "#22c55e" : normalized === "completed" ? "#facc15" : "#334155"
+      };
+    }
+
+    function createMainCorridorPositions(chapterList = chapters) {
+      return Object.fromEntries(chapterList.map((chapter, index) => {
+        const x = MAIN_CORRIDOR_MAP_LAYOUT.startX + index * MAIN_CORRIDOR_MAP_LAYOUT.spacing;
+        const y = MAIN_CORRIDOR_MAP_LAYOUT.laneY;
+        const pod = [x, y];
+        const gate = [x + MAIN_CORRIDOR_MAP_LAYOUT.gateOffsetX, y];
+        return [chapter.id, { pod, stone: pod, gate, laneIndex: index }];
+      }));
+    }
 
     const CHAPTER_REGION_LAYOUT = Object.freeze([
       { id: "foundation", title: "区域一：C 语言起点总线", chapterIds: ["overview", "hello", "syntax", "variables", "operators", "conditions"], origin: { x: 180, y: 360 }, theme: 0x38bdf8 },
@@ -20886,16 +21155,7 @@ int main(void) {
     });
 
     function createLinearChapterPositions(chapterList = chapters) {
-      return Object.fromEntries(chapterList.map((chapter) => {
-        const region = getChapterRegion(chapter.id);
-        const localIndex = Math.max(0, region.chapterIds.indexOf(chapter.id));
-        const x = region.origin.x + 170 + localIndex * 188;
-        const y = region.origin.y;
-        return [chapter.id, {
-          stone: [x, y],
-          gate: [x + DATA_BUS_MAP_LAYOUT.gateOffsetX, y + (localIndex % 2 ? 34 : -34)]
-        }];
-      }));
+      return createMainCorridorPositions(chapterList);
     }
 
     function getChapterRegionId(chapterId) {
@@ -21926,8 +22186,8 @@ int main(void) {
     const ABSOLUTE_GUIDE_HELP_AUTO_HIDE_MS = 5000;
     const ABSOLUTE_GUIDE_STAGES = Object.freeze({
       welcome: {
-        prompt: "先找到第一块石碑",
-        target: "靠近入口石碑，手机触摸 / 键盘按 E 交互",
+        prompt: "先进入第一座学习舱",
+        target: "沿地面光流靠近《认识你的编译器》",
         feedback: "其它信息已收起，只看这三条。"
       },
       editor: {
@@ -21942,7 +22202,7 @@ int main(void) {
       },
       followPath: {
         prompt: "跟随地面光带",
-        target: "走到下一块石碑",
+        target: "走到下一座学习舱",
         feedback: "走远会出现红色方向提示。"
       },
       fragment: {
@@ -21952,7 +22212,7 @@ int main(void) {
       },
       done: {
         prompt: "你已经掌握基础流程",
-        target: "继续按石碑顺序学习",
+        target: "继续按学习舱顺序前进",
         feedback: "需要时可在菜单重看指引。"
       }
     });
@@ -24179,7 +24439,7 @@ ${item.code}
         if (this.phase === "final") {
           this.drawButton(ctx, {
             id: "finish",
-            label: "进入启航村",
+            label: "进入 Main Corridor",
             x: this.width * 0.5 - 110 * this.dpr,
             y: this.height * 0.54,
             w: 220 * this.dpr,
@@ -25474,7 +25734,7 @@ ${item.code}
         const status = questManager?.getState?.(task.id)?.status;
         return status === TASK_STATUS.inProgress || status === TASK_STATUS.readyToSubmit || status === TASK_STATUS.available;
       });
-      if (!activeTask) return "// 当前任务：沿着数据线前往下一座石碑。";
+      if (!activeTask) return "// 当前任务：沿着地面光流前往下一座学习舱。";
       const state = questManager?.getState?.(activeTask.id);
       const status = getQuestStatusLabel(state?.status);
       const description = getQuestDynamicDescription(activeTask);
@@ -25485,25 +25745,23 @@ ${item.code}
     function getTaskNextStepHint(task, state = {}) {
       if (!task) return "跟随地图上的金色箭头前进。";
       if (state.status === TASK_STATUS.available) {
-        if (task.id === "solve_for_sequence") return "前往地图中央偏右的「循环石碑」，靠近后手机触摸或键盘按 E 进入编辑器。";
-        if (task.requirement?.clearedChapter) return "前往当前发光石碑，完成代码填空后通过编译之门。";
-        const npc = NPC_DATA.find((item) => (item.taskIds || []).includes(task.id));
-        return npc ? `去找 ${npc.name} 接取任务，NPC 头顶会显示名字和任务符号。` : "跟随地面光带，前往当前发光石碑。";
+        if (task.id === "solve_for_sequence") return "沿 Main Corridor 前往循环学习舱，进入编辑器完成演示。";
+        if (task.requirement?.clearedChapter) return "前往当前发光学习舱，通过编译门。";
+        return "跟随地面光带，前往当前发光学习舱。";
       }
       if (state.status === TASK_STATUS.readyToSubmit) {
-        const npc = NPC_DATA.find((item) => (item.taskIds || []).includes(task.id));
-        return npc ? `回到 ${npc.name} 交付任务，跟随金色箭头。` : "回到任务发布者处交付。";
+        return "跟随金色箭头回到当前学习舱完成确认。";
       }
       if (task.requirement?.keywords) {
         const missing = task.requirement.keywords.filter((keyword) => !gameState.codeInventory.includes(keyword));
-        return missing.length ? `收集 ${missing.join("、")} 碎片；地面引导线和箭头会指向最近碎片。` : "基础碎片已齐，回导师处交付。";
+        return missing.length ? `等待 ${missing.join("、")} 高亮；地面引导线会指向当前学习舱。` : "基础高亮已齐，继续当前编译门。";
       }
       if (task.requirement?.anyKeywordCount) {
         return getNextVisibleGuidanceFragment(gameState.scene)
           ? "沿主路径收集发光代码碎片，靠近即可自动吸附。"
-          : "当前可见碎片已收完，先完成发光石碑或编译之门，新碎片会显现。";
+          : "当前可见代码光点已处理，先完成发光学习舱或编译门。";
       }
-      if (task.requirement?.clearedChapter) return "前往当前发光石碑，完成代码填空后通过编译之门。";
+      if (task.requirement?.clearedChapter) return "前往当前发光学习舱，通过编译门。";
       return "跟随地图上的金色箭头前进。";
     }
 
@@ -26393,21 +26651,7 @@ ${item.code}
         const words = phrase.split(/(\s+)/);
         dom.littleCSpeech.innerHTML = words.map((word, index) => `<span class="${index === 0 ? "karaoke-highlight" : ""}">${escapeHtml(word)}</span>`).join("");
       }
-      if ("speechSynthesis" in globalThis) {
-        try {
-          globalThis.speechSynthesis.cancel();
-          const utterance = new SpeechSynthesisUtterance(phrase);
-          utterance.lang = "zh-CN";
-          utterance.rate = 0.78;
-          utterance.pitch = 1.28;
-          utterance.volume = 0.78;
-          const voices = globalThis.speechSynthesis.getVoices?.() || [];
-          utterance.voice = voices.find((voice) => /female|xiaoxiao|huihui|zh-CN|Chinese/i.test(`${voice.name} ${voice.lang}`)) || voices[0] || null;
-          globalThis.speechSynthesis.speak(utterance);
-        } catch (error) {
-          reportSoftError(error, ERROR_LEVELS.recoverable, { source: "little-c-read" });
-        }
-      }
+      speakGameText(phrase, { role: "mentor", profile: "mentor", maxLength: 180 });
       return true;
     }
 
@@ -28589,7 +28833,7 @@ ${item.code}
       if (completion >= 60) return "// 代码路径已经固化，树木和光柱会随进度继续增强。";
       if (completion >= 35) return "// 生态层正在恢复，草地、极光和符文开始显形。";
       if (completion >= 10) return "// 世界核心已点火，地面裂纹开始减少。";
-      return "// 主线学习：手机触摸石碑，键盘靠近后按 E。世界进化会随课程编译自动推进。";
+      return "// 主线学习：沿地面光流进入学习舱。世界进化会随课程编译自动推进。";
     }
 
     function isWorldEvolutionComplete() {
@@ -28851,14 +29095,14 @@ ${item.code}
       const state = questManager.getState(task.id);
       const required = questManager.getRequiredAmount(task);
       const current = Math.min(Number(state.progress) || 0, required);
-      if (state.status === TASK_STATUS.readyToSubmit) return `目标已达成：${current}/${required}。回到对应 NPC 处交付任务。`;
+      if (state.status === TASK_STATUS.readyToSubmit) return `目标已达成：${current}/${required}。继续沿地面光流确认。`;
       if (state.status === TASK_STATUS.closed) return `已完成：${task.description}`;
       if (task.requirement?.keywords) {
         const missing = task.requirement.keywords.filter((keyword) => !gameState.codeInventory.includes(keyword));
         return `已找到 ${current}/${required}。还缺：${missing.length ? missing.join("、") : "无"}。`;
       }
-      if (task.requirement?.anyKeywordCount) return `已找到 ${current}/${required} 个代码碎片。继续靠近石碑周围的知识碎片。`;
-      if (task.requirement?.clearedChapter) return current ? "编译门已通过，等待交付。" : "完成对应关卡后，守卫会放行。";
+      if (task.requirement?.anyKeywordCount) return `已登记 ${current}/${required} 个代码块。继续按学习舱顺序前进。`;
+      if (task.requirement?.clearedChapter) return current ? "编译门已通过，等待下一舱点亮。" : "完成对应学习舱后，编译门会点亮。";
       return current ? `已推进 ${current}/${required}。` : task.description;
     }
 
@@ -29540,7 +29784,7 @@ ${item.code}
       if (objects?.gate) {
         objects.gate.disableBody(true, true);
         objects.gate.setActive(true).setVisible(true).setAlpha(0.34).setTint(0x64748b);
-        objects.gateHintText?.setText?.("先修复石碑");
+        objects.gateHintText?.setText?.("◆");
         objects.gateHintText?.setColor?.("#bfdbfe");
       }
       updateProgressHud();
@@ -32418,7 +32662,7 @@ ${item.code}
       if (interaction.type === "codeEnemy") return formatInteractionPrompt(`修复逻辑守卫（${interaction.enemy?.repair || "补全代码"}）`);
       if (interaction.type === "regionPortal") return interaction.portal?.unlocked ? formatInteractionPrompt(`进入${interaction.portal.label}`) : `完成前一区域后解锁：${interaction.portal.label}`;
       if (interaction.type === "locked") {
-        if (!isLearned(interaction.chapter.id)) return formatInteractionPrompt(`查看（先完成 ${interaction.chapter.stoneLabel}）`);
+        if (!isLearned(interaction.chapter.id)) return formatInteractionPrompt("◆");
         const previousIndex = Math.max(0, chapters.findIndex((chapter) => chapter.id === interaction.chapter.id) - 1);
         const previous = chapters[previousIndex];
         return formatInteractionPrompt(`查看（需要先通过 ${previous.gateLabel}）`);
@@ -32743,6 +32987,7 @@ ${item.code}
     }
 
     function pickPreferredSpeechVoice(lang = "zh-CN") {
+      if (CODE_AWAKENER_TTS_ENGINES.browserSpeechSynthesisAllowed === false) return null;
       if (!("speechSynthesis" in globalThis)) return null;
       const voices = globalThis.speechSynthesis.getVoices?.() || [];
       if (!voices.length) return null;
@@ -32780,6 +33025,7 @@ ${item.code}
     }
 
     function speakWithBrowserFemale(text = "", lang = "zh-CN", profile = "mentor", maxLength = 160) {
+      if (CODE_AWAKENER_TTS_ENGINES.browserSpeechSynthesisAllowed === false) return false;
       if (!globalThis.speechSynthesis || gameState.settings?.voiceEnabled === false) return false;
       try {
         globalThis.speechSynthesis.cancel();
@@ -32795,12 +33041,82 @@ ${item.code}
     }
 
     function shouldUseBrowserSpeechFallback(options = {}) {
-      return Boolean(options.allowBrowserSpeechFallback || gameState.settings?.browserSpeechFallback === true);
+      return false;
+    }
+
+    let openSourceTtsAudioElement = null;
+
+    function getOpenSourceTtsEngineConfig(role = "mentor") {
+      const normalized = role === "system" ? "system" : "mentor";
+      return CODE_AWAKENER_TTS_ENGINES[normalized] || CODE_AWAKENER_TTS_ENGINES.mentor;
+    }
+
+    function getOpenSourceTtsEndpoint(engineConfig) {
+      try {
+        return localStorage.getItem(engineConfig.endpointStorageKey) || engineConfig.defaultEndpoint;
+      } catch (error) {
+        return engineConfig.defaultEndpoint;
+      }
+    }
+
+    function createOpenSourceVoicePipeline(role = "mentor", text = "", options = {}) {
+      const engineConfig = getOpenSourceTtsEngineConfig(role);
+      const emotionPrompt = options.emotionPrompt || engineConfig.emotionPrompt;
+      return {
+        role: engineConfig.role,
+        engine: engineConfig.engine,
+        text: String(text || "").trim(),
+        endpoint: options.endpoint || getOpenSourceTtsEndpoint(engineConfig),
+        voiceId: options.voiceId || engineConfig.voiceId,
+        cloneFile: options.cloneFile || engineConfig.cloneFile,
+        emotionPrompt,
+        browserSpeechSynthesisAllowed: CODE_AWAKENER_TTS_ENGINES.browserSpeechSynthesisAllowed,
+        steps: ["import-engine", "generate-clone-file", "game-demand-playback"]
+      };
+    }
+
+    async function speakWithOpenSourceTts(text = "", options = {}) {
+      const phrase = String(text || "").trim().slice(0, options.maxLength || 180);
+      if (!phrase || gameState.settings?.voiceEnabled === false || gameState.settings?.masterVolume <= 0) return false;
+      const role = options.role || (options.profile === "system" ? "system" : "mentor");
+      const pipeline = createOpenSourceVoicePipeline(role, phrase, options);
+      try {
+        const response = await fetch(pipeline.endpoint, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            engine: pipeline.engine,
+            role: pipeline.role,
+            input: pipeline.text,
+            voice: pipeline.voiceId,
+            clone_file: pipeline.cloneFile,
+            emotion: pipeline.emotionPrompt,
+            response_format: options.responseFormat || "mp3"
+          })
+        });
+        if (!response.ok) throw new Error(`${pipeline.engine} ${response.status}`);
+        const audioBlob = await response.blob();
+        if (!audioBlob.size) throw new Error(`${pipeline.engine} empty audio`);
+        const url = URL.createObjectURL(audioBlob);
+        if (openSourceTtsAudioElement) {
+          openSourceTtsAudioElement.pause();
+          if (openSourceTtsAudioElement.dataset.url) URL.revokeObjectURL(openSourceTtsAudioElement.dataset.url);
+        }
+        openSourceTtsAudioElement = new Audio(url);
+        openSourceTtsAudioElement.dataset.url = url;
+        openSourceTtsAudioElement.volume = Math.min(0.82, Math.max(0.08, (gameState.settings.sfxVolume || 80) / 120));
+        openSourceTtsAudioElement.onended = () => URL.revokeObjectURL(url);
+        await openSourceTtsAudioElement.play();
+        return true;
+      } catch (error) {
+        reportSoftError?.(error, ERROR_LEVELS.recoverable, { source: "open-source-tts", engine: pipeline.engine, endpoint: pipeline.endpoint });
+        return false;
+      }
     }
 
     function speakGameText(text = "", options = {}) {
       if (gameState.settings?.voiceEnabled === false) return false;
-      speakWithTtsfmFemale(text, options).then((ok) => {
+      speakWithOpenSourceTts(text, options).then((ok) => {
         if (!ok && shouldUseBrowserSpeechFallback(options)) {
           speakWithBrowserFemale(text, options.lang || "zh-CN", options.profile || "mentor", options.maxLength || 160);
         }
@@ -32809,7 +33125,119 @@ ${item.code}
     }
 
     function speakNoviceGuideLine(text = "") {
-      return speakGameText(text, { lang: "zh-CN", profile: "mentor", maxLength: 160, voice: "nova" });
+      return speakGameText(text, { lang: "zh-CN", profile: "mentor", role: "mentor", maxLength: 160 });
+    }
+
+    function buildCompilerCabinCinematicTimeline() {
+      return {
+        id: "compiler-cabin-cinematic",
+        title: "认识你的编译器",
+        durationMs: 90000,
+        phases: [
+          { type: "split", startMs: 0, endMs: 22000, visual: "source-code-package-splits-into-address-label-content-and-command" },
+          { type: "explain", startMs: 22000, endMs: 45000, visual: "courier-metaphor-maps-code-to-package-and-compiler-to-sorting-center" },
+          { type: "highlight", startMs: 45000, endMs: 68000, visual: "compiler-core-highlights-lexical-syntax-linking-checkpoints" },
+          { type: "demo", startMs: 68000, endMs: 90000, visual: "source-c-becomes-executable-and-terminal-output" }
+        ],
+        script: [
+          { atMs: 0, role: "mentor", emotion: "calm", text: "编程像发快递。你写下的源代码，是包裹里的说明和目的地。" },
+          { atMs: 14500, role: "mentor", emotion: "happy", text: "编译器就像智能分拣中心，它先拆开包裹，检查每个字符有没有放对。" },
+          { atMs: 31000, role: "system", emotion: "neutral", text: "第一步：拆分。关键字、函数名、括号、字符串和分号被逐一识别。" },
+          { atMs: 47500, role: "mentor", emotion: "serious", text: "如果括号没有闭合，或者分号缺失，编译器会停下来，把问题标亮。" },
+          { atMs: 63500, role: "system", emotion: "neutral", text: "第二步：转换。源代码被翻译成机器更容易执行的指令。" },
+          { atMs: 78500, role: "mentor", emotion: "excited", text: "当检查通过，程序被送达终端。现在，我们进入实操界面。" }
+        ]
+      };
+    }
+
+    function buildPrintfCharacterDeconstructionTimeline(code = 'printf("Hello World!");') {
+      const source = String(code || 'printf("Hello World!");');
+      const printfStart = source.indexOf("printf");
+      const openParen = source.indexOf("(");
+      const closeParen = source.lastIndexOf(")");
+      const firstQuote = source.indexOf("\"");
+      const lastQuote = source.lastIndexOf("\"");
+      const semicolon = source.lastIndexOf(";");
+      return {
+        id: "printf-character-deconstruction",
+        code: source,
+        totalMs: 26000,
+        steps: [
+          { atMs: 0, kind: "overall", token: source, range: [0, source.length], narration: "整行代码的意思是：让终端显示 Hello World。" },
+          { atMs: 5200, kind: "function", token: "printf", range: [printfStart, printfStart + 6], effect: "circle-zoom", narration: "printf 是核心函数，负责打印输出。" },
+          { atMs: 10400, kind: "brackets", token: "()", range: [openParen, closeParen + 1], effect: "bracket-flash", narration: "括号告诉函数：里面这些内容是参数。" },
+          { atMs: 15000, kind: "parameters", token: source.slice(firstQuote, lastQuote + 1), range: [firstQuote, lastQuote + 1], effect: "quote-flash", narration: "双引号包住的文字，会原样出现在屏幕上。" },
+          { atMs: 21000, kind: "terminator", token: ";", range: [semicolon, semicolon + 1], effect: "stop-emphasis", sfx: "ding", narration: "分号表示这条语句结束。听到叮声，编译器就知道可以收尾。" }
+        ]
+      };
+    }
+
+    function ensureCompilerCabinCinematicStage() {
+      let stage = document.getElementById("compilerCabinCinematicStage");
+      if (stage) return stage;
+      stage = document.createElement("section");
+      stage.id = "compilerCabinCinematicStage";
+      stage.className = "compiler-cabin-cinematic-stage";
+      stage.setAttribute("aria-hidden", "true");
+      stage.innerHTML = `
+        <div class="compiler-cabin-rail" aria-hidden="true">
+          <span></span><span></span><span></span><span></span>
+        </div>
+        <div class="compiler-cabin-core" aria-hidden="true">
+          <i></i><i></i><i></i>
+        </div>
+        <pre class="compiler-cabin-code" aria-hidden="true">printf("Hello World!");</pre>`;
+      document.body.appendChild(stage);
+      return stage;
+    }
+
+    function playCompilerCabinCinematic(chapter = chapterById[FIRST_MAINLINE_CHAPTER_ID]) {
+      const timeline = buildCompilerCabinCinematicTimeline();
+      const stage = ensureCompilerCabinCinematicStage();
+      stage.classList.add("active");
+      stage.setAttribute("aria-hidden", "false");
+      dom.cinematicLetterbox?.classList.add("active");
+      const timers = [];
+      timeline.phases.forEach((phase) => {
+        timers.push(trackedSetTimeout(() => {
+          stage.dataset.phase = phase.type;
+          stage.style.setProperty("--phase-progress", String(phase.startMs / timeline.durationMs));
+        }, phase.startMs, `compiler-cabin-phase-${phase.type}`));
+      });
+      timeline.script.forEach((line) => {
+        timers.push(trackedSetTimeout(() => {
+          if (dom.cinematicSubtitle) dom.cinematicSubtitle.textContent = line.text;
+          speakGameText(line.text, { role: line.role, profile: line.role, emotionPrompt: line.emotion, maxLength: 220 });
+        }, line.atMs, `compiler-cabin-voice-${line.atMs}`));
+      });
+      return new Promise((resolve) => {
+        timers.push(trackedSetTimeout(() => {
+          playPrintfCharacterDeconstruction('printf("Hello World!");');
+          stage.classList.remove("active");
+          stage.setAttribute("aria-hidden", "true");
+          dom.cinematicLetterbox?.classList.remove("active");
+          if (dom.cinematicSubtitle) dom.cinematicSubtitle.textContent = "";
+          resolve({ chapterId: chapter?.id || FIRST_MAINLINE_CHAPTER_ID, timeline });
+        }, timeline.durationMs, "compiler-cabin-complete"));
+      });
+    }
+
+    function playPrintfCharacterDeconstruction(code = 'printf("Hello World!");') {
+      const timeline = buildPrintfCharacterDeconstructionTimeline(code);
+      timeline.steps.forEach((step) => {
+        trackedSetTimeout(() => {
+          if (step.sfx === "ding") audioManager.ding();
+          speakGameText(step.narration, { role: "mentor", profile: "mentor", emotionPrompt: step.kind === "terminator" ? "happy" : "calm" });
+          if (dom.codeExplainBody) {
+            const chars = Array.from(timeline.code).map((char, index) => {
+              const active = index >= step.range[0] && index < step.range[1] ? ` class="code-deconstruct-active ${step.effect || ""}"` : "";
+              return `<span${active}>${escapeHtml(char)}</span>`;
+            }).join("");
+            dom.codeExplainBody.innerHTML = `<div class="code-deconstruct-line">${chars}</div>`;
+          }
+        }, step.atMs, `printf-deconstruct-${step.kind}`);
+      });
+      return timeline;
     }
 
     function showNoviceGuideDialogue(text = "") {
@@ -38371,6 +38799,20 @@ ${item.code}
       return scan;
     }
 
+    function createLearningPodScanline(scene, pod) {
+      const scan = scene.add.rectangle(pod.x, pod.y - 10, 62, 3, 0x67e8f9, 0.5).setDepth(6).setBlendMode(Phaser.BlendModes.ADD);
+      scene.tweens.add({
+        targets: scan,
+        y: pod.y + 22,
+        alpha: { from: 0.18, to: 0.76 },
+        duration: 1050,
+        yoyo: true,
+        repeat: -1,
+        ease: "Sine.easeInOut"
+      });
+      return scan;
+    }
+
     function spawnPlayerTrail(scene, player) {
       if (!scene?.add || !player || !gameState.settings.particles) return;
       const trail = acquirePooledParticle(scene, "playerTrail", () => scene.add.rectangle(0, 0, 18, 5, 0x38bdf8, 0.22).setDepth(3));
@@ -38800,7 +39242,7 @@ ${item.code}
 
     function getPersonalizedHint(chapterId) {
       const recent = puzzleMistakes.filter((mistake) => mistake.chapterId === chapterId).slice(-3);
-      if (recent.some((mistake) => mistake.type === "missing_keyword")) return "先靠近地图上的 C 语言知识碎片，再补石碑空缺。";
+      if (recent.some((mistake) => mistake.type === "missing_keyword")) return "跟随地面光流，学习舱会按顺序点亮。";
       if (recent.some((mistake) => mistake.type === "wrong_keyword")) return "观察空缺左右两侧：它通常暗示需要关键字、运算符或数值。";
       return "把石碑代码当成一行真正的 C 语句来读。";
     }
@@ -38810,7 +39252,7 @@ ${item.code}
         id: "c-language-world",
         worldKey: "c",
         name: "C Runtime",
-        title: "C 语言启航村",
+        title: "Main Corridor",
         colorTheme: { primary: "#00ff88", secondary: "#00ccff", accent: "#fbbf24" },
         entryFunction: initCWorld,
         exitFunction: closeCWorld,
@@ -39215,7 +39657,7 @@ ${item.code}
       const render = (parsed) => {
         dom.variableWatchContent.innerHTML = `
           <strong>Watch: C World</strong>
-          <div><code>world</code> = "C 语言启航村"</div>
+          <div><code>world</code> = "Main Corridor"</div>
           <div><code>selected_keyword</code> = ${escapeHtml(parsed.selected)}</div>
           <div><code>inventory</code> = ${escapeHtml(parsed.inventoryText)}</div>
         `;
@@ -40176,7 +40618,7 @@ ${item.code}
         objects.gate?.setAlpha?.(0.34);
         objects.gate?.setTint?.(0x64748b);
         objects.gate?.setScale?.(1);
-        objects.gateHintText?.setText?.("先修复石碑");
+        objects.gateHintText?.setText?.("◆");
         objects.gateHintText?.setColor?.("#bfdbfe");
         objects.gateHintText?.setAlpha?.(0.78);
         objects.stone?.clearTint?.();
@@ -40711,6 +41153,90 @@ ${item.code}
       return puzzle;
     }
 
+    function createLearningPodCodeInterface(scene, chapter, x, y) {
+      const sample = chapter.id === "overview" ? 'compiler("source.c") -> app.exe' : (chapter.taskExample || 'printf("Hello World!");').replace(/<[^>]*>/g, "");
+      const panel = scene.add.text(x, y + 56, sample, {
+        fontFamily: "JetBrains Mono, Fira Code, monospace",
+        fontSize: "11px",
+        color: "#bae6fd",
+        backgroundColor: "rgba(2, 6, 23, 0.28)",
+        padding: { x: 8, y: 4 },
+        stroke: "#020617",
+        strokeThickness: 2
+      }).setDepth(6).setAlpha(0.72).setOrigin(0.5);
+      panel.answer = "";
+      panel.template = sample;
+      panel.completed = true;
+      panel.completedText = sample;
+      panel.blankHitZone = null;
+      scene.tweens.add({
+        targets: panel,
+        alpha: { from: 0.42, to: 0.86 },
+        duration: 1300,
+        yoyo: true,
+        repeat: -1,
+        ease: "Sine.easeInOut"
+      });
+      return panel;
+    }
+
+    function createMainCorridorLedBands(scene) {
+      if (!scene?.add) return [];
+      const y = MAIN_CORRIDOR_MAP_LAYOUT.laneY;
+      const width = GAME_DATA.map.width;
+      scene.corridorLedBands = [
+        scene.add.rectangle(width / 2, y - MAIN_CORRIDOR_MAP_LAYOUT.corridorHalfWidth, width - 220, 5, 0x334155, 0.58).setDepth(2.2),
+        scene.add.rectangle(width / 2, y + MAIN_CORRIDOR_MAP_LAYOUT.corridorHalfWidth, width - 220, 5, 0x334155, 0.58).setDepth(2.2)
+      ];
+      return scene.corridorLedBands;
+    }
+
+    function updateCorridorLedInteractionLight(scene, interaction) {
+      if (!scene?.corridorLedBands?.length) return false;
+      const active = Boolean(interaction?.chapter || interaction?.type === "challenge" || interaction?.type === "lesson");
+      const color = active ? 0x22c55e : 0x334155;
+      const alpha = active ? 0.86 : 0.44;
+      scene.corridorLedBands.forEach((band, index) => {
+        band.setFillStyle?.(color, alpha);
+        band.setScale?.(1, active ? 1.25 + Math.sin(performance.now() / 220 + index) * 0.16 : 1);
+      });
+      return active;
+    }
+
+    function createFlowingGoldenGuideLine(scene, target) {
+      if (!scene?.player || !target || !scene.guidanceLine) return false;
+      const distance = Phaser.Math.Distance.Between(scene.player.x, scene.player.y, target.x, target.y);
+      const dots = createGuidancePathDots(scene.player, target, distance);
+      const now = performance.now();
+      dots.forEach((dot, index) => {
+        const wave = (Math.sin(now / 135 + index * 0.92) + 1) / 2;
+        scene.guidanceLine.fillStyle(0xfacc15, 0.28 + wave * 0.46);
+        scene.guidanceLine.fillCircle(dot.x, dot.y + Math.sin(now / 210 + index) * 2, 4 + wave * 2);
+      });
+      return true;
+    }
+
+    function focusButtonWithVisualPulse(button = dom.runButton) {
+      if (!button?.getBoundingClientRect) return false;
+      const rect = button.getBoundingClientRect();
+      const centerX = rect.left + rect.width / 2;
+      const centerY = rect.top + rect.height / 2;
+      const layer = dom.absoluteGuideLayer || document.body;
+      let pulse = document.getElementById("visualButtonFocusPulse");
+      if (!pulse) {
+        pulse = document.createElement("div");
+        pulse.id = "visualButtonFocusPulse";
+        pulse.className = "visual-button-focus-pulse";
+        pulse.setAttribute("aria-hidden", "true");
+        layer.appendChild(pulse);
+      }
+      pulse.style.left = `${centerX}px`;
+      pulse.style.top = `${centerY}px`;
+      pulse.classList.add("active");
+      button.focus?.({ preventScroll: true });
+      return true;
+    }
+
     function cancelInteractionUiShielding() {
       [dom.prompt, dom.bottomHintBar, dom.keymapGlassBar].forEach((element) => {
         element?.style?.setProperty?.("pointer-events", "none", "important");
@@ -40731,12 +41257,11 @@ ${item.code}
           cancelInteractionUiShielding();
           if (gameState.menuOpen || gameState.dialogOpen || gameState.editorOpen) return;
           if (typeof scene.isChapterUnlocked === "function" && !scene.isChapterUnlocked(chapterId)) {
-            showReward(`先完成上一座石碑，才能触碰 ${chapterById[chapterId]?.stoneLabel || "这座石碑"}。`);
+            triggerErrorGlitch();
             return;
           }
           if (!isLearned(chapterId)) {
-            if (objects.codePuzzle?.completed) scene.startLesson?.(chapterId, true);
-            else tryFillStoneBlank(scene, chapterId);
+            scene.startLesson?.(chapterId, true);
             return;
           }
           if (!isCleared(chapterId)) openEditor(chapterId);
@@ -41046,20 +41571,20 @@ ${item.code}
     function createGuidanceLine(scene) {
       scene.guidanceLine = scene.add.graphics().setDepth(2);
       scene.guidanceHighlight = scene.add.graphics().setDepth(8);
-      scene.guidanceIcon = scene.add.text(0, 0, "E", {
+      scene.guidanceIcon = scene.add.text(0, 0, "◆", {
         fontFamily: "JetBrains Mono, Fira Code, monospace",
         fontSize: "13px",
         color: "#f8fafc",
-        backgroundColor: "rgba(2, 6, 23, 0.48)",
+        backgroundColor: "rgba(2, 6, 23, 0)",
         padding: { x: 5, y: 2 },
         stroke: "#020617",
         strokeThickness: 2
       }).setDepth(9).setOrigin(0.5).setAlpha(0);
-      scene.guidanceScreenArrow = scene.add.text(0, 0, "➜ 任务目标", {
+      scene.guidanceScreenArrow = scene.add.text(0, 0, "◆", {
         fontFamily: "JetBrains Mono, Fira Code, monospace",
         fontSize: "14px",
         color: "#fef3c7",
-        backgroundColor: "rgba(2, 6, 23, 0.72)",
+        backgroundColor: "rgba(2, 6, 23, 0)",
         padding: { x: 8, y: 4 },
         stroke: "#020617",
         strokeThickness: 3
@@ -41107,9 +41632,9 @@ ${item.code}
       if (!scene?.taskGuidanceSystem || !scene.player) return;
       const targetChapter = chapters.find((chapter) => !isLearned(chapter.id)) || chapters.find((chapter) => isLearned(chapter.id) && !isCleared(chapter.id));
       const fallbackTarget = targetChapter ? createGuidanceTargetData(
-        { id: targetChapter.id, type: TASK_TYPES.puzzle, title: targetChapter.stoneLabel },
+        { id: targetChapter.id, type: TASK_TYPES.puzzle, title: targetChapter.podLabel },
         { status: TASK_STATUS.inProgress, progress: 0 },
-        scene.chapterObjects[targetChapter.id]?.stone,
+        scene.chapterObjects[targetChapter.id]?.pod || scene.chapterObjects[targetChapter.id]?.stone,
         "puzzle"
       ) : null;
       syncQuestInteractableTargets(scene);
@@ -41153,6 +41678,7 @@ ${item.code}
         const dots = createGuidancePathDots(scene.player, targetData.target, distance);
         const baseAlpha = getGuidanceDistanceAlpha(scene, distance) * settings.alphaScale;
         scene.guidanceLine.clear();
+        createFlowingGoldenGuideLine(scene, targetData.target);
         drawGuidanceConnections(scene.guidanceLine, dots, color, baseAlpha);
         dots.forEach((dot, index) => drawGuidanceDot(scene, dot, index, color, baseAlpha, settings, lostBoost));
       }
@@ -41234,7 +41760,7 @@ ${item.code}
       if (onScreen) {
         const alpha = Math.max(0.42, Math.min(1, 1 - distance / 900 + pulse * 0.18));
         scene.guidanceIcon
-          ?.setText?.(`▼ ${label}`)
+          ?.setText?.("◆")
           ?.setPosition?.(targetData.target.x, targetData.target.y - 58 - pulse * 5)
           ?.setAlpha?.(alpha)
           ?.setAngle?.(0);
@@ -41248,7 +41774,7 @@ ${item.code}
         const arrowX = Math.max(margin, Math.min(width - margin, centerX + Math.cos(angle) * (width / 2 - margin)));
         const arrowY = Math.max(margin, Math.min(height - margin, centerY + Math.sin(angle) * (height / 2 - margin)));
         scene.guidanceScreenArrow
-          ?.setText?.(`➜ ${label}`)
+          ?.setText?.("◆")
           ?.setPosition?.(arrowX, arrowY)
           ?.setAngle?.(angle * 180 / Math.PI)
           ?.setAlpha?.(0.78 + pulse * 0.18);
@@ -41300,35 +41826,33 @@ ${item.code}
     function drawVectorFlatWorld(scene, g, worldWidth, worldHeight) {
       g.fillStyle(0x070a12, 1);
       g.fillRect(0, 0, worldWidth, worldHeight);
-      g.fillStyle(0x101827, 1);
+      g.fillStyle(0x0b1020, 1);
       g.fillRect(0, 0, worldWidth, worldHeight);
       g.lineStyle(1, 0x38bdf8, 0.12);
       for (let x = 0; x < worldWidth; x += 48) g.lineBetween(x, 0, x, worldHeight);
       for (let y = 0; y < worldHeight; y += 48) g.lineBetween(0, y, worldWidth, y);
 
-      const paths = [
-        [92, 318, 1020, 76],
-        [720, 438, 1520, 76],
-        [860, 690, 1320, 76],
-        [700, 880, 1580, 76],
-        [386, 220, 94, 210],
-        [1090, 300, 90, 190],
-        [2110, 500, 90, 250],
-        [880, 735, 90, 190]
-      ];
-      paths.forEach(([x, y, w, h]) => {
-        g.fillStyle(0x0f172a, 0.96);
-        g.fillRoundedRect(x, y, w, h, 12);
-        g.lineStyle(2, 0x38bdf8, 0.18);
-        g.strokeRoundedRect(x, y, w, h, 12);
-        g.lineStyle(1, 0xa855f7, 0.18);
-        for (let px = x + 18; px < x + w; px += 64) g.lineBetween(px, y + 8, px, y + h - 8);
+      const corridorY = MAIN_CORRIDOR_MAP_LAYOUT.laneY;
+      const corridorX = 92;
+      const corridorW = worldWidth - 184;
+      const corridorH = MAIN_CORRIDOR_MAP_LAYOUT.corridorHalfWidth * 2;
+      g.fillStyle(0x101827, 0.98);
+      g.fillRoundedRect(corridorX, corridorY - corridorH / 2, corridorW, corridorH, 18);
+      g.lineStyle(3, 0x38bdf8, 0.22);
+      g.strokeRoundedRect(corridorX, corridorY - corridorH / 2, corridorW, corridorH, 18);
+      g.lineStyle(1, 0xfacc15, 0.18);
+      for (let x = corridorX + 36; x < corridorX + corridorW; x += 86) {
+        g.lineBetween(x, corridorY - corridorH / 2 + 12, x + 36, corridorY + corridorH / 2 - 12);
+      }
+      g.lineStyle(4, 0x334155, 0.46);
+      g.lineBetween(corridorX + 20, corridorY - corridorH / 2 + 18, corridorX + corridorW - 20, corridorY - corridorH / 2 + 18);
+      g.lineBetween(corridorX + 20, corridorY + corridorH / 2 - 18, corridorX + corridorW - 20, corridorY + corridorH / 2 - 18);
+      chapters.forEach((chapter, index) => {
+        const x = MAIN_CORRIDOR_MAP_LAYOUT.startX + index * MAIN_CORRIDOR_MAP_LAYOUT.spacing;
+        const cue = getPureVisualGuideCue(getLearningPodProgressState(chapter.id));
+        g.fillStyle(cue.hex, cue.state === "locked" ? 0.05 : 0.1);
+        g.fillCircle(x, corridorY, MAIN_CORRIDOR_MAP_LAYOUT.podRadius + 18);
       });
-
-      drawVectorHouse(g, 120, 166, 0x0f172a, 0x38bdf8);
-      drawVectorHouse(g, 570, 222, 0x111827, 0xa855f7);
-      drawVectorHouse(g, 1510, 316, 0x0b1120, 0x67e8f9);
-      drawVectorHouse(g, 2050, 812, 0x111827, 0x86efac);
 
       g.fillStyle(0x09111f, 1);
       g.fillRect(0, 1060, worldWidth, 140);
@@ -41840,6 +42364,23 @@ ${item.code}
       g.fillCircle(24, 45, 3);
     }
 
+    function drawLearningPod(g) {
+      g.fillStyle(0x000000, 0.22);
+      g.fillEllipse(37, 56, 58, 9);
+      g.fillStyle(0x07111f, 0.98);
+      g.fillRoundedRect(7, 7, 60, 46, 14);
+      g.lineStyle(3, 0x38bdf8, 0.78);
+      g.strokeRoundedRect(7, 7, 60, 46, 14);
+      g.fillStyle(0x0ea5e9, 0.16);
+      g.fillRoundedRect(15, 13, 44, 28, 10);
+      g.lineStyle(2, 0xfacc15, 0.7);
+      g.lineBetween(19, 47, 55, 47);
+      g.fillStyle(0x22c55e, 0.86);
+      g.fillCircle(58, 19, 3.5);
+      g.fillStyle(0xfacc15, 0.8);
+      g.fillCircle(17, 43, 2.8);
+    }
+
     function drawVectorGate(g) {
       g.fillStyle(0x020617, 0.92);
       g.fillRoundedRect(7, 8, 58, 82, 12);
@@ -42297,10 +42838,14 @@ ${item.code}
         const prev = points[index];
         const done = index <= gameState.progress.cleared.length;
         const active = index === current;
-        const color = done ? 0xfacc15 : active ? 0x38bdf8 : 0x475569;
+        const color = done ? 0xfacc15 : active ? 0x38bdf8 : 0x334155;
         const alpha = done ? 0.76 : active ? 0.7 : 0.24;
         graphics.lineStyle(active ? 8 : 6, color, alpha);
         graphics.lineBetween(prev.x, prev.y, point.x, point.y);
+        const midX = (prev.x + point.x) / 2;
+        const midY = (prev.y + point.y) / 2;
+        graphics.fillStyle(color, done || active ? 0.82 : 0.38);
+        graphics.fillTriangle(midX + 16, midY, midX - 8, midY - 10, midX - 8, midY + 10);
       });
     }
 
@@ -42837,10 +43382,9 @@ ${item.code}
 
         this.gateGroup = this.physics.add.staticGroup();
         this.createChapterNodes(obstacles);
-        createRegionPortals(this);
         createDataBusFlowMap(this);
         createStageVisibilityVeil(this);
-        createCodeKeywordFragments(this);
+        createMainCorridorLedBands(this);
         safeRunEffect("volumetricLight", () => createVolumetricLightBeams(this), () => []);
         safeRunEffect("ambientParticles", () => {
           createGroundEnergyPulse(this);
@@ -42867,21 +43411,7 @@ ${item.code}
         this.createLighting();
         createTreeSwayTweens(this, this.trees);
         createBreathingVegetation(this, this.trees);
-        createNpcPatrol(this);
-        createCoreNpcs(this);
-        createRunawayNpc(this);
-        createPlayerRoomEntrance(this);
-        createOldComputerTerminal(this);
-        createMossyDeveloperStone(this);
-        createHiddenLayerEntrances(this);
-        createDeveloperNpc(this);
         createAiCompanion(this);
-        this.petComputer = createPetComputer(this);
-        createRestBench(this);
-        createWarmthStation(this);
-        createDecorativeLever(this);
-        createCBattleEncounter(this);
-        codeEnemyEncounterManager.rebuildFromProgress(this);
         applyPlayerGrowthVisuals(this);
         createAmbientCodeMotes(this);
         createFloatingDustMotes(this);
@@ -42897,7 +43427,7 @@ ${item.code}
           createWindowGlow(this, 2114, 872)
         ];
 
-        this.add.text(92, 118, "C 语言启航村", {
+        this.add.text(92, 118, "Main Corridor", {
           fontFamily: "Press Start 2P, Fira Code, monospace",
           fontSize: "16px",
           color: "#f8fafc",
@@ -42927,13 +43457,15 @@ ${item.code}
 
         chapters.forEach((chapter, index) => {
           const position = positions[chapter.id];
-          const stone = this.physics.add.staticSprite(position.stone[0], position.stone[1], "stone");
-          stone.setDepth(5).setScale(1.34);
-          stone.body.setSize(64, 72).setOffset(-8, -8);
-          obstacles.add(stone);
-          stone.refreshBody();
-          const scanline = createStoneScanline(this, stone);
-          const codePuzzle = createStoneCodePuzzle(this, chapter, position.stone[0], position.stone[1]);
+          const pod = this.physics.add.staticSprite(position.pod[0], position.pod[1], "learning-pod");
+          pod.setDepth(5).setScale(1.16);
+          pod.body.setSize(72, 58).setOffset(-12, -2);
+          obstacles.add(pod);
+          pod.refreshBody();
+          pod.learningPod = true;
+          const stone = pod;
+          const scanline = createLearningPodScanline(this, pod);
+          const codePuzzle = createLearningPodCodeInterface(this, chapter, position.pod[0], position.pod[1]);
 
           const gate = this.gateGroup.create(position.gate[0], position.gate[1], "gate");
           gate.setDepth(5);
@@ -42943,31 +43475,31 @@ ${item.code}
           gate.setActive(true).setVisible(true).setAlpha(0.34).setTint(0x64748b);
 
           const chapterNumberText = createChapterNumberMarker(this, chapter, position, index);
-          const stoneLabelText = this.add.text(position.stone[0] - 42, position.stone[1] - 78, chapter.stoneLabel, {
+          const stoneLabelText = this.add.text(position.pod[0], position.pod[1] - 82, chapter.podLabel, {
             fontFamily: "Fira Code, monospace",
-            fontSize: "14px",
+            fontSize: "12px",
             color: "#fff7ed",
             stroke: "#111827",
             strokeThickness: 3
-          }).setDepth(7);
+          }).setDepth(7).setOrigin(0.5);
           stoneLabelText.setShadow(0, 0, "#facc15", 8);
 
-          const gateLabelText = this.add.text(position.gate[0] - 38, position.gate[1] - 78, chapter.gateLabel, {
+          const gateLabelText = this.add.text(position.gate[0], position.gate[1] - 78, chapter.gateLabel, {
             fontFamily: "Fira Code, monospace",
             fontSize: "13px",
             color: "#fecaca",
             stroke: "#111827",
             strokeThickness: 3
-          }).setDepth(3);
-          const gateHintText = this.add.text(position.gate[0] - 62, position.gate[1] + 58, "先修复石碑", {
+          }).setDepth(3).setOrigin(0.5);
+          const gateHintText = this.add.text(position.gate[0], position.gate[1] + 58, "◆", {
             fontFamily: "Fira Code, monospace",
-            fontSize: "11px",
+            fontSize: "16px",
             color: "#bfdbfe",
             stroke: "#020617",
             strokeThickness: 3
-          }).setDepth(6).setAlpha(0.78);
+          }).setDepth(6).setOrigin(0.5).setAlpha(0.78);
 
-          this.chapterObjects[chapter.id] = { stone, gate, scanline, stoneLabelText, gateLabelText, gateHintText, codePuzzle, chapterNumberText };
+          this.chapterObjects[chapter.id] = { pod, stone, gate, scanline, stoneLabelText, gateLabelText, gateHintText, codePuzzle, chapterNumberText };
         });
       }
 
@@ -42985,6 +43517,7 @@ ${item.code}
           updateWorldEvolutionLayer(this);
           updateSafeSceneFx(this, null);
           updateInteractionHalo(this, null);
+          updateCorridorLedInteractionLight(this, null);
           updateSpawnStoneLifeRecovery(this);
           updatePlayerGrowthAura(this);
           codeEnemyEncounterManager.update(this);
@@ -43048,6 +43581,7 @@ ${item.code}
         const interaction = this.getInteraction();
         updateThinkingCodeRainHint(this, interaction);
         updateInteractiveFocus(this, interaction);
+        updateCorridorLedInteractionLight(this, interaction);
         updateInteractionHalo(this, interaction);
         if ((this.frameTick || 0) % 2 === 0) {
           updateGuidanceLine(this);
@@ -43059,7 +43593,7 @@ ${item.code}
         updateAudioMix(interaction);
         if ((this.frameTick || 0) % 4 === 0) safeRunEffect("audioDirector", () => adaptiveSymphonicAudioDirector?.update(this, interaction));
 
-        showPrompt(getContextualInteractionHint(interaction));
+        showPrompt("");
 
         if (Phaser.Input.Keyboard.JustDown(this.keyE)) {
           this.performCurrentInteraction("keyboard", interaction);
@@ -43117,9 +43651,6 @@ ${item.code}
         ], "happy", 0x166534, this.mossyDeveloperStone);
         if (interaction?.type === "locked") {
           triggerErrorGlitch();
-          showReward(!isLearned(interaction.chapter.id)
-            ? `先完成 ${interaction.chapter.stoneLabel}，编译之门才会亮起。`
-            : `需要先通过前置编译节点。`);
           showCompilerSpark(window.innerWidth * 0.5, window.innerHeight * 0.5);
         }
         if (interaction?.type === "lesson") {
@@ -43200,7 +43731,7 @@ ${item.code}
         const busStart = DATA_BUS_MAP_LAYOUT.entrance.x - 36;
         const busEnd = DATA_BUS_MAP_LAYOUT.startX + (chapters.length - 1) * DATA_BUS_MAP_LAYOUT.spacing + DATA_BUS_MAP_LAYOUT.gateOffsetX + 72;
         const onRoad = Math.abs(y - DATA_BUS_MAP_LAYOUT.y) <= 84 && x >= busStart && x <= busEnd;
-        return onRoad ? "stone" : "grass";
+        return onRoad ? "metal" : "grass";
       }
 
       bumpPlayer() {
@@ -43288,17 +43819,9 @@ ${item.code}
       }
 
       getInteraction() {
-        if (this.playerRoomEntrance?.door && Phaser.Math.Distance.BetweenPoints(this.player, this.playerRoomEntrance.door) < 78) return { type: "roomEntrance" };
-        if (this.oldComputerTerminal?.terminal && Phaser.Math.Distance.BetweenPoints(this.player, this.oldComputerTerminal.terminal) < 72) return { type: "oldComputer" };
-        if (this.mossyDeveloperStone && Phaser.Math.Distance.BetweenPoints(this.player, this.mossyDeveloperStone) < 74) return { type: "mossyStone" };
-        if (this.developerRoomDoor && Phaser.Math.Distance.BetweenPoints(this.player, this.developerRoomDoor) < 74) return { type: "developerRoom" };
-        if (this.mazeLayerGlitch && Phaser.Math.Distance.BetweenPoints(this.player, this.mazeLayerGlitch) < 74) return { type: "mazeLayer" };
-        if (this.terminalGuessStone && Phaser.Math.Distance.BetweenPoints(this.player, this.terminalGuessStone) < 74) return { type: "terminalGuess" };
-        const regionPortal = getNearestRegionPortalInteraction(this);
-        if (regionPortal) return { type: "regionPortal", portal: regionPortal };
         for (const chapter of chapters) {
           const objects = this.chapterObjects[chapter.id];
-          const nearStone = Phaser.Math.Distance.BetweenPoints(this.player, objects.stone) < 82;
+          const nearStone = Phaser.Math.Distance.BetweenPoints(this.player, objects.pod || objects.stone) < 88;
           const nearGate = objects.gate.active && Phaser.Math.Distance.BetweenPoints(this.player, objects.gate) < 92;
           const unlocked = this.isChapterUnlocked(chapter.id);
 
@@ -43314,10 +43837,6 @@ ${item.code}
             return unlocked ? { type: "challenge", chapter } : { type: "locked", chapter };
           }
         }
-        const codeEnemy = codeEnemyEncounterManager.getNearestInteraction(this);
-        if (codeEnemy) return { type: "codeEnemy", enemy: codeEnemy };
-        const npc = getNearestNpcInteraction(this);
-        if (npc) return { type: "npc", npc };
         return null;
       }
 
@@ -43330,21 +43849,37 @@ ${item.code}
 
       startLesson(chapterId, fromCodeFill = false) {
         const chapter = chapterById[chapterId];
-        if (!fromCodeFill && !this.chapterObjects[chapterId]?.codePuzzle?.completed) {
-          showPrompt("先靠近正确的 C 语言知识碎片，再点击石碑空缺");
-          invalidSoft();
+        if (chapterId === FIRST_MAINLINE_CHAPTER_ID) {
+          this.playCompilerCabinLesson(chapterId);
           return;
         }
         this.playerFrozen = true;
         showPrompt("");
-        const stone = this.chapterObjects[chapterId].stone;
-        spawnCodeParticles(this, stone.x, stone.y - 24, ["#include", "main", "printf", "return"]);
+        const pod = this.chapterObjects[chapterId].pod || this.chapterObjects[chapterId].stone;
+        spawnCodeParticles(this, pod.x, pod.y - 24, ["#include", "main", "printf", "return"]);
         showDialog(chapter.lessonLines, () => {
           markLearned(chapter.id);
           this.markStoneLearned(chapter.id, true);
           this.revealGate(chapter.id, true);
           showMemoryReadEffect(this.chapterObjects[chapterId].codePuzzle?.completedText || "int main(void) { return 0; }");
           showReward(`获得知识碎片：${chapter.shard}`);
+        });
+      }
+
+      playCompilerCabinLesson(chapterId) {
+        const chapter = chapterById[chapterId];
+        const objects = this.chapterObjects[chapterId];
+        const pod = objects?.pod || objects?.stone;
+        this.playerFrozen = true;
+        showPrompt("");
+        spawnCodeParticles(this, pod.x, pod.y - 24, ["source.c", "compiler", "object", "exe"]);
+        playCompilerCabinCinematic(chapter).then(() => {
+          markLearned(chapter.id);
+          this.markStoneLearned(chapter.id, true);
+          this.revealGate(chapter.id, true);
+          openEditor(chapter.id);
+          trackedSetTimeout(() => focusButtonWithVisualPulse(dom.runButton), 260, "compiler-cabin-run-button-focus");
+          this.playerFrozen = false;
         });
       }
 
@@ -43385,7 +43920,7 @@ ${item.code}
         if (!gate || isCleared(chapterId)) return;
         gate.enableBody(false, gate.x, gate.y, true, true);
         gate.clearTint?.();
-        objects.gateHintText?.setText?.(isMobileTouchViewport() ? "触摸进入编译" : "按 E 进入编译");
+        objects.gateHintText?.setText?.("◆");
         objects.gateHintText?.setColor?.("#86efac");
         objects.gateHintText?.setAlpha?.(1);
         this.startGatePulse(gate);
@@ -43488,6 +44023,10 @@ ${item.code}
 
         this.makeTexture("stone", 48, 56, (g) => {
           drawVectorStone(g);
+        });
+
+        this.makeTexture("learning-pod", 74, 62, (g) => {
+          drawLearningPod(g);
         });
 
         this.makeTexture("gate", 72, 96, (g) => {
@@ -43738,7 +44277,7 @@ ${item.code}
       dom.absoluteGuideHelp?.setAttribute("aria-hidden", "true");
       const stage = gameState.progress.absoluteGuideStage || "welcome";
       const text = stage === "welcome"
-        ? "去发光石碑旁，手机触摸或键盘按 E。"
+        ? "跟随地面光流进入下一座学习舱。"
         : stage === "editor"
           ? "先看 // 注释，再运行。"
           : stage === "run"
@@ -44030,10 +44569,7 @@ ${item.code}
     dom.noviceGuideCodeInput?.addEventListener("focus", () => {
       trackedSetTimeout(() => dom.noviceGuideCodeInput?.scrollIntoView?.({ block: "center", behavior: "smooth" }), 120, "novice-guide-mobile-focus");
     });
-    if ("speechSynthesis" in globalThis) {
-      globalThis.speechSynthesis.addEventListener?.("voiceschanged", refreshPreferredSpeechVoiceCache);
-      refreshPreferredSpeechVoiceCache();
-    }
+    // Browser speech synthesis stays disabled; narration is generated by configured open-source TTS engines.
     dom.worldAdvanceButton?.setAttribute?.("data-disabled-reason", "world-evolves-from-fragments-and-compiles");
     dom.courseLessonList?.addEventListener("click", (event) => {
       const target = event.target.closest?.("[data-c-lesson]");

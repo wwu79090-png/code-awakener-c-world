@@ -137,6 +137,15 @@ globalThis.__gameApi = {
   repairLegacyBeginnerQuestInventory: typeof repairLegacyBeginnerQuestInventory === "function" ? repairLegacyBeginnerQuestInventory : undefined,
   C_VISUAL_ENTITY_MAP: typeof C_VISUAL_ENTITY_MAP !== "undefined" ? C_VISUAL_ENTITY_MAP : undefined,
   DEVELOP_FAN_C_LANGUAGE_PATH: typeof DEVELOP_FAN_C_LANGUAGE_PATH !== "undefined" ? DEVELOP_FAN_C_LANGUAGE_PATH : undefined,
+  MAIN_CORRIDOR_MAP_LAYOUT: typeof MAIN_CORRIDOR_MAP_LAYOUT !== "undefined" ? MAIN_CORRIDOR_MAP_LAYOUT : undefined,
+  CODE_AWAKENER_TTS_ENGINES: typeof CODE_AWAKENER_TTS_ENGINES !== "undefined" ? CODE_AWAKENER_TTS_ENGINES : undefined,
+  FIRST_WORLD_TTS_ENGINE_EVALUATION: typeof FIRST_WORLD_TTS_ENGINE_EVALUATION !== "undefined" ? FIRST_WORLD_TTS_ENGINE_EVALUATION : undefined,
+  createMainCorridorPositions: typeof createMainCorridorPositions === "function" ? createMainCorridorPositions : undefined,
+  buildCompilerCabinCinematicTimeline: typeof buildCompilerCabinCinematicTimeline === "function" ? buildCompilerCabinCinematicTimeline : undefined,
+  buildPrintfCharacterDeconstructionTimeline: typeof buildPrintfCharacterDeconstructionTimeline === "function" ? buildPrintfCharacterDeconstructionTimeline : undefined,
+  createOpenSourceVoicePipeline: typeof createOpenSourceVoicePipeline === "function" ? createOpenSourceVoicePipeline : undefined,
+  getLearningPodProgressState: typeof getLearningPodProgressState === "function" ? getLearningPodProgressState : undefined,
+  getPureVisualGuideCue: typeof getPureVisualGuideCue === "function" ? getPureVisualGuideCue : undefined,
   flattenCTutorialSnippets: typeof flattenCTutorialSnippets === "function" ? flattenCTutorialSnippets : undefined,
   buildExecutionPlanForSnippet: typeof buildExecutionPlanForSnippet === "function" ? buildExecutionPlanForSnippet : undefined,
   getTutorialDifficultyTiming: typeof getTutorialDifficultyTiming === "function" ? getTutorialDifficultyTiming : undefined,
@@ -200,6 +209,10 @@ assert(Array.isArray(api.DEVELOP_FAN_C_LANGUAGE_PATH) && api.DEVELOP_FAN_C_LANGU
 assert(api.DEVELOP_FAN_C_LANGUAGE_PATH[0].title === "C 语言概述", "develop.fan path should start with C overview");
 assert(api.DEVELOP_FAN_C_LANGUAGE_PATH[14].title === "高级主题和最佳实践", "develop.fan path should end with advanced best practices");
 assert(api.chapterById.overview.coursePathIndex === 1 && api.chapterById.hello.coursePathIndex === 2 && api.chapterById.syntax.coursePathIndex === 3, "first playable chapters should follow develop.fan ordering");
+assert(/README\.md": `任务：C 语言概述[\s\S]*0 基础照着做[\s\S]*先不用理解所有符号[\s\S]*只改 main\.c[\s\S]*不要改 README\.md/m.test(html), "first task README should include zero-basis step-by-step guidance and file-scope warnings");
+assert(/taskGoal:\s*"0 基础目标：先让终端精确显示 <code>C language<\/code>/m.test(html), "first task goal should start with a concrete zero-basis output target");
+assert(/taskTarget:\s*"照着 4 步检查[\s\S]*第 1 行[\s\S]*第 3 行/m.test(html), "first task target should explain line-by-line checks instead of only listing a compact structure");
+assert(/taskHint:\s*"导师提示：如果你完全没学过 C/m.test(html), "first task mentor hint should explain the task in beginner language");
 assert(api.chapterById["best-practices"]?.coursePathIndex === 15, "final chapter should map to develop.fan section 15");
 
 assert(/id="memoryCoreCinematicOverlay"/m.test(html) && /id="memoryCoreCinematicCanvas"/m.test(html), "post-creation memory core cinematic overlay should exist");
@@ -219,7 +232,7 @@ assert(/async function playMemoryCoreCinematicBridge/m.test(html), "creation flo
 assert(/await openPostGenesisSetupOverlay\(character\);[\s\S]*await playMemoryCoreCinematicBridge\(character\);[\s\S]*const loaded = await LoadNextSceneWithTimeout/m.test(html), "character creation should play the memory core cinematic before loading the world");
 assert(/async function ensureMemoryCoreCinematicBeforeWorldEntry/m.test(html), "legacy saves should pass through a memory core cinematic gate before entering the world");
 assert(/enterGameWorldInFlight/m.test(html) && /async enterGameWorld\(\)[\s\S]*await ensureMemoryCoreCinematicBeforeWorldEntry\(\)/m.test(html), "menu start and continue should not skip the memory core cinematic for old saves");
-assert(/GAME_VERSION\s*=\s*"v1\.1\.2"/m.test(html) && /编译失败诊断改为精确输出对比/m.test(html), "startup announcement should be updated for the compile-feedback hotfix release");
+assert(/GAME_VERSION\s*=\s*"v1\.2\.0"/m.test(html) && /Main Corridor 单一走廊/m.test(html), "startup announcement should be updated for the Main Corridor release");
 
 assert(api.compressSavePayload, "save compressor should be exported for tests");
 assert(api.decompressSavePayload, "save decompressor should be exported for tests");
@@ -669,16 +682,16 @@ assert(/function compileSuccess\(\)/m.test(html), "audio manager should expose c
 assert(/filter:\s*contrast\(1\.16\)\s*saturate\(0\.92\)\s*hue-rotate\(215deg\)/m.test(html), "game canvas should use cold cyber-dark color grading");
 assert(/id="memoryReadOverlay"/m.test(html), "knowledge shard pickup should include a memory read overlay");
 assert(/function showMemoryReadEffect/m.test(html), "knowledge shard pickup should show code being read into memory");
-assert(/function createStoneCodePuzzle/m.test(html), "stone interaction should show a keyword-completion code puzzle");
+assert(/function createLearningPodCodeInterface/m.test(html), "learning pod interaction should show a read-only code interface instead of a stone fill puzzle");
 assert(/function completeStoneCodePuzzle/m.test(html), "stone code puzzle should complete before unlocking the gate");
 assert(/function repairFragmentProgressState/m.test(html), "fragment progress should repair duplicated or legacy save data");
 assert(/function getCourseFragmentProgressText/m.test(html), "fragment UI should use course fragment progress instead of raw inventory length");
 assert(/const alreadyCollected = gameState\.progress\.collectedFragmentKeys\.includes\(fragmentKey\)/m.test(html), "fragment collection should dedupe by unique fragment key, not keyword text");
 assert(/if \(!gameState\.codeInventory\.includes\(fragment\.keyword\)\) gameState\.codeInventory\.push\(fragment\.keyword\)/m.test(html), "fragment inventory should keep keyword strings unique");
 assert(/dom\.infoFragmentText\.textContent = `任务碎片: \$\{getCourseFragmentProgressText\(\)\}`/m.test(html), "side menu task fragment count should never exceed the course total");
-assert(/if \(interaction\?\.type === "lesson"\)[\s\S]*else tryFillStoneBlank\(this, interaction\.chapter\.id\)/m.test(html), "pressing E near a stone should try to fill the code blank directly");
+assert(/if \(interaction\?\.type === "lesson"\)[\s\S]*this\.startLesson\(interaction\.chapter\.id,\s*true\)/m.test(html), "activating a learning pod should start the lesson directly");
 assert(/gate\.setActive\(true\)\.setVisible\(true\)\.setAlpha\(0\.34\)\.setTint\(0x64748b\)/m.test(html), "compile gates should remain visible as locked silhouettes before activation");
-assert(/const gateHintText = this\.add\.text[\s\S]*先修复石碑/m.test(html), "locked compile gates should show an explicit repair-stone hint");
+assert(/const gateHintText = this\.add\.text[\s\S]*"◆"/m.test(html), "locked compile gates should show a compact visual lock marker instead of repair-stone text");
 assert(/if \(nearGate && !isLearned\(chapter\.id\)\)[\s\S]*return \{ type: "locked", chapter \}/m.test(html), "standing at an inactive compile gate should produce locked feedback");
 assert(/function createNpcPatrol/m.test(html), "scene should include a small NPC patrol/life animation");
 assert(/function createAmbientCodeMotes/m.test(html), "world should include floating ambient code particles");
@@ -719,6 +732,48 @@ assert(/function createChapterNumberMarker/m.test(html), "each stone should have
 assert(/function createStageVisibilityVeil/m.test(html), "locked future stages should be hidden by staged fog/occlusion");
 assert(/id="worldNodeProgressHud"/m.test(html), "HUD should include a compact node-based world progress strip");
 assert(/世界一：C语言基础/.test(html) && /出口/.test(html), "map should label the entrance and final compile exit");
+assert(api.MAIN_CORRIDOR_MAP_LAYOUT?.mode === "single-corridor", "first world should declare a single no-branch Main Corridor layout");
+assert(api.MAIN_CORRIDOR_MAP_LAYOUT?.branching === false && api.MAIN_CORRIDOR_MAP_LAYOUT?.freeSearch === false, "main corridor should explicitly disable branching and free searching");
+assert(/function createMainCorridorPositions/m.test(html), "first world should position learning pods with a dedicated Main Corridor layout function");
+assert(!/createRegionPortals\(this\)/m.test(html), "main scene should not create branch portals in the first-world corridor");
+assert(!/createCoreNpcs\(this\)/m.test(html), "main scene should not spawn free-search NPC objectives in the first-world corridor");
+{
+  const positions = api.createMainCorridorPositions(api.chapters.slice(0, 5));
+  const ordered = api.chapters.slice(0, 5).map((chapter) => positions[chapter.id]);
+  assert(ordered.every((position) => position?.pod && position?.gate), "each ordered corridor lesson should have a learning pod and compiler gate position");
+  assert(ordered.every((position, index) => index === 0 || position.pod[0] > ordered[index - 1].pod[0]), "learning pods should be placed in strict left-to-right order");
+  assert(new Set(ordered.map((position) => position.pod[1])).size === 1, "learning pods should share one corridor lane with no vertical branches");
+}
+assert(api.chapters[0].podLabel === "认识你的编译器" && api.chapters[1].podLabel === "第一行代码：Hello World", "first two learning pods should match the required beginner sequence");
+assert(api.getLearningPodProgressState("overview") === "challenge" || api.getLearningPodProgressState("overview") === "available", "current learning pod should resolve to a visual challenge/available state");
+assert(["completed", "challenge", "locked"].every((state) => api.getPureVisualGuideCue(state)?.arrowColor), "visual guide cues should define arrow colors for completed, challenge, and locked states");
+assert(!/按 E 进入编译|先修复石碑|去发光石碑旁|查看（先完成/m.test(html), "first-world guidance should not expose static text prompts or stone repair copy");
+assert(/function createFlowingGoldenGuideLine/m.test(html), "movement guidance should use flowing golden light lines");
+assert(/function focusButtonWithVisualPulse/m.test(html), "button guidance should move visual focus to the button center and pulse");
+assert(/function updateCorridorLedInteractionLight/m.test(html), "entering an interactable zone should update corridor LED lighting");
+{
+  const cinematic = api.buildCompilerCabinCinematicTimeline();
+  assert(cinematic.durationMs === 90000, "compiler cabin cinematic should be exactly 1 minute 30 seconds");
+  assert(["split", "explain", "highlight", "demo"].every((phase) => cinematic.phases.some((item) => item.type === phase)), "compiler cabin cinematic should include split, explain, highlight, and demo phases");
+  assert(cinematic.script.some((line) => /发快递|快递/.test(line.text)) && cinematic.script.some((line) => /编译器/.test(line.text)), "compiler cabin script should cover the courier metaphor and compiler demonstration");
+}
+{
+  const deconstruction = api.buildPrintfCharacterDeconstructionTimeline('printf("Hello World!");');
+  assert(deconstruction.code === 'printf("Hello World!");', "printf deconstruction should preserve the exact source line");
+  assert(deconstruction.steps.some((step) => step.kind === "overall"), "code deconstruction should start with an overall meaning step");
+  assert(deconstruction.steps.some((step) => step.kind === "function" && step.token === "printf" && step.effect === "circle-zoom"), "printf should be circled and enlarged as the core function");
+  assert(deconstruction.steps.some((step) => step.kind === "parameters" && step.effect === "quote-flash"), "parameters and quotes should flash");
+  assert(deconstruction.steps.some((step) => step.kind === "terminator" && step.token === ";" && step.sfx === "ding"), "semicolon should be emphasized with a ding sound");
+}
+assert(api.FIRST_WORLD_TTS_ENGINE_EVALUATION?.length >= 10, "TTS evaluation should cover every candidate repository from the task");
+assert(api.CODE_AWAKENER_TTS_ENGINES?.system?.engine === "ChatTTS" && api.CODE_AWAKENER_TTS_ENGINES?.mentor?.engine === "EmotiVoice", "first world should select ChatTTS for system narration and EmotiVoice for mentor narration");
+assert(api.CODE_AWAKENER_TTS_ENGINES?.browserSpeechSynthesisAllowed === false, "browser built-in TTS should be forbidden for the first-world voice pipeline");
+{
+  const pipeline = api.createOpenSourceVoicePipeline("mentor", "理解 printf 时，先看函数，再看括号里的参数。");
+  assert(pipeline.engine === "EmotiVoice" && pipeline.cloneFile.endsWith(".wav"), "mentor voice pipeline should generate a cloned voice file through EmotiVoice");
+  assert(pipeline.steps.includes("import-engine") && pipeline.steps.includes("generate-clone-file") && pipeline.steps.includes("game-demand-playback"), "voice pipeline should document import, clone generation, and game playback steps");
+  assert(/happy|excited|calm|serious/.test(JSON.stringify(pipeline.emotionPrompt)), "voice pipeline should include explicit emotion prompts");
+}
 assert(/NEON_CYBER_BOOK_STYLE/m.test(html), "visual direction should switch to neon cyber book style");
 assert(/function drawNeonHoodiePlayer/m.test(html), "player should be rendered as a neon outlined hoodie character");
 assert(/function drawSignatureOperatorAvatar/m.test(html), "player should have a distinctive signature avatar silhouette");
@@ -876,13 +931,10 @@ assert(/NPC_DATA\s*=\s*Object\.freeze/m.test(html), "map should define core NPC 
 assert(/mentor[\s\S]*merchant[\s\S]*lost[\s\S]*guard[\s\S]*easterEgg/m.test(html), "map should include the five required NPC roles");
 assert(/QUEST_DATA\s*=\s*Object\.freeze/m.test(html), "task system should define quest data");
 assert(/class QuestManager/m.test(html), "task system should have a QuestManager");
-assert(/collect_basic_fragments/m.test(html), "new player task should collect three basic syntax fragments");
+assert(/collect_basic_fragments/m.test(html), "new player task id should remain for legacy save compatibility");
 {
-  assert(typeof api.getStonePuzzleSpec === "function" && api.QUEST_DATA?.collect_basic_fragments, "beginner quest and stone puzzle data should be available to tests");
-  const beginnerRequiredKeywords = api.QUEST_DATA.collect_basic_fragments.requirement.keywords;
-  const firstStoneSpec = api.getStonePuzzleSpec(api.chapters[0].id);
-  const firstVisibleKeywords = [firstStoneSpec.answer, ...firstStoneSpec.decoys];
-  assert(beginnerRequiredKeywords.every((keyword) => firstVisibleKeywords.includes(keyword)), "beginner collect quest should be completable from the first visible stone fragments");
+  assert(typeof api.getStonePuzzleSpec === "function" && api.QUEST_DATA?.collect_basic_fragments, "beginner quest and legacy stone puzzle data should be available to tests");
+  assert(api.QUEST_DATA.collect_basic_fragments.requirement.clearedChapter === "overview", "beginner quest should now advance through the first learning pod instead of free fragment searching");
   assert(typeof api.repairLegacyBeginnerQuestInventory === "function", "legacy beginner fragment repair helper should exist");
   const repairedBeginnerInventory = api.repairLegacyBeginnerQuestInventory(
     ["printf", "scanf", "return"],
@@ -1470,7 +1522,7 @@ assert(/class TaskGuidanceSystem/m.test(html), "task guidance should be handled 
 assert(/MAX_GUIDANCE_DOTS\s*=\s*20/m.test(html), "task guidance should cap light dots at 20");
 assert(/guidanceScreenArrow/m.test(html), "task guidance should include a screen-edge arrow when the target is off-screen");
 assert(/function getGuidanceTargetShortLabel/m.test(html), "task guidance arrow should label the precise current target");
-assert(/`▼ \$\{label\}`/m.test(html) && /`➜ \$\{label\}`/m.test(html), "task guidance should show direct arrows for on-screen and off-screen targets");
+assert(/scene\.guidanceIcon[\s\S]*\?\.setText\?\.\("◆"\)[\s\S]*scene\.guidanceScreenArrow[\s\S]*\?\.setText\?\.\("◆"\)/m.test(html), "task guidance should use compact visual markers for on-screen and off-screen targets");
 assert(/function updateGuidanceTargetHighlight/m.test(html), "nearby task targets should receive a highlight pulse");
 assert(/function showQuestProgressToast/m.test(html), "quest progress should use a non-blocking toast");
 assert(/function updateLostDirectionAssist/m.test(html), "guidance should escalate when the player is lost");
@@ -1496,17 +1548,17 @@ assert(/启动公告只提示当前版本|历史版本改到主菜单查看/.tes
 assert(/STARTUP_ANNOUNCEMENT_AUTO_HIDE_MS\s*=\s*14000/m.test(html), "announcement should remain visible long enough to read the current update");
 assert(/function showStartupAnnouncement/m.test(html), "announcement should be controlled by a startup function");
 assert(/id="announcementCloseButton"/m.test(html), "announcement should include a minimal close control");
-assert(/World Build v1\.1\.2/m.test(html) || /GAME_VERSION\s*=\s*"v1\.1\.2"/m.test(html), "game version should increment when shipping a new update");
+assert(/World Build v1\.2\.0/m.test(html) || /GAME_VERSION\s*=\s*"v1\.2\.0"/m.test(html), "game version should increment when shipping a new update");
 assert(/UPDATE_HISTORY\s*=\s*Object\.freeze\(\[[\s\S]*v1\.0\.1[\s\S]*零基础新手指引[\s\S]*v1\.0\.0[\s\S]*手机端适配/m.test(html), "update history should keep detailed previous release notes");
 assert(/data-menu-action="history"[\s\S]*历史更新内容/.test(html) && /id="updateHistoryOverlay"/m.test(html) && /function renderUpdateHistoryList/m.test(html), "main menu should expose update history with detailed notes");
-assert(/GAME_VERSION\s*=\s*"v1\.1\.2"/m.test(html), "game version should increment for the compile-feedback hotfix release");
+assert(/GAME_VERSION\s*=\s*"v1\.2\.0"/m.test(html), "game version should increment for the Main Corridor release");
 assert(html.includes('const OFFICIAL_SITE_HREF = "./official-site.html";') && /data-menu-action="official"[\s\S]*访问官方网站/.test(html) && /action === "official"[\s\S]*openOfficialWebsite\(\)/m.test(html), "main menu should expose and handle an official website entry");
 assert(/SYSTEM_BOOT_FORCE_RELEASE_MS\s*=\s*3200/m.test(html) && /system-boot-force-release/m.test(html) && /SYSTEM_BOOT_FORCE_RELEASE_MS \+ 1400/m.test(html), "startup boot overlay should have tracked and native failsafe release timers");
 assert(/function markAppRendered\(reason = "script-started"\)[\s\S]*classList\?\.add\("app-rendered"\)[\s\S]*staticRescue/m.test(html), "normal script startup should hide the static rescue layer");
 assert(/html\.app-rendered \.static-rescue/m.test(html) && /safeMode=true&noAudio=true&v=1\.1\.2/m.test(html), "static rescue should only appear if the app script does not render");
 assert(/isStrictSecurityMode\(\)[\s\S]*removeItem\?\.\("codeAwakenerStrictSecurity"\)[\s\S]*params\.get\("strictSecurity"\) === "1"/m.test(html), "stale localStorage strict-security flags should not white-screen normal browsers");
-assert(/UPDATE_ANNOUNCEMENT_PAGES\s*=\s*Object\.freeze\(\[\s*\{\s*title:\s*"> 消息 \/ 本次更新"[\s\S]*v1\.1\.2[\s\S]*精确输出对比[\s\S]*HP 归零[\s\S]*导师解析折叠按钮[\s\S]*414374792/m.test(html), "startup announcement should show only the current v1.1.2 compile-feedback hotfix");
-assert(/id="announcementPageBody"[\s\S]*v1\.1\.2：编译失败诊断改为精确输出对比[\s\S]*导师解析折叠按钮[\s\S]*官方Q群：414374792/m.test(initialBodyMarkup), "static startup announcement placeholder should match the current v1.1.2 update before script hydration");
+assert(/UPDATE_ANNOUNCEMENT_PAGES\s*=\s*Object\.freeze\(\[\s*\{\s*title:\s*"> 消息 \/ 本次更新"[\s\S]*v1\.2\.0[\s\S]*Main Corridor[\s\S]*ChatTTS[\s\S]*EmotiVoice[\s\S]*414374792/m.test(html), "startup announcement should show only the current v1.2.0 Main Corridor release");
+assert(/id="announcementPageBody"[\s\S]*v1\.2\.0：第一世界重构为 Main Corridor[\s\S]*ChatTTS[\s\S]*EmotiVoice[\s\S]*官方Q群：414374792/m.test(initialBodyMarkup), "static startup announcement placeholder should match the current v1.2.0 update before script hydration");
 assert(!/公告只保留关闭、课程锁定、自由模式通关后显示/m.test(initialBodyMarkup), "static startup announcement placeholder should not show stale update copy");
 assert(/UPDATE_HISTORY\s*=\s*Object\.freeze\(\[[\s\S]*v1\.0\.31[\s\S]*QQ音乐外部模式与自定义场景音乐[\s\S]*播放\/暂停切换[\s\S]*IndexedDB[\s\S]*414374792/m.test(html), "update history should record the v1.0.31 custom music connector release");
 assert(/UPDATE_HISTORY\s*=\s*Object\.freeze\(\[[\s\S]*v1\.0\.30[\s\S]*Pixabay 真实音乐与音效接入[\s\S]*Gamer Menu[\s\S]*音乐切换器[\s\S]*外部音频失败回退[\s\S]*414374792/m.test(html), "update history should record the v1.0.30 Pixabay music and sound-effect release");
@@ -2033,6 +2085,8 @@ assert(/\.info-side-menu::before[\s\S]*background-size:\s*56px 56px/m.test(html)
 assert(/\.info-side-menu\s*\{[\s\S]*overflow-y:\s*auto[\s\S]*-webkit-overflow-scrolling:\s*touch/m.test(html), "mobile side menu should remain vertically scrollable after visual polish");
 assert(/--hud-scroll-track:[\s\S]*--hud-range-fill-hot:/m.test(html), "menu scrollbars and sliders should share themed HUD variables");
 assert(/:where\(\.menu-list, \.pause-panel, \.settings-panel, \.world-select-panel[\s\S]*::-webkit-scrollbar-thumb[\s\S]*linear-gradient\(180deg, var\(--hud-scroll-thumb\), var\(--hud-scroll-thumb-hot\)\)/m.test(html), "main and in-game menu scrollbars should use a cyber terminal thumb instead of browser defaults");
+assert(/:where\([\s\S]*\.task-panel[\s\S]*\.code-explain-panel[\s\S]*\.editor-notes-panel[\s\S]*#devConsoleOutput[\s\S]*\)::\-webkit-scrollbar-thumb[\s\S]*linear-gradient\(180deg, var\(--hud-scroll-thumb\), var\(--hud-scroll-thumb-hot\)\)/m.test(html), "editor task, mentor, note, and console scrollbars should use the same themed HUD thumb");
+assert(/\.task-panel,[\s\S]*\.code-explain-panel\s*\{[\s\S]*scrollbar-gutter:\s*stable both-edges[\s\S]*overscroll-behavior:\s*contain[\s\S]*overflow-wrap:\s*anywhere/m.test(html), "editor side panes should reserve scrollbar space and keep all content readable without being covered");
 assert(/input\[type="range"\]\s*\{[\s\S]*--range-progress:\s*50%[\s\S]*appearance:\s*none[\s\S]*input\[type="range"\]::-webkit-slider-thumb[\s\S]*linear-gradient\(135deg, #fef3c7, #22c55e 48%, #38bdf8\)/m.test(html), "range sliders should render as themed glowing chip controls");
 assert(/function syncThemedRangeProgress\(input\)[\s\S]*input\.style\.setProperty\("--range-progress"[\s\S]*function initializeThemedRangeControls\(root = document\)/m.test(html), "range sliders should synchronize their visible progress fill with current values");
 assert(/\.music-dynamic-island::before[\s\S]*rgba\(250, 240, 138, 0\.82\)[\s\S]*\.music-dynamic-island\.is-dragging::before[\s\S]*#fef08a/m.test(html), "music dynamic island should show a thematic drag handle for the movable in-game bar");
@@ -2196,7 +2250,7 @@ assert(api.manualEditorOperationFromBeforeInput, "mobile beforeinput operation b
   const mobileBackspace = api.manualEditorOperationFromBeforeInput({ value: "abc", start: 2, end: 2 }, "deleteContentBackward");
   assert(mobileBackspace.value === "ac" && mobileBackspace.start === 1, "mobile soft keyboard Backspace should delete through manual editor logic");
 }
-assert(/for \(const chapter of chapters\)[\s\S]*const npc = getNearestNpcInteraction\(this\)/m.test(html), "chapter stones and gates should be checked before nearby NPCs");
+assert(/getInteraction\(\)[\s\S]*for \(const chapter of chapters\)[\s\S]*return null;[\s\S]*isChapterUnlocked/m.test(html), "first-world interaction should be limited to ordered learning pods and compiler gates");
 assert(/id: "guard"[\s\S]*x: 520,\s*y: 260/m.test(html), "compile guard should be moved away from the first stone interaction radius");
 assert(fs.existsSync("scripts/mobile-browser-smoke.cjs"), "mobile Chrome/WebKit smoke script should exist");
 assert(/mobile:smoke/.test(fs.readFileSync("package.json", "utf8")), "package scripts should expose mobile:smoke");
@@ -2401,14 +2455,14 @@ assert(/function showCodeGenesisNextLineHint/m.test(html) && /function explainCo
 assert(/function refreshCodeGenesisGuideFromInput/m.test(html) && /codeGenesisInput\.placeholder/m.test(html), "code genesis helper and placeholder should refresh from the current typed code");
 assert(/commitCodeGenesisEditorOperation[\s\S]*refreshCodeGenesisGuideFromInput/m.test(html), "code genesis typing should refresh the current guide without waiting for helper buttons");
 assert(/runCodeGenesisEditor[\s\S]*const source = dom\.codeGenesisInput\.value[\s\S]*!source\.trim\(\)/m.test(html), "code genesis create button should validate player-typed code instead of auto-running the full template");
-assert(/function pickPreferredSpeechVoice/m.test(html) && /function applyPreferredSpeechVoice/m.test(html), "TTS should prefer softer local browser voices instead of forcing the default voice");
-assert(/TTSFM_CONFIG\s*=\s*Object\.freeze[\s\S]*http:\/\/localhost:8000\/v1\/audio\/speech[\s\S]*voice:\s*"nova"/m.test(html), "TTS should default to the requested ttsfm local OpenAI-compatible endpoint and female-style voice");
-assert(/function speakWithTtsfmFemale/m.test(html) && /fetch\(endpoint[\s\S]*\/v1\/audio\/speech/m.test(html), "TTS should include a ttsfm connector before browser speech fallback");
-assert(/voiceEnabled:\s*false/m.test(html), "TTS should be opt-in so a missing local ttsfm server cannot slow the tutorial");
+assert(/CODE_AWAKENER_TTS_ENGINES\s*=\s*Object\.freeze[\s\S]*ChatTTS[\s\S]*EmotiVoice/m.test(html), "TTS should select open-source ChatTTS and EmotiVoice engines");
+assert(/function createOpenSourceVoicePipeline/m.test(html) && /steps:\s*\["import-engine",\s*"generate-clone-file",\s*"game-demand-playback"\]/m.test(html), "TTS should document import, clone generation, and game playback steps");
+assert(/function speakWithOpenSourceTts/m.test(html) && /fetch\(pipeline\.endpoint[\s\S]*clone_file[\s\S]*emotion/m.test(html), "TTS should call the configured open-source engine adapter with clone file and emotion prompts");
+assert(/voiceEnabled:\s*true/m.test(html), "TTS should be enabled for the interactive cinematic lesson");
 assert(/browserSpeechFallback:\s*false/m.test(html), "browser robot TTS fallback should be disabled by default");
-assert(/function shouldUseBrowserSpeechFallback/m.test(html), "browser speech fallback should require explicit opt-in");
-assert(/speakGameText[\s\S]*shouldUseBrowserSpeechFallback\(options\)[\s\S]*speakWithBrowserFemale/m.test(html), "game speech should not fall back to browser robot voices unless explicitly enabled");
-assert(/ttsfm不可用时不会播放浏览器机器人声/m.test(html), "announcement should explain that poor browser robot TTS is disabled when ttsfm is unavailable");
+assert(/function shouldUseBrowserSpeechFallback/m.test(html) && /return false;/m.test(html), "browser speech fallback should stay disabled");
+assert(/speakGameText[\s\S]*speakWithOpenSourceTts\(text,\s*options\)/m.test(html), "game speech should route through open-source TTS instead of browser voices");
+assert(/Browser speech synthesis stays disabled/m.test(html), "runtime should explicitly document that browser speech synthesis is disabled");
 assert(/function openNoviceGuideRealEditor/m.test(html), "novice guide should open the real VS Code-style editor for hands-on code");
 assert(/renderNoviceGuideStep[\s\S]*step\.id === "guidedCode"[\s\S]*openNoviceGuideRealEditor/m.test(html), "guided code step should bring up the normal editor");
 assert(/handleNoviceGuideCompile[\s\S]*dom\.codeInput\?\.value[\s\S]*NOVICE_GUIDE_HELLO_CODE/m.test(html), "novice guide compile should read code from the real editor first");
