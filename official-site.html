@@ -3115,14 +3115,19 @@
       timer: null,
       step: 0,
       started: false,
-      media: null
+      media: null,
+      mediaUnlocked: false,
+      mediaFadeRaf: null,
+      masterFadeRaf: null
     };
     const AUDIO_MASTER_GAIN = 0.16;
     const AUDIO_MEDIA_VOLUME = 0.18;
+    const AUDIO_FADE_MS = 820;
 
     window.__codeAwakenerAudioDebug = () => ({
       started: audio.started,
       muted: audio.muted,
+      mediaUnlocked: audio.mediaUnlocked,
       mediaPaused: audio.media ? audio.media.paused : null,
       mediaMuted: audio.media ? audio.media.muted : null,
       mediaVolume: audio.media ? audio.media.volume : null,
@@ -3130,9 +3135,14 @@
       contextState: audio.ctx ? audio.ctx.state : null
     });
 
+    function hasAudioActivation() {
+      return Boolean(navigator.userActivation?.isActive);
+    }
+
     function initAudio(force = false) {
       if (audio.muted) return;
       audio.started = true;
+      if (force) audio.mediaUnlocked = true;
       if (audio.ctx || !supportsAudio) {
         startMediaLoop(force);
         if (force && !supportsAudio) showToast("音乐 ON：当前浏览器使用 WAV 循环播放。");
@@ -3141,9 +3151,10 @@
       const AudioCtx = window.AudioContext || window.webkitAudioContext;
       audio.ctx = new AudioCtx();
       audio.master = audio.ctx.createGain();
-      audio.master.gain.value = AUDIO_MASTER_GAIN;
+      audio.master.gain.value = 0;
       audio.master.connect(audio.ctx.destination);
       audio.ctx.resume?.();
+      fadeMasterGain(AUDIO_MASTER_GAIN, force ? AUDIO_FADE_MS : 220);
       if (force) {
         playStartupFanfare();
         showToast("音频引擎 ON：长段落背景音乐已启动");
@@ -3233,19 +3244,57 @@
       return audio.media;
     }
 
+    function fadeMasterGain(targetGain = AUDIO_MASTER_GAIN, durationMs = AUDIO_FADE_MS) {
+      if (!audio.ctx || !audio.master) return false;
+      const target = Math.max(0, Math.min(AUDIO_MASTER_GAIN, Number(targetGain) || 0));
+      const timeConstant = Math.max(0.025, Math.min(0.32, (Number(durationMs) || 0) / 3000));
+      audio.master.gain.cancelScheduledValues(audio.ctx.currentTime);
+      audio.master.gain.setTargetAtTime(target, audio.ctx.currentTime, timeConstant);
+      return true;
+    }
+
+    function fadeMediaVolume(targetVolume = AUDIO_MEDIA_VOLUME, durationMs = AUDIO_FADE_MS, onComplete = null) {
+      if (!audio.media) return false;
+      const media = audio.media;
+      const startVolume = Number(media.volume) || 0;
+      const target = Math.max(0, Math.min(AUDIO_MEDIA_VOLUME, Number(targetVolume) || 0));
+      const duration = Math.max(0, Number(durationMs) || 0);
+      if (audio.mediaFadeRaf) cancelAnimationFrame(audio.mediaFadeRaf);
+      if (duration <= 0 || Math.abs(startVolume - target) < 0.001) {
+        media.volume = target;
+        onComplete?.();
+        return true;
+      }
+      const startedAt = performance.now();
+      const tick = () => {
+        const progress = Math.max(0, Math.min(1, (performance.now() - startedAt) / duration));
+        const eased = progress * progress * (3 - progress * 2);
+        media.volume = startVolume + (target - startVolume) * eased;
+        if (progress < 1) {
+          audio.mediaFadeRaf = requestAnimationFrame(tick);
+          return;
+        }
+        audio.mediaFadeRaf = null;
+        media.volume = target;
+        onComplete?.();
+      };
+      audio.mediaFadeRaf = requestAnimationFrame(tick);
+      return true;
+    }
+
     function startMediaLoop(force = false) {
       if (audio.muted) return;
+      if (!force && !audio.mediaUnlocked) return;
       primeMediaLoop();
       audio.media.muted = false;
-      audio.media.volume = AUDIO_MEDIA_VOLUME;
+      if (audio.media.paused) audio.media.volume = 0;
       const playResult = audio.media.play();
+      fadeMediaVolume(AUDIO_MEDIA_VOLUME, AUDIO_FADE_MS);
       if (playResult?.then) {
-        playResult.then(() => stopFallbackMusic()).catch(() => {});
-      }
-      if (playResult?.catch) {
-        playResult.catch(() => {
-          startMusic();
-          if (force) showToast("浏览器暂时拦截 WAV，已切到轻量合成音乐。");
+        playResult.then(() => stopFallbackMusic()).catch((error) => {
+          if (error?.name !== "NotAllowedError" && force) {
+            showToast("音频启动失败，已保留合成音效路径。");
+          }
         });
       }
     }
@@ -3289,7 +3338,7 @@
 
     function playSfx(kind) {
       if (!audio.started && kind === "hover") return;
-      initAudio();
+      initAudio(kind !== "hover" && hasAudioActivation());
       if (kind === "success") {
         tone(660, 0.07, "triangle", 0.024);
         setTimeout(() => tone(990, 0.09, "sine", 0.018), 82);
@@ -3338,17 +3387,25 @@
         }
         audio.muted = !audio.muted;
         localStorage.setItem("code-awakener-muted", audio.muted ? "1" : "0");
-        if (audio.media) audio.media.muted = audio.muted;
+        if (audio.muted) {
+          fadeMediaVolume(0, AUDIO_FADE_MS, () => {
+            if (audio.media) audio.media.muted = true;
+          });
+          fadeMasterGain(0, AUDIO_FADE_MS);
+        }
         if (!audio.muted) {
+          if (audio.media) audio.media.muted = false;
           initAudio(true);
           startMediaLoop(true);
+          fadeMasterGain(AUDIO_MASTER_GAIN, AUDIO_FADE_MS);
           playSfx("success");
         }
         render();
       });
       const unlockAudio = (event) => {
         if (event?.target?.closest?.("#muteButton")) return;
-        initAudio();
+        if (event?.isTrusted === false) return;
+        initAudio(true);
         render();
       };
       addEventListener("pointerdown", unlockAudio, { once: true, passive: true });

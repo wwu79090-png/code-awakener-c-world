@@ -14,7 +14,7 @@
   <meta http-equiv="Cache-Control" content="no-store, max-age=0, must-revalidate">
   <meta http-equiv="Pragma" content="no-cache">
   <meta http-equiv="Expires" content="0">
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self' file:; base-uri 'self'; object-src 'none'; frame-ancestors 'none'; script-src 'self' 'nonce-code-awakener-inline' file: 'sha256-roK4RqBgRHkxbVIZm24OWG83lcZnx6nmUkijSW9MDk8='; style-src 'self' 'nonce-code-awakener-inline' file: 'sha256-LsLFbeuz1wvJ/MaI+cphfcThuuwfm0ZZMQGdjYVSvxs='; style-src-attr 'unsafe-inline'; font-src 'self' file: data:; img-src 'self' file: data: blob: https://cdn.pixabay.com; media-src 'self' file: data: blob: https: http: https://cdn.pixabay.com; worker-src 'self' file: blob:; child-src 'self' file: blob:; connect-src 'self' file: http://localhost:8000 http://127.0.0.1:8000 https://cdn.pixabay.com https://pixabay.com;">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self' file:; base-uri 'self'; object-src 'none'; frame-ancestors 'none'; script-src 'self' 'nonce-code-awakener-inline' file: 'sha256-jFc06SR0yKkwUcF9u30TEhGsqGj73cQafIqGWMQzjZo='; style-src 'self' 'nonce-code-awakener-inline' file: 'sha256-eOaTH8C7R5pSziC0oyQtzHurxKjM3HbjQkBqzUXWfPI='; style-src-attr 'unsafe-inline'; font-src 'self' file: data:; img-src 'self' file: data: blob: https://cdn.pixabay.com; media-src 'self' file: data: blob: https: http: https://cdn.pixabay.com; worker-src 'self' file: blob:; child-src 'self' file: blob:; connect-src 'self' file: http://localhost:8000 http://127.0.0.1:8000 https://cdn.pixabay.com https://pixabay.com;">
   <title>编程学习 RPG：C 语言启航村</title>
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%23020617'/%3E%3Cpath d='M22 20 10 32l12 12M42 20l12 12-12 12' fill='none' stroke='%2300ff88' stroke-width='6' stroke-linecap='round' stroke-linejoin='round'/%3E%3Cpath d='m36 16-8 32' stroke='%2300ccff' stroke-width='5' stroke-linecap='round'/%3E%3C/svg%3E">
   <script src="./vendor/phaser.min.js"></script>
@@ -745,27 +745,32 @@
     }
 
     .main-menu-card {
+      --main-menu-option-height: 42px;
       position: relative;
       z-index: 2;
+      display: flex;
+      flex-direction: column;
       width: min(760px, 92vw);
-      padding: 34px;
+      max-height: min(860px, calc(100dvh - 40px));
+      padding: clamp(18px, 3.2vh, 30px);
+      overflow: hidden;
       transform-origin: center;
     }
 
     .game-logo {
       margin: 0;
       font-family: var(--font-pixel);
-      font-size: clamp(22px, 4vw, 42px);
-      line-height: 1.45;
+      font-size: clamp(20px, 3.4vw, 34px);
+      line-height: 1.28;
       letter-spacing: 0;
       text-shadow: 0 0 26px rgba(96, 165, 250, 0.62), 4px 4px 0 rgba(2, 6, 23, 0.72);
     }
 
     .version-label {
-      margin-top: 12px;
+      margin-top: 8px;
       color: #fbbf24;
       font-family: var(--font-code);
-      font-size: 13px;
+      font-size: 12px;
     }
 
     .music-switcher {
@@ -773,8 +778,8 @@
       align-items: center;
       justify-content: space-between;
       gap: 14px;
-      margin-top: 16px;
-      padding: 12px 14px;
+      margin-top: 12px;
+      padding: 10px 12px;
       border: 1px solid rgba(34, 197, 94, 0.28);
       border-radius: 14px;
       background:
@@ -799,7 +804,7 @@
 
     .music-switcher-kicker {
       color: #86efac;
-      font-size: 11px;
+      font-size: 10px;
     }
 
     .music-switcher-title {
@@ -823,8 +828,8 @@
       align-items: end;
       gap: 3px;
       width: min(180px, 28vw);
-      height: 36px;
-      padding: 5px;
+      height: 30px;
+      padding: 4px;
       border: 1px solid rgba(125, 211, 252, 0.18);
       border-radius: 10px;
       background: rgba(2, 6, 23, 0.38);
@@ -854,8 +859,8 @@
     .music-switcher-button {
       display: grid;
       place-items: center;
-      width: 34px;
-      height: 34px;
+      width: 32px;
+      height: 32px;
       border: 1px solid rgba(125, 211, 252, 0.38);
       border-radius: 10px;
       background: rgba(15, 23, 42, 0.72);
@@ -891,27 +896,31 @@
     }
 
     .music-dynamic-island {
+      --music-island-hue: 145deg;
+      --music-island-glow: 18px;
+      --music-island-alpha: 0.46;
+      --music-island-orb-scale: 1;
       position: fixed;
       z-index: 230;
       left: var(--music-island-x, 50%);
       top: var(--music-island-y, 18px);
       display: grid;
-      gap: 12px;
-      width: min(430px, calc(100vw - 28px));
-      min-height: 72px;
-      padding: 14px 16px;
-      border: 1px solid rgba(255, 255, 255, 0.18);
-      border-radius: 28px;
+      gap: 8px;
+      width: min(380px, calc(100vw - 28px));
+      min-height: 58px;
+      padding: 10px 12px;
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      border-radius: 24px;
       background:
-        linear-gradient(135deg, rgba(255, 255, 255, 0.14), rgba(34, 197, 94, 0.09)),
-        rgba(2, 6, 23, 0.62);
-      box-shadow: 0 22px 70px rgba(2, 6, 23, 0.46), inset 0 1px 0 rgba(255, 255, 255, 0.18);
+        linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(34, 197, 94, 0.06)),
+        rgba(2, 6, 23, 0.38);
+      box-shadow: 0 14px 44px rgba(2, 6, 23, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.14);
       color: #f8fafc;
       font-family: var(--font-code);
       backdrop-filter: blur(22px) saturate(1.35);
       transform: translateX(-50%) scale(1);
       transform-origin: top center;
-      transition: width 420ms cubic-bezier(0.22, 1, 0.36, 1), min-height 420ms cubic-bezier(0.22, 1, 0.36, 1), border-radius 420ms cubic-bezier(0.22, 1, 0.36, 1), padding 420ms cubic-bezier(0.22, 1, 0.36, 1), transform 260ms ease, opacity 220ms ease;
+      transition: width 420ms cubic-bezier(0.22, 1, 0.36, 1), min-height 420ms cubic-bezier(0.22, 1, 0.36, 1), border-radius 420ms cubic-bezier(0.22, 1, 0.36, 1), padding 420ms cubic-bezier(0.22, 1, 0.36, 1), transform 260ms ease, opacity 220ms ease, box-shadow 180ms ease;
       user-select: none;
       touch-action: none;
     }
@@ -932,9 +941,9 @@
     }
 
     .music-dynamic-island.is-collapsed {
-      width: min(265px, calc(100vw - 28px));
-      min-height: 48px;
-      padding: 9px 12px;
+      width: min(318px, calc(100vw - 28px));
+      min-height: 44px;
+      padding: 8px 11px;
       border-radius: 999px;
       cursor: grab;
     }
@@ -952,11 +961,13 @@
     }
 
     .music-island-orb {
-      width: 28px;
-      height: 28px;
+      width: 24px;
+      height: 24px;
       border-radius: 999px;
-      background: radial-gradient(circle at 35% 30%, #fef3c7, #22c55e 50%, #38bdf8);
-      box-shadow: 0 0 18px rgba(34, 197, 94, 0.46);
+      background: radial-gradient(circle at 35% 30%, #fef3c7, hsl(var(--music-island-hue) 88% 56%) 50%, #38bdf8);
+      box-shadow: 0 0 var(--music-island-glow) hsl(var(--music-island-hue) 88% 58% / var(--music-island-alpha));
+      transform: scale(var(--music-island-orb-scale));
+      transition: background 160ms ease, box-shadow 160ms ease, transform 120ms ease;
       flex: 0 0 auto;
     }
 
@@ -967,7 +978,8 @@
     }
 
     .music-island-title,
-    .music-island-subtitle {
+    .music-island-subtitle,
+    .music-island-lyric {
       overflow: hidden;
       text-overflow: ellipsis;
       white-space: nowrap;
@@ -984,19 +996,55 @@
       font-size: 10px;
     }
 
+    .music-island-lyric {
+      color: #bbf7d0;
+      font-size: 9px;
+      opacity: 0.92;
+      text-shadow: 0 0 12px hsl(var(--music-island-hue) 88% 58% / 0.24);
+    }
+
     .music-island-expanded {
+      position: relative;
       display: grid;
-      gap: 12px;
+      gap: 8px;
+      padding-top: 22px;
     }
 
     .music-dynamic-island.is-collapsed .music-island-expanded {
       display: none;
     }
 
+    .music-island-window-actions {
+      position: absolute;
+      inset: 0 0 auto;
+      display: flex;
+      justify-content: space-between;
+      pointer-events: none;
+    }
+
+    .music-island-corner-button {
+      display: grid;
+      place-items: center;
+      width: 24px;
+      height: 24px;
+      border: 1px solid rgba(125, 211, 252, 0.28);
+      border-radius: 999px;
+      background: rgba(2, 6, 23, 0.42);
+      color: #dbeafe;
+      font: 700 12px/1 var(--font-code);
+      cursor: pointer;
+      pointer-events: auto;
+    }
+
+    .music-island-corner-button:hover {
+      border-color: rgba(34, 197, 94, 0.62);
+      color: #bbf7d0;
+    }
+
     .music-island-controls,
     .music-island-volume-grid {
       display: grid;
-      grid-template-columns: repeat(4, minmax(0, 1fr));
+      grid-template-columns: repeat(3, minmax(0, 1fr));
       gap: 8px;
     }
 
@@ -1083,8 +1131,8 @@
       display: flex;
       align-items: center;
       gap: 10px;
-      margin-top: 22px;
-      padding: 12px 14px;
+      margin-top: 12px;
+      padding: 9px 12px;
       border: 1px solid rgba(56, 189, 248, 0.28);
       border-radius: 14px;
       background: rgba(2, 6, 23, 0.42);
@@ -1111,17 +1159,24 @@
     .menu-list {
       position: relative;
       display: grid;
-      gap: 12px;
-      margin-top: 30px;
+      gap: 8px;
+      margin-top: 14px;
+      flex: 1 1 auto;
+      min-height: 0;
+      max-height: 100%;
+      overflow-y: auto;
+      padding-right: 3px;
+      overscroll-behavior: contain;
+      scrollbar-width: thin;
     }
 
     .menu-highlight {
       position: absolute;
       left: 0;
       right: 0;
-      height: 48px;
+      height: var(--main-menu-option-height, 42px);
       border: 1px solid rgba(251, 191, 36, 0.64);
-      border-radius: 14px;
+      border-radius: 12px;
       background: linear-gradient(90deg, rgba(96, 165, 250, 0.22), rgba(251, 191, 36, 0.18));
       box-shadow: 0 0 26px rgba(251, 191, 36, 0.18);
       transform: translateY(0);
@@ -1131,16 +1186,19 @@
 
     .menu-option {
       position: relative;
+      display: flex;
+      align-items: center;
+      gap: 10px;
       overflow: hidden;
-      min-height: 48px;
-      padding: 0 20px;
+      min-height: var(--main-menu-option-height, 42px);
+      padding: 0 16px;
       border: 1px solid rgba(148, 163, 184, 0.24);
-      border-radius: 14px;
+      border-radius: 12px;
       background: linear-gradient(180deg, rgba(30, 41, 59, 0.92), rgba(15, 23, 42, 0.78));
       color: #e0f2fe;
       box-shadow: 0 8px 24px rgba(2, 6, 23, 0.22), inset 0 1px 0 rgba(255, 255, 255, 0.1);
       font-family: var(--font-pixel);
-      font-size: 11px;
+      font-size: 10px;
       text-align: left;
       cursor: pointer;
       transition:
@@ -1165,14 +1223,14 @@
 
     .menu-option:hover,
     .menu-option.selected {
-      transform: translateY(-3px) scale(1.035);
+      transform: translateY(-1px);
       border-color: rgba(56, 189, 248, 0.78);
       background:
         linear-gradient(180deg, rgba(30, 64, 175, 0.74), rgba(15, 23, 42, 0.8)),
         rgba(15, 23, 42, 0.78);
       color: #fef3c7;
       box-shadow:
-        0 16px 42px rgba(96, 165, 250, 0.32),
+        0 10px 28px rgba(96, 165, 250, 0.28),
         0 0 26px rgba(56, 189, 248, 0.24),
         0 0 18px rgba(251, 191, 36, 0.16);
     }
@@ -2326,6 +2384,28 @@
       text-shadow: 0 0 8px rgba(248, 113, 113, 0.3);
     }
 
+    .npc-popup-close {
+      position: absolute;
+      top: 9px;
+      right: 10px;
+      z-index: 2;
+      width: 26px;
+      height: 26px;
+      border: 1px solid rgba(125, 211, 252, 0.34);
+      border-radius: 999px;
+      background: rgba(2, 6, 23, 0.72);
+      color: #e0f2fe;
+      font: 700 16px/1 var(--font-code);
+      cursor: var(--custom-code-cursor), pointer;
+      box-shadow: 0 0 18px rgba(56, 189, 248, 0.16);
+    }
+
+    .npc-popup-close:hover {
+      color: #fef2f2;
+      border-color: rgba(248, 113, 113, 0.5);
+      box-shadow: 0 0 18px rgba(248, 113, 113, 0.2);
+    }
+
     .npc-code-panel pre {
       margin: 12px 0 0;
       padding: 14px;
@@ -2468,11 +2548,12 @@
     }
 
     .choice-window.choice-island .choice-panel {
+      position: relative;
       width: min(280px, calc(100vw - 36px));
       min-height: 0;
       max-height: min(240px, calc(100vh - 96px));
       overflow: auto;
-      padding: 14px;
+      padding: 14px 42px 14px 14px;
       border-radius: 28px;
       pointer-events: auto;
       animation: choiceIslandPop 240ms cubic-bezier(0.34, 1.56, 0.64, 1) both;
@@ -3432,6 +3513,27 @@
     .template-entry {
       text-align: left;
       cursor: pointer;
+    }
+
+    .menu-option-icon {
+      display: grid;
+      place-items: center;
+      width: 24px;
+      height: 24px;
+      border: 1px solid rgba(125, 211, 252, 0.24);
+      border-radius: 8px;
+      background: rgba(2, 6, 23, 0.44);
+      color: #86efac;
+      font: 700 12px/1 var(--font-code);
+      box-shadow: inset 0 0 10px rgba(56, 189, 248, 0.08);
+      flex: 0 0 auto;
+    }
+
+    .menu-option-label {
+      min-width: 0;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
     }
 
     .template-entry strong {
@@ -4918,7 +5020,7 @@
     .dialog-help {
       margin-top: 8px;
       color: rgba(191, 219, 254, 0.76);
-      font-size: 11px;
+      font-size: 10px;
     }
 
     .mobile-dialog-advance {
@@ -7694,6 +7796,78 @@
       text-align: center;
     }
 
+    @media (max-height: 760px) {
+      .main-menu-card {
+        --main-menu-option-height: 38px;
+        width: min(700px, 94vw);
+        max-height: calc(100dvh - 24px);
+        padding: 14px 18px;
+      }
+
+      .game-logo {
+        font-size: clamp(18px, 3vw, 28px);
+        line-height: 1.18;
+      }
+
+      .version-label {
+        margin-top: 6px;
+        font-size: 10px;
+      }
+
+      .music-switcher {
+        gap: 10px;
+        margin-top: 8px;
+        padding: 8px 10px;
+      }
+
+      .music-switcher-kicker,
+      .music-switcher-meta {
+        font-size: 9px;
+      }
+
+      .music-switcher-title {
+        font-size: 10px;
+      }
+
+      .music-visualizer {
+        width: min(140px, 22vw);
+        height: 22px;
+      }
+
+      .music-switcher-actions {
+        gap: 6px;
+      }
+
+      .music-switcher-button {
+        width: 28px;
+        height: 28px;
+        border-radius: 8px;
+        font-size: 11px;
+      }
+
+      .boot-command {
+        margin-top: 8px;
+        padding: 7px 10px;
+        font-size: 11px;
+      }
+
+      .menu-list {
+        gap: 6px;
+        margin-top: 9px;
+      }
+
+      .menu-option {
+        padding: 0 14px;
+        border-radius: 10px;
+        font-size: 9px;
+      }
+
+      .main-menu-idle-counter {
+        margin-top: 6px;
+        font-size: 9px;
+      }
+    }
+
     .final-revival-stage,
     .certificate-panel,
     .developer-room-panel,
@@ -8995,16 +9169,124 @@
 
     .codex-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-      gap: 10px;
-      margin-top: 12px;
+      grid-template-columns: repeat(auto-fit, minmax(172px, 1fr));
+      gap: 12px;
+      margin-top: 14px;
     }
 
     .codex-entry {
-      padding: 10px;
+      display: grid;
+      grid-template-columns: 34px minmax(0, 1fr);
+      gap: 10px;
+      align-items: start;
+      padding: 12px;
       border: 1px solid rgba(34, 197, 94, 0.22);
       border-radius: 10px;
       background: rgba(15, 23, 42, 0.72);
+    }
+
+    .codex-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      margin-bottom: 12px;
+    }
+
+    .codex-title-group {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      min-width: 0;
+    }
+
+    .codex-panel-icon,
+    .codex-entry-icon {
+      display: grid;
+      place-items: center;
+      border: 1px solid rgba(125, 211, 252, 0.3);
+      border-radius: 12px;
+      background: linear-gradient(135deg, rgba(34, 197, 94, 0.18), rgba(56, 189, 248, 0.1));
+      color: #bbf7d0;
+      box-shadow: 0 0 20px rgba(34, 197, 94, 0.12);
+      font-family: var(--font-code);
+    }
+
+    .codex-panel-icon {
+      width: 42px;
+      height: 42px;
+      font-size: 20px;
+    }
+
+    .codex-entry-icon {
+      width: 34px;
+      height: 34px;
+      font-size: 15px;
+    }
+
+    .codex-head h2 {
+      margin: 0;
+      color: #d9f99d;
+      font-size: 18px;
+    }
+
+    .codex-desc,
+    .codex-entry small,
+    .codex-empty {
+      color: #93c5fd;
+      font: 11px/1.55 var(--font-code);
+    }
+
+    .codex-desc {
+      margin: 4px 0 0;
+    }
+
+    .codex-stats,
+    .codex-type-tabs {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 10px;
+    }
+
+    .codex-stat,
+    .codex-type-tab {
+      border: 1px solid rgba(125, 211, 252, 0.22);
+      border-radius: 999px;
+      background: rgba(2, 6, 23, 0.42);
+      color: #dbeafe;
+      font: 11px/1.2 var(--font-code);
+    }
+
+    .codex-stat {
+      padding: 7px 10px;
+    }
+
+    .codex-type-tab {
+      padding: 7px 11px;
+      cursor: pointer;
+    }
+
+    .codex-type-tab.active {
+      border-color: rgba(34, 197, 94, 0.68);
+      color: #bbf7d0;
+      box-shadow: 0 0 16px rgba(34, 197, 94, 0.14);
+    }
+
+    .codex-entry strong {
+      display: block;
+      overflow: hidden;
+      color: #f8fafc;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .codex-empty {
+      grid-column: 1 / -1;
+      padding: 18px;
+      border: 1px dashed rgba(125, 211, 252, 0.24);
+      border-radius: 12px;
+      background: rgba(2, 6, 23, 0.38);
     }
 
     .dev-easter-overlay {
@@ -10299,11 +10581,12 @@
       }
 
       body.mobile-input .main-menu-card {
+        --main-menu-option-height: 40px;
         width: min(430px, calc(100vw - 20px));
         max-width: calc(100vw - 20px);
         max-height: calc(100dvh - 20px);
         margin: 0 auto;
-        padding: 16px;
+        padding: 14px;
         overflow: hidden;
       }
 
@@ -10355,15 +10638,18 @@
       }
 
       body.mobile-input .music-dynamic-island {
-        width: min(360px, calc(100vw - 18px));
-        padding: 12px;
+        width: min(340px, calc(100vw - 18px));
+        padding: 10px;
       }
 
       body.mobile-input .music-dynamic-island.is-collapsed {
-        width: min(236px, calc(100vw - 18px));
+        width: min(270px, calc(100vw - 18px));
       }
 
-      body.mobile-input .music-island-controls,
+      body.mobile-input .music-island-controls {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+
       body.mobile-input .music-island-volume-grid {
         grid-template-columns: 1fr 1fr;
       }
@@ -10375,7 +10661,8 @@
       }
 
       body.mobile-input .main-menu-card .menu-list {
-        max-height: min(48dvh, 390px);
+        gap: 7px;
+        max-height: min(52dvh, 420px);
         overflow-y: auto;
         padding-right: 2px;
         overscroll-behavior: contain;
@@ -10383,8 +10670,28 @@
       }
 
       body.mobile-input .main-menu-card .menu-option {
-        min-height: 44px;
-        border-radius: 12px;
+        min-height: var(--main-menu-option-height, 40px);
+        border-radius: 11px;
+        font-size: 9px;
+      }
+
+      body.mobile-input .menu-option-icon {
+        width: 22px;
+        height: 22px;
+        border-radius: 7px;
+        font-size: 11px;
+      }
+
+      body.mobile-input .codex-collection-panel {
+        inset: max(10px, env(safe-area-inset-top)) max(10px, env(safe-area-inset-right)) max(10px, env(safe-area-inset-bottom)) max(10px, env(safe-area-inset-left));
+      }
+
+      body.mobile-input .codex-head {
+        align-items: flex-start;
+      }
+
+      body.mobile-input .codex-grid {
+        grid-template-columns: 1fr;
       }
 
       body.mobile-input .absolute-guide-stack {
@@ -10470,8 +10777,8 @@
       <p>&gt; 如果这里一直空白，说明浏览器缓存、旧存档或脚本自检阻塞了启动。</p>
       <p>&gt; 使用下面入口可以绕过旧缓存并关闭重型特效，学习进度仍会保留。</p>
       <div class="static-rescue-actions">
-        <a href="./programming-rpg-c-basics.html?safeMode=true&noAudio=true&v=1.0.31">安全启动</a>
-        <a href="./programming-rpg-c-basics.html?v=1.0.31">强制刷新</a>
+        <a href="./programming-rpg-c-basics.html?safeMode=true&noAudio=true&v=1.0.32">安全启动</a>
+        <a href="./programming-rpg-c-basics.html?v=1.0.32">强制刷新</a>
       </div>
       <p>作者：杀戮 · QQ：3424636983 · 官方Q群：414374792</p>
     </div>
@@ -10490,14 +10797,18 @@
         <span class="music-island-lines">
           <strong id="musicIslandTitle" class="music-island-title">音乐未连接</strong>
           <span id="musicIslandSubtitle" class="music-island-subtitle">QQ 或自定义音乐播放时显示</span>
+          <span id="musicIslandLyric" class="music-island-lyric">歌词状态待机</span>
         </span>
       </div>
       <div class="music-island-expanded" id="musicIslandExpanded">
+        <div class="music-island-window-actions" aria-label="音乐灵动岛窗口控制">
+          <button id="musicIslandCloseButton" class="music-island-corner-button" type="button" aria-label="缩小音乐灵动岛">－</button>
+          <button id="musicIslandDismissButton" class="music-island-corner-button" type="button" aria-label="隐藏本次音乐灵动岛">×</button>
+        </div>
         <div class="music-island-controls">
           <button id="musicIslandPlayButton" class="music-switcher-button" type="button" aria-label="播放或暂停">▶</button>
           <button id="musicIslandPrevButton" class="music-switcher-button" type="button" aria-label="上一个音乐主题">‹</button>
           <button id="musicIslandNextButton" class="music-switcher-button" type="button" aria-label="下一个音乐主题">›</button>
-          <button id="musicIslandCloseButton" class="music-switcher-button" type="button" aria-label="缩小音乐灵动岛">－</button>
         </div>
         <div class="music-island-volume-grid">
           <label class="music-island-volume">自定义音乐 <input id="musicIslandCustomVolume" type="range" min="0" max="140" step="1"><span id="musicIslandCustomVolumeValue">100</span></label>
@@ -10598,10 +10909,19 @@
     <div id="a11yLiveRegion" class="sr-only-live" aria-live="polite" aria-atomic="true"></div>
     <aside id="devEasterOverlay" class="dev-easter-overlay" aria-live="polite">FPS --<br>内存 --<br>粒子 --<br>绘制调用 --</aside>
     <section id="codexCollectionPanel" class="codex-collection-panel" aria-label="图鉴系统">
-      <h2>&gt; CODEX 图鉴</h2>
-      <p>// 自动记录技能卡、敌人和区域的首次发现时间。</p>
+      <header class="codex-head">
+        <div class="codex-title-group">
+          <span class="codex-panel-icon" aria-hidden="true">⌬</span>
+          <div>
+            <h2>&gt; CODEX 图鉴</h2>
+            <p class="codex-desc">// 自动记录技能卡、碎片、区域和特殊发现。</p>
+          </div>
+        </div>
+        <button id="closeCodexCollectionButton" class="pixel-button" type="button">关闭</button>
+      </header>
+      <div id="codexStats" class="codex-stats" aria-label="图鉴统计"></div>
+      <div id="codexTypeTabs" class="codex-type-tabs" aria-label="图鉴分类筛选"></div>
       <div id="codexCollectionGrid" class="codex-grid"></div>
-      <button id="closeCodexCollectionButton" class="pixel-button" type="button">关闭</button>
     </section>
     <section id="sandboxPanel" class="sandbox-panel" aria-label="沙盒创造模式">
       <h2>&gt; SANDBOX ISLAND</h2>
@@ -10660,7 +10980,7 @@
       <canvas id="menuFxCanvas" width="1280" height="720"></canvas>
       <div class="main-menu-card glass-panel">
         <h1 class="game-logo">CODE AWAKENER<br>C 语言启航村</h1>
-        <div class="version-label" id="versionLabel">World Build v1.0.31 · develop.fan C Basics</div>
+        <div class="version-label" id="versionLabel">World Build v1.0.32 · develop.fan C Basics</div>
         <div id="musicSwitcher" class="music-switcher" aria-label="音乐主题切换器">
           <div class="music-switcher-copy">
             <span class="music-switcher-kicker">♪ 当前音乐主题</span>
@@ -10707,15 +11027,15 @@
         <label class="boot-command"><span>&gt;</span><input id="bootCommandInput" value="start_game.exe" autocomplete="off" spellcheck="false" aria-label="启动命令"></label>
         <nav class="menu-list" id="mainMenuList" aria-label="主菜单选项">
           <span id="menuHighlight" class="menu-highlight"></span>
-          <button class="menu-option selected" type="button" data-menu-action="start">开始游戏</button>
-          <button class="menu-option" type="button" data-menu-action="continue">继续游戏</button>
-          <button class="menu-option" type="button" data-menu-action="cards">技能卡册</button>
-          <button class="menu-option" type="button" data-menu-action="codex">图鉴系统</button>
-          <button class="menu-option" type="button" data-menu-action="settings">设置</button>
-          <button class="menu-option" type="button" data-menu-action="official">访问官方网站</button>
-          <button class="menu-option" type="button" data-menu-action="history">历史更新内容</button>
-          <button class="menu-option" type="button" data-menu-action="credits">制作名单</button>
-          <button class="menu-option" type="button" data-menu-action="exit">退出</button>
+          <button class="menu-option selected" type="button" data-menu-action="start"><span class="menu-option-icon" aria-hidden="true">▶</span><span class="menu-option-label">开始游戏</span></button>
+          <button class="menu-option" type="button" data-menu-action="continue"><span class="menu-option-icon" aria-hidden="true">↻</span><span class="menu-option-label">继续游戏</span></button>
+          <button class="menu-option" type="button" data-menu-action="cards"><span class="menu-option-icon" aria-hidden="true">◆</span><span class="menu-option-label">技能卡册</span></button>
+          <button class="menu-option" type="button" data-menu-action="codex"><span class="menu-option-icon" aria-hidden="true">⌬</span><span class="menu-option-label">图鉴系统</span></button>
+          <button class="menu-option" type="button" data-menu-action="settings"><span class="menu-option-icon" aria-hidden="true">⚙</span><span class="menu-option-label">设置</span></button>
+          <button class="menu-option" type="button" data-menu-action="official"><span class="menu-option-icon" aria-hidden="true">⇱</span><span class="menu-option-label">访问官方网站</span></button>
+          <button class="menu-option" type="button" data-menu-action="history"><span class="menu-option-icon" aria-hidden="true">≡</span><span class="menu-option-label">历史更新内容</span></button>
+          <button class="menu-option" type="button" data-menu-action="credits"><span class="menu-option-icon" aria-hidden="true">★</span><span class="menu-option-label">制作名单</span></button>
+          <button class="menu-option" type="button" data-menu-action="exit"><span class="menu-option-icon" aria-hidden="true">×</span><span class="menu-option-label">退出</span></button>
         </nav>
         <div id="mainMenuIdleCounter" class="main-menu-idle-counter">你在这个界面停留了0秒</div>
       </div>
@@ -11274,6 +11594,7 @@ int main(void) {
 
     <section id="narrativeChoiceOverlay" class="choice-window choice-island" aria-hidden="true">
       <div class="choice-panel glass-panel">
+        <button id="choiceCloseButton" class="npc-popup-close" type="button" aria-label="关闭NPC交互">×</button>
         <h2 id="choiceNodeTitle">选择</h2>
         <p id="choiceNodePrompt">// 选择一条路径。</p>
         <div id="choiceOptions" class="choice-options"></div>
@@ -11407,12 +11728,16 @@ int main(void) {
       <button id="announcementCloseButton" class="announcement-close" type="button" aria-label="关闭公告">×</button>
       <h2 id="startupAnnouncementTitle" class="startup-announcement-title">> 消息 / 本次更新</h2>
       <div id="announcementPageBody" class="startup-announcement-body">
-        <p>// v1.0.31：QQ音乐外部模式与自定义场景音乐。</p>
-        <p>// QQ 按钮会打开官方 QQ 音乐，游戏内 BGM 自动暂停。</p>
-        <p>// 主菜单可为主菜单、探索、编程、战斗和夜晚分别绑定喜欢的音乐。</p>
-        <p>// 局内暂停菜单新增音乐播放器卡片，播放按钮可播放/暂停。</p>
-        <p>// QQ 或自定义音乐播放时会出现可拖拽玻璃音乐灵动岛。</p>
-        <p>// 自定义音乐可单独调真实音量，QQ 音量会保存外部偏好。</p>
+        <p>// v1.0.32：NPC关闭与音乐灵动岛增强。</p>
+        <p>// NPC交互选择窗新增关闭按钮和关闭选项，手机端也能快速退出。</p>
+        <p>// 音乐灵动岛保留缩小按钮，并新增关闭本次悬浮窗按钮。</p>
+        <p>// 缩小后的灵动岛会显示当前外部/自定义音乐的歌词状态行。</p>
+        <p>// 灵动岛气泡颜色、光晕和缩放会跟随当前音量节奏起伏。</p>
+        <p>// QQ外部模式、自定义音乐、游戏内置音乐和官网音乐切换改为自然淡入淡出。</p>
+        <p>// QQ音乐灵动岛展开后左上缩小、右上隐藏，卡片更透明更低，不挡视野。</p>
+        <p>// 主菜单图鉴入口增加图标，图鉴面板加入统计、分类和图标卡片。</p>
+        <p>// 主界面重新压缩 Logo、音乐条和菜单选项大小，低高度屏幕也能看全并滚动。</p>
+        <p>// QQ音乐与自定义音乐仍保留独立音量偏好，原生音效音乐继续最低优先级。</p>
         <p>// 作者：杀戮，QQ：3424636983。</p>
         <p>// 官方Q群：414374792。</p>
         <p>// 作者：杀戮</p>
@@ -11916,29 +12241,44 @@ int main() {
     const SAVE_CLEAR_CONFIRM_MS = 3000;
     const STARTUP_ANNOUNCEMENT_AUTO_HIDE_MS = 14000;
     const SYSTEM_BOOT_FORCE_RELEASE_MS = 3200;
-    const GAME_VERSION = "v1.0.31";
+    const GAME_VERSION = "v1.0.32";
     const OFFICIAL_SITE_HREF = "./official-site.html";
     const UPDATE_ANNOUNCEMENT_PAGES = Object.freeze([
       {
         title: "> 消息 / 本次更新",
         lines: [
-          "// v1.0.31：QQ音乐外部模式与自定义场景音乐。",
-          "// 主菜单 QQ 按钮已接入官方 QQ 音乐入口，点击后游戏 BGM 自动暂停，避免和外部播放器叠音。",
-          "// 播放按钮改为播放/暂停切换：正在播放时显示暂停，再点即可停止当前游戏音乐。",
-          "// 主菜单新增自定义场景音乐面板，可分别给主菜单、探索、编程、战斗和夜晚绑定玩家喜欢的音乐。",
-          "// 自定义音乐支持 https 音乐直链，也支持本地音频文件；本地文件保存到浏览器 IndexedDB，不会上传。",
-          "// 局内暂停菜单新增音乐播放器卡片，可在游戏中查看当前音乐、切换主题、暂停播放、打开 QQ 音乐或编辑自定义音乐。",
-          "// QQ 或自定义音乐播放时会出现玻璃透明音乐灵动岛，点击展开，缩小后可拖到屏幕任意位置并记住位置。",
-          "// 自定义音乐新增独立音量，实时控制游戏内自定义音频；QQ 音量保存外部偏好，并提示到 QQ 音乐页面同步调节。",
-          "// 场景音乐仍保持固定主题：未自定义时使用 Pixabay，对应场景自定义后只覆盖该场景。",
-          "// 原来的 WebAudio 合成音乐和音效优先级降到最低，只作为外部/自定义/Pixabay 失败后的兜底。",
-          "// CSP 只放开媒体音频来源，脚本来源仍锁定；国内网络异常时仍保留内置回退。",
-          "// 安全启动与强制刷新入口已切到 v1.0.31，方便绕过旧缓存。",
+          "// v1.0.32：NPC关闭与音乐灵动岛增强。",
+          "// NPC交互选择窗新增右上关闭按钮，并在选项列表加入“关闭”，避免点错后只能按 Esc。",
+          "// 音乐灵动岛保留“缩小”，新增“关闭本次悬浮窗”，当前 QQ/自定义音乐不变，只隐藏岛。",
+          "// 缩小后的灵动岛显示正在播放的歌词状态行：自定义音乐显示曲目/场景状态，QQ 音乐提示外部歌词以 QQ 页面为准。",
+          "// 灵动岛气泡颜色、光晕和大小会跟随 QQ/自定义音量偏好与节奏起伏。",
+          "// QQ外部模式、自定义音乐、Pixabay内置音乐、WebAudio兜底音乐和官网音乐切换时改为淡入淡出，不再突然硬切。",
+          "// QQ音乐灵动岛展开后左上角缩小、右上角隐藏，卡片更透明、更低、更不挡游戏视野。",
+          "// 主菜单各选项补上图标；图鉴系统整理成统计头、分类标签和带图标的记录卡。",
+          "// 主界面重新分配 UI 空间：Logo、音乐播放器和菜单选项更紧凑，菜单列表独占剩余高度并可滚动。",
+          "// 自定义音乐和 QQ 音乐仍可单独调节音量偏好，原来的 WebAudio 合成音乐/音效继续保持最低优先级。",
+          "// 安全启动与强制刷新入口已切到 v1.0.32，方便绕过旧缓存。",
           "// 作者：杀戮，QQ：3424636983，官方Q群：414374792。"
         ]
       }
     ]);
     const UPDATE_HISTORY = Object.freeze([
+      {
+        version: "v1.0.32",
+        date: "2026-06-17",
+        title: "NPC关闭与音乐灵动岛增强",
+        details: [
+          "NPC交互选择窗新增右上关闭按钮，并在交流、任务、商店、线索之外加入关闭选项，手机端误触后可直接退出。",
+          "音乐灵动岛将缩小和关闭拆开：缩小后继续显示悬浮歌词状态，关闭只隐藏本次 QQ/自定义音乐的悬浮窗。",
+          "折叠灵动岛新增正在播放状态歌词行，自定义音乐显示曲目/场景状态，QQ 音乐提示以外部 QQ 音乐页面歌词为准。",
+          "灵动岛气泡颜色、光晕和缩放会跟随当前 QQ/自定义音量偏好和节奏起伏，外部音乐悬浮窗反馈更明显。",
+          "QQ外部模式、自定义音乐、Pixabay内置音乐、WebAudio兜底音乐和官网音乐切换改为自然淡入淡出，减少突兀断音。",
+          "QQ音乐灵动岛展开后左上角为缩小、右上角为隐藏；卡片整体更透明、更低，不容易挡住游戏视野。",
+          "主菜单选项加入识别图标，图鉴系统整理为统计头、分类标签和带图标的发现记录卡。",
+          "主界面整体重新收紧：Logo、音乐播放器、启动命令和各个菜单选项尺寸更适合低高度屏幕，选项列表会在卡片内滚动且键盘选择自动跟随。",
+          "自定义音乐与 QQ 音乐继续保留独立音量偏好，原 WebAudio 合成音乐与音效优先级保持最低。官方Q群：414374792。"
+        ]
+      },
       {
         version: "v1.0.31",
         date: "2026-06-17",
@@ -13093,7 +13433,7 @@ return 0;`;
       directSaveAs: "reduced-by-inline-resources"
     });
     const SECURITY_CONFIG = Object.freeze({
-      expectedScriptHash: "P9E+s3IF4BDtDTFzWw5Bi0glP2CTkDbjmoADUlE2EAg=",
+      expectedScriptHash: "LivMssYnaG3wLuK0DbyBKdGo4DQ5NVwn/F0LM1cfWrg=",
       selfCheckIntervalMs: 45000,
       tamperRefreshMs: 5000,
       devToolsRefreshMs: 2000,
@@ -16191,6 +16531,8 @@ return 0;`;
       })
     });
     const PIXABAY_BGM_THEME_ORDER = Object.freeze(["menu", "town", "puzzle", "battle", "night"]);
+    const AUDIO_CROSSFADE_MS = 920;
+    const AUDIO_QUICK_FADE_MS = 260;
     const EXTERNAL_MUSIC_CONNECTORS = Object.freeze({
       qqmusic: Object.freeze({
         id: "qqmusic",
@@ -16209,6 +16551,7 @@ return 0;`;
       expanded: false,
       x: null,
       y: null,
+      dismissedKey: "",
       dragging: false,
       pointerId: null,
       dragOffsetX: 0,
@@ -16946,6 +17289,7 @@ return 0;`;
         this.pixabayBgm = null;
         this.pixabayBgmTrack = null;
         this.pixabayBgmMode = "";
+        this.pixabayBgmFadeId = 0;
         this.pixabayPreviewMode = "";
         this.pixabayBgmFailedAt = 0;
         this.pixabaySfxCooldowns = new Map();
@@ -16953,6 +17297,7 @@ return 0;`;
         this.lastPixabaySfxAt = 0;
         this.externalMusicMode = false;
         this.externalMusicProvider = "";
+        this.musicBusFadeScale = 1;
         this.audioDisabled = window.location?.search?.includes("noAudio=true") || Boolean(typeof navigator !== "undefined" && navigator.webdriver);
       }
 
@@ -17014,9 +17359,53 @@ return 0;`;
         return Math.max(0, Math.min(0.34, master * sfx * (track?.gain || 0.18)));
       }
 
+      fadeHtmlAudio(audio, targetVolume = 0, durationMs = AUDIO_CROSSFADE_MS, onComplete = null) {
+        if (!audio) return false;
+        const startVolume = Number(audio.volume) || 0;
+        const target = Math.max(0, Math.min(1, Number(targetVolume) || 0));
+        const duration = Math.max(0, Number(durationMs) || 0);
+        if (audio.__fadeRaf) cancelAnimationFrame(audio.__fadeRaf);
+        if (duration <= 0 || Math.abs(startVolume - target) < 0.001) {
+          audio.volume = target;
+          onComplete?.();
+          return true;
+        }
+        const startedAt = performance.now();
+        const step = () => {
+          const progress = Math.max(0, Math.min(1, (performance.now() - startedAt) / duration));
+          const eased = progress * progress * (3 - progress * 2);
+          audio.volume = startVolume + (target - startVolume) * eased;
+          if (progress < 1) {
+            audio.__fadeRaf = requestAnimationFrame(step);
+            return;
+          }
+          audio.__fadeRaf = null;
+          audio.volume = target;
+          onComplete?.();
+        };
+        audio.__fadeRaf = requestAnimationFrame(step);
+        return true;
+      }
+
+      cleanupHtmlAudio(audio) {
+        if (!audio) return false;
+        try {
+          if (audio.__fadeRaf) cancelAnimationFrame(audio.__fadeRaf);
+          audio.__fadeRaf = null;
+          audio.onended = null;
+          audio.onerror = null;
+          audio.pause();
+          audio.removeAttribute("src");
+          audio.load?.();
+        } catch (error) {
+          errorRingBuffer.push(error, ERROR_LEVELS.recoverable, { action: "cleanupHtmlAudio" });
+        }
+        return true;
+      }
+
       syncPixabayVolumes() {
         if (this.pixabayBgm && this.pixabayBgmTrack) {
-          this.pixabayBgm.volume = this.getPixabayMusicVolume(this.pixabayBgmTrack);
+          this.fadeHtmlAudio(this.pixabayBgm, this.getPixabayMusicVolume(this.pixabayBgmTrack), AUDIO_QUICK_FADE_MS);
         }
         this.pixabaySfxActive.forEach((audio) => {
           const track = audio.__pixabayTrack;
@@ -17032,19 +17421,13 @@ return 0;`;
         return Boolean(this.pixabayBgm && this.pixabayBgmTrack && this.pixabayBgm.src && !this.pixabayBgm.ended);
       }
 
-      stopPixabayBgm() {
+      stopPixabayBgm(fadeMs = AUDIO_CROSSFADE_MS) {
         if (!this.pixabayBgm) return false;
-        try {
-          this.pixabayBgm.onended = null;
-          this.pixabayBgm.onerror = null;
-          this.pixabayBgm.pause();
-          this.pixabayBgm.removeAttribute("src");
-          this.pixabayBgm.load?.();
-        } catch (error) {
-          errorRingBuffer.push(error, ERROR_LEVELS.recoverable, { action: "stopPixabayBgm" });
-        }
+        const audio = this.pixabayBgm;
         this.pixabayBgmTrack = null;
         this.pixabayBgmMode = "";
+        this.pixabayBgm = null;
+        this.fadeHtmlAudio(audio, 0, fadeMs, () => this.cleanupHtmlAudio(audio));
         return true;
       }
 
@@ -17070,25 +17453,43 @@ return 0;`;
           this.syncPixabayVolumes();
           if (!this.pixabayBgm.paused) return true;
         }
-        const audio = this.pixabayBgm || new Audio();
+        const previousAudio = this.pixabayBgm && this.pixabayBgmTrack?.src !== track.src ? this.pixabayBgm : null;
+        if (previousAudio) this.fadeHtmlAudio(previousAudio, 0, AUDIO_CROSSFADE_MS, () => this.cleanupHtmlAudio(previousAudio));
+        const audio = previousAudio ? new Audio() : (this.pixabayBgm || new Audio());
         this.pixabayBgm = audio;
         this.pixabayBgmTrack = track;
         this.pixabayBgmMode = mode;
         audio.preload = "auto";
         audio.loop = true;
         audio.src = track.src;
-        audio.volume = this.getPixabayMusicVolume(track);
+        const targetVolume = this.getPixabayMusicVolume(track);
+        audio.volume = previousAudio || audio.paused ? 0 : Math.min(audio.volume || 0, targetVolume);
         audio.onended = () => this.advancePixabayBgm();
         audio.onerror = () => {
           this.pixabayBgmFailedAt = performance.now();
+          this.cleanupHtmlAudio(audio);
+          if (this.pixabayBgm === audio) {
+            this.pixabayBgm = null;
+            this.pixabayBgmTrack = null;
+            this.pixabayBgmMode = "";
+          }
           if (this.hasMusicIntent()) this.startSynthBgm(mode);
         };
         const playResult = audio.play();
+        this.fadeSynthBgmTo(0, AUDIO_CROSSFADE_MS);
         playResult?.catch?.((error) => {
           this.pixabayBgmFailedAt = performance.now();
           errorRingBuffer.push(error, ERROR_LEVELS.recoverable, { action: "startPixabayBgm", track: track.id });
+          this.cleanupHtmlAudio(audio);
+          if (this.pixabayBgm === audio) {
+            this.pixabayBgm = null;
+            this.pixabayBgmTrack = null;
+            this.pixabayBgmMode = "";
+          }
           if (this.hasMusicIntent()) this.startSynthBgm(mode);
         });
+        playResult?.then?.(() => this.fadeHtmlAudio(audio, targetVolume, AUDIO_CROSSFADE_MS));
+        if (!playResult?.then) this.fadeHtmlAudio(audio, targetVolume, AUDIO_CROSSFADE_MS);
         return true;
       }
 
@@ -17193,13 +17594,31 @@ return 0;`;
         return this.musicLayers;
       }
 
+      getMusicBusBaseGain() {
+        const music = Math.max(0, Math.min(1.4, gameState.settings.musicVolume / 100));
+        return Math.min(1.35, music * this.musicBusScale);
+      }
+
+      setMusicBusGain(targetGain = this.getMusicBusBaseGain(), fadeMs = AUDIO_QUICK_FADE_MS) {
+        if (!this.ctx || !this.musicBus) return false;
+        const target = Math.max(0, Math.min(1.35, Number(targetGain) || 0));
+        const timeConstant = Math.max(0.025, Math.min(0.42, (Number(fadeMs) || 0) / 3000));
+        this.musicBus.gain.cancelScheduledValues(this.ctx.currentTime);
+        this.musicBus.gain.setTargetAtTime(target, this.ctx.currentTime, timeConstant);
+        return true;
+      }
+
+      fadeSynthBgmTo(scale = 1, fadeMs = AUDIO_CROSSFADE_MS) {
+        this.musicBusFadeScale = Math.max(0, Math.min(1, Number(scale) || 0));
+        return this.setMusicBusGain(this.getMusicBusBaseGain() * this.musicBusFadeScale, fadeMs);
+      }
+
       applyVolumes() {
         if (!this.master) return;
         const master = Math.max(0, Math.min(1.4, gameState.settings.masterVolume / 100));
-        const music = Math.max(0, Math.min(1.4, gameState.settings.musicVolume / 100));
         const sfx = Math.max(0, Math.min(1.4, gameState.settings.sfxVolume / 100));
         this.master.gain.value = this.masterBaseGain * master;
-        if (this.musicBus) this.musicBus.gain.value = Math.min(1.35, music * this.musicBusScale);
+        if (this.musicBus) this.setMusicBusGain(this.getMusicBusBaseGain() * this.musicBusFadeScale, AUDIO_QUICK_FADE_MS);
         if (this.sfxBus) this.sfxBus.gain.value = Math.min(0.78, sfx * this.sfxBusScale);
         this.applyMusicLayerMix(this.bgmMode, this.editorAudioFocus);
         this.proceduralMusic?.applyVolume?.();
@@ -17369,12 +17788,13 @@ return 0;`;
         return true;
       }
 
-      stopBgm() {
+      stopBgm(fadeMs = AUDIO_CROSSFADE_MS) {
         if (this.bgmTimer) window.clearTimeout(this.bgmTimer);
         this.bgmTimer = null;
         this.wantMusic = false;
         this.activeBgmVariation = null;
-        this.stopPixabayBgm();
+        this.fadeSynthBgmTo(0, fadeMs);
+        this.stopPixabayBgm(fadeMs);
       }
 
       recoverMusicContext() {
@@ -17510,6 +17930,7 @@ return 0;`;
         this.bgmMode = mode;
         if (!this.ensureBgmRunning(mode, true)) return;
         if (!this.ensureContext()) return;
+        this.fadeSynthBgmTo(1, AUDIO_CROSSFADE_MS);
         const themeSections = ADAPTIVE_BGM_THEMES[mode] || ADAPTIVE_BGM_THEMES.town;
         const layers = this.createMusicLayers() || {};
         this.applyMusicLayerMix(mode, this.editorAudioFocus);
@@ -17972,6 +18393,8 @@ return 0;`;
     function previewMenuMusicTheme(delta = 0) {
       audioManager.externalMusicMode = false;
       audioManager.externalMusicProvider = "";
+      musicIslandState.dismissedKey = "";
+      saveMusicIslandState();
       initializeAudioFromGesture();
       const currentIndex = getMusicThemeIndex();
       const nextMode = PIXABAY_BGM_THEME_ORDER[(currentIndex + delta + PIXABAY_BGM_THEME_ORDER.length) % PIXABAY_BGM_THEME_ORDER.length];
@@ -17993,6 +18416,8 @@ return 0;`;
       }
       audioManager.externalMusicMode = false;
       audioManager.externalMusicProvider = "";
+      musicIslandState.dismissedKey = "";
+      saveMusicIslandState();
       audioManager.pixabayPreviewMode = mode;
       initializeAudioFromGesture();
       audioManager.playBgm(mode);
@@ -18014,6 +18439,8 @@ return 0;`;
       audioManager.externalMusicMode = true;
       audioManager.externalMusicProvider = connector.id;
       audioManager.pixabayPreviewMode = "external";
+      musicIslandState.dismissedKey = "";
+      saveMusicIslandState();
       renderMusicSwitcher("external");
       announceA11yEvent?.(`已打开 ${connector.label}，游戏音乐已暂停`, "♪");
       showReward?.(`${connector.label}外部模式：游戏BGM已暂停，可在新页面登录播放喜欢的歌`);
@@ -18034,6 +18461,7 @@ return 0;`;
         expanded: Boolean(source.expanded),
         x,
         y,
+        dismissedKey: typeof source.dismissedKey === "string" ? source.dismissedKey.slice(0, 180) : "",
         dragging: false,
         pointerId: null,
         dragOffsetX: 0,
@@ -18052,7 +18480,8 @@ return 0;`;
       return writeStorage(STORAGE.musicIsland, {
         expanded: musicIslandState.expanded,
         x: musicIslandState.x,
-        y: musicIslandState.y
+        y: musicIslandState.y,
+        dismissedKey: musicIslandState.dismissedKey || ""
       });
     }
 
@@ -18092,6 +18521,7 @@ return 0;`;
         return {
           visible: true,
           kind: "qq",
+          key: `qq:${connector.id || "qqmusic"}`,
           title: `QQ音乐 · 外部播放`,
           subtitle: `偏好音量 ${gameState.settings.qqMusicVolume ?? 100}% · 请在 QQ 音乐页面同步调节`,
           mode: "external",
@@ -18105,6 +18535,7 @@ return 0;`;
       return {
         visible: true,
         kind: "custom",
+        key: `custom:${mode}:${track.id || track.src || track.title}`,
         title: `${track.sceneLabel} · ${track.title}`,
         subtitle: `自定义音乐 ${gameState.settings.customMusicVolume ?? 100}% · ${track.creator}`,
         mode,
@@ -18112,27 +18543,83 @@ return 0;`;
       };
     }
 
+    function getMusicIslandLyric(payload = {}) {
+      if (!payload.visible) return "QQ 或自定义音乐播放时显示";
+      const now = performance?.now?.() || Date.now();
+      const modeLabel = payload.track?.sceneLabel || getMusicThemeTrack(payload.mode || "town")?.sceneLabel || "当前场景";
+      const title = payload.track?.title || payload.track?.label || "外部音乐";
+      const lines = payload.kind === "qq"
+        ? [
+          "♪ QQ音乐外部播放中",
+          "♪ 歌词以 QQ 音乐页面为准",
+          `♪ ${modeLabel}：游戏音效已让位`,
+          "♪ 外部音乐优先 · 游戏BGM暂停"
+        ]
+        : [
+          `♪ ${title} 正在播放`,
+          `♪ ${modeLabel} 的自定义主题`,
+          "♪ 跟随场景推进自动切换",
+          "♪ 原生音效保持低优先级"
+        ];
+      return lines[Math.floor(now / 2600) % lines.length];
+    }
+
+    function updateMusicIslandRhythm(payload = {}, hidden = false) {
+      const island = dom.musicDynamicIsland;
+      if (!island) return false;
+      const now = (performance?.now?.() || Date.now()) / 1000;
+      const volume = payload.kind === "qq"
+        ? Math.max(0, Math.min(140, Number(gameState.settings.qqMusicVolume ?? 100) || 0))
+        : Math.max(0, Math.min(140, Number(gameState.settings.customMusicVolume ?? 100) || 0));
+      const mediaTime = audioManager.pixabayBgm && !audioManager.pixabayBgm.paused ? audioManager.pixabayBgm.currentTime : now;
+      const energy = Math.max(0.28, Math.min(0.96, Number(payload.track?.energy) || (payload.kind === "qq" ? 0.58 : 0.5)));
+      const beat = hidden || !payload.visible ? 0.18 : Math.max(0.18, Math.min(1.18, (volume / 100) * (0.42 + Math.abs(Math.sin(mediaTime * (1.65 + energy * 2.4))) * 0.58)));
+      const hue = payload.kind === "qq"
+        ? 112 + Math.round(beat * 74)
+        : 176 + Math.round(beat * 116);
+      island.style?.setProperty?.("--music-island-hue", `${hue}deg`);
+      island.style?.setProperty?.("--music-island-glow", `${Math.round(13 + beat * 28)}px`);
+      island.style?.setProperty?.("--music-island-alpha", String(Math.max(0.22, Math.min(0.82, 0.28 + beat * 0.42))));
+      island.style?.setProperty?.("--music-island-orb-scale", (0.92 + beat * 0.18).toFixed(3));
+      island.style?.setProperty?.("--music-island-volume", String(volume));
+      return beat;
+    }
+
     function updateMusicDynamicIsland() {
       const island = dom.musicDynamicIsland;
       if (!island) return false;
       const payload = getActiveMusicIslandPayload();
-      island.classList.toggle("is-hidden", !payload.visible);
-      island.classList.toggle("is-expanded", Boolean(payload.visible && musicIslandState.expanded));
+      const dismissed = Boolean(payload.visible && payload.key && musicIslandState.dismissedKey === payload.key);
+      island.classList.toggle("is-hidden", !payload.visible || dismissed);
+      island.classList.toggle("is-expanded", Boolean(payload.visible && !dismissed && musicIslandState.expanded));
       island.classList.toggle("is-collapsed", !musicIslandState.expanded);
       island.dataset.musicKind = payload.kind || "none";
       if (dom.musicIslandTitle) dom.musicIslandTitle.textContent = payload.visible ? payload.title : "音乐未连接";
       if (dom.musicIslandSubtitle) dom.musicIslandSubtitle.textContent = payload.visible ? payload.subtitle : "QQ 或自定义音乐播放时显示";
+      if (dom.musicIslandLyric) dom.musicIslandLyric.textContent = getMusicIslandLyric(payload);
+      updateMusicIslandRhythm(payload, dismissed);
       syncMusicIslandVolumeControls();
       syncMusicPlayButton(payload.mode || audioManager.pixabayPreviewMode || audioManager.bgmMode || "town");
       applyMusicIslandPosition();
-      return payload.visible;
+      return Boolean(payload.visible && !dismissed);
     }
 
     function setMusicIslandExpanded(expanded = true) {
       musicIslandState.expanded = Boolean(expanded);
+      if (musicIslandState.expanded) musicIslandState.dismissedKey = "";
       updateMusicDynamicIsland();
       saveMusicIslandState();
       return musicIslandState.expanded;
+    }
+
+    function dismissMusicIsland() {
+      const payload = getActiveMusicIslandPayload();
+      if (!payload.visible || !payload.key) return false;
+      musicIslandState.expanded = false;
+      musicIslandState.dismissedKey = payload.key;
+      updateMusicDynamicIsland();
+      saveMusicIslandState();
+      return true;
     }
 
     function handleMusicIslandPointerDown(event) {
@@ -18315,6 +18802,8 @@ return 0;`;
       if (controls.fileInput) controls.fileInput.value = "";
       audioManager.externalMusicMode = false;
       audioManager.externalMusicProvider = "";
+      musicIslandState.dismissedKey = "";
+      saveMusicIslandState();
       audioManager.pixabayPreviewMode = mode;
       audioManager.stopBgm();
       initializeAudioFromGesture();
@@ -18344,6 +18833,8 @@ return 0;`;
       if (controls.urlInput) controls.urlInput.value = "";
       audioManager.externalMusicMode = false;
       audioManager.externalMusicProvider = "";
+      musicIslandState.dismissedKey = "";
+      saveMusicIslandState();
       audioManager.pixabayPreviewMode = mode;
       audioManager.stopBgm();
       if (audioBooted) audioManager.playBgm(mode);
@@ -20175,6 +20666,7 @@ int main(void) {
       choiceNodeTitle: document.getElementById("choiceNodeTitle"),
       choiceNodePrompt: document.getElementById("choiceNodePrompt"),
       choiceOptions: document.getElementById("choiceOptions"),
+      choiceCloseButton: document.getElementById("choiceCloseButton"),
       choiceFeedbackIsland: document.getElementById("choiceFeedbackIsland"),
       questRewardToast: document.getElementById("questRewardToast"),
       questProgressToast: document.getElementById("questProgressToast"),
@@ -20312,6 +20804,8 @@ int main(void) {
       a11yLiveRegion: document.getElementById("a11yLiveRegion"),
       devEasterOverlay: document.getElementById("devEasterOverlay"),
       codexCollectionPanel: document.getElementById("codexCollectionPanel"),
+      codexStats: document.getElementById("codexStats"),
+      codexTypeTabs: document.getElementById("codexTypeTabs"),
       codexCollectionGrid: document.getElementById("codexCollectionGrid"),
       closeCodexCollectionButton: document.getElementById("closeCodexCollectionButton"),
       sandboxPanel: document.getElementById("sandboxPanel"),
@@ -20482,10 +20976,12 @@ int main(void) {
       musicIslandExpanded: document.getElementById("musicIslandExpanded"),
       musicIslandTitle: document.getElementById("musicIslandTitle"),
       musicIslandSubtitle: document.getElementById("musicIslandSubtitle"),
+      musicIslandLyric: document.getElementById("musicIslandLyric"),
       musicIslandPlayButton: document.getElementById("musicIslandPlayButton"),
       musicIslandPrevButton: document.getElementById("musicIslandPrevButton"),
       musicIslandNextButton: document.getElementById("musicIslandNextButton"),
       musicIslandCloseButton: document.getElementById("musicIslandCloseButton"),
+      musicIslandDismissButton: document.getElementById("musicIslandDismissButton"),
       musicIslandCustomVolume: document.getElementById("musicIslandCustomVolume"),
       musicIslandCustomVolumeValue: document.getElementById("musicIslandCustomVolumeValue"),
       musicIslandQqVolume: document.getElementById("musicIslandQqVolume"),
@@ -21403,12 +21899,56 @@ int main(void) {
       return discoveries[key];
     }
 
-    function renderCodexCollection() {
+    const CODEX_TYPE_META = Object.freeze({
+      area: Object.freeze({ label: "区域", icon: "◇" }),
+      "skill-card": Object.freeze({ label: "碎片", icon: "◆" }),
+      enemy: Object.freeze({ label: "敌人", icon: "!" }),
+      memory: Object.freeze({ label: "记忆", icon: "◎" }),
+      system: Object.freeze({ label: "系统", icon: "⌬" })
+    });
+    let activeCodexTypeFilter = "all";
+
+    function getCodexTypeMeta(type = "system") {
+      return CODEX_TYPE_META[type] || { label: type || "记录", icon: "?" };
+    }
+
+    function renderCodexCollection(filter = activeCodexTypeFilter) {
       if (!dom.codexCollectionGrid) return false;
-      const discoveries = Object.values(gameState.progress.codexDiscoveries || {});
-      dom.codexCollectionGrid.innerHTML = discoveries.length
-        ? discoveries.map((entry) => `<article class="codex-entry"><strong>${escapeHtml(entry.label)}</strong><br><small>${escapeHtml(entry.type)} · ${escapeHtml(entry.firstSeenAt)}</small></article>`).join("")
-        : "<p>// 图鉴还没有记录。去收集碎片、解锁区域或遭遇敌人吧。</p>";
+      const discoveries = Object.values(gameState.progress.codexDiscoveries || {})
+        .sort((a, b) => String(b.firstSeenAt || "").localeCompare(String(a.firstSeenAt || "")));
+      const typeCounts = discoveries.reduce((counts, entry) => {
+        counts[entry.type] = (counts[entry.type] || 0) + 1;
+        return counts;
+      }, {});
+      const types = Object.keys(typeCounts).sort();
+      activeCodexTypeFilter = filter === "all" || types.includes(filter) ? filter : "all";
+      const filtered = activeCodexTypeFilter === "all" ? discoveries : discoveries.filter((entry) => entry.type === activeCodexTypeFilter);
+      if (dom.codexStats) {
+        dom.codexStats.innerHTML = [
+          `<span class="codex-stat">总记录 ${discoveries.length}</span>`,
+          `<span class="codex-stat">分类 ${types.length}</span>`,
+          `<span class="codex-stat">当前 ${filtered.length}</span>`
+        ].join("");
+      }
+      if (dom.codexTypeTabs) {
+        dom.codexTypeTabs.innerHTML = [
+          `<button class="codex-type-tab ${activeCodexTypeFilter === "all" ? "active" : ""}" type="button" data-codex-type="all">全部</button>`,
+          ...types.map((type) => {
+            const meta = getCodexTypeMeta(type);
+            return `<button class="codex-type-tab ${activeCodexTypeFilter === type ? "active" : ""}" type="button" data-codex-type="${escapeHtml(type)}">${meta.icon} ${escapeHtml(meta.label)} ${typeCounts[type]}</button>`;
+          })
+        ].join("");
+        dom.codexTypeTabs.querySelectorAll("[data-codex-type]").forEach((button) => {
+          button.addEventListener("click", () => renderCodexCollection(button.dataset.codexType || "all"));
+        });
+      }
+      dom.codexCollectionGrid.innerHTML = filtered.length
+        ? filtered.map((entry) => {
+          const meta = getCodexTypeMeta(entry.type);
+          const time = entry.firstSeenAt ? new Date(entry.firstSeenAt).toLocaleString("zh-CN") : "未知时间";
+          return `<article class="codex-entry"><span class="codex-entry-icon" aria-hidden="true">${meta.icon}</span><div><strong>${escapeHtml(entry.label)}</strong><small>${escapeHtml(meta.label)} · ${escapeHtml(time)}<br>ID: ${escapeHtml(entry.id || "")}</small></div></article>`;
+        }).join("")
+        : `<p class="codex-empty">// ${discoveries.length ? "这个分类还没有记录。" : "图鉴还没有记录。去收集碎片、解锁区域或遭遇敌人吧。"}</p>`;
       return true;
     }
 
@@ -31219,13 +31759,13 @@ ${item.code}
 
       bind() {
         dom.mainMenuList.querySelectorAll("[data-menu-action]").forEach((button, index) => {
-          button.addEventListener("mouseenter", () => this.select(index));
+          button.addEventListener("mouseenter", () => this.select(index, { playSound: false }));
           button.addEventListener("click", () => this.activateButton(button));
         });
 
         dom.pauseMenuList.querySelectorAll("[data-pause-action]").forEach((button, index) => {
           button.addEventListener("mouseenter", () => {
-            if (this.active === "pause") this.select(index);
+            if (this.active === "pause") this.select(index, { playSound: false });
           });
           button.addEventListener("click", () => this.activatePauseButton(button));
         });
@@ -31268,6 +31808,7 @@ ${item.code}
         dom.musicDynamicIsland?.addEventListener("pointercancel", handleMusicIslandPointerUp);
         dom.musicIslandCompact?.addEventListener("click", handleMusicIslandCompactClick);
         dom.musicIslandCloseButton?.addEventListener("click", () => setMusicIslandExpanded(false));
+        dom.musicIslandDismissButton?.addEventListener("click", dismissMusicIsland);
         dom.musicIslandPlayButton?.addEventListener("click", () => toggleMenuMusicPlayback());
         dom.musicIslandPrevButton?.addEventListener("click", () => previewMenuMusicTheme(-1));
         dom.musicIslandNextButton?.addEventListener("click", () => previewMenuMusicTheme(1));
@@ -31401,7 +31942,8 @@ ${item.code}
         return [...dom.mainMenuList.querySelectorAll(".menu-option")];
       }
 
-      select(index) {
+      select(index, options = {}) {
+        const { scroll = false, playSound = true } = options;
         this.menuButtons = this.currentButtons();
         const enabled = this.menuButtons.filter((button) => !button.disabled);
         if (!enabled.length) return;
@@ -31412,14 +31954,15 @@ ${item.code}
           this.selectedIndex = normalized;
         }
         this.menuButtons.forEach((button, buttonIndex) => button.classList.toggle("selected", buttonIndex === this.selectedIndex));
-        this.updateHighlight();
-        audioManager.uiHover();
+        this.updateHighlight({ scroll });
+        if (playSound) audioManager.uiHover();
       }
 
-      updateHighlight() {
+      updateHighlight({ scroll = false } = {}) {
         if (this.active !== "main") return;
         const target = this.menuButtons[this.selectedIndex];
         if (!target) return;
+        if (scroll) target.scrollIntoView?.({ block: "nearest", inline: "nearest" });
         dom.menuHighlight.style.transform = `translateY(${target.offsetTop}px)`;
         dom.menuHighlight.style.height = `${target.offsetHeight}px`;
       }
@@ -31445,7 +31988,7 @@ ${item.code}
         updateContextualHint();
         renderMusicSwitcher(audioManager.externalMusicMode ? "external" : "menu");
         if (!audioManager.externalMusicMode && audioBooted && audioManager.hasMusicEnabled()) audioManager.playBgm("menu");
-        window.setTimeout(() => this.select(0), 40);
+        window.setTimeout(() => this.select(0, { playSound: false }), 40);
       }
 
       startGame() {
@@ -31486,7 +32029,7 @@ ${item.code}
         pauseFreezeAnimations();
         if (gameState.scene) gameState.scene.scene.pause();
         updateContextualHint();
-        window.setTimeout(() => this.select(0), 20);
+        window.setTimeout(() => this.select(0, { playSound: false }), 20);
       }
 
       resumeGame() {
@@ -31564,12 +32107,12 @@ ${item.code}
         if (!["main", "pause"].includes(this.active)) return false;
         if (event.key === "ArrowDown") {
           event.preventDefault();
-          this.select(this.selectedIndex + 1);
+          this.select(this.selectedIndex + 1, { scroll: true });
           return true;
         }
         if (event.key === "ArrowUp") {
           event.preventDefault();
-          this.select(this.selectedIndex - 1);
+          this.select(this.selectedIndex - 1, { scroll: true });
           return true;
         }
         if (event.key === "Enter") {
@@ -39069,7 +39612,8 @@ ${item.code}
       { id: "talk", label: "交流", hint: "听 NPC 当前状态和世界反应" },
       { id: "task", label: "任务", hint: "接取、提交或查看任务" },
       { id: "shop", label: "商店", hint: "打开兑换窗口" },
-      { id: "hint", label: "线索", hint: "获取下一步和碎片位置提示" }
+      { id: "hint", label: "线索", hint: "获取下一步和碎片位置提示" },
+      { id: "close", label: "关闭", hint: "收起本次NPC交互弹窗" }
     ]);
 
     function getNpcActionOptions(npc) {
@@ -39078,6 +39622,7 @@ ${item.code}
       if ((data.taskIds || []).length) options.push(NPC_ACTIONS[1]);
       if (data.type === NPC_TYPES.merchant) options.push(NPC_ACTIONS[2]);
       options.push(NPC_ACTIONS[3]);
+      options.push(NPC_ACTIONS[4]);
       return options;
     }
 
@@ -39089,6 +39634,7 @@ ${item.code}
     }
 
     function performNpcAction(scene, npc, actionId = "talk") {
+      if (actionId === "close") return closeNpcActionChooser();
       closeNpcActionChooser();
       if (!npc?.data) return false;
       if (actionId === "task") {
@@ -40756,6 +41302,7 @@ ${item.code}
     });
     dom.closeQuestLogButton?.addEventListener("click", () => openQuestLog(false));
     dom.closeNpcCodeButton?.addEventListener("click", closeNpcCodeWindow);
+    dom.choiceCloseButton?.addEventListener("click", closeNpcActionChooser);
     dom.saveCertificateButton?.addEventListener("click", saveCompletionCertificateAsPng);
     dom.shareCertificateButton?.addEventListener("click", shareCompletionCertificate);
     dom.closeCertificateButton?.addEventListener("click", () => {
@@ -41276,8 +41823,7 @@ ${item.code}
       if (event.key === "Escape" && (dom.npcCodeWindow?.classList.contains("active") || dom.narrativeChoiceOverlay?.classList.contains("active"))) {
         event.preventDefault();
         closeNpcCodeWindow();
-        dom.narrativeChoiceOverlay?.classList.remove("active");
-        dom.narrativeChoiceOverlay?.setAttribute("aria-hidden", "true");
+        closeNpcActionChooser();
         return;
       }
       if (event.key === "Escape" && gameState.paused && !gameState.menuOpen) {
