@@ -14,7 +14,7 @@
   <meta http-equiv="Cache-Control" content="no-store, max-age=0, must-revalidate">
   <meta http-equiv="Pragma" content="no-cache">
   <meta http-equiv="Expires" content="0">
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self' file:; base-uri 'self'; object-src 'none'; script-src 'self' 'nonce-code-awakener-inline' file: 'sha256-h471bh7hzlBQF3sSuW6omS927B2vVohaGNwS3btEsH4='; style-src 'self' 'nonce-code-awakener-inline' file: 'sha256-3OEBcoAS3gplA/brmASCZ27L2kFZG36hg+RDP4wIrIs='; style-src-attr 'unsafe-inline'; font-src 'self' file: data:; img-src 'self' file: data: blob: https://cdn.pixabay.com; media-src 'self' file: data: blob: https: http: https://cdn.pixabay.com; worker-src 'self' file: blob:; child-src 'self' file: blob:; connect-src 'self' file: http://localhost:8000 http://127.0.0.1:8000 http://localhost:9966 http://127.0.0.1:9966 http://localhost:9977 http://127.0.0.1:9977 https://cdn.pixabay.com https://pixabay.com;">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self' file:; base-uri 'self'; object-src 'none'; script-src 'self' 'nonce-code-awakener-inline' file: 'sha256-a0wXNqLQkJHQajXS5i7QQdD9SLgG77eKzNtSeE6BWNE='; style-src 'self' 'nonce-code-awakener-inline' file: 'sha256-3OEBcoAS3gplA/brmASCZ27L2kFZG36hg+RDP4wIrIs='; style-src-attr 'unsafe-inline'; font-src 'self' file: data:; img-src 'self' file: data: blob: https://cdn.pixabay.com; media-src 'self' file: data: blob: https: http: https://cdn.pixabay.com; worker-src 'self' file: blob:; child-src 'self' file: blob:; connect-src 'self' file: http://localhost:8000 http://127.0.0.1:8000 http://localhost:9966 http://127.0.0.1:9966 http://localhost:9977 http://127.0.0.1:9977 https://cdn.pixabay.com https://pixabay.com;">
   <title>代码觉醒者：Main Corridor</title>
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%23020617'/%3E%3Cpath d='M22 20 10 32l12 12M42 20l12 12-12 12' fill='none' stroke='%2300ff88' stroke-width='6' stroke-linecap='round' stroke-linejoin='round'/%3E%3Cpath d='m36 16-8 32' stroke='%2300ccff' stroke-width='5' stroke-linecap='round'/%3E%3C/svg%3E">
   <script src="./vendor/phaser.min.js"></script>
@@ -12770,6 +12770,8 @@ int main(void) {
       <button id="announcementCloseButton" class="announcement-close" type="button" aria-label="关闭公告">×</button>
       <h2 id="startupAnnouncementTitle" class="startup-announcement-title">> 消息 / 本次更新</h2>
       <div id="announcementPageBody" class="startup-announcement-body">
+        <p>// v1.2.0 热修：已选过五幕记忆内核分支后，启动游戏不再反复进入剧情桥。</p>
+        <p>// 进入世界或切换场景音乐时会先清理上一条 BGM，避免两首音乐同时播放。</p>
         <p>// v1.2.0：第一世界重构为 Main Corridor 单一走廊，学习舱按顺序点亮。</p>
         <p>// 新玩家首次进入会打开变量立绘剧场，主角修复师与全息导师使用 1200×1600 WebP atlas。</p>
         <p>// 《认识你的编译器》加入 1 分 30 秒交互式电影教学，printf("Hello World!"); 支持字符级解构。</p>
@@ -13314,6 +13316,8 @@ int main() {
       {
         title: "> 消息 / 本次更新",
         lines: [
+          "// v1.2.0 热修：已选过五幕记忆内核分支后，启动游戏不再反复进入剧情桥。",
+          "// 进入世界或切换场景音乐时会先清理上一条 BGM，避免两首音乐同时播放。",
           "// v1.2.0：第一世界重构为 Main Corridor 单一走廊，学习舱按顺序点亮，不再自由寻找。",
           "// 新玩家首次进入会打开变量立绘剧场，主角修复师与全息导师使用 1200×1600 WebP atlas。",
           "// 第一个学习舱《认识你的编译器》加入 1 分 30 秒交互式电影教学，printf(\"Hello World!\"); 支持字符级解构。",
@@ -13324,6 +13328,17 @@ int main() {
       }
     ]);
     const UPDATE_HISTORY = Object.freeze([
+      {
+        version: "v1.2.0-hotfix.1",
+        date: "2026-06-18",
+        title: "五幕剧情桥与 BGM 叠加热修",
+        details: [
+          "记忆核心入口新增 resolved 判断，memoryCoreChoice 已存在时会视为五幕剧情桥已处理，不再每次点击启动游戏都重复弹出。",
+          "旧存档归一化会保留 memoryCoreChoice、memoryCoreCinematicComplete、memoryCoreCinematicSkipped 和已清理幕记录，避免选择状态丢失。",
+          "场景音乐切换前会立即清理冲突的上一条 Pixabay/自定义 BGM，进入世界后不会同时听到菜单音乐和世界音乐。",
+          "被主动停止的旧 HTML 音轨 play() 失败会被识别为可恢复媒体竞态，不再误触发额外合成 BGM。官方Q群：414374792。"
+        ]
+      },
       {
         version: "v1.2.0",
         date: "2026-06-17",
@@ -14727,7 +14742,7 @@ return 0;`;
       directSaveAs: "reduced-by-inline-resources"
     });
     const SECURITY_CONFIG = Object.freeze({
-      expectedScriptHash: "63THuIxT3GBfzbiAdbJ6x93ngtSY2QvHkLLJ23MZFV4=",
+      expectedScriptHash: "S+NXq8CC3DvTJ3uMfCBZGGIki7JUTpPdnB+bSVKoP1o=",
       selfCheckIntervalMs: 45000,
       tamperRefreshMs: 5000,
       devToolsRefreshMs: 2000,
@@ -17826,6 +17841,7 @@ return 0;`;
       friendlyAchievements: [],
       firstFriendlyOpenedAt: "",
       postGenesisSetupComplete: false,
+      memoryCoreChoice: "",
       memoryCoreCinematicComplete: false,
       memoryCoreCinematicSkipped: false,
       memoryCoreCinematicClearedActs: [],
@@ -18244,6 +18260,11 @@ return 0;`;
         npcMemory: savedProgress.npcMemory && typeof savedProgress.npcMemory === "object" ? savedProgress.npcMemory : {},
         collectedImprints: Array.isArray(savedProgress.collectedImprints) ? savedProgress.collectedImprints : [],
         codeGenesisCharacter: savedProgress.codeGenesisCharacter && typeof savedProgress.codeGenesisCharacter === "object" ? savedProgress.codeGenesisCharacter : null,
+        memoryCoreChoice: typeof savedProgress.memoryCoreChoice === "string" ? savedProgress.memoryCoreChoice : "",
+        memoryCoreCinematicComplete: Boolean(savedProgress.memoryCoreCinematicComplete),
+        memoryCoreCinematicSkipped: Boolean(savedProgress.memoryCoreCinematicSkipped),
+        memoryCoreCinematicClearedActs: Array.isArray(savedProgress.memoryCoreCinematicClearedActs) ? savedProgress.memoryCoreCinematicClearedActs : [],
+        memoryCoreCinematicLastSeenAt: savedProgress.memoryCoreCinematicLastSeenAt || "",
         absoluteGuideStage: savedProgress.absoluteGuideStage || "welcome",
         absoluteGuideStartedAt: Number(savedProgress.absoluteGuideStartedAt) || 0,
         absoluteGuideCompleted: Boolean(savedProgress.absoluteGuideCompleted),
@@ -18815,6 +18836,14 @@ return 0;`;
         return true;
       }
 
+      stopConflictingPixabayBgm(mode = "town", fadeMs = 0) {
+        if (!this.pixabayBgm || !this.pixabayBgmTrack) return false;
+        const targetTrack = this.getPixabayBgmTrack(mode);
+        const sameTrack = Boolean(targetTrack?.src && this.pixabayBgmTrack?.src === targetTrack.src);
+        if (sameTrack && this.pixabayBgmMode === mode) return false;
+        return this.stopPixabayBgm(fadeMs);
+      }
+
       advancePixabayBgm() {
         if (!this.hasMusicIntent()) return false;
         const mode = this.pixabayBgmMode || this.bgmMode || "town";
@@ -18826,7 +18855,8 @@ return 0;`;
         const now = performance.now();
         const synthPlaying = Boolean(this.bgmTimer && this.bgmMode === targetMode);
         const pixabaySameMode = Boolean(this.pixabayBgm && this.pixabayBgmMode === targetMode);
-        if (synthPlaying || (pixabaySameMode && this.isPixabayBgmPlaying())) {
+        const pixabayConflictingMode = Boolean(this.pixabayBgm && this.pixabayBgmMode && this.pixabayBgmMode !== targetMode);
+        if ((synthPlaying && !pixabayConflictingMode) || (pixabaySameMode && this.isPixabayBgmPlaying())) {
           this.lastBgmPingAt = now;
           this.syncPixabayVolumes();
           this.applyMusicLayerMix(targetMode, this.isAudioFocusActive());
@@ -18865,7 +18895,7 @@ return 0;`;
         if (this.bgmTimer) window.clearTimeout(this.bgmTimer);
         this.bgmTimer = null;
         const previousAudio = this.pixabayBgm && this.pixabayBgmTrack?.src !== track.src ? this.pixabayBgm : null;
-        if (previousAudio) this.fadeHtmlAudio(previousAudio, 0, AUDIO_CROSSFADE_MS, () => this.cleanupHtmlAudio(previousAudio));
+        if (previousAudio) this.cleanupHtmlAudio(previousAudio);
         const audio = previousAudio ? new Audio() : (this.pixabayBgm || new Audio());
         this.pixabayBgm = audio;
         this.pixabayBgmTrack = track;
@@ -18887,6 +18917,7 @@ return 0;`;
           if (this.hasMusicIntent()) this.startSynthBgm(mode);
         };
         const handleHtmlAudioPlayFailure = (error) => {
+          if (isBenignMediaPlayInterruption(error) || this.pixabayBgm !== audio) return;
           this.pixabayBgmFailedAt = performance.now();
           errorRingBuffer.push(error, ERROR_LEVELS.recoverable, { action: "startPixabayBgm", track: track.id });
           this.cleanupHtmlAudio(audio);
@@ -19347,6 +19378,7 @@ return 0;`;
       playBgm(mode = "town") {
         if (this.externalMusicMode) return false;
         if (this.shouldSkipBgmRequest(mode)) return true;
+        this.stopConflictingPixabayBgm(mode, 0);
         if (this.startPixabayBgm(mode)) return true;
         return this.startSynthBgm(mode);
       }
@@ -24998,9 +25030,14 @@ ${item.code}
 
     let memoryCoreCinematicEngine = null;
 
+    function hasMemoryCoreCinematicResolved(progress = gameState?.progress || {}) {
+      const choice = typeof progress?.memoryCoreChoice === "string" ? progress.memoryCoreChoice.trim() : "";
+      return Boolean(progress?.memoryCoreCinematicComplete || progress?.memoryCoreCinematicSkipped || choice);
+    }
+
     async function playMemoryCoreCinematicBridge(character = gameState.progress.codeGenesisCharacter) {
       const progress = gameState.progress || {};
-      if (progress.memoryCoreCinematicComplete || progress.memoryCoreCinematicSkipped) return { skipped: true };
+      if (hasMemoryCoreCinematicResolved(progress)) return { skipped: true, reason: "already-resolved" };
       if (!memoryCoreCinematicEngine) {
         memoryCoreCinematicEngine = new MemoryCoreCinematicEngine({
           overlay: dom.memoryCoreCinematicOverlay,
@@ -25016,8 +25053,7 @@ ${item.code}
       const progress = gameState.progress || {};
       return Boolean(
         hasCompletedCodeGenesisCharacter() &&
-        !progress.memoryCoreCinematicComplete &&
-        !progress.memoryCoreCinematicSkipped
+        !hasMemoryCoreCinematicResolved(progress)
       );
     }
 

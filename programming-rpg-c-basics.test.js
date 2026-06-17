@@ -130,6 +130,8 @@ globalThis.__gameApi = {
   buyMerchantSupply: typeof buyMerchantSupply === "function" ? buyMerchantSupply : undefined,
   useMerchantHpSupply: typeof useMerchantHpSupply === "function" ? useMerchantHpSupply : undefined,
   getMerchantHpSupplyCount: typeof getMerchantHpSupplyCount === "function" ? getMerchantHpSupplyCount : undefined,
+  hasMemoryCoreCinematicResolved: typeof hasMemoryCoreCinematicResolved === "function" ? hasMemoryCoreCinematicResolved : undefined,
+  shouldPlayMemoryCoreCinematicBeforeWorldEntry: typeof shouldPlayMemoryCoreCinematicBeforeWorldEntry === "function" ? shouldPlayMemoryCoreCinematicBeforeWorldEntry : undefined,
   gameState: typeof gameState !== "undefined" ? gameState : undefined,
   C_TUTORIAL_COURSE: typeof C_TUTORIAL_COURSE !== "undefined" ? C_TUTORIAL_COURSE : undefined,
   QUEST_DATA: typeof QUEST_DATA !== "undefined" ? QUEST_DATA : undefined,
@@ -232,6 +234,12 @@ assert(/async function playMemoryCoreCinematicBridge/m.test(html), "creation flo
 assert(/await openPostGenesisSetupOverlay\(character\);[\s\S]*await playMemoryCoreCinematicBridge\(character\);[\s\S]*const loaded = await LoadNextSceneWithTimeout/m.test(html), "character creation should play the memory core cinematic before loading the world");
 assert(/async function ensureMemoryCoreCinematicBeforeWorldEntry/m.test(html), "legacy saves should pass through a memory core cinematic gate before entering the world");
 assert(/enterGameWorldInFlight/m.test(html) && /async enterGameWorld\(\)[\s\S]*await ensureMemoryCoreCinematicBeforeWorldEntry\(\)/m.test(html), "menu start and continue should not skip the memory core cinematic for old saves");
+assert(typeof api.hasMemoryCoreCinematicResolved === "function", "memory core gate should expose a reusable resolved-state helper");
+assert(api.hasMemoryCoreCinematicResolved({ memoryCoreChoice: "rational", memoryCoreCinematicComplete: false, memoryCoreCinematicSkipped: false }), "memory core gate should treat a stored rational/emotional choice as already resolved");
+assert(!api.hasMemoryCoreCinematicResolved({ memoryCoreChoice: "", memoryCoreCinematicComplete: false, memoryCoreCinematicSkipped: false }), "memory core gate should still play for old saves with no choice, completion, or skip flag");
+assert(/memoryCoreChoice:\s*""/m.test(html) && /memoryCoreChoice:\s*typeof savedProgress\.memoryCoreChoice === "string" \? savedProgress\.memoryCoreChoice : ""/m.test(html), "memory core choice should survive default and normalized progress state");
+assert(/playMemoryCoreCinematicBridge\(character[\s\S]*hasMemoryCoreCinematicResolved\(progress\)[\s\S]*return \{ skipped: true, reason: "already-resolved" \}/m.test(html), "memory core bridge should not reopen after the player has already chosen a branch");
+assert(/shouldPlayMemoryCoreCinematicBeforeWorldEntry\(\)[\s\S]*!hasMemoryCoreCinematicResolved\(progress\)/m.test(html), "start-game gate should suppress repeat memory core playback after a recorded choice");
 assert(/GAME_VERSION\s*=\s*"v1\.2\.0"/m.test(html) && /Main Corridor 单一走廊/m.test(html) && /变量立绘剧场/m.test(html), "startup announcement should be updated for the Main Corridor and variable theater release");
 
 assert(api.compressSavePayload, "save compressor should be exported for tests");
@@ -1368,7 +1376,7 @@ assert(/dom\.musicExternalButton\?\.addEventListener\("click", \(\) => connectEx
 assert(/function toggleMenuMusicPlayback\(\)[\s\S]*isMenuMusicPlaying\(mode\)[\s\S]*audioManager\.stopBgm\(\)[\s\S]*audioManager\.playBgm\(mode\)/m.test(html), "music play button should toggle pause and play");
 assert(/dom\.musicPlayButton\?\.addEventListener\("click", \(\) => toggleMenuMusicPlayback\(\)\)/m.test(html), "music play button should use the toggle handler");
 assert(/AUDIO_CROSSFADE_MS\s*=\s*920/m.test(html) && /fadeHtmlAudio\(audio,[\s\S]*requestAnimationFrame\(step\)[\s\S]*cleanupHtmlAudio\(audio\)/m.test(html), "HTML audio music transitions should fade instead of cutting abruptly");
-assert(/previousAudio[\s\S]*fadeHtmlAudio\(previousAudio,\s*0,\s*AUDIO_CROSSFADE_MS[\s\S]*fadeHtmlAudio\(audio,\s*targetVolume,\s*AUDIO_CROSSFADE_MS/m.test(html), "Pixabay and custom music switches should crossfade old and new tracks");
+assert(/previousAudio[\s\S]*cleanupHtmlAudio\(previousAudio\)[\s\S]*fadeHtmlAudio\(audio,\s*targetVolume,\s*AUDIO_CROSSFADE_MS/m.test(html), "Pixabay and custom music switches should clear the previous track before fading in the next one");
 assert(/fadeSynthBgmTo\(scale = 1,[\s\S]*setMusicBusGain[\s\S]*stopBgm\(fadeMs = AUDIO_CROSSFADE_MS\)[\s\S]*fadeSynthBgmTo\(0,\s*fadeMs\)/m.test(html), "synth fallback music should fade through the music bus");
 assert(/id="customMusicPanel"[\s\S]*id="customMusicSceneSelect"[\s\S]*id="customMusicUrlInput"[\s\S]*id="customMusicFileInput"[\s\S]*id="customMusicSaveButton"[\s\S]*id="customMusicClearButton"/m.test(html), "main menu should expose custom music controls for each scene");
 assert(/customMusic:\s*"rpg-c-basics-custom-music-v1"/m.test(html) && /CUSTOM_MUSIC_DB_NAME\s*=\s*"code-awakener-custom-music-v1"/m.test(html), "custom scene music should have separate storage keys");
@@ -1393,6 +1401,9 @@ assert(/startCyberLofiBgm\(\)[\s\S]*audioManager\.playBgm\("town"\)[\s\S]*direct
 assert(/getGentleMusicWave\(type = "triangle"\)[\s\S]*square[\s\S]*sawtooth[\s\S]*"triangle"/m.test(html), "BGM playback should soften square and sawtooth waves");
 assert(/BGM_VARIATION_QUEUE_MAX\s*=\s*3/m.test(html), "BGM event variation queue should be bounded to prevent stacked music bursts");
 assert(/BGM_REQUEST_DEDUPE_MS\s*=\s*1200/m.test(html) && /shouldSkipBgmRequest\(mode = "town"\)[\s\S]*this\.shouldSkipBgmRequest\(mode\)/m.test(html), "same-mode BGM requests should be deduped before starting another loop");
+assert(/stopConflictingPixabayBgm\(mode = "town", fadeMs = 0\)[\s\S]*this\.stopPixabayBgm\(fadeMs\)/m.test(html), "BGM mode switches should clear any conflicting external track instead of layering two songs");
+assert(/playBgm\(mode = "town"\)[\s\S]*this\.stopConflictingPixabayBgm\(mode, 0\)[\s\S]*this\.startPixabayBgm\(mode\)/m.test(html), "scene music should stop the previous external BGM before starting the next one");
+assert(/handleHtmlAudioPlayFailure = \(error\) => \{[\s\S]*isBenignMediaPlayInterruption\(error\)[\s\S]*this\.pixabayBgm !== audio[\s\S]*return/m.test(html), "stale or intentionally stopped HTML audio should not trigger an extra synth fallback bed");
 assert(/BGM_VARIATION_COOLDOWN_MS\s*=\s*1400/m.test(html) && /this\.bgmVariationCooldowns\s*=\s*new Map\(\)/m.test(html) && /duplicateActive[\s\S]*duplicateQueued[\s\S]*BGM_VARIATION_COOLDOWN_MS/m.test(html), "BGM event variations should be cooldown-gated and deduped");
 assert(/AUDIO_SFX_GLOBAL_COOLDOWN_MS\s*=\s*120/m.test(html) && /AUDIO_SFX_ACTIVE_LIMIT\s*=\s*2/m.test(html) && /now - this\.lastPixabaySfxAt < AUDIO_SFX_GLOBAL_COOLDOWN_MS[\s\S]*this\.pixabaySfxActive\.size >= AUDIO_SFX_ACTIVE_LIMIT/m.test(html), "Pixabay SFX should have global cooldown and concurrency limits");
 assert(/triggerMusicCompilePass\(\)[\s\S]*canPlayEvent\?\.\("musicCompilePass",\s*BGM_VARIATION_COOLDOWN_MS\)[\s\S]*queueBgmVariation\("compilePass"\)/m.test(html) && /triggerMusicCompileError\(\)[\s\S]*canPlayEvent\?\.\("musicCompileError",\s*BGM_VARIATION_COOLDOWN_MS\)[\s\S]*queueBgmVariation\("compileError"\)/m.test(html), "compile music gestures should not stack repeatedly in one compile flow");
@@ -1583,8 +1594,11 @@ assert(/function markAppRendered\(reason = "script-started"\)[\s\S]*classList\?\
 assert(/html\.app-rendered \.static-rescue/m.test(html) && /safeMode=true&noAudio=true&v=1\.2\.0/m.test(html), "static rescue should only appear if the app script does not render");
 assert(/isStrictSecurityMode\(\)[\s\S]*removeItem\?\.\("codeAwakenerStrictSecurity"\)[\s\S]*params\.get\("strictSecurity"\) === "1"/m.test(html), "stale localStorage strict-security flags should not white-screen normal browsers");
 assert(/UPDATE_ANNOUNCEMENT_PAGES\s*=\s*Object\.freeze\(\[\s*\{\s*title:\s*"> 消息 \/ 本次更新"[\s\S]*v1\.2\.0[\s\S]*Main Corridor[\s\S]*变量立绘剧场[\s\S]*1200×1600 WebP atlas[\s\S]*ChatTTS[\s\S]*EmotiVoice[\s\S]*414374792/m.test(html), "startup announcement should show the current v1.2.0 Main Corridor and variable theater release");
+assert(/UPDATE_ANNOUNCEMENT_PAGES\s*=\s*Object\.freeze\(\[\s*\{[\s\S]*v1\.2\.0 热修[\s\S]*五幕记忆内核[\s\S]*启动游戏不再反复进入剧情桥[\s\S]*清理上一条 BGM[\s\S]*两首音乐同时播放[\s\S]*414374792/m.test(html), "startup announcement should include the current memory-core and BGM overlap hotfix before upload");
 assert(/id="announcementPageBody"[\s\S]*v1\.2\.0：第一世界重构为 Main Corridor[\s\S]*变量立绘剧场[\s\S]*1200×1600 WebP atlas[\s\S]*ChatTTS[\s\S]*EmotiVoice[\s\S]*官方Q群：414374792/m.test(initialBodyMarkup), "static startup announcement placeholder should match the current v1.2.0 variable theater update before script hydration");
+assert(/id="announcementPageBody"[\s\S]*v1\.2\.0 热修[\s\S]*启动游戏不再反复进入剧情桥[\s\S]*两首音乐同时播放/m.test(initialBodyMarkup), "static startup announcement placeholder should include the current hotfix before script hydration");
 assert(!/公告只保留关闭、课程锁定、自由模式通关后显示/m.test(initialBodyMarkup), "static startup announcement placeholder should not show stale update copy");
+assert(/UPDATE_HISTORY\s*=\s*Object\.freeze\(\[\s*\{[\s\S]*v1\.2\.0-hotfix\.1[\s\S]*五幕剧情桥与 BGM 叠加热修[\s\S]*memoryCoreChoice[\s\S]*Pixabay\/自定义 BGM[\s\S]*官方Q群：414374792/m.test(html), "update history should record the memory-core and BGM overlap hotfix");
 assert(/UPDATE_HISTORY\s*=\s*Object\.freeze\(\[[\s\S]*v1\.0\.31[\s\S]*QQ音乐外部模式与自定义场景音乐[\s\S]*播放\/暂停切换[\s\S]*IndexedDB[\s\S]*414374792/m.test(html), "update history should record the v1.0.31 custom music connector release");
 assert(/UPDATE_HISTORY\s*=\s*Object\.freeze\(\[[\s\S]*v1\.0\.30[\s\S]*Pixabay 真实音乐与音效接入[\s\S]*Gamer Menu[\s\S]*音乐切换器[\s\S]*外部音频失败回退[\s\S]*414374792/m.test(html), "update history should record the v1.0.30 Pixabay music and sound-effect release");
 assert(/UPDATE_HISTORY\s*=\s*Object\.freeze\(\[[\s\S]*v1\.0\.29[\s\S]*声音重新标定[\s\S]*旧存档[\s\S]*进入游戏时的 BGM[\s\S]*反咚咚/m.test(html), "update history should record the v1.0.29 audio calibration and clean startup music release");
