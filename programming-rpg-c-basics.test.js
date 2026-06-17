@@ -123,6 +123,12 @@ globalThis.__gameApi = {
   getUsableWorldEvolutionFragmentCount: typeof getUsableWorldEvolutionFragmentCount === "function" ? getUsableWorldEvolutionFragmentCount : undefined,
   spendUsableWorldEvolutionFragment: typeof spendUsableWorldEvolutionFragment === "function" ? spendUsableWorldEvolutionFragment : undefined,
   useWorldEvolutionFragmentItem: typeof useWorldEvolutionFragmentItem === "function" ? useWorldEvolutionFragmentItem : undefined,
+  normalizeCompileLifeState: typeof normalizeCompileLifeState === "function" ? normalizeCompileLifeState : undefined,
+  handleCompileFailurePenalty: typeof handleCompileFailurePenalty === "function" ? handleCompileFailurePenalty : undefined,
+  getMerchantTradeFragmentCount: typeof getMerchantTradeFragmentCount === "function" ? getMerchantTradeFragmentCount : undefined,
+  buyMerchantSupply: typeof buyMerchantSupply === "function" ? buyMerchantSupply : undefined,
+  useMerchantHpSupply: typeof useMerchantHpSupply === "function" ? useMerchantHpSupply : undefined,
+  getMerchantHpSupplyCount: typeof getMerchantHpSupplyCount === "function" ? getMerchantHpSupplyCount : undefined,
   gameState: typeof gameState !== "undefined" ? gameState : undefined,
   C_TUTORIAL_COURSE: typeof C_TUTORIAL_COURSE !== "undefined" ? C_TUTORIAL_COURSE : undefined,
   QUEST_DATA: typeof QUEST_DATA !== "undefined" ? QUEST_DATA : undefined,
@@ -455,6 +461,9 @@ assert(/validateEditorSubmissionForCurrentTask\(rawCCode,\s*chapter,\s*gameState
 assert(!/renderExactCodeReferenceForCurrentTask\(preflight\)/m.test(html), "compile preflight failures should not render a full copy-only target answer");
 assert(/restoreEditorSourceAfterFailedRun\(userSourceBeforeRun,\s*preflight\.reason/m.test(html), "compile preflight failures should preserve the user's erroneous text for in-place correction");
 assert(/function formatCompileErrorMessage/m.test(html) && /appendCompileFailureHelp\(failureMessage,\s*chapter,\s*penalty\.failureCount\)/m.test(html), "all failed compile paths should display a compile-error message with non-blocking help while preserving editor text");
+assert(/function renderAcceptedOutputToSandbox/m.test(html) && /await renderAcceptedOutputToSandbox\(acceptedOutput\)/m.test(html), "accepted output preview should be isolated behind a safe sandbox renderer");
+assert(!/dom\.sandbox\.contentDocument\.getElementById\("terminal"\)\.textContent\s*=/.test(html), "accepted output preview should not write to a possibly missing iframe terminal");
+assert(/function syncActiveEditorFileFromInput/m.test(html) && /dom\.codeInput\.addEventListener\("input"[\s\S]*syncActiveEditorFileFromInput\(dom\.codeInput\.value\)/m.test(html), "typing in the editor should keep the active source file synchronized before compile");
 assert(typeof api.buildCompileFailureHelp === "function", "compile failures should expose a non-blocking help builder");
 assert(typeof api.buildCompileErrorSystemLogLines === "function", "compile error popup should build testable diagnostic lines");
 {
@@ -503,21 +512,29 @@ assert(/--editor-safe-top:[\s\S]*env\(safe-area-inset-top\)[\s\S]*--editor-safe-
 assert(/function applyEditorSafeArea\(\)[\s\S]*visualViewport[\s\S]*--mobile-visual-height[\s\S]*--mobile-visual-offset-top/m.test(html), "mobile editor should recalculate safe area and visual viewport dimensions");
 assert(/window\.addEventListener\("orientationchange",\s*applyEditorSafeArea\)/m.test(html), "mobile editor should refresh layout when device orientation changes");
 assert(/body\.mobile-input\.is-editor-open #editorOverlay\s*\{[\s\S]*position:\s*fixed[\s\S]*padding:\s*max\(6px,\s*var\(--editor-safe-top\)\)\s+max\(8px,\s*var\(--editor-safe-right\)\)\s+max\(6px,\s*var\(--editor-safe-bottom\)\)\s+max\(8px,\s*var\(--editor-safe-left\)\)/m.test(html), "mobile editor overlay should stay inside the safe visual area");
-assert(/body\.mobile-input \.vscode-window\s*\{[\s\S]*grid-template-rows:\s*minmax\(38px,\s*auto\)\s+minmax\(0,\s*1fr\)\s+minmax\(118px,\s*26dvh\)[\s\S]*min-height:\s*0/m.test(html), "mobile editor panel should use top, flexible editor, and fixed console rows");
+assert(/body\.mobile-input \.vscode-window\s*\{[\s\S]*grid-template-rows:\s*minmax\(52px,\s*auto\)\s+minmax\(0,\s*1fr\)\s+minmax\(142px,\s*28dvh\)[\s\S]*min-height:\s*0/m.test(html), "mobile editor panel should reserve top HP, flexible editor, and readable console rows");
 assert(/@media\s*\(max-width:\s*1100px\),\s*\(pointer:\s*coarse\)\s*\{[\s\S]*body\.mobile-input \.vscode-window/m.test(html), "tablet-sized editor viewports should share the compact single-column editor layout");
 assert(/body\.mobile-input \.console-actions\s*\{[\s\S]*display:\s*grid[\s\S]*grid-template-areas:\s*"run reset close"[\s\S]*"label status status"/m.test(html), "mobile editor action buttons should remain visible in a fixed bottom grid");
 assert(/body\.mobile-input #codeInput\s*\{[\s\S]*overflow:\s*auto[\s\S]*-webkit-overflow-scrolling:\s*touch[\s\S]*overscroll-behavior:\s*contain/m.test(html), "mobile editor code input should be an internally scrollable input viewport");
 assert(/const compactEditor = Boolean\(mobileInput \|\| width <= 1100\)/m.test(html), "narrow editor viewports should use compact editor layout without forcing phone controls");
 assert(/document\.body\.classList\.toggle\("mobile-input", profile\.mobileInput\)/m.test(html), "mobile controls should be driven only by the classified mobile touch profile");
+assert(/id="editorHpChip"[\s\S]*id="editorHpText"[\s\S]*id="editorUseHpSupplyButton"/m.test(html), "editor titlebar should show player HP and merchant healing item count");
+assert(/body\.mobile-input \.editor-hp-chip\s*\{[\s\S]*order:\s*5[\s\S]*width:\s*100%/m.test(html), "mobile editor HP chip should wrap to its own titlebar row instead of squeezing controls");
 assert(/body\.mobile-input \.vscode-window\.code-block-guided \.editor-main\s*\{[\s\S]*grid-template-columns:\s*minmax\(0,\s*1fr\)/m.test(html), "mobile guided-code editor should collapse explicit desktop columns so the code area fills the screen");
+assert(/body\.mobile-input \.editor-main\s*\{[\s\S]*grid-template-rows:\s*minmax\(0,\s*1fr\)\s+minmax\(86px,\s*18dvh\)\s+minmax\(78px,\s*15dvh\)/m.test(html), "mobile editor should keep code, task description, and mentor analysis visible in stacked panes");
+assert(/body\.mobile-input \.task-panel,[\s\S]*body\.mobile-input \.code-explain-panel\s*\{[\s\S]*display:\s*block[\s\S]*overflow:\s*auto/m.test(html), "mobile task and mentor panels should remain visible as compact scrollable panes");
 assert(/body\.mobile-input \.code-wrap\s*\{[\s\S]*grid-template-columns:\s*clamp\(28px,\s*8vw,\s*34px\)\s+minmax\(0,\s*1fr\)/m.test(html), "mobile editor line-number gutter should stay compact so code remains visible on narrow phones");
 assert(typeof api.getEditorDeviceSymbolHint === "function", "editor should expose a testable device-specific symbol hint helper");
 assert(Array.isArray(api.COMMON_ASCII_CODE_SYMBOLS) && [";", "(", ")", "{", "}", "\"", "'", "#"].every((symbol) => api.COMMON_ASCII_CODE_SYMBOLS.includes(symbol)), "editor should define a reusable common ASCII symbol palette for C code");
 assert(api.getEditorDeviceSymbolHint(true).includes("手机符号助手") && api.getEditorDeviceSymbolHint(false).includes("PC提示"), "editor symbol hint should distinguish mobile symbol buttons from PC English-symbol guidance");
 assert(/id="editorDeviceSymbolHint"/m.test(html) && /id="editorSymbolPalette"/m.test(html), "main in-game editor should include device hint and common ASCII symbol palette DOM");
 assert(/id="codeGenesisDeviceSymbolHint"/m.test(html) && /id="codeGenesisSymbolPalette"/m.test(html), "protagonist creation editor should include the same device hint and common ASCII symbol palette DOM");
+assert(/class="editor-hint-strip"/m.test(html) && /class="console-output-grid"/m.test(html), "editor footer should separate actions, device hints, and output panes into readable regions");
+assert(/\.editor-hint-strip\s*\{[\s\S]*min-height:\s*34px[\s\S]*\.console-output-grid\s*\{[\s\S]*grid-template-columns:\s*minmax\(0,\s*1\.42fr\)\s+minmax\(220px,\s*0\.8fr\)/m.test(html), "desktop editor footer should reserve a readable hint strip and two-pane output area");
 assert(/body\.mobile-input\.is-editor-open \.editor-symbol-palette\s*\{[\s\S]*display:\s*flex/m.test(html), "mobile main editor should show common ASCII symbol buttons while editing");
 assert(/body\.mobile-input \.code-genesis-symbol-palette\s*\{[\s\S]*display:\s*flex/m.test(html), "mobile protagonist creation editor should show common ASCII symbol buttons while typing code");
+assert(/body\.mobile-input \.code-genesis-overlay\.active\s*\{[\s\S]*grid-template-rows:\s*minmax\(0,\s*1fr\)\s+minmax\(94px,\s*15dvh\)\s+minmax\(48px,\s*auto\)/m.test(html), "mobile protagonist creation editor should reserve terminal, preview, and status rows");
+assert(/body\.mobile-input \.code-genesis-terminal\s*\{[\s\S]*display:\s*grid[\s\S]*grid-template-rows:\s*minmax\(54px,\s*0\.82fr\)[\s\S]*overflow:\s*hidden/m.test(html), "mobile protagonist creation terminal should split output, input, symbol hints, and helper panes instead of clipping them");
 assert(/editorSymbolPalette\?\.addEventListener\("click"[\s\S]*insertAsciiSymbolIntoEditor/m.test(html), "main editor symbol palette should insert symbols into the active code input");
 assert(/codeGenesisSymbolPalette\?\.addEventListener\("click"[\s\S]*insertAsciiSymbolIntoCodeGenesis/m.test(html), "protagonist creation symbol palette should insert symbols into the creation code input");
 assert(/PC提示：代码符号请使用英文半角/m.test(html), "PC editor users should be reminded to type code symbols with English half-width punctuation");
@@ -656,6 +673,9 @@ assert(/function updateAudioMix/m.test(html), "audio should dynamically mix laye
 assert(/startLayeredBgm/m.test(html), "audio manager should support layered BGM");
 assert(/setExplorationIntensity/m.test(html), "audio manager should expose exploration intensity control");
 assert(/pickupSpark\(\)/m.test(html), "audio manager should include pickup sparkle SFX");
+assert(/dialogAudioFocusTokens\s*=\s*new Set\(\)/m.test(html) && /setDialogFocus\(active,\s*token = "dialog"\)/m.test(html), "audio manager should use tokenized dialog focus for quiet NPC and dialogue interactions");
+assert(/showDialog[\s\S]*setDialogFocus\(true,\s*"lesson-dialog"\)[\s\S]*closeDialog[\s\S]*setDialogFocus\(false,\s*"lesson-dialog"\)/m.test(html), "lesson dialogue should lower and restore the audio mix");
+assert(/openNpcCodeWindow[\s\S]*setDialogFocus\(true,\s*"npc-code"\)[\s\S]*closeNpcCodeWindow[\s\S]*setDialogFocus\(false,\s*"npc-code"\)/m.test(html), "NPC dialogue windows should lower and restore the audio mix");
 assert(/function createGuidanceLine/m.test(html), "scene should include subtle guidance toward first objective");
 assert(/function updateGuidanceLine/m.test(html), "guidance line should update without text spam");
 assert(/DATA_BUS_MAP_LAYOUT\s*=\s*Object\.freeze/m.test(html), "main C-world map should use a linear data-bus layout");
@@ -1440,17 +1460,17 @@ assert(/启动公告只提示当前版本|历史版本改到主菜单查看/.tes
 assert(/STARTUP_ANNOUNCEMENT_AUTO_HIDE_MS\s*=\s*14000/m.test(html), "announcement should remain visible long enough to read the current update");
 assert(/function showStartupAnnouncement/m.test(html), "announcement should be controlled by a startup function");
 assert(/id="announcementCloseButton"/m.test(html), "announcement should include a minimal close control");
-assert(/World Build v1\.0\.36/m.test(html) || /GAME_VERSION\s*=\s*"v1\.0\.36"/m.test(html), "game version should increment when shipping a new update");
+assert(/World Build v1\.0\.38/m.test(html) || /GAME_VERSION\s*=\s*"v1\.0\.38"/m.test(html), "game version should increment when shipping a new update");
 assert(/UPDATE_HISTORY\s*=\s*Object\.freeze\(\[[\s\S]*v1\.0\.1[\s\S]*零基础新手指引[\s\S]*v1\.0\.0[\s\S]*手机端适配/m.test(html), "update history should keep detailed previous release notes");
 assert(/data-menu-action="history"[\s\S]*历史更新内容/.test(html) && /id="updateHistoryOverlay"/m.test(html) && /function renderUpdateHistoryList/m.test(html), "main menu should expose update history with detailed notes");
-assert(/GAME_VERSION\s*=\s*"v1\.0\.36"/m.test(html), "game version should increment for the fragment system and guidance release");
+assert(/GAME_VERSION\s*=\s*"v1\.0\.38"/m.test(html), "game version should increment for the editor, NPC, and merchant release");
 assert(html.includes('const OFFICIAL_SITE_HREF = "./official-site.html";') && /data-menu-action="official"[\s\S]*访问官方网站/.test(html) && /action === "official"[\s\S]*openOfficialWebsite\(\)/m.test(html), "main menu should expose and handle an official website entry");
 assert(/SYSTEM_BOOT_FORCE_RELEASE_MS\s*=\s*3200/m.test(html) && /system-boot-force-release/m.test(html) && /SYSTEM_BOOT_FORCE_RELEASE_MS \+ 1400/m.test(html), "startup boot overlay should have tracked and native failsafe release timers");
 assert(/function markAppRendered\(reason = "script-started"\)[\s\S]*classList\?\.add\("app-rendered"\)[\s\S]*staticRescue/m.test(html), "normal script startup should hide the static rescue layer");
-assert(/html\.app-rendered \.static-rescue/m.test(html) && /safeMode=true&noAudio=true&v=1\.0\.36/m.test(html), "static rescue should only appear if the app script does not render");
+assert(/html\.app-rendered \.static-rescue/m.test(html) && /safeMode=true&noAudio=true&v=1\.0\.38/m.test(html), "static rescue should only appear if the app script does not render");
 assert(/isStrictSecurityMode\(\)[\s\S]*removeItem\?\.\("codeAwakenerStrictSecurity"\)[\s\S]*params\.get\("strictSecurity"\) === "1"/m.test(html), "stale localStorage strict-security flags should not white-screen normal browsers");
-assert(/UPDATE_ANNOUNCEMENT_PAGES\s*=\s*Object\.freeze\(\[\s*\{\s*title:\s*"> 消息 \/ 本次更新"[\s\S]*v1\.0\.36[\s\S]*碎片系统分账与卡关引导修复[\s\S]*任务碎片[\s\S]*可使用进化碎片[\s\S]*414374792/m.test(html), "startup announcement should show only the current v1.0.36 fragment taxonomy and guidance update");
-assert(/id="announcementPageBody"[\s\S]*v1\.0\.36：碎片系统分账与卡关引导修复[\s\S]*官方Q群：414374792/m.test(initialBodyMarkup), "static startup announcement placeholder should match the current v1.0.36 update before script hydration");
+assert(/UPDATE_ANNOUNCEMENT_PAGES\s*=\s*Object\.freeze\(\[\s*\{\s*title:\s*"> 消息 \/ 本次更新"[\s\S]*v1\.0\.38[\s\S]*编辑器 HP[\s\S]*手机内置编辑器[\s\S]*安静音频焦点[\s\S]*交易碎片[\s\S]*回血道具[\s\S]*414374792/m.test(html), "startup announcement should show only the current v1.0.38 editor, NPC, HP, mobile, and merchant update");
+assert(/id="announcementPageBody"[\s\S]*v1\.0\.38：编辑器 HP、手机布局与碎片商人热修[\s\S]*手机创角终端[\s\S]*官方Q群：414374792/m.test(initialBodyMarkup), "static startup announcement placeholder should match the current v1.0.38 update before script hydration");
 assert(!/公告只保留关闭、课程锁定、自由模式通关后显示/m.test(initialBodyMarkup), "static startup announcement placeholder should not show stale update copy");
 assert(/UPDATE_HISTORY\s*=\s*Object\.freeze\(\[[\s\S]*v1\.0\.31[\s\S]*QQ音乐外部模式与自定义场景音乐[\s\S]*播放\/暂停切换[\s\S]*IndexedDB[\s\S]*414374792/m.test(html), "update history should record the v1.0.31 custom music connector release");
 assert(/UPDATE_HISTORY\s*=\s*Object\.freeze\(\[[\s\S]*v1\.0\.30[\s\S]*Pixabay 真实音乐与音效接入[\s\S]*Gamer Menu[\s\S]*音乐切换器[\s\S]*外部音频失败回退[\s\S]*414374792/m.test(html), "update history should record the v1.0.30 Pixabay music and sound-effect release");
@@ -1505,7 +1525,7 @@ assert(/UPDATE_HISTORY\s*=\s*Object\.freeze\(\[[\s\S]*v1\.0\.11[\s\S]*防白屏�
 assert(/UPDATE_HISTORY\s*=\s*Object\.freeze\(\[[\s\S]*v1\.0\.33[\s\S]*NPC交互稳定与手机代码符号助手[\s\S]*NPC交互入口[\s\S]*手机端主编辑器新增常用英文代码符号栏[\s\S]*414374792/m.test(html), "update history should retain the v1.0.33 NPC stability and symbol helper release");
 assert(/UPDATE_HISTORY\s*=\s*Object\.freeze\(\[[\s\S]*v1\.0\.34[\s\S]*PC设备识别与E键交互热修复[\s\S]*宽屏 Windows 触屏电脑[\s\S]*物理键盘 E 键[\s\S]*414374792/m.test(html), "update history should retain the v1.0.34 PC detection and E-key hotfix release");
 assert(/UPDATE_HISTORY\s*=\s*Object\.freeze\(\[[\s\S]*v1\.0\.35[\s\S]*音频播放中断蓝屏热修复[\s\S]*The play\(\) request was interrupted by a call to pause\(\)[\s\S]*FATAL 终端蓝屏[\s\S]*414374792/m.test(html), "update history should retain the v1.0.35 audio interruption blue-screen hotfix release");
-assert(/UPDATE_ANNOUNCEMENT_PAGES\s*=\s*Object\.freeze\(\[[\s\S]*v1\.0\.36[\s\S]*碎片系统分账与卡关引导修复[\s\S]*任务碎片[\s\S]*可使用进化碎片[\s\S]*414374792/m.test(html), "startup announcement should describe the current fragment taxonomy and stuck-guidance update");
+assert(/UPDATE_ANNOUNCEMENT_PAGES\s*=\s*Object\.freeze\(\[[\s\S]*v1\.0\.38[\s\S]*编辑器 HP[\s\S]*手机内置编辑器[\s\S]*安静音频焦点[\s\S]*交易碎片[\s\S]*回血道具[\s\S]*414374792/m.test(html), "startup announcement should describe the current editor HP, mobile layout, NPC audio, and merchant-fragment update");
 assert(/id="announcementCloseButton"[\s\S]*>×<\/button>/m.test(html), "announcement close button should be a compact icon, not wrapping text");
 assert(/function isCTutorialChapterUnlocked/m.test(html) && /course-lesson-item[\s\S]*locked[\s\S]*disabled aria-disabled/m.test(html), "course progress should lock future chapters until the player reaches them");
 assert(/function isCTutorialFullyCompleted/m.test(html) && /const unlocked = isCTutorialFullyCompleted\(\)/m.test(html), "free mode editor should only unlock after full course completion");
@@ -2079,7 +2099,8 @@ assert(/function handleManualEditorCompositionStart/m.test(html) && /function ha
 assert(/function handleCodeGenesisCompositionStart/m.test(html) && /function handleCodeGenesisCompositionEnd/m.test(html), "code genesis should commit IME composition only once at compositionend");
 assert(/codeInput\.addEventListener\("compositionstart", handleManualEditorCompositionStart\)/m.test(html), "main editor should listen for composition lifecycle events");
 assert(/codeGenesisInput\?\.addEventListener\("compositionend", handleCodeGenesisCompositionEnd\)/m.test(html), "code genesis should listen for composition lifecycle events");
-assert(/body\.mobile-input \.file-tree,[\s\S]*body\.mobile-input \.task-panel,[\s\S]*body\.mobile-input \.code-explain-panel/m.test(html), "mobile editor should collapse side panels for a single-column code-first layout");
+assert(/body\.mobile-input \.file-tree,[\s\S]*body\.mobile-input \.editor-pro-layer\s*\{[\s\S]*display:\s*none/m.test(html), "mobile editor should hide nonessential file chrome only");
+assert(/body\.mobile-input \.task-panel,[\s\S]*body\.mobile-input \.code-explain-panel\s*\{[\s\S]*display:\s*block/m.test(html), "mobile editor should keep task hints and mentor analysis visible below the code pane");
 assert(/body\.mobile-input \.code-genesis-overlay\.active[\s\S]*grid-template-columns:\s*1fr/m.test(html), "mobile code genesis should use a single-column layout");
 assert(/body\.mobile-input\.is-editor-open \.mobile-controls/m.test(html), "mobile joystick should hide while the editor is open");
 assert(/function requestGamePointerLock[\s\S]*if \(isMobileTouchViewport\(\)\) return false;[\s\S]*requestPointerLock/m.test(html), "mobile touch mode should not request pointer lock while desktop touch PCs can keep mouse capture available");
@@ -2231,17 +2252,40 @@ assert(/FRAGMENT_VISUAL_LIBRARY\s*=\s*Object\.freeze/m.test(html) && /image:\s*F
 assert(/function getFragmentWorldPosition/m.test(html) && /function renderFragmentLocationGuide/m.test(html) && /id="fragmentLocationList"/m.test(html), "fragment guidance should list concrete world positions");
 assert(/function awardWorldEvolutionFromFragment/m.test(html) && /任务碎片只推进世界完成度，不进入可使用碎片池/m.test(html), "collecting task fragments should advance learning/world progress without becoming usable-spend fragments");
 assert(/NPC_ACTIONS\s*=\s*Object\.freeze\(\[[\s\S]*id:\s*"talk"[\s\S]*id:\s*"task"[\s\S]*id:\s*"shop"[\s\S]*id:\s*"hint"[\s\S]*id:\s*"close"/m.test(html), "NPC interactions should offer talk, task, shop, hint, and close choices");
+assert(/function dedupeNpcActionOptions\(options = \[\]\)/m.test(html) && /return dedupeNpcActionOptions\(options\)/m.test(html), "NPC action options should be de-duplicated by id before rendering");
 assert(/id="choiceCloseButton"[\s\S]*aria-label="关闭NPC交互"/m.test(html) && /dom\.choiceCloseButton\?\.addEventListener\("click", closeNpcActionChooser\)/m.test(html), "NPC action chooser should expose a visible close control");
 assert(/function openNpcActionChooser/m.test(html) && /data-npc-action/m.test(html) && /function performNpcAction\(scene, npc, actionId = "talk"\)[\s\S]*actionId === "close"[\s\S]*closeNpcActionChooser\(\)/m.test(html), "NPC action chooser should route the selected interaction mode");
+assert(/DEFAULT_UNLOCKED_PLAYER_SKINS\s*=\s*Object\.freeze\(\["neonBlue",\s*"shadowPurple"\]\)/m.test(html) && /normalizeUnlockedPlayerSkins\(savedProgress\.unlockedSkins\)/m.test(html), "shadow purple skin should be unlocked by default for new and legacy saves");
+assert(/merchantTradeFragments:\s*0/m.test(html) && /merchantHpSupplies:\s*0/m.test(html) && /reward:\s*\{ exp:\s*30,\s*codeBlock:\s*"printf",\s*tradeFragments:\s*3 \}/m.test(html), "merchant trade fragments and healing items should be separate saved accounts");
+assert(/function buyMerchantSupply/m.test(html) && /spendMerchantTradeFragments\(MERCHANT_SUPPLY_COST\)/m.test(html) && /grantMerchantHpSupplies\(1,\s*"merchant-supply"\)/m.test(html), "merchant purchases should spend trade fragments and grant a healing item");
+assert(/function useMerchantHpSupply/m.test(html) && /restoreCompileLife\(MERCHANT_HP_SUPPLY_RESTORE,\s*"silent"\)/m.test(html), "merchant healing items should be explicitly used to restore editor HP");
+assert(!/function buyMerchantSkin\(\)[\s\S]{0,180}codeInventory\.length\s*<\s*3/m.test(html), "merchant purchases must not consume or gate on task/code fragments");
 assert(/function beginWorldEvolutionNewGamePlus/m.test(html) && /worldEvolutionNewGamePlus/m.test(html), "world evolution should include ending and new-game-plus lifecycle");
 assert(/COMPILE_LIFE_RULES\s*=\s*Object\.freeze/m.test(html), "compile failure penalty should centralize life and failure threshold rules");
 assert(/compileLives:\s*3/m.test(html) && /compileLifeMax:\s*3/m.test(html), "save progress should start each player with three compile lives");
-assert(/function handleCompileFailurePenalty/m.test(html), "compile failures should be recorded through a dedicated handler");
+assert(/function handleCompileFailurePenalty/m.test(html) && /damageCompileLife\(1,\s*detail\.source \|\| "compile-failed"\)/m.test(html), "compile failures should be recorded through a dedicated handler and deduct editor HP");
+assert(/function updateEditorHpPanel/m.test(html) && /dom\.editorUseHpSupplyButton\?\.addEventListener\("click",\s*\(\)\s*=>\s*useMerchantHpSupply\("editor-button"\)\)/m.test(html), "editor HP display should refresh and expose a healing item button");
 assert(/function resetEditorAfterCompileFailure/m.test(html), "compile failures should reset editor state after every failed run");
 assert(!/function triggerCompileLifeZeroPenalty/m.test(html), "compile failures should not trigger a life-zero teleport or editor lock");
 assert(!/compileLives\s*<=\s*0[\s\S]{0,120}triggerCompileLifeZeroPenalty/m.test(html), "compile failure count must not lock the editor after repeated failures");
 assert(/function restoreCompileLife/m.test(html) && /interactWithRoomBed[\s\S]*restoreCompileLife\("full"/m.test(html), "room bed rest should restore compile lives");
 assert(/function updateSpawnStoneLifeRecovery/m.test(html), "standing near the spawn stone should recover life after ten seconds");
+if (api.handleCompileFailurePenalty && api.buyMerchantSupply && api.useMerchantHpSupply) {
+  api.gameState.progress.compileLives = 3;
+  api.gameState.progress.compileLifeMax = 3;
+  api.gameState.progress.merchantTradeFragments = 1;
+  api.gameState.progress.merchantHpSupplies = 0;
+  api.gameState.codeInventory = ["int", "return", "printf"];
+  api.gameState.progress.collectedFragmentKeys = ["overview:int", "overview:return"];
+  const penalty = api.handleCompileFailurePenalty("overview", { source: "test-compile" });
+  assert(penalty.lives === 2 && api.gameState.progress.compileLives === 2, "compile failure should deduct one editor HP");
+  assert(api.buyMerchantSupply() === true, "merchant should sell one healing item for trade fragments");
+  assert(api.gameState.progress.merchantTradeFragments === 0 && api.gameState.progress.merchantHpSupplies === 1, "merchant purchase should move trade fragments into healing item inventory");
+  assert(api.useMerchantHpSupply("test") === true, "merchant healing item should restore editor HP when used");
+  assert(api.gameState.progress.compileLives === 3 && api.gameState.progress.merchantHpSupplies === 0, "healing item should be consumed and restore HP");
+  assert(api.gameState.codeInventory.join("|") === "int|return|printf", "merchant healing flow must not consume task/code fragments");
+  assert(api.gameState.progress.collectedFragmentKeys.join("|") === "overview:int|overview:return", "merchant healing flow must not consume task fragment records");
+}
 assert(/ENEMY_ENCOUNTER_RULES\s*=\s*Object\.freeze/m.test(html), "enemy encounter rules should describe logic guard progression");
 assert(/class CodeEnemyEncounterManager/m.test(html), "code enemies should be managed through a dedicated encounter system");
 assert(!/function spawnCodeBugEnemy/m.test(html) && /function spawnLogicGuardEnemy/m.test(html) && !/type:\s*"codeBug"/m.test(html), "code Bug enemies should be removed from the player build while logic guards remain");

@@ -14,7 +14,7 @@
   <meta http-equiv="Cache-Control" content="no-store, max-age=0, must-revalidate">
   <meta http-equiv="Pragma" content="no-cache">
   <meta http-equiv="Expires" content="0">
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self' file:; base-uri 'self'; object-src 'none'; frame-ancestors 'none'; script-src 'self' 'nonce-code-awakener-inline' file: 'sha256-EOc6fDaAVd1+NV3836Xap94liFa/9+VfgiyQFBA2ee4='; style-src 'self' 'nonce-code-awakener-inline' file: 'sha256-eItKV3ej7b1xpV5MA2IqQ1Vyvr5OsUkfkuuLvlyzDPw='; style-src-attr 'unsafe-inline'; font-src 'self' file: data:; img-src 'self' file: data: blob: https://cdn.pixabay.com; media-src 'self' file: data: blob: https: http: https://cdn.pixabay.com; worker-src 'self' file: blob:; child-src 'self' file: blob:; connect-src 'self' file: http://localhost:8000 http://127.0.0.1:8000 https://cdn.pixabay.com https://pixabay.com;">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self' file:; base-uri 'self'; object-src 'none'; frame-ancestors 'none'; script-src 'self' 'nonce-code-awakener-inline' file: 'sha256-3l5uplxG2tebGowbV9xsJM5T/AX6O4+prIlVOUV4MlA='; style-src 'self' 'nonce-code-awakener-inline' file: 'sha256-S59GcWKbWbBO8ddVXnS1Lu4q956MzfFIztuVnQsJzuA='; style-src-attr 'unsafe-inline'; font-src 'self' file: data:; img-src 'self' file: data: blob: https://cdn.pixabay.com; media-src 'self' file: data: blob: https: http: https://cdn.pixabay.com; worker-src 'self' file: blob:; child-src 'self' file: blob:; connect-src 'self' file: http://localhost:8000 http://127.0.0.1:8000 https://cdn.pixabay.com https://pixabay.com;">
   <title>编程学习 RPG：C 语言启航村</title>
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%23020617'/%3E%3Cpath d='M22 20 10 32l12 12M42 20l12 12-12 12' fill='none' stroke='%2300ff88' stroke-width='6' stroke-linecap='round' stroke-linejoin='round'/%3E%3Cpath d='m36 16-8 32' stroke='%2300ccff' stroke-width='5' stroke-linecap='round'/%3E%3C/svg%3E">
   <script src="./vendor/phaser.min.js"></script>
@@ -5090,9 +5090,9 @@
 
     .vscode-window {
       width: min(1120px, 96vw);
-      height: min(660px, 92vh);
+      height: min(700px, calc(100dvh - 32px));
       display: grid;
-      grid-template-rows: 34px 1fr 128px;
+      grid-template-rows: 34px minmax(0, 1fr) minmax(156px, 24%);
       overflow: hidden;
       background:
         linear-gradient(180deg, rgba(30, 30, 30, 0.82), rgba(15, 23, 42, 0.68)),
@@ -5162,6 +5162,50 @@
 
     .editor-title-spacer {
       flex: 1;
+    }
+
+    .editor-hp-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      min-height: 26px;
+      padding: 3px 4px 3px 9px;
+      border: 1px solid rgba(134, 239, 172, 0.34);
+      border-radius: 999px;
+      background: rgba(6, 78, 59, 0.38);
+      color: #bbf7d0;
+      font: 800 11px/1 var(--font-code);
+      box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.05), 0 0 18px rgba(34, 197, 94, 0.12);
+      white-space: nowrap;
+    }
+
+    .editor-hp-chip.low {
+      border-color: rgba(248, 113, 113, 0.72);
+      background: rgba(127, 29, 29, 0.42);
+      color: #fecaca;
+      animation: editorHpWarningPulse 900ms ease-in-out infinite alternate;
+    }
+
+    .editor-use-hp-supply {
+      min-height: 22px;
+      padding: 0 8px;
+      border: 1px solid rgba(250, 204, 21, 0.34);
+      border-radius: 999px;
+      background: rgba(113, 63, 18, 0.56);
+      color: #fef3c7;
+      font: 800 10px/1 var(--font-code);
+      cursor: pointer;
+    }
+
+    .editor-use-hp-supply:disabled {
+      cursor: not-allowed;
+      opacity: 0.54;
+      filter: saturate(0.62);
+    }
+
+    @keyframes editorHpWarningPulse {
+      from { box-shadow: 0 0 12px rgba(248, 113, 113, 0.16); }
+      to { box-shadow: 0 0 24px rgba(248, 113, 113, 0.3); }
     }
 
     .editor-font-inline {
@@ -5345,10 +5389,29 @@
       overflow: hidden;
     }
 
+    .code-layer::before {
+      content: "";
+      position: absolute;
+      inset: 8px 8px 8px 0;
+      z-index: 0;
+      border: 1px solid transparent;
+      border-radius: 8px;
+      pointer-events: none;
+      transition: border-color 160ms ease, box-shadow 160ms ease, opacity 160ms ease;
+      opacity: 0;
+    }
+
+    .code-layer:focus-within::before {
+      border-color: rgba(103, 232, 249, 0.28);
+      box-shadow: inset 0 0 0 1px rgba(103, 232, 249, 0.08), 0 0 28px rgba(34, 211, 238, 0.1);
+      opacity: 1;
+    }
+
     #highlightLayer,
     #codeInput {
       position: absolute;
       inset: 0;
+      z-index: 1;
       margin: 0;
       padding: 12px 16px;
       border: 0;
@@ -5372,6 +5435,12 @@
       caret-color: #67e8f9;
       font-variant-ligatures: contextual;
       text-shadow: 0 0 0 rgba(212, 212, 212, 0.04);
+      transition: caret-color 140ms ease, filter 140ms ease;
+    }
+
+    #codeInput:focus {
+      caret-color: #facc15;
+      filter: drop-shadow(0 0 10px rgba(34, 211, 238, 0.08));
     }
 
     .code-wrap.readme-mode #highlightLayer,
@@ -5729,9 +5798,11 @@
 
     .console {
       display: grid;
-      grid-template-rows: 38px auto auto minmax(0, 1fr) auto;
+      grid-template-rows: minmax(40px, auto) minmax(34px, auto) minmax(0, 1fr);
       min-height: 0;
-      background: #181818;
+      background:
+        linear-gradient(180deg, rgba(15, 23, 42, 0.82), rgba(8, 13, 23, 0.92)),
+        #181818;
       border-top: 1px solid #303030;
       font-family: var(--font-code);
       font-variant-ligatures: contextual;
@@ -5741,10 +5812,12 @@
       display: flex;
       align-items: center;
       gap: 10px;
-      padding: 0 12px;
-      border-bottom: 1px solid #303030;
+      min-height: 40px;
+      padding: 6px 12px;
+      border-bottom: 1px solid rgba(71, 85, 105, 0.72);
       color: #cccccc;
       font-size: 12px;
+      background: rgba(15, 23, 42, 0.72);
     }
 
     .run-button,
@@ -5752,21 +5825,30 @@
     .reset-button {
       min-height: 28px;
       border: 1px solid rgba(255, 255, 255, 0.16);
-      border-radius: 0;
+      border-radius: 6px;
       color: #ffffff;
       font-family: var(--font-code);
       font-size: 12px;
       font-variant-ligatures: contextual;
       cursor: pointer;
+      transition: transform 120ms ease, border-color 120ms ease, filter 120ms ease, box-shadow 120ms ease;
     }
 
     .run-button {
       padding: 0 14px;
-      background: #0e7a3d;
+      background: linear-gradient(180deg, #15954d, #0b6b37);
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.12);
+    }
+
+    .run-button:hover,
+    .reset-button:hover,
+    .close-button:hover {
+      transform: translateY(-1px);
+      filter: brightness(1.08);
     }
 
     .run-button.compiling {
-      animation: runButtonPulse 620ms ease-in-out infinite;
+      animation: runButtonPulse 860ms ease-in-out infinite;
       box-shadow: 0 0 18px rgba(34, 197, 94, 0.42);
       border-color: rgba(134, 239, 172, 0.78);
     }
@@ -5778,7 +5860,7 @@
 
     @keyframes runButtonPulse {
       0%, 100% { transform: translateY(0) scale(1); filter: brightness(1); }
-      50% { transform: translateY(-1px) scale(1.03); filter: brightness(1.22); }
+      50% { transform: translateY(-1px) scale(1.015); filter: brightness(1.16); }
     }
 
     .close-button {
@@ -5795,17 +5877,34 @@
     #editorStatusText {
       min-width: 0;
       overflow: hidden;
-      color: #9cdcfe;
+      color: #dbeafe;
       text-overflow: ellipsis;
       white-space: nowrap;
+      flex: 1 1 auto;
+    }
+
+    .console-label {
+      flex: 0 0 auto;
+      color: #94a3b8;
+    }
+
+    .editor-hint-strip {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr);
+      align-content: center;
+      min-height: 34px;
+      border-bottom: 1px solid rgba(71, 85, 105, 0.72);
+      background:
+        linear-gradient(90deg, rgba(250, 204, 21, 0.1), rgba(56, 189, 248, 0.08)),
+        rgba(2, 6, 23, 0.82);
     }
 
     .editor-device-symbol-hint {
-      padding: 6px 12px;
-      border-bottom: 1px solid rgba(48, 48, 48, 0.88);
-      color: #facc15;
-      background: rgba(24, 24, 24, 0.94);
-      font: 700 11px/1.45 var(--font-code);
+      min-height: 34px;
+      padding: 8px 14px;
+      color: #fde68a;
+      font: 800 12px/1.45 var(--font-code);
+      text-shadow: 0 0 14px rgba(250, 204, 21, 0.18);
     }
 
     .editor-symbol-palette,
@@ -5814,7 +5913,6 @@
       gap: 6px;
       padding: 7px 10px;
       overflow-x: auto;
-      border-bottom: 1px solid rgba(48, 48, 48, 0.88);
       background: rgba(8, 20, 34, 0.9);
       scrollbar-width: thin;
       -webkit-overflow-scrolling: touch;
@@ -5844,8 +5942,7 @@
     }
 
     body.mobile-input.is-editor-open .editor-device-symbol-hint {
-      color: #bae6fd;
-      background: rgba(8, 20, 34, 0.94);
+      color: #e0f2fe;
     }
 
     .spinner {
@@ -5874,6 +5971,8 @@
       font-size: 12px;
       line-height: 1.55;
       white-space: pre-wrap;
+      min-width: 0;
+      min-height: 0;
     }
 
     #consoleOutput.console-shake {
@@ -5892,6 +5991,15 @@
     .output-success { color: #7ee787; }
     .output-error { color: #ff7b72; }
     .output-info { color: #a5d6ff; }
+
+    .console-output-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1.42fr) minmax(220px, 0.8fr);
+      gap: 10px;
+      min-height: 0;
+      padding: 8px 12px 10px;
+      overflow: hidden;
+    }
 
     #rewardToast,
     .dynamic-island-toast,
@@ -8516,8 +8624,11 @@
     }
 
     .editor-rich-console {
-      margin-top: 6px;
       color: #dbeafe;
+      min-width: 0;
+      min-height: 0;
+      overflow: auto;
+      -webkit-overflow-scrolling: touch;
     }
 
     .editor-rich-console[data-tone="success"] {
@@ -9359,8 +9470,6 @@
 
     @media (max-width: 1100px), (pointer: coarse) {
       body.mobile-input .file-tree,
-      body.mobile-input .task-panel,
-      body.mobile-input .code-explain-panel,
       body.mobile-input .editor-pro-layer {
         display: none;
       }
@@ -9373,7 +9482,7 @@
       body.mobile-input .vscode-window {
         width: calc(100vw - 18px);
         height: calc(100dvh - 18px);
-        grid-template-rows: minmax(38px, auto) minmax(0, 1fr) minmax(118px, 26dvh);
+        grid-template-rows: minmax(52px, auto) minmax(0, 1fr) minmax(142px, 28dvh);
         min-height: 0;
         border-radius: 14px;
         overflow: hidden;
@@ -9384,6 +9493,27 @@
         gap: 6px;
         padding: 0 8px;
         font-size: 11px;
+        flex-wrap: wrap;
+        align-content: center;
+        row-gap: 4px;
+      }
+
+      body.mobile-input .editor-title-spacer {
+        flex: 1 1 24px;
+      }
+
+      body.mobile-input .editor-hp-chip {
+        order: 5;
+        width: 100%;
+        justify-content: space-between;
+        min-height: 28px;
+        padding: 3px 5px 3px 10px;
+        font-size: clamp(10px, 2.7vw, 12px);
+      }
+
+      body.mobile-input .editor-use-hp-supply {
+        min-height: 24px;
+        font-size: clamp(10px, 2.6vw, 11px);
       }
 
       body.mobile-input .editor-font-inline {
@@ -9392,14 +9522,51 @@
 
       body.mobile-input .editor-main {
         grid-template-columns: minmax(0, 1fr);
+        grid-template-rows: minmax(0, 1fr) minmax(86px, 18dvh) minmax(78px, 15dvh);
+        overflow: hidden;
       }
 
       body.mobile-input .editor-center {
         min-width: 0;
+        min-height: 0;
+      }
+
+      body.mobile-input .task-panel,
+      body.mobile-input .code-explain-panel {
+        display: block;
+        min-height: 0;
+        max-height: none;
+        overflow: auto;
+        border-left: 0;
+        border-top: 1px solid rgba(71, 85, 105, 0.72);
+        font-size: clamp(11px, 2.8vw, 12px);
+        line-height: 1.45;
+        -webkit-overflow-scrolling: touch;
+      }
+
+      body.mobile-input .task-panel h2,
+      body.mobile-input .code-explain-panel h2 {
+        padding: 7px 10px 4px;
+        font-size: 10px;
+      }
+
+      body.mobile-input .task-panel section,
+      body.mobile-input .code-explain-body {
+        padding: 0 10px 8px;
+      }
+
+      body.mobile-input .task-panel p {
+        margin: 5px 0;
+      }
+
+      body.mobile-input .code-explain-card {
+        padding: 8px;
+        font-size: 11px;
+        line-height: 1.48;
       }
 
       body.mobile-input .vscode-window.code-block-guided {
-        grid-template-rows: 42px minmax(0, 1fr) minmax(96px, 18dvh);
+        grid-template-rows: minmax(52px, auto) minmax(0, 1fr) minmax(112px, 22dvh);
       }
 
       body.mobile-input .vscode-window.code-block-guided .editor-main {
@@ -9507,7 +9674,7 @@
       }
 
       body.mobile-input .console {
-        grid-template-rows: auto auto auto minmax(0, 1fr) auto;
+        grid-template-rows: auto auto minmax(0, 1fr);
         overflow: hidden;
       }
 
@@ -9563,6 +9730,23 @@
         min-width: 0;
       }
 
+      body.mobile-input .editor-hint-strip {
+        min-height: 44px;
+      }
+
+      body.mobile-input .editor-device-symbol-hint {
+        min-height: 42px;
+        padding: 8px 10px;
+        font-size: clamp(11px, 2.8vw, 13px);
+      }
+
+      body.mobile-input .console-output-grid {
+        grid-template-columns: 1fr;
+        grid-template-rows: minmax(0, 1fr) minmax(44px, 72px);
+        gap: 6px;
+        padding: 6px;
+      }
+
       body.mobile-input #consoleOutput {
         min-height: 0;
         padding: 8px 10px;
@@ -9570,7 +9754,7 @@
 
       body.mobile-input .editor-rich-console {
         min-height: 44px;
-        max-height: 72px;
+        max-height: none;
         overflow: auto;
         -webkit-overflow-scrolling: touch;
       }
@@ -9582,24 +9766,30 @@
 
       body.mobile-input .code-genesis-overlay.active {
         grid-template-columns: 1fr;
-        grid-template-rows: minmax(0, 1fr) 156px 58px;
+        grid-template-rows: minmax(0, 1fr) minmax(94px, 15dvh) minmax(48px, auto);
       }
 
       body.mobile-input .code-genesis-terminal {
-        padding: 18px 14px 84px;
+        display: grid;
+        grid-template-rows: minmax(54px, 0.82fr) auto auto auto minmax(92px, 0.58fr);
+        gap: 8px;
+        min-height: 0;
+        padding: 12px 12px 10px;
         border-right: 0;
         border-bottom: 1px solid rgba(0, 255, 136, 0.18);
+        overflow: hidden;
       }
 
       body.mobile-input .code-genesis-output {
+        min-height: 0;
+        overflow: auto;
         font-size: 13px;
         line-height: 1.55;
+        -webkit-overflow-scrolling: touch;
       }
 
       body.mobile-input .code-genesis-input-row {
-        position: sticky;
-        bottom: 0;
-        min-height: 64px;
+        min-height: 58px;
         padding: 8px;
         border: 1px solid rgba(34, 197, 94, 0.24);
         border-radius: 12px;
@@ -9609,27 +9799,55 @@
       }
 
       body.mobile-input .code-genesis-input {
-        min-height: 112px;
+        min-height: 84px;
+        max-height: 132px;
         font-size: 16px;
         line-height: 1.55;
       }
 
+      body.mobile-input .code-genesis-device-symbol-hint {
+        margin-top: 0;
+        padding: 7px 9px;
+        font-size: clamp(11px, 2.8vw, 12px);
+      }
+
+      body.mobile-input .code-genesis-symbol-palette {
+        margin-top: 0;
+        min-height: 44px;
+      }
+
+      body.mobile-input .code-genesis-helper {
+        min-height: 0;
+        margin-top: 0;
+        padding: 10px;
+        overflow: auto;
+        -webkit-overflow-scrolling: touch;
+      }
+
       body.mobile-input .code-genesis-helper .menu-actions {
-        grid-template-columns: 1fr;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 6px;
+      }
+
+      body.mobile-input .code-genesis-helper .pixel-button {
+        min-height: 38px;
+        font-size: clamp(10px, 2.7vw, 12px);
+        white-space: normal;
       }
 
       body.mobile-input .code-genesis-preview {
         min-height: 0;
-        padding: 12px;
+        padding: 8px;
       }
 
       body.mobile-input .genesis-avatar {
-        transform: scale(0.72);
+        transform: scale(0.58);
       }
 
       body.mobile-input .code-genesis-status {
-        height: 58px;
-        padding: 0 10px;
+        min-height: 48px;
+        height: auto;
+        padding: 6px 10px;
         gap: 8px;
         overflow-x: auto;
         font-size: 11px;
@@ -9929,6 +10147,98 @@
       border-top: 1px solid rgba(0, 255, 136, 0.2);
       background: rgba(0, 0, 0, 0.84);
       font: 12px "JetBrains Mono", monospace;
+    }
+
+    @media (max-width: 1100px), (pointer: coarse) {
+      body.mobile-input .code-genesis-overlay.active {
+        grid-template-columns: 1fr;
+        grid-template-rows: minmax(0, 1fr) minmax(94px, 15dvh) minmax(48px, auto);
+      }
+
+      body.mobile-input .code-genesis-terminal {
+        display: grid;
+        grid-template-rows: minmax(54px, 0.82fr) auto auto auto minmax(92px, 0.58fr);
+        gap: 8px;
+        min-height: 0;
+        padding: 12px 12px 10px;
+        border-right: 0;
+        border-bottom: 1px solid rgba(0, 255, 136, 0.18);
+        overflow: hidden;
+      }
+
+      body.mobile-input .code-genesis-output {
+        min-height: 0;
+        overflow: auto;
+        font-size: 13px;
+        line-height: 1.55;
+        -webkit-overflow-scrolling: touch;
+      }
+
+      body.mobile-input .code-genesis-input-row {
+        min-height: 58px;
+        padding: 8px;
+        border: 1px solid rgba(34, 197, 94, 0.24);
+        border-radius: 12px;
+        background: rgba(0, 0, 0, 0.72);
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+      }
+
+      body.mobile-input .code-genesis-input {
+        min-height: 84px;
+        max-height: 132px;
+        font-size: 16px;
+        line-height: 1.55;
+      }
+
+      body.mobile-input .code-genesis-device-symbol-hint {
+        margin-top: 0;
+        padding: 7px 9px;
+        font-size: clamp(11px, 2.8vw, 12px);
+      }
+
+      body.mobile-input .code-genesis-symbol-palette {
+        margin-top: 0;
+        min-height: 44px;
+      }
+
+      body.mobile-input .code-genesis-helper {
+        min-height: 0;
+        margin-top: 0;
+        padding: 10px;
+        overflow: auto;
+        -webkit-overflow-scrolling: touch;
+      }
+
+      body.mobile-input .code-genesis-helper .menu-actions {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 6px;
+      }
+
+      body.mobile-input .code-genesis-helper .pixel-button {
+        min-height: 38px;
+        font-size: clamp(10px, 2.7vw, 12px);
+        white-space: normal;
+      }
+
+      body.mobile-input .code-genesis-preview {
+        min-height: 0;
+        padding: 8px;
+      }
+
+      body.mobile-input .genesis-avatar {
+        transform: scale(0.58);
+      }
+
+      body.mobile-input .code-genesis-status {
+        grid-column: auto;
+        min-height: 48px;
+        height: auto;
+        padding: 6px 10px;
+        gap: 8px;
+        overflow-x: auto;
+        font-size: 11px;
+      }
     }
 
     .code-genesis-flash {
@@ -10814,7 +11124,11 @@
       }
 
       body.mobile-input.mobile-keyboard-open .vscode-window {
-        grid-template-rows: minmax(38px, auto) minmax(0, 1fr) minmax(86px, 18dvh);
+        grid-template-rows: minmax(52px, auto) minmax(0, 1fr) minmax(104px, 20dvh);
+      }
+
+      body.mobile-input.mobile-keyboard-open .editor-main {
+        grid-template-rows: minmax(0, 1fr) minmax(64px, 14dvh) minmax(58px, 12dvh);
       }
 
       body.mobile-input.mobile-keyboard-open .editor-statusbar {
@@ -10845,8 +11159,8 @@
       <p>&gt; 如果这里一直空白，说明浏览器缓存、旧存档或脚本自检阻塞了启动。</p>
       <p>&gt; 使用下面入口可以绕过旧缓存并关闭重型特效，学习进度仍会保留。</p>
       <div class="static-rescue-actions">
-        <a href="./programming-rpg-c-basics.html?safeMode=true&noAudio=true&v=1.0.36">安全启动</a>
-        <a href="./programming-rpg-c-basics.html?v=1.0.36">强制刷新</a>
+        <a href="./programming-rpg-c-basics.html?safeMode=true&noAudio=true&v=1.0.38">安全启动</a>
+        <a href="./programming-rpg-c-basics.html?v=1.0.38">强制刷新</a>
       </div>
       <p>作者：杀戮 · QQ：3424636983 · 官方Q群：414374792</p>
     </div>
@@ -11050,7 +11364,7 @@
       <canvas id="menuFxCanvas" width="1280" height="720"></canvas>
       <div class="main-menu-card glass-panel">
         <h1 class="game-logo">CODE AWAKENER<br>C 语言启航村</h1>
-        <div class="version-label" id="versionLabel">World Build v1.0.36 · develop.fan C Basics</div>
+        <div class="version-label" id="versionLabel">World Build v1.0.38 · develop.fan C Basics</div>
         <div id="musicSwitcher" class="music-switcher" aria-label="音乐主题切换器">
           <div class="music-switcher-copy">
             <span class="music-switcher-kicker">♪ 当前音乐主题</span>
@@ -11628,9 +11942,9 @@ int main(void) {
     <section id="merchantWindow" class="merchant-window" aria-hidden="true">
       <div class="merchant-panel glass-panel">
         <h2>碎片商人</h2>
-        <p id="merchantText">用 3 个代码碎片兑换一套角色外观。</p>
+        <p id="merchantText">暗影紫外观已默认解锁。交易碎片可购买回血道具，不消耗任务碎片。</p>
         <div class="menu-actions">
-          <button id="buyShadowSkinButton" class="pixel-button" type="button">兑换暗影紫</button>
+          <button id="buyShadowSkinButton" class="pixel-button" type="button">购买回血道具</button>
           <button id="closeMerchantButton" class="pixel-button" type="button">关闭</button>
         </div>
       </div>
@@ -11798,12 +12112,17 @@ int main(void) {
       <button id="announcementCloseButton" class="announcement-close" type="button" aria-label="关闭公告">×</button>
       <h2 id="startupAnnouncementTitle" class="startup-announcement-title">> 消息 / 本次更新</h2>
       <div id="announcementPageBody" class="startup-announcement-body">
-        <p>// v1.0.36：碎片系统分账与卡关引导修复。</p>
-        <p>// 任务碎片、世界进化碎片、可使用进化碎片已拆清：任务碎片只用于任务、石碑和课程进度。</p>
-        <p>// HP 自动恢复、星盘强化和造物只会消耗可使用进化碎片，不会扣掉任务碎片。</p>
-        <p>// 隐藏代码块任务引导会跳过隐藏、已收集或未启用的碎片，不再把玩家带到空地。</p>
-        <p>// 玩家房间壁炉改为映照任务碎片记忆，不再删除 codeInventory。</p>
-        <p>// 编译器、公告和安全自检已同步到 v1.0.36，便于绕过旧缓存。</p>
+        <p>// v1.0.38：编辑器 HP、手机布局与碎片商人热修。</p>
+        <p>// 修复正确 C 代码通过后，沙箱预览 iframe 未准备好却导致“运行结果为空/沙箱异常”的误报。</p>
+        <p>// 编辑器顶部显示 HP 与商人回血道具；编译失败会扣 HP，道具需要手动使用恢复。</p>
+        <p>// 手机内置编辑器改为代码、任务提示、导师解析、控制台分区显示，不再只剩代码区。</p>
+        <p>// 手机创角终端重新划分输出、输入、符号栏、帮助、预览和状态条，避免信息被挤出屏幕。</p>
+        <p>// 编辑器底部重新划分为操作区、设备符号提示区、输出/导师控制台区，PC 提示和手机符号栏更清楚。</p>
+        <p>// 普通输入会同步 main.c 内存文件，撤销/重做也同步，降低可见代码和判题代码分叉的概率。</p>
+        <p>// 输入反馈、运行按钮和导师迷你地图更新已节流，长代码编辑更顺滑。</p>
+        <p>// NPC/导师对话进入安静音频焦点，逐字提示音降低频率和音量，关闭后恢复正常混音。</p>
+        <p>// NPC 交互选项会按 id 去重；碎片商人使用独立交易碎片出售回血道具，暗影紫外观默认解锁。</p>
+        <p>// 编译器、公告和安全自检已同步到 v1.0.38，便于绕过旧缓存。</p>
         <p>// 作者：杀戮，QQ：3424636983。</p>
         <p>// 官方Q群：414374792。</p>
         <p>// 作者：杀戮</p>
@@ -11891,6 +12210,10 @@ int main(void) {
           <div class="window-dots"><span class="dot"></span><span class="dot"></span><span class="dot"></span></div>
           Code Gate - C 语言启航村
           <span class="editor-title-spacer"></span>
+          <div id="editorHpChip" class="editor-hp-chip" role="status" aria-live="polite">
+            <span id="editorHpText">HP 3/3</span>
+            <button id="editorUseHpSupplyButton" class="editor-use-hp-supply" type="button">回血道具 x0</button>
+          </div>
           <label class="editor-font-inline">字号 <input id="editorInlineFontSize" type="range" min="12" max="20" step="1" aria-label="编辑器字号"></label>
           <span class="pixel-screw"></span>
         </div>
@@ -11961,7 +12284,7 @@ int main(void) {
             </div>
           </aside>
         </div>
-        <div class="console">
+        <div class="console" aria-label="编辑器运行与提示区">
           <div class="console-actions">
             <button id="runButton" class="run-button">运行代码</button>
             <button id="resetCodeButton" class="reset-button" type="button">重置代码</button>
@@ -11970,10 +12293,14 @@ int main(void) {
             <span id="editorStatusText">导师提示：先读任务，再运行小步验证。</span>
             <button id="closeEditorButton" class="close-button">关闭编辑器</button>
           </div>
-          <div id="editorDeviceSymbolHint" class="editor-device-symbol-hint" role="status"></div>
-          <div id="editorSymbolPalette" class="editor-symbol-palette" aria-label="常用英文代码符号"></div>
-          <pre id="consoleOutput">等待运行。请在 main.c 中补全 C 语言 Hello World 程序。</pre>
+          <div class="editor-hint-strip" aria-label="编辑器输入提示">
+            <div id="editorDeviceSymbolHint" class="editor-device-symbol-hint" role="status"></div>
+            <div id="editorSymbolPalette" class="editor-symbol-palette" aria-label="常用英文代码符号"></div>
+          </div>
+          <div class="console-output-grid" aria-label="运行输出与导师控制台">
+            <pre id="consoleOutput">等待运行。请在 main.c 中补全 C 语言 Hello World 程序。</pre>
             <div id="editorRichConsole" class="editor-rich-console" aria-live="polite">彩色控制台：等待编译信号。</div>
+          </div>
         </div>
       </div>
       <section id="editorGuideLayer" class="editor-guide-layer" aria-hidden="true">
@@ -12309,24 +12636,44 @@ int main() {
     const SAVE_CLEAR_CONFIRM_MS = 3000;
     const STARTUP_ANNOUNCEMENT_AUTO_HIDE_MS = 14000;
     const SYSTEM_BOOT_FORCE_RELEASE_MS = 3200;
-    const GAME_VERSION = "v1.0.36";
+    const GAME_VERSION = "v1.0.38";
     const OFFICIAL_SITE_HREF = "./official-site.html";
     const UPDATE_ANNOUNCEMENT_PAGES = Object.freeze([
       {
         title: "> 消息 / 本次更新",
         lines: [
-          "// v1.0.36：碎片系统分账与卡关引导修复。",
-          "// 任务碎片/知识碎片只用于任务进度、NPC提交、石碑填空和课程展示，不再作为消耗品。",
-          "// 世界进化奖励统一进入可使用进化碎片池；HP自动恢复、星盘强化和造物只会消耗这一个池。",
-          "// 隐藏代码块任务引导会跳过隐藏、已收集、未启用或还没解锁的碎片，不再指向空地。",
-          "// 玩家房间壁炉改成映照任务碎片记忆，不会删除 codeInventory 里的关键词。",
-          "// 侧边菜单和提示文案已区分任务碎片、世界进化进度、可使用进化碎片，减少误解。",
-          "// 安全启动、强制刷新、CSP 和脚本自检已同步到 v1.0.36，方便绕过旧缓存。",
+          "// v1.0.38：编辑器 HP、手机布局与碎片商人热修。",
+          "// 修复正确 C 代码通过后，沙箱预览 iframe 未准备好却导致“运行结果为空/沙箱异常”的误报。",
+          "// 编辑器顶部显示 HP 与商人回血道具；编译失败会扣 HP，道具需要手动使用恢复。",
+          "// 手机内置编辑器改为代码、任务提示、导师解析、控制台分区显示，不再只剩代码区。",
+          "// 手机创角终端重新划分输出、输入、符号栏、帮助、预览和状态条，避免信息被挤出屏幕。",
+          "// 编辑器底部重新划分为操作区、设备符号提示区、输出/导师控制台区，PC 提示和手机符号栏更清楚。",
+          "// 普通输入会同步 main.c 内存文件，撤销/重做也同步，降低可见代码和判题代码分叉的概率。",
+          "// 输入反馈、运行按钮和导师迷你地图更新已节流，长代码编辑更顺滑。",
+          "// NPC/导师对话进入安静音频焦点，逐字提示音降低频率和音量，关闭后恢复正常混音。",
+          "// NPC 交互选项会按 id 去重；碎片商人使用独立交易碎片出售回血道具，暗影紫外观默认解锁。",
+          "// 安全启动、强制刷新、CSP 和脚本自检已同步到 v1.0.38，方便绕过旧缓存。",
           "// 作者：杀戮，QQ：3424636983，官方Q群：414374792。"
         ]
       }
     ]);
     const UPDATE_HISTORY = Object.freeze([
+      {
+        version: "v1.0.38",
+        date: "2026-06-17",
+        title: "编辑器 HP 与手机布局热修",
+        details: [
+          "修复正确代码编译通过后，隐藏 iframe 预览终端尚未加载完成时触发 Cannot set properties of null，导致玩家看到运行结果为空或沙箱异常的问题。",
+          "编辑器顶部新增 HP 与回血道具入口；编译失败扣 1 点 HP，碎片商人出售的回血道具需要玩家手动使用恢复。",
+          "手机内置编辑器改为代码区、任务提示、导师解析和控制台分区显示，任务目标与运行提示不再被代码区挤掉。",
+          "手机创角终端重新划分输出、输入、符号栏、帮助、预览和状态条，修复只看到编辑器、任务提示显示不全的问题。",
+          "编辑器底部重排为操作区、设备符号提示区、输出/导师控制台区，PC 英文半角符号提示和手机符号按钮不再被挤到难以看清。",
+          "普通输入、撤销和重做都会同步当前 main.c 内存文件，减少可见编辑内容和判题内容分叉。",
+          "输入反馈、运行按钮和导师迷你地图更新改为轻量动画与节流刷新，提升编辑手感和长代码输入流畅度。",
+          "NPC/导师对话使用安静音频焦点，降低逐字提示音和高频音效；NPC 选择项按 id 去重，避免重复按钮。",
+          "碎片商人改用独立交易碎片，隐藏代码块支线奖励交易碎片；交易碎片只购买回血道具，任务碎片和知识碎片不参与消耗；暗影紫人物皮肤默认解锁。官方Q群：414374792。"
+        ]
+      },
       {
         version: "v1.0.36",
         date: "2026-06-17",
@@ -13472,6 +13819,9 @@ return 0;`;
       decoder: { title: "破译者", comment: "// 你追问到底，直到错误交出了名字。" },
       traveler: { title: "永远的旅人", comment: "// 你没有停留，只把一束光留在路上。" }
     });
+    const DEFAULT_UNLOCKED_PLAYER_SKINS = Object.freeze(["neonBlue", "shadowPurple"]);
+    const MERCHANT_SUPPLY_COST = 1;
+    const MERCHANT_HP_SUPPLY_RESTORE = 1;
     const QUEST_DATA = Object.freeze({
       collect_basic_fragments: {
         id: "collect_basic_fragments",
@@ -13495,9 +13845,9 @@ return 0;`;
         id: "collect_hidden_blocks",
         type: TASK_TYPES.collect,
         title: "支线：隐藏代码块",
-        description: "替碎片商人收集 5 个任意代码碎片。",
+        description: "替碎片商人登记 5 个任意代码碎片，换取独立的交易碎片。",
         requirement: { anyKeywordCount: 5, requiredAmount: 5 },
-        reward: { exp: 30, codeBlock: "printf", skin: "shadowPurple" },
+        reward: { exp: 30, codeBlock: "printf", tradeFragments: 3 },
         next: ["solve_for_sequence"]
       },
       solve_for_sequence: {
@@ -13512,7 +13862,7 @@ return 0;`;
     });
     const NPC_DIALOGUE_DATA = Object.freeze({
       log: ["[SYSTEM] operator 已习得关键词。", `${COMMENT_SIGNATURE} 日志精灵 // LOG 正在观察你的代码。`],
-      merchant: ["value = fragment_count;", "给我 3 个 int，我给你 1 个 struct。"],
+      merchant: ["trade_fragment += registered_code;", "交易碎片独立记账，不消耗任务碎片。"],
       pointer: ["你连指针都没有就想碰我？", "先找到 &，再谈地址。"]
     });
     const C_EXECUTION_MODES = Object.freeze({
@@ -13545,7 +13895,7 @@ return 0;`;
       directSaveAs: "reduced-by-inline-resources"
     });
     const SECURITY_CONFIG = Object.freeze({
-      expectedScriptHash: "B1UZ2So7r5fIhBmjbiZSHoVB27DSng2B1/iIFl8m+Fc=",
+      expectedScriptHash: "ymPC5rbBCsPKvizBQMUT+xSQTviE4skCMWFdDQ4W/ns=",
       selfCheckIntervalMs: 45000,
       tamperRefreshMs: 5000,
       devToolsRefreshMs: 2000,
@@ -16504,6 +16854,11 @@ return 0;`;
       }
     }
 
+    function normalizeUnlockedPlayerSkins(skins = DEFAULT_UNLOCKED_PLAYER_SKINS) {
+      const list = Array.isArray(skins) ? skins : [];
+      return Array.from(new Set([...DEFAULT_UNLOCKED_PLAYER_SKINS, ...list].filter((skinId) => PLAYER_SKIN_PRESETS[skinId])));
+    }
+
     const defaultProgress = {
       worldId: "c",
       learned: [],
@@ -16585,7 +16940,9 @@ return 0;`;
       chapterFailureCounts: {},
       defeatedCodeEnemies: [],
       activeCodeEnemies: [],
-      unlockedSkins: ["neonBlue"],
+      unlockedSkins: normalizeUnlockedPlayerSkins(),
+      merchantTradeFragments: 0,
+      merchantHpSupplies: 0,
       questCodeBlocks: [],
       redScarfHermitFound: false,
       roomFireplaceOfferings: 0,
@@ -17039,7 +17396,9 @@ return 0;`;
         chapterFailureCounts: savedProgress.chapterFailureCounts && typeof savedProgress.chapterFailureCounts === "object" ? savedProgress.chapterFailureCounts : {},
         defeatedCodeEnemies: Array.isArray(savedProgress.defeatedCodeEnemies) ? savedProgress.defeatedCodeEnemies : [],
         activeCodeEnemies: Array.isArray(savedProgress.activeCodeEnemies) ? savedProgress.activeCodeEnemies : [],
-        unlockedSkins: Array.isArray(savedProgress.unlockedSkins) ? savedProgress.unlockedSkins : ["neonBlue"],
+        unlockedSkins: normalizeUnlockedPlayerSkins(savedProgress.unlockedSkins),
+        merchantTradeFragments: Number.isFinite(Number(savedProgress.merchantTradeFragments)) ? Math.max(0, Number(savedProgress.merchantTradeFragments)) : 0,
+        merchantHpSupplies: Number.isFinite(Number(savedProgress.merchantHpSupplies)) ? Math.max(0, Number(savedProgress.merchantHpSupplies)) : 0,
         questCodeBlocks: Array.isArray(savedProgress.questCodeBlocks) ? savedProgress.questCodeBlocks : [],
         redScarfHermitFound: Boolean(savedProgress.redScarfHermitFound),
         roomFireplaceOfferings: Number(savedProgress.roomFireplaceOfferings) || 0,
@@ -17465,6 +17824,8 @@ return 0;`;
         this.sfxBurstCount = 0;
         this.eventCooldowns = new Map();
         this.editorAudioFocus = false;
+        this.dialogAudioFocus = false;
+        this.dialogAudioFocusTokens = new Set();
         this.pixabayBgm = null;
         this.pixabayBgmTrack = null;
         this.pixabayBgmMode = "";
@@ -17508,6 +17869,7 @@ return 0;`;
       getLegacyAudioPriorityScale(channel = "sfx") {
         if (channel === "music" && this.hasPrimaryMusicLayerActive()) return 0;
         if (channel !== "music" && this.hasPrimaryMusicLayerActive()) return 0.32;
+        if (channel !== "music" && this.dialogAudioFocus) return 0.34;
         return 1;
       }
 
@@ -17529,13 +17891,15 @@ return 0;`;
         const master = Math.max(0, Math.min(1.4, (gameState.settings.masterVolume || 0) / 100));
         const music = Math.max(0, Math.min(1.4, (gameState.settings.musicVolume || 0) / 100));
         const custom = track?.custom ? Math.max(0, Math.min(1.4, (gameState.settings.customMusicVolume ?? 100) / 100)) : 1;
-        return Math.max(0, Math.min(0.62, master * music * custom * (track?.gain || 0.34)));
+        const focusScale = this.dialogAudioFocus ? 0.46 : 1;
+        return Math.max(0, Math.min(0.62, master * music * custom * (track?.gain || 0.34) * focusScale));
       }
 
       getPixabaySfxVolume(track) {
         const master = Math.max(0, Math.min(1.4, (gameState.settings.masterVolume || 0) / 100));
         const sfx = Math.max(0, Math.min(1.4, (gameState.settings.sfxVolume || 0) / 100));
-        return Math.max(0, Math.min(0.34, master * sfx * (track?.gain || 0.18)));
+        const focusScale = this.dialogAudioFocus ? 0.38 : 1;
+        return Math.max(0, Math.min(0.34, master * sfx * (track?.gain || 0.18) * focusScale));
       }
 
       fadeHtmlAudio(audio, targetVolume = 0, durationMs = AUDIO_CROSSFADE_MS, onComplete = null) {
@@ -17802,12 +18166,16 @@ return 0;`;
         this.master.gain.value = this.masterBaseGain * master;
         if (this.musicBus) this.setMusicBusGain(this.getMusicBusBaseGain() * this.musicBusFadeScale, AUDIO_QUICK_FADE_MS);
         if (this.sfxBus) this.sfxBus.gain.value = Math.min(0.78, sfx * this.sfxBusScale);
-        this.applyMusicLayerMix(this.bgmMode, this.editorAudioFocus);
+        this.applyMusicLayerMix(this.bgmMode, this.isAudioFocusActive());
         this.proceduralMusic?.applyVolume?.();
         this.syncPixabayVolumes();
       }
 
-      applyMusicLayerMix(mode = this.bgmMode, focus = this.editorAudioFocus) {
+      isAudioFocusActive() {
+        return Boolean(this.editorAudioFocus || this.dialogAudioFocus);
+      }
+
+      applyMusicLayerMix(mode = this.bgmMode, focus = this.isAudioFocusActive()) {
         const ctx = this.ctx;
         const layers = this.musicLayers || this.createMusicLayers();
         if (!ctx || !layers) return false;
@@ -17819,6 +18187,7 @@ return 0;`;
         };
         const mix = { ...(mixes[mode] || mixes.town) };
         if (focus) Object.assign(mix, { drone: 0, ambience: 0.1, theme: 0.36 });
+        if (this.dialogAudioFocus) Object.assign(mix, { drone: 0, ambience: 0.05, theme: 0.2 });
         if (complexity === "reduced") mix.ambience *= 0.5;
         if (complexity === "off") Object.assign(mix, { drone: 0, ambience: 0, theme: 0 });
         Object.entries(mix).forEach(([key, value]) => {
@@ -18104,7 +18473,7 @@ return 0;`;
       startSynthBgm(mode = "town") {
         const now = performance.now();
         if (this.bgmTimer && this.bgmMode === mode) {
-          this.applyMusicLayerMix(mode, this.editorAudioFocus);
+          this.applyMusicLayerMix(mode, this.isAudioFocusActive());
           return true;
         }
         if (this.pixabayBgmTrack) this.stopPixabayBgm();
@@ -18115,7 +18484,7 @@ return 0;`;
         this.fadeSynthBgmTo(1, AUDIO_CROSSFADE_MS);
         const themeSections = ADAPTIVE_BGM_THEMES[mode] || ADAPTIVE_BGM_THEMES.town;
         const layers = this.createMusicLayers() || {};
-        this.applyMusicLayerMix(mode, this.editorAudioFocus);
+        this.applyMusicLayerMix(mode, this.isAudioFocusActive());
 
         const tick = () => {
           this.recoverMusicContext();
@@ -18155,22 +18524,39 @@ return 0;`;
         const ctx = this.ensureContext();
         if (!ctx || !this.filter) return;
         this.editorAudioFocus = Boolean(active);
-        this.filter.frequency.setTargetAtTime(active ? 620 : 3200, ctx.currentTime, 0.12);
-        this.applyMusicLayerMix(active ? "puzzle" : this.bgmMode || "town", this.editorAudioFocus);
+        this.filter.frequency.setTargetAtTime(this.isAudioFocusActive() ? 620 : 3200, ctx.currentTime, 0.12);
+        this.applyMusicLayerMix(active ? "puzzle" : this.bgmMode || "town", this.isAudioFocusActive());
+      }
+
+      setDialogFocus(active, token = "dialog") {
+        const id = String(token || "dialog");
+        if (active) this.dialogAudioFocusTokens.add(id);
+        else this.dialogAudioFocusTokens.delete(id);
+        const next = this.dialogAudioFocusTokens.size > 0;
+        if (this.dialogAudioFocus === next) return next;
+        const ctx = this.ensureContext();
+        this.dialogAudioFocus = next;
+        this.syncPixabayVolumes();
+        if (ctx && this.filter) {
+          this.filter.frequency.setTargetAtTime(next ? 760 : this.editorAudioFocus ? 620 : 3200, ctx.currentTime, 0.18);
+        }
+        this.applyMusicLayerMix(this.bgmMode || "town", this.isAudioFocusActive());
+        return next;
       }
 
       dialogOpen() {
-        if (!this.canPlayEvent("dialogOpen", 220)) return;
-        this.tone(560, 0.045, "triangle", 0.022);
-        window.setTimeout(() => this.noise(0.022, 0.011), 28);
+        if (!this.canPlayEvent("dialogOpen", 320)) return;
+        this.tone(500, 0.038, "triangle", this.dialogAudioFocus ? 0.009 : 0.018);
+        window.setTimeout(() => this.noise(0.018, this.dialogAudioFocus ? 0.003 : 0.008), 28);
       }
 
       type() {
         const now = performance.now();
-        if (now - this.lastTypeAt < AUDIO_TYPE_COOLDOWN_MS) return;
+        const cooldown = this.dialogAudioFocus ? 145 : AUDIO_TYPE_COOLDOWN_MS;
+        if (now - this.lastTypeAt < cooldown) return;
         this.lastTypeAt = now;
-        this.noise(0.012, 0.008);
-        this.tone(640 + Math.random() * 80, 0.014, "triangle", 0.007);
+        this.noise(0.01, this.dialogAudioFocus ? 0.002 : 0.008);
+        this.tone(620 + Math.random() * 60, 0.012, "triangle", this.dialogAudioFocus ? 0.0025 : 0.007);
       }
 
       murmur(index) {
@@ -18241,9 +18627,9 @@ return 0;`;
       }
 
       uiClick() {
-        if (!this.canPlayEvent("uiClick", 70)) return;
-        this.tone(330, 0.035, "triangle", 0.01);
-        window.setTimeout(() => this.tone(470, 0.03, "sine", 0.007), 42);
+        if (!this.canPlayEvent("uiClick", this.dialogAudioFocus ? 180 : 70)) return;
+        this.tone(330, 0.032, "triangle", this.dialogAudioFocus ? 0.004 : 0.01);
+        if (!this.dialogAudioFocus) window.setTimeout(() => this.tone(470, 0.03, "sine", 0.007), 42);
       }
 
       run() {
@@ -19087,9 +19473,10 @@ return 0;`;
     }
 
     function typewriterTick() {
-      if (!audioManager.canPlayEvent?.("typewriterTick", 58)) return;
-      audioManager.tone(720 + Math.random() * 80, 0.014, "triangle", 0.009, "sfx");
-      audioManager.noise(0.01, 0.004, 0, null, "sfx");
+      const quiet = Boolean(audioManager.dialogAudioFocus || gameState.dialogOpen);
+      if (!audioManager.canPlayEvent?.("typewriterTick", quiet ? 160 : 58)) return;
+      audioManager.tone(720 + Math.random() * 80, 0.012, "triangle", quiet ? 0.0025 : 0.009, "sfx");
+      if (!quiet) audioManager.noise(0.01, 0.004, 0, null, "sfx");
     }
 
     function invalidSoft() {
@@ -20577,6 +20964,7 @@ int main(void) {
     let lessonAnimationId = null;
     let lessonStartTime = 0;
     let editorVisualTimer = null;
+    let editorFeedbackPulseAt = 0;
     let clearSaveConfirmTimer = null;
     let startupAnnouncementTimer = null;
     let islandToastTimer = null;
@@ -20667,6 +21055,9 @@ int main(void) {
       runSpinner: document.getElementById("runSpinner"),
       closeEditorButton: document.getElementById("closeEditorButton"),
       editorStatusText: document.getElementById("editorStatusText"),
+      editorHpChip: document.getElementById("editorHpChip"),
+      editorHpText: document.getElementById("editorHpText"),
+      editorUseHpSupplyButton: document.getElementById("editorUseHpSupplyButton"),
       editorDeviceSymbolHint: document.getElementById("editorDeviceSymbolHint"),
       editorSymbolPalette: document.getElementById("editorSymbolPalette"),
       editorMinimap: document.getElementById("editorMinimap"),
@@ -27085,11 +27476,19 @@ ${item.code}
       return current ? `已推进 ${current}/${required}。` : task.description;
     }
 
+    function formatQuestRewardText(reward = {}) {
+      const parts = [`${Number(reward.exp) || 0} EXP`];
+      if (reward.codeBlock) parts.push(reward.codeBlock);
+      if (reward.tradeFragments) parts.push(`${Number(reward.tradeFragments) || 0} 交易碎片`);
+      if (reward.skin) parts.push(PLAYER_SKIN_PRESETS[reward.skin]?.label || reward.skin);
+      return `奖励：${parts.join(" / ")}`;
+    }
+
     function renderQuestCard(task, compact = false) {
       const state = questManager.getState(task.id);
       const required = questManager.getRequiredAmount(task);
       const percent = Math.min(100, Math.round(((state.progress || 0) / required) * 100));
-      const reward = task.reward?.codeBlock ? `奖励：${task.reward.exp} EXP / ${task.reward.codeBlock}` : `奖励：${task.reward?.exp || 0} EXP`;
+      const reward = formatQuestRewardText(task.reward || {});
       const description = getQuestDynamicDescription(task);
       return `<article class="quest-card" data-status="${escapeHtml(state.status)}"><h3>${escapeHtml(task.title)} <small>${escapeHtml(getQuestStatusLabel(state.status))}</small></h3><p>${escapeHtml(compact ? description.slice(0, 52) : description)}</p><div class="quest-progress-row"><span>${escapeHtml(getQuestProgressText(task))}</span><span>${escapeHtml(reward)}</span></div><div class="quest-bar" aria-label="任务进度 ${percent}%"><span data-progress-fill="${percent}"></span></div></article>`;
     }
@@ -27175,7 +27574,7 @@ ${item.code}
       const write = (index) => {
         if (index >= chars.length) return;
         element.textContent += chars[index];
-        audioManager.type();
+        if (index % (audioManager.dialogAudioFocus ? 5 : 2) === 0) audioManager.type();
         trackedSetTimeout(() => write(index + 1), speed, "dom-typewriter");
       };
       write(0);
@@ -27245,6 +27644,7 @@ ${item.code}
     }
 
     function openNpcCodeWindow(title, lines, expression = "normal", color = 0xa855f7, anchor = null) {
+      audioManager.setDialogFocus(true, "npc-code");
       if (dom.npcCodeTitle) dom.npcCodeTitle.textContent = title;
       const resolvedExpression = inferNpcExpression(lines, expression);
       applyNpcExpression(resolvedExpression);
@@ -27259,15 +27659,89 @@ ${item.code}
     function closeNpcCodeWindow() {
       dom.npcCodeWindow?.classList.remove("active");
       dom.npcCodeWindow?.setAttribute("aria-hidden", "true");
+      audioManager.setDialogFocus(false, "npc-code");
+    }
+
+    function getMerchantTradeFragmentCount() {
+      const count = Math.max(0, Number(gameState.progress.merchantTradeFragments) || 0);
+      gameState.progress.merchantTradeFragments = count;
+      return count;
+    }
+
+    function grantMerchantTradeFragments(amount = 0, source = "quest") {
+      const before = getMerchantTradeFragmentCount();
+      const gained = Math.max(0, Number(amount) || 0);
+      gameState.progress.merchantTradeFragments = before + gained;
+      if (gained > 0) addWorldEvolutionDiary(`获得交易碎片 +${gained}（${source}），不会消耗任务碎片。`);
+      return gained;
+    }
+
+    function spendMerchantTradeFragments(cost = MERCHANT_SUPPLY_COST) {
+      const amount = Math.max(0, Number(cost) || 0);
+      const before = getMerchantTradeFragmentCount();
+      if (before < amount) return false;
+      gameState.progress.merchantTradeFragments = before - amount;
+      return true;
+    }
+
+    function getMerchantHpSupplyCount() {
+      const count = Math.max(0, Number(gameState.progress.merchantHpSupplies) || 0);
+      gameState.progress.merchantHpSupplies = count;
+      return count;
+    }
+
+    function grantMerchantHpSupplies(amount = 1, source = "merchant") {
+      const gained = Math.max(0, Number(amount) || 0);
+      if (!gained) return 0;
+      gameState.progress.merchantHpSupplies = getMerchantHpSupplyCount() + gained;
+      addWorldEvolutionDiary(`获得回血道具 +${gained}（${source}），只恢复编辑器 HP。`);
+      updateEditorHpPanel();
+      saveProgress();
+      return gained;
+    }
+
+    function useMerchantHpSupply(source = "editor") {
+      const supplyCount = getMerchantHpSupplyCount();
+      const state = normalizeCompileLifeState();
+      if (state.lives >= state.max) {
+        showReward("编辑器 HP 已满，先保留回血道具。");
+        updateEditorHpPanel();
+        return false;
+      }
+      if (supplyCount <= 0) {
+        showReward("没有回血道具。可找碎片商人用交易碎片购买。");
+        triggerErrorGlitch();
+        updateEditorHpPanel();
+        return false;
+      }
+      gameState.progress.merchantHpSupplies = supplyCount - 1;
+      const restored = restoreCompileLife(MERCHANT_HP_SUPPLY_RESTORE, "silent");
+      if (restored) showReward(`已使用回血道具：HP ${gameState.progress.compileLives}/${gameState.progress.compileLifeMax}`);
+      addWorldEvolutionDiary(`使用回血道具（${source}），交易碎片和任务碎片未消耗。`);
+      updateEditorHpPanel();
+      openMerchantWindowIfActive();
+      saveProgress();
+      return restored;
+    }
+
+    function openMerchantWindowIfActive() {
+      if (!dom.merchantWindow?.classList?.contains?.("active")) return false;
+      openMerchantWindow();
+      return true;
     }
 
     function openMerchantWindow() {
-      const canBuy = gameState.codeInventory.length >= 3;
-      const unlocked = gameState.progress.unlockedSkins.includes("shadowPurple");
-      if (dom.merchantText) dom.merchantText.textContent = unlocked ? "暗影紫外观已解锁，可在主菜单切换。" : `持有 ${gameState.codeInventory.length}/3 个碎片，可兑换暗影紫外观。`;
+      audioManager.setDialogFocus(true, "merchant");
+      gameState.progress.unlockedSkins = normalizeUnlockedPlayerSkins(gameState.progress.unlockedSkins);
+      const tradeFragments = getMerchantTradeFragmentCount();
+      const hpSupplies = getMerchantHpSupplyCount();
+      const canBuySupply = tradeFragments >= MERCHANT_SUPPLY_COST;
+      if (dom.merchantText) {
+        dom.merchantText.textContent = `暗影紫外观已默认解锁。交易碎片 ${tradeFragments}，回血道具 ${hpSupplies}；购买和使用都不会扣任务碎片或知识碎片。`;
+      }
       if (dom.buyShadowSkinButton) {
-        dom.buyShadowSkinButton.disabled = !canBuy || unlocked;
-        dom.buyShadowSkinButton.textContent = unlocked ? "已解锁" : "兑换暗影紫";
+        dom.buyShadowSkinButton.disabled = !canBuySupply;
+        dom.buyShadowSkinButton.textContent = canBuySupply ? `购买回血道具 -${MERCHANT_SUPPLY_COST}交易碎片` : "交易碎片不足";
       }
       dom.merchantWindow?.classList.add("active");
       dom.merchantWindow?.setAttribute("aria-hidden", "false");
@@ -27276,16 +27750,20 @@ ${item.code}
     function closeMerchantWindow() {
       dom.merchantWindow?.classList.remove("active");
       dom.merchantWindow?.setAttribute("aria-hidden", "true");
+      audioManager.setDialogFocus(false, "merchant");
+    }
+
+    function buyMerchantSupply() {
+      if (!spendMerchantTradeFragments(MERCHANT_SUPPLY_COST)) return triggerErrorGlitch();
+      grantMerchantHpSupplies(1, "merchant-supply");
+      saveProgress();
+      showReward("已购买回血道具：可在编辑器顶部恢复 HP，任务碎片未消耗。");
+      openMerchantWindow();
+      return true;
     }
 
     function buyMerchantSkin() {
-      if (gameState.codeInventory.length < 3) return triggerErrorGlitch();
-      if (!gameState.progress.unlockedSkins.includes("shadowPurple")) gameState.progress.unlockedSkins.push("shadowPurple");
-      applyPlayerSkin("shadowPurple");
-      saveProgress();
-      showReward("已兑换外观：暗影紫");
-      openMerchantWindow();
-      return true;
+      return buyMerchantSupply();
     }
 
     function resolveNarrativeBranchWeights(nodeId) {
@@ -27507,6 +27985,7 @@ ${item.code}
       gameState.progress.exp = (Number(gameState.progress.exp) || 0) + (Number(reward.exp) || 0);
       if (reward.skin && !gameState.progress.unlockedSkins.includes(reward.skin)) gameState.progress.unlockedSkins.push(reward.skin);
       if (reward.codeBlock && !gameState.progress.questCodeBlocks.includes(reward.codeBlock)) gameState.progress.questCodeBlocks.push(reward.codeBlock);
+      if (reward.tradeFragments) grantMerchantTradeFragments(reward.tradeFragments, task.id);
       saveProgress();
       updateNpcWorldReactions(gameState.scene);
       updateRoomMemorabilia();
@@ -27563,6 +28042,33 @@ ${item.code}
       return { lives: gameState.progress.compileLives, max };
     }
 
+    function updateEditorHpPanel() {
+      const state = normalizeCompileLifeState();
+      const supplies = getMerchantHpSupplyCount();
+      if (dom.editorHpText) dom.editorHpText.textContent = `HP ${state.lives}/${state.max}`;
+      if (dom.editorHpChip) dom.editorHpChip.classList.toggle("low", state.lives <= Math.max(1, Math.floor(state.max * 0.34)));
+      if (dom.editorUseHpSupplyButton) {
+        dom.editorUseHpSupplyButton.textContent = `回血道具 x${supplies}`;
+        dom.editorUseHpSupplyButton.disabled = supplies <= 0 || state.lives >= state.max;
+        dom.editorUseHpSupplyButton.setAttribute("aria-label", `使用回血道具，当前 HP ${state.lives}/${state.max}，道具 ${supplies}`);
+      }
+      return { ...state, supplies };
+    }
+
+    function damageCompileLife(amount = 1, source = "compile-failure") {
+      const state = normalizeCompileLifeState();
+      const damage = Math.max(1, Number(amount) || 1);
+      const next = Math.max(0, state.lives - damage);
+      const actualDamage = state.lives - next;
+      gameState.progress.compileLives = next;
+      if (actualDamage > 0) showCompileLifeLossFloat(actualDamage);
+      updateEditorHpPanel();
+      updateInfoSideMenu();
+      saveProgress();
+      if (actualDamage > 0) addWorldEvolutionDiary(`编译失败扣除 HP -${actualDamage}（${source}）。`);
+      return { lives: next, max: state.max, damage: actualDamage };
+    }
+
     function showCompileLifeLossFloat(amount = 1) {
       const node = document.createElement("div");
       node.className = "compile-life-float";
@@ -27606,6 +28112,7 @@ ${item.code}
       const next = amount === "full" ? state.max : Math.min(state.max, state.lives + Math.max(1, Number(amount) || 1));
       if (next === state.lives) return false;
       gameState.progress.compileLives = next;
+      updateEditorHpPanel();
       updateInfoSideMenu();
       saveProgress();
       if (source !== "silent") showReward(amount === "full" ? "关卡生命已完全恢复。" : `关卡生命恢复：${next}/${state.max}`);
@@ -27644,6 +28151,7 @@ ${item.code}
     function handleCompileFailurePenalty(chapterId = gameState.activeChallengeId, detail = {}) {
       normalizeCompileLifeState();
       const totalFailures = recordCompileFailure();
+      const lifeDamage = damageCompileLife(1, detail.source || "compile-failed");
       const key = chapterId || "unknown";
       gameState.progress.chapterFailureCounts[key] = (Number(gameState.progress.chapterFailureCounts[key]) || 0) + 1;
       gameState.progress.compileFailureStreak = (Number(gameState.progress.compileFailureStreak) || 0) + 1;
@@ -27653,10 +28161,13 @@ ${item.code}
       trackedSetTimeout(() => scene?.player?.clearTint?.(), 260, "compile-life-player-red");
       const index = getChapterLevelIndex(key);
       const limit = index >= COMPILE_LIFE_RULES.lateChapterIndex ? COMPILE_LIFE_RULES.lateFailureHintLimit : COMPILE_LIFE_RULES.earlyFailureHintLimit;
+      const lifeText = lifeDamage.damage > 0
+        ? `HP -${lifeDamage.damage}（${lifeDamage.lives}/${lifeDamage.max}）。可使用商人回血道具恢复。`
+        : `HP 已为 0（${lifeDamage.lives}/${lifeDamage.max}）。可使用商人回血道具或回出生点恢复。`;
       if (gameState.progress.chapterFailureCounts[key] >= limit) {
-        showReward("连续编译失败：核心提示已显示在编辑器底部。");
+        showReward(`连续编译失败：${lifeText} 核心提示已显示在编辑器底部。`);
       } else {
-        showReward("编译失败已记录，编辑器仍可继续修改。");
+        showReward(`编译失败已记录：${lifeText}`);
       }
       updateInfoSideMenu();
       saveProgress();
@@ -27665,6 +28176,7 @@ ${item.code}
         lives: gameState.progress.compileLives,
         limit,
         detail,
+        lifeDamage,
         failureCount: gameState.progress.chapterFailureCounts[key],
         totalFailures
       };
@@ -28436,8 +28948,8 @@ ${item.code}
 
     function playEmotionalNpcMumble(emotion = "warm") {
       const pitch = emotion === "sad" ? 180 : emotion === "surprised" ? 540 : emotion === "serious" ? 260 : 420;
-      audioManager?.tone?.(pitch, 0.045, "sine", 0.018, "sfx");
-      audioManager?.tone?.(pitch * 1.5, 0.026, "triangle", 0.008, "sfx");
+      audioManager?.tone?.(pitch, 0.038, "sine", 0.006, "sfx");
+      if (!audioManager?.dialogAudioFocus) audioManager?.tone?.(pitch * 1.5, 0.026, "triangle", 0.008, "sfx");
       return emotion;
     }
 
@@ -28520,11 +29032,18 @@ ${item.code}
     class IdeExperienceManager {
       constructor() {
         this.notes = readStorage("editor_notes", "// 本地笔记：记录你自己的 C 语言理解。");
+        this.updateTimer = 0;
       }
 
       attach() {
         dom.editorFoldButton?.addEventListener("click", toggleCodeFold);
-        dom.codeInput?.addEventListener("input", () => this.update());
+        dom.codeInput?.addEventListener("input", () => this.scheduleUpdate());
+        return true;
+      }
+
+      scheduleUpdate() {
+        window.clearTimeout(this.updateTimer);
+        this.updateTimer = window.setTimeout(() => this.update(), 90);
         return true;
       }
 
@@ -32703,6 +33222,7 @@ ${item.code}
       if (gameState.editorOpen) return;
       bootAudio();
       gameState.dialogOpen = true;
+      audioManager.setDialogFocus(true, "lesson-dialog");
       document.body.classList.add("is-dialog-open");
       dialogLines = lines;
       dialogIndex = 0;
@@ -32777,6 +33297,7 @@ ${item.code}
 
     function closeDialog() {
       gameState.dialogOpen = false;
+      audioManager.setDialogFocus(false, "lesson-dialog");
       document.body.classList.remove("is-dialog-open");
       dialogAwaitingChoice = false;
       window.clearInterval(typingTimer);
@@ -33236,6 +33757,7 @@ ${item.code}
       dom.overlay.classList.remove("closing");
       document.body.classList.add("is-editor-open");
       refreshEditorDeviceSymbolAssist(document.body.classList.contains("mobile-input"));
+      updateEditorHpPanel();
       audioManager.setEditorFocus(true);
       audioManager.playBgm("puzzle");
       adaptiveSymphonicAudioDirector?.setVerticalLayer("teaching");
@@ -33279,6 +33801,7 @@ ${item.code}
       selectFile("main.c");
       gameState.codeAccuracy = 100;
       updateStatusBars();
+      updateEditorHpPanel();
       setOutput("已重置为本关初始模板。", "info");
     }
 
@@ -33348,13 +33871,22 @@ ${item.code}
       editorVisualTimer = window.setTimeout(updateEditorVisuals, delay);
     }
 
+    function syncActiveEditorFileFromInput(value = dom.codeInput?.value || "") {
+      if (!currentFile || currentFile === "README.md" || !dom.codeInput || dom.codeInput.readOnly) return false;
+      files[currentFile] = String(value ?? "");
+      return true;
+    }
+
     function pulseCodeInputFeedback() {
       const layer = dom.codeInput?.closest?.(".code-layer");
       if (!layer) return;
+      const now = Date.now();
+      if (now - editorFeedbackPulseAt < 90) return;
+      editorFeedbackPulseAt = now;
       layer.classList.remove("key-pulse");
       void layer.offsetWidth;
       layer.classList.add("key-pulse");
-      trackedSetTimeout(() => layer.classList.remove("key-pulse"), 180, "editor-key-pulse");
+      trackedSetTimeout(() => layer.classList.remove("key-pulse"), 140, "editor-key-pulse");
     }
 
     function resetEditorHistory(value = dom.codeInput?.value || "") {
@@ -33602,6 +34134,7 @@ ${item.code}
       dom.codeInput.value = value;
       dom.codeInput.selectionStart = dom.codeInput.selectionEnd = value.length;
       editorHistory.lastValue = value;
+      syncActiveEditorFileFromInput(value);
       scheduleEditorVisuals();
       return true;
     }
@@ -33613,6 +34146,7 @@ ${item.code}
       dom.codeInput.value = value;
       dom.codeInput.selectionStart = dom.codeInput.selectionEnd = value.length;
       editorHistory.lastValue = value;
+      syncActiveEditorFileFromInput(value);
       scheduleEditorVisuals();
       return true;
     }
@@ -34855,17 +35389,78 @@ ${item.code}
       return Promise.race([promise, timeout]).finally(() => window.clearTimeout(timer));
     }
 
+    function getSandboxTerminalElement() {
+      try {
+        return dom.sandbox?.contentDocument?.getElementById?.("terminal") || null;
+      } catch (error) {
+        reportSoftError(error, ERROR_LEVELS.recoverable, { source: "sandbox-terminal-read" });
+        return null;
+      }
+    }
+
+    function waitForSandboxTerminal(timeoutMs = 320) {
+      return new Promise((resolve) => {
+        const frame = dom.sandbox;
+        if (!frame) {
+          resolve(null);
+          return;
+        }
+        const existing = getSandboxTerminalElement();
+        if (existing) {
+          resolve(existing);
+          return;
+        }
+
+        let settled = false;
+        const startedAt = Date.now();
+        const finish = (terminal = null) => {
+          if (settled) return;
+          settled = true;
+          frame.removeEventListener?.("load", handleLoad);
+          resolve(terminal);
+        };
+        const poll = () => {
+          const terminal = getSandboxTerminalElement();
+          if (terminal) {
+            finish(terminal);
+            return;
+          }
+          if (Date.now() - startedAt >= timeoutMs) {
+            finish(null);
+            return;
+          }
+          window.setTimeout(poll, 24);
+        };
+        const handleLoad = () => {
+          const terminal = getSandboxTerminalElement();
+          if (terminal) finish(terminal);
+        };
+
+        frame.addEventListener?.("load", handleLoad, { once: true });
+        poll();
+      });
+    }
+
+    async function renderAcceptedOutputToSandbox(acceptedOutput = "") {
+      if (!dom.sandbox) return false;
+      dom.sandbox.srcdoc = `<!doctype html><html><body><pre id="terminal"></pre></body></html>`;
+      const terminal = await waitForSandboxTerminal();
+      if (!terminal) {
+        console.warn("[editor] sandbox terminal unavailable; compile result accepted without preview");
+        return false;
+      }
+      terminal.textContent = acceptedOutput;
+      return true;
+    }
+
     async function validateCChallenge(cCode, chapter) {
       const result = await compileAndRunCProgram(cCode, chapter);
       if (!result.ok) return result;
       const comparison = compareProgramOutput(result.output, chapter.output);
       const lenientPass = !comparison.ok && isLenientChallengePass(cCode, chapter, result.output);
       if (!comparison.ok && !lenientPass) return { ok: false, message: comparison.message, output: comparison.actual, mode: result.mode };
-      const html = `<!doctype html><html><body><pre id="terminal"></pre></body></html>`;
-      dom.sandbox.srcdoc = html;
-      await new Promise((resolve) => window.setTimeout(resolve, 80));
       const acceptedOutput = comparison.ok ? comparison.actual : (comparison.actual || result.output || chapter.output || "compiled");
-      dom.sandbox.contentDocument.getElementById("terminal").textContent = acceptedOutput;
+      await renderAcceptedOutputToSandbox(acceptedOutput);
       return { ok: true, output: acceptedOutput, mode: result.mode, lenient: lenientPass };
     }
 
@@ -39883,7 +40478,7 @@ ${item.code}
         scene.time.delayedCall(index * 28, () => {
           if (!bubble?.setText || bubble.destroyed || bubble.active === false) return;
           bubble.setText(String(bubble.text || "") + char);
-          if (index % 2 === 0) audioManager.type();
+          if (index % 6 === 0) audioManager.type();
         });
       });
       scene.tweens.add({ targets: bubble, y: -122, alpha: { from: 1, to: 0 }, delay: Math.max(900, chars.length * 28 + 900), duration: 520, ease: "Cubic.easeOut" });
@@ -39966,13 +40561,24 @@ ${item.code}
       if (data.type === NPC_TYPES.merchant) options.push(NPC_ACTIONS[2]);
       options.push(NPC_ACTIONS[3]);
       options.push(NPC_ACTIONS[4]);
-      return options;
+      return dedupeNpcActionOptions(options);
+    }
+
+    function dedupeNpcActionOptions(options = []) {
+      const seen = new Set();
+      return options.filter((option) => {
+        const id = option?.id || "";
+        if (!id || seen.has(id)) return false;
+        seen.add(id);
+        return true;
+      });
     }
 
     function closeNpcActionChooser() {
       dom.narrativeChoiceOverlay?.classList.remove("active");
       dom.narrativeChoiceOverlay?.setAttribute("aria-hidden", "true");
       if (dom.choiceOptions) dom.choiceOptions.textContent = "";
+      audioManager.setDialogFocus(false, "npc-choice");
       return true;
     }
 
@@ -40008,6 +40614,7 @@ ${item.code}
 
     function openNpcActionChooser(scene, npc) {
       if (!npc?.data || !dom.narrativeChoiceOverlay || !dom.choiceOptions) return performNpcAction(scene, npc, "talk");
+      audioManager.setDialogFocus(true, "npc-choice");
       const options = getNpcActionOptions(npc);
       dom.choiceNodeTitle && (dom.choiceNodeTitle.textContent = `${npc.data.name || "NPC"} · 选择交互`);
       dom.choiceNodePrompt && (dom.choiceNodePrompt.textContent = "先选择你想做什么，再进入具体对话。");
@@ -41553,6 +42160,7 @@ ${item.code}
     dom.codeInput.addEventListener("input", () => {
       pushEditorUndoSnapshot();
       editorHistory.lastValue = dom.codeInput.value;
+      syncActiveEditorFileFromInput(dom.codeInput.value);
       editorKonamiBuffer = (editorKonamiBuffer + dom.codeInput.value.slice(-12)).slice(-40).toLowerCase();
       if (editorKonamiBuffer.includes("konami")) {
         editorKonamiBuffer = "";
@@ -41643,6 +42251,7 @@ ${item.code}
     });
     dom.resetCodeButton.addEventListener("click", resetCurrentCode);
     dom.closeEditorButton.addEventListener("click", () => closeEditor(true));
+    dom.editorUseHpSupplyButton?.addEventListener("click", () => useMerchantHpSupply("editor-button"));
     dom.codeExplainToggleButton?.addEventListener("click", () => setCodeExplainCollapsed());
     dom.editorGuideCloseButton?.addEventListener("click", () => closeEditorGuide(true));
     document.addEventListener("keydown", (event) => {
@@ -41698,7 +42307,7 @@ ${item.code}
       dom.terminalGuessOverlay?.setAttribute("aria-hidden", "true");
     });
     dom.closeMerchantButton?.addEventListener("click", closeMerchantWindow);
-    dom.buyShadowSkinButton?.addEventListener("click", buyMerchantSkin);
+    dom.buyShadowSkinButton?.addEventListener("click", buyMerchantSupply);
     dom.roomBedButton?.addEventListener("click", interactWithRoomBed);
     dom.roomDeskButton?.addEventListener("click", () => openDeskCodeReview(true));
     dom.roomFireplaceButton?.addEventListener("click", offerFireplaceFragmentRitual);
