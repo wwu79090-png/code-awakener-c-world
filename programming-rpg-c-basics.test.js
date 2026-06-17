@@ -219,7 +219,7 @@ assert(/async function playMemoryCoreCinematicBridge/m.test(html), "creation flo
 assert(/await openPostGenesisSetupOverlay\(character\);[\s\S]*await playMemoryCoreCinematicBridge\(character\);[\s\S]*const loaded = await LoadNextSceneWithTimeout/m.test(html), "character creation should play the memory core cinematic before loading the world");
 assert(/async function ensureMemoryCoreCinematicBeforeWorldEntry/m.test(html), "legacy saves should pass through a memory core cinematic gate before entering the world");
 assert(/enterGameWorldInFlight/m.test(html) && /async enterGameWorld\(\)[\s\S]*await ensureMemoryCoreCinematicBeforeWorldEntry\(\)/m.test(html), "menu start and continue should not skip the memory core cinematic for old saves");
-assert(/GAME_VERSION\s*=\s*"v1\.1\.1"/m.test(html) && /旧存档进入世界前会补播五幕记忆内核剧情/m.test(html), "startup announcement should be updated for the legacy-save cinematic hotfix release");
+assert(/GAME_VERSION\s*=\s*"v1\.1\.2"/m.test(html) && /编译失败诊断改为精确输出对比/m.test(html), "startup announcement should be updated for the compile-feedback hotfix release");
 
 assert(api.compressSavePayload, "save compressor should be exported for tests");
 assert(api.decompressSavePayload, "save decompressor should be exported for tests");
@@ -496,6 +496,11 @@ assert(typeof api.buildCompileErrorSystemLogLines === "function", "compile error
 {
   const lines = api.buildCompileErrorSystemLogLines("编译错误：[第5行] return 0; 写在 main 函数外面。", 5).join("\n");
   assert(lines.includes("第5行") && lines.includes("return 0; 写在 main 函数外面") && !lines.includes("检查第1行"), "compile error popup should show the real diagnostic instead of a fake first-line semicolon hint");
+}
+{
+  const lines = api.buildCompileErrorSystemLogLines("运行结果不符。\n预期输出：Hello, C World!\n实际输出：Hello C World", null).join("\n");
+  assert(lines.includes("错误类型：运行结果不符（输出对比）") && !lines.includes("（第1行）"), "output mismatch popup should not point to a fake source line");
+  assert(lines.includes("预期输出：Hello, C World!") && lines.includes("实际输出：Hello C World") && lines.includes("差异点"), "output mismatch popup should show expected output, actual output, and a concrete difference point");
 }
 assert(/function skipSystemLogWindow/m.test(html) && /dom\.systemLogOverlay\?\.addEventListener\("click"[\s\S]*skipSystemLogWindow/m.test(html), "system log popups should be skippable or accelerated by click");
 assert(/dom\.systemLogOverlay\?\.classList\.contains\("active"\)[\s\S]*skipSystemLogWindow\(\)/m.test(html), "system log popups should be skippable or accelerated by keyboard");
@@ -1491,17 +1496,17 @@ assert(/启动公告只提示当前版本|历史版本改到主菜单查看/.tes
 assert(/STARTUP_ANNOUNCEMENT_AUTO_HIDE_MS\s*=\s*14000/m.test(html), "announcement should remain visible long enough to read the current update");
 assert(/function showStartupAnnouncement/m.test(html), "announcement should be controlled by a startup function");
 assert(/id="announcementCloseButton"/m.test(html), "announcement should include a minimal close control");
-assert(/World Build v1\.1\.1/m.test(html) || /GAME_VERSION\s*=\s*"v1\.1\.1"/m.test(html), "game version should increment when shipping a new update");
+assert(/World Build v1\.1\.2/m.test(html) || /GAME_VERSION\s*=\s*"v1\.1\.2"/m.test(html), "game version should increment when shipping a new update");
 assert(/UPDATE_HISTORY\s*=\s*Object\.freeze\(\[[\s\S]*v1\.0\.1[\s\S]*零基础新手指引[\s\S]*v1\.0\.0[\s\S]*手机端适配/m.test(html), "update history should keep detailed previous release notes");
 assert(/data-menu-action="history"[\s\S]*历史更新内容/.test(html) && /id="updateHistoryOverlay"/m.test(html) && /function renderUpdateHistoryList/m.test(html), "main menu should expose update history with detailed notes");
-assert(/GAME_VERSION\s*=\s*"v1\.1\.1"/m.test(html), "game version should increment for the legacy-save cinematic hotfix release");
+assert(/GAME_VERSION\s*=\s*"v1\.1\.2"/m.test(html), "game version should increment for the compile-feedback hotfix release");
 assert(html.includes('const OFFICIAL_SITE_HREF = "./official-site.html";') && /data-menu-action="official"[\s\S]*访问官方网站/.test(html) && /action === "official"[\s\S]*openOfficialWebsite\(\)/m.test(html), "main menu should expose and handle an official website entry");
 assert(/SYSTEM_BOOT_FORCE_RELEASE_MS\s*=\s*3200/m.test(html) && /system-boot-force-release/m.test(html) && /SYSTEM_BOOT_FORCE_RELEASE_MS \+ 1400/m.test(html), "startup boot overlay should have tracked and native failsafe release timers");
 assert(/function markAppRendered\(reason = "script-started"\)[\s\S]*classList\?\.add\("app-rendered"\)[\s\S]*staticRescue/m.test(html), "normal script startup should hide the static rescue layer");
-assert(/html\.app-rendered \.static-rescue/m.test(html) && /safeMode=true&noAudio=true&v=1\.1\.1/m.test(html), "static rescue should only appear if the app script does not render");
+assert(/html\.app-rendered \.static-rescue/m.test(html) && /safeMode=true&noAudio=true&v=1\.1\.2/m.test(html), "static rescue should only appear if the app script does not render");
 assert(/isStrictSecurityMode\(\)[\s\S]*removeItem\?\.\("codeAwakenerStrictSecurity"\)[\s\S]*params\.get\("strictSecurity"\) === "1"/m.test(html), "stale localStorage strict-security flags should not white-screen normal browsers");
-assert(/UPDATE_ANNOUNCEMENT_PAGES\s*=\s*Object\.freeze\(\[\s*\{\s*title:\s*"> 消息 \/ 本次更新"[\s\S]*v1\.1\.1[\s\S]*旧存档进入世界前会补播五幕记忆内核剧情[\s\S]*memoryCoreCinematicSkipped[\s\S]*frame-ancestors[\s\S]*414374792/m.test(html), "startup announcement should show only the current v1.1.1 legacy-save cinematic hotfix");
-assert(/id="announcementPageBody"[\s\S]*v1\.1\.1：旧存档进入世界前会补播五幕记忆内核剧情[\s\S]*控制台更干净[\s\S]*官方Q群：414374792/m.test(initialBodyMarkup), "static startup announcement placeholder should match the current v1.1.1 update before script hydration");
+assert(/UPDATE_ANNOUNCEMENT_PAGES\s*=\s*Object\.freeze\(\[\s*\{\s*title:\s*"> 消息 \/ 本次更新"[\s\S]*v1\.1\.2[\s\S]*精确输出对比[\s\S]*HP 归零[\s\S]*导师解析折叠按钮[\s\S]*414374792/m.test(html), "startup announcement should show only the current v1.1.2 compile-feedback hotfix");
+assert(/id="announcementPageBody"[\s\S]*v1\.1\.2：编译失败诊断改为精确输出对比[\s\S]*导师解析折叠按钮[\s\S]*官方Q群：414374792/m.test(initialBodyMarkup), "static startup announcement placeholder should match the current v1.1.2 update before script hydration");
 assert(!/公告只保留关闭、课程锁定、自由模式通关后显示/m.test(initialBodyMarkup), "static startup announcement placeholder should not show stale update copy");
 assert(/UPDATE_HISTORY\s*=\s*Object\.freeze\(\[[\s\S]*v1\.0\.31[\s\S]*QQ音乐外部模式与自定义场景音乐[\s\S]*播放\/暂停切换[\s\S]*IndexedDB[\s\S]*414374792/m.test(html), "update history should record the v1.0.31 custom music connector release");
 assert(/UPDATE_HISTORY\s*=\s*Object\.freeze\(\[[\s\S]*v1\.0\.30[\s\S]*Pixabay 真实音乐与音效接入[\s\S]*Gamer Menu[\s\S]*音乐切换器[\s\S]*外部音频失败回退[\s\S]*414374792/m.test(html), "update history should record the v1.0.30 Pixabay music and sound-effect release");
@@ -2314,6 +2319,8 @@ assert(/COMPILE_LIFE_RULES\s*=\s*Object\.freeze/m.test(html), "compile failure p
 assert(/compileLives:\s*3/m.test(html) && /compileLifeMax:\s*3/m.test(html), "save progress should start each player with three compile lives");
 assert(/function handleCompileFailurePenalty/m.test(html) && /damageCompileLife\(1,\s*detail\.source \|\| "compile-failed"\)/m.test(html), "compile failures should be recorded through a dedicated handler and deduct editor HP");
 assert(/function updateEditorHpPanel/m.test(html) && /dom\.editorUseHpSupplyButton\?\.addEventListener\("click",\s*\(\)\s*=>\s*useMerchantHpSupply\("editor-button"\)\)/m.test(html), "editor HP display should refresh and expose a healing item button");
+assert(/function buildCompileLifeZeroRecoveryMessage/m.test(html) && /function showCompileLifeZeroRecoveryPrompt/m.test(html), "HP zero should build and show a concrete recovery prompt instead of stopping at 0/3");
+assert(/code-explain-head\s*\{[\s\S]*grid-template-columns:\s*minmax\(0,\s*1fr\)\s+32px/m.test(html) && /code-explain-toggle\s*\{[\s\S]*position:\s*static/m.test(html), "mentor explain collapse button should reserve its own column and not cover the title text");
 assert(/function resetEditorAfterCompileFailure/m.test(html), "compile failures should reset editor state after every failed run");
 assert(!/function triggerCompileLifeZeroPenalty/m.test(html), "compile failures should not trigger a life-zero teleport or editor lock");
 assert(!/compileLives\s*<=\s*0[\s\S]{0,120}triggerCompileLifeZeroPenalty/m.test(html), "compile failure count must not lock the editor after repeated failures");
@@ -2328,6 +2335,10 @@ if (api.handleCompileFailurePenalty && api.buyMerchantSupply && api.useMerchantH
   api.gameState.progress.collectedFragmentKeys = ["overview:int", "overview:return"];
   const penalty = api.handleCompileFailurePenalty("overview", { source: "test-compile" });
   assert(penalty.lives === 2 && api.gameState.progress.compileLives === 2, "compile failure should deduct one editor HP");
+  api.gameState.progress.compileLives = 1;
+  const zeroPenalty = api.handleCompileFailurePenalty("overview", { source: "test-compile-zero" });
+  assert(zeroPenalty.lifeZero === true && /HP 已归零/.test(zeroPenalty.recoveryMessage) && /回血道具|回出生点|床休息/.test(zeroPenalty.recoveryMessage), "HP zero should return an actionable recovery message");
+  api.gameState.progress.compileLives = 2;
   assert(api.buyMerchantSupply() === true, "merchant should sell one healing item for trade fragments");
   assert(api.gameState.progress.merchantTradeFragments === 0 && api.gameState.progress.merchantHpSupplies === 1, "merchant purchase should move trade fragments into healing item inventory");
   assert(api.useMerchantHpSupply("test") === true, "merchant healing item should restore editor HP when used");

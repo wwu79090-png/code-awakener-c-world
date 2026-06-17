@@ -2,6 +2,13 @@
 
 ## Unreleased
 
+## v1.1.2 - 2026-06-17
+
+- Improved compile-failure diagnostics for output mismatches by showing expected output, actual output, and the first differing character instead of pointing at a fake source line.
+- Avoided highlighting a source line for output-only mismatches so learners are directed to fix `printf`/`puts` text rather than chase unrelated syntax.
+- Added an actionable HP-zero recovery prompt that preserves the current code and tells players to use healing items or recover at spawn/bed.
+- Reworked the mentor explanation collapse control into a reserved grid column so the button no longer covers the title in narrow panels.
+
 ## v1.1.1 - 2026-06-17
 
 - Fixed legacy saves and continue-game entry so completed characters pass through the Memory Core cinematic gate before entering the world.

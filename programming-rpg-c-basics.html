@@ -14,7 +14,7 @@
   <meta http-equiv="Cache-Control" content="no-store, max-age=0, must-revalidate">
   <meta http-equiv="Pragma" content="no-cache">
   <meta http-equiv="Expires" content="0">
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self' file:; base-uri 'self'; object-src 'none'; script-src 'self' 'nonce-code-awakener-inline' file: 'sha256-r+fIGFH643ukXG8W2x8oSaY69JE34GfuIFfcZ688ZbA='; style-src 'self' 'nonce-code-awakener-inline' file: 'sha256-yrxVsPlrV14nM4EJhhe53enSo12dZIS/rUNHHraiFUo='; style-src-attr 'unsafe-inline'; font-src 'self' file: data:; img-src 'self' file: data: blob: https://cdn.pixabay.com; media-src 'self' file: data: blob: https: http: https://cdn.pixabay.com; worker-src 'self' file: blob:; child-src 'self' file: blob:; connect-src 'self' file: http://localhost:8000 http://127.0.0.1:8000 https://cdn.pixabay.com https://pixabay.com;">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self' file:; base-uri 'self'; object-src 'none'; script-src 'self' 'nonce-code-awakener-inline' file: 'sha256-eaEFLePjStw+ZmN/EJ9HqWS0YCt1xJqlCk2KLrLT+R4='; style-src 'self' 'nonce-code-awakener-inline' file: 'sha256-dNEdHkr1ok5NB6FEcLO3MaeTZLVTxtzitIVd9qD5+vY='; style-src-attr 'unsafe-inline'; font-src 'self' file: data:; img-src 'self' file: data: blob: https://cdn.pixabay.com; media-src 'self' file: data: blob: https: http: https://cdn.pixabay.com; worker-src 'self' file: blob:; child-src 'self' file: blob:; connect-src 'self' file: http://localhost:8000 http://127.0.0.1:8000 https://cdn.pixabay.com https://pixabay.com;">
   <title>编程学习 RPG：C 语言启航村</title>
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%23020617'/%3E%3Cpath d='M22 20 10 32l12 12M42 20l12 12-12 12' fill='none' stroke='%2300ff88' stroke-width='6' stroke-linecap='round' stroke-linejoin='round'/%3E%3Cpath d='m36 16-8 32' stroke='%2300ccff' stroke-width='5' stroke-linecap='round'/%3E%3C/svg%3E">
   <script src="./vendor/phaser.min.js"></script>
@@ -5410,6 +5410,7 @@
     .file-tree h2,
     .task-panel h2,
     .code-explain-panel h2 {
+      min-width: 0;
       margin: 0;
       padding: 12px 14px 8px;
       color: #e5e7eb;
@@ -5417,6 +5418,9 @@
       font-weight: 800;
       letter-spacing: 0.04em;
       text-transform: uppercase;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
     }
 
     .file-item {
@@ -5837,15 +5841,17 @@
     }
 
     .code-explain-head {
-      display: flex;
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 32px;
       align-items: center;
-      justify-content: space-between;
       gap: 8px;
       border-bottom: 1px solid rgba(125, 211, 252, 0.16);
     }
 
     .code-explain-toggle {
-      margin-right: 8px;
+      position: static;
+      justify-self: center;
+      margin: 0;
       min-width: 26px;
       min-height: 26px;
       border: 1px solid rgba(34, 211, 238, 0.36);
@@ -11358,8 +11364,8 @@
       <p>&gt; 如果这里一直空白，说明浏览器缓存、旧存档或脚本自检阻塞了启动。</p>
       <p>&gt; 使用下面入口可以绕过旧缓存并关闭重型特效，学习进度仍会保留。</p>
       <div class="static-rescue-actions">
-        <a href="./programming-rpg-c-basics.html?safeMode=true&noAudio=true&v=1.1.1">安全启动</a>
-        <a href="./programming-rpg-c-basics.html?v=1.1.1">强制刷新</a>
+        <a href="./programming-rpg-c-basics.html?safeMode=true&noAudio=true&v=1.1.2">安全启动</a>
+        <a href="./programming-rpg-c-basics.html?v=1.1.2">强制刷新</a>
       </div>
       <p>作者：杀戮 · QQ：3424636983 · 官方Q群：414374792</p>
     </div>
@@ -11568,7 +11574,7 @@
       <canvas id="menuFxCanvas" width="1280" height="720"></canvas>
       <div class="main-menu-card glass-panel">
         <h1 class="game-logo">CODE AWAKENER<br>C 语言启航村</h1>
-        <div class="version-label" id="versionLabel">World Build v1.1.1 · develop.fan C Basics</div>
+        <div class="version-label" id="versionLabel">World Build v1.1.2 · develop.fan C Basics</div>
         <div id="musicSwitcher" class="music-switcher" aria-label="音乐主题切换器">
           <div class="music-switcher-copy">
             <span class="music-switcher-kicker">♪ 当前音乐主题</span>
@@ -12316,11 +12322,11 @@ int main(void) {
       <button id="announcementCloseButton" class="announcement-close" type="button" aria-label="关闭公告">×</button>
       <h2 id="startupAnnouncementTitle" class="startup-announcement-title">> 消息 / 本次更新</h2>
       <div id="announcementPageBody" class="startup-announcement-body">
-        <p>// v1.1.1：旧存档进入世界前会补播五幕记忆内核剧情，不再直接跳过新剧情桥。</p>
-        <p>// 如果玩家主动点击“跳过”，系统会记录为手动跳过，避免后续每次读档重复弹出。</p>
-        <p>// 记忆核心动画已加入新手引导阻塞名单，防止剧情期间叠加其他教程弹层。</p>
-        <p>// CSP 移除浏览器会忽略的 meta frame-ancestors，并保留运行时防嵌套安全层，控制台更干净。</p>
-        <p>// 完整回归已覆盖静态测试、旧档浏览器验证、移动烟测、构建和全量诊断。</p>
+        <p>// v1.1.2：编译失败诊断改为精确输出对比，不再把运行结果不符误指向第 1 行。</p>
+        <p>// 系统日志会展示预期输出、实际输出和首个差异字符，方便直接修改 printf/puts 文本。</p>
+        <p>// 编辑器 HP 归零后会保留代码并显示恢复步骤：使用回血道具，或回出生点/房间床休息。</p>
+        <p>// 导师解析折叠按钮改为独立网格列，窄面板下不会遮挡“导师解析”标题。</p>
+        <p>// 已通过静态测试、浏览器复现验证和截图级 UI 检查。</p>
         <p>// 作者：杀戮，QQ：3424636983，官方Q群：414374792。</p>
         <p class="announcement-dismiss-hint">- 点击任意处关闭</p>
       </div>
@@ -12832,23 +12838,34 @@ int main() {
     const SAVE_CLEAR_CONFIRM_MS = 3000;
     const STARTUP_ANNOUNCEMENT_AUTO_HIDE_MS = 14000;
     const SYSTEM_BOOT_FORCE_RELEASE_MS = 3200;
-    const GAME_VERSION = "v1.1.1";
+    const GAME_VERSION = "v1.1.2";
     const OFFICIAL_SITE_HREF = "./official-site.html";
     const UPDATE_ANNOUNCEMENT_PAGES = Object.freeze([
       {
         title: "> 消息 / 本次更新",
         lines: [
-          "// v1.1.1：旧存档进入世界前会补播五幕记忆内核剧情，不再直接跳过新剧情桥。",
-          "// 固定存档 gameSave.json 会先恢复角色数据，再进入记忆核心动画门。",
-          "// 如果玩家主动点击“跳过”，系统会记录为手动跳过，避免后续每次读档重复弹出。",
-          "// 记忆核心动画已加入新手引导阻塞名单，防止剧情期间叠加其他教程弹层。",
-          "// CSP 移除浏览器会忽略的 meta frame-ancestors，并保留运行时防嵌套安全层。",
-          "// 安全启动、强制刷新、CSP 和脚本自检已同步到 v1.1.1，方便绕过旧缓存。",
+          "// v1.1.2：编译失败诊断改为精确输出对比，不再把运行结果不符误指向第 1 行。",
+          "// 系统日志会展示预期输出、实际输出和首个差异字符，方便直接修改 printf/puts 文本。",
+          "// 编辑器 HP 归零后会保留代码并显示恢复步骤：使用回血道具，或回出生点/房间床休息。",
+          "// 导师解析折叠按钮改为独立网格列，窄面板下不会遮挡“导师解析”标题。",
+          "// 安全启动、强制刷新、CSP 和脚本自检已同步到 v1.1.2，方便绕过旧缓存。",
           "// 作者：杀戮，QQ：3424636983，官方Q群：414374792。"
         ]
       }
     ]);
     const UPDATE_HISTORY = Object.freeze([
+      {
+        version: "v1.1.2",
+        date: "2026-06-17",
+        title: "编译失败反馈与 HP 归零热修",
+        details: [
+          "运行结果不符时，系统日志改为输出对比模式，展示预期输出、实际输出和第一个差异字符，不再误标第 1 行源码错误。",
+          "输出不符不会再触发错误行高亮，避免把 printf 文本差异伪装成语法行号问题。",
+          "编辑器 HP 归零后会保留当前代码，并在控制台和导师提示中给出可执行恢复步骤：使用回血道具，或回出生点/房间床休息。",
+          "导师解析折叠按钮改为独立网格列，窄面板下不再遮挡标题文字。",
+          "新增回归测试和浏览器复现验证，覆盖输出不符详情、HP 0 后续提示和按钮遮挡。官方Q群：414374792。"
+        ]
+      },
       {
         version: "v1.1.1",
         date: "2026-06-17",
@@ -14133,7 +14150,7 @@ return 0;`;
       directSaveAs: "reduced-by-inline-resources"
     });
     const SECURITY_CONFIG = Object.freeze({
-      expectedScriptHash: "POjfvTxXO7bXV/uRNXZd25EBqsLTlmdllggmRadfNn8=",
+      expectedScriptHash: "Kmw/+h0Lt567TR6e6eecHicPqR8F7/ezTiSw528hl54=",
       selfCheckIntervalMs: 45000,
       tamperRefreshMs: 5000,
       devToolsRefreshMs: 2000,
@@ -29488,6 +29505,30 @@ ${item.code}
       return true;
     }
 
+    function buildCompileLifeZeroRecoveryMessage(lifeDamage = normalizeCompileLifeState()) {
+      const lives = Math.max(0, Number(lifeDamage.lives ?? gameState.progress.compileLives) || 0);
+      const max = Math.max(1, Number(lifeDamage.max ?? gameState.progress.compileLifeMax) || 3);
+      const supplies = getMerchantHpSupplyCount();
+      return [
+        `HP 已归零（${lives}/${max}），当前代码已保留，不会锁死编辑器。`,
+        supplies > 0
+          ? `下一步：点击编辑器顶部“回血道具 x${supplies}”立刻恢复 1 点 HP。`
+          : "下一步：找碎片商人购买回血道具，或关闭编辑器回出生点/房间床休息恢复。",
+        "建议：先按本条错误诊断改代码，再运行；如果只是输出不符，重点核对引号中的文字。"
+      ].join("\n");
+    }
+
+    function showCompileLifeZeroRecoveryPrompt(lifeDamage = normalizeCompileLifeState(), detail = {}) {
+      const message = buildCompileLifeZeroRecoveryMessage(lifeDamage);
+      if (dom.editorRichConsole) {
+        dom.editorRichConsole.dataset.tone = "error";
+        dom.editorRichConsole.textContent = message;
+      }
+      showReward("HP 已归零：代码已保留，请使用回血道具或回出生点/床休息恢复。");
+      addWorldEvolutionDiary(`编辑器 HP 归零（${detail.source || "compile-failed"}），已显示恢复指引。`);
+      return message;
+    }
+
     function resetCurrentChallengeProgress(chapterId = gameState.activeChallengeId) {
       const chapter = chapterById[chapterId];
       if (!chapter) return false;
@@ -29530,7 +29571,11 @@ ${item.code}
       trackedSetTimeout(() => scene?.player?.clearTint?.(), 260, "compile-life-player-red");
       const index = getChapterLevelIndex(key);
       const limit = index >= COMPILE_LIFE_RULES.lateChapterIndex ? COMPILE_LIFE_RULES.lateFailureHintLimit : COMPILE_LIFE_RULES.earlyFailureHintLimit;
-      const lifeText = lifeDamage.damage > 0
+      const lifeZero = lifeDamage.lives <= 0;
+      const recoveryMessage = lifeZero ? showCompileLifeZeroRecoveryPrompt(lifeDamage, detail) : "";
+      const lifeText = lifeZero
+        ? `HP 已归零（${lifeDamage.lives}/${lifeDamage.max}）。请使用回血道具，或回出生点/床休息恢复。`
+        : lifeDamage.damage > 0
         ? `HP -${lifeDamage.damage}（${lifeDamage.lives}/${lifeDamage.max}）。可使用商人回血道具恢复。`
         : `HP 已为 0（${lifeDamage.lives}/${lifeDamage.max}）。可使用商人回血道具或回出生点恢复。`;
       if (gameState.progress.chapterFailureCounts[key] >= limit) {
@@ -29546,6 +29591,8 @@ ${item.code}
         limit,
         detail,
         lifeDamage,
+        lifeZero,
+        recoveryMessage,
         failureCount: gameState.progress.chapterFailureCounts[key],
         totalFailures
       };
@@ -31406,11 +31453,35 @@ ${item.code}
       return showSystemLogWindow(lines, { mode: "compact", autoCloseMs: 3000 });
     }
 
+    function isOutputMismatchDiagnostic(message = "") {
+      return /运行结果不符|输出内容不匹配|expected terminal output|预期输出：|实际输出：/.test(String(message || ""));
+    }
+
+    function extractOutputDiagnosticValue(text = "", label = "预期输出") {
+      const pattern = new RegExp(`${label}[:：]\\s*([^\\n]*)`);
+      const match = String(text || "").match(pattern);
+      return match ? match[1].trim() : "";
+    }
+
+    function describeOutputDifference(expected = "", actual = "") {
+      const expectedChars = Array.from(String(expected ?? ""));
+      const actualChars = Array.from(String(actual ?? ""));
+      const max = Math.max(expectedChars.length, actualChars.length);
+      for (let index = 0; index < max; index += 1) {
+        const expectedChar = expectedChars[index] ?? "∅";
+        const actualChar = actualChars[index] ?? "∅";
+        if (expectedChar !== actualChar) {
+          return `第${index + 1}个字符不同：预期“${expectedChar}”，实际“${actualChar}”。`;
+        }
+      }
+      return "文本看起来一致，请检查不可见空白或换行。";
+    }
+
     function buildCompileErrorSystemLogLines(message = "", lineNumber = null) {
       const text = String(message || "").replace(/^编译错误[:：]\s*/, "").trim();
       const line = lineNumber || extractLineNumber(text);
       const primary = text.split("\n").find((item) => item.trim()) || "未知错误";
-      const isOutputMismatch = /运行结果不符|输出内容不匹配|expected terminal output/.test(text);
+      const isOutputMismatch = isOutputMismatchDiagnostic(text);
       const isSyntax = !isOutputMismatch;
       let suggestion = "按控制台诊断修正对应位置后重试。";
       if (/return\s+0;.*main 函数外面/.test(text)) {
@@ -31419,6 +31490,21 @@ ${item.code}
         suggestion = "核对引号里的输出文本；大小写、空格和标点都必须和任务一致。";
       } else if (/分号|;/.test(text)) {
         suggestion = `检查第${line}行末尾是否缺少英文分号 ;。`;
+      }
+      if (isOutputMismatch) {
+        const expected = extractOutputDiagnosticValue(text, "预期输出");
+        const actual = extractOutputDiagnosticValue(text, "实际输出");
+        return [
+          "[ERROR] 编译失败",
+          "> 错误类型：运行结果不符（输出对比）",
+          `> 诊断：${primary}`,
+          `> 预期输出：${expected || "(空)"}`,
+          `> 实际输出：${actual || "(空)"}`,
+          `> 差异点：${describeOutputDifference(expected, actual)}`,
+          `> 建议：${suggestion}`,
+          "> 提示：点击或按任意键可立即显示/关闭此日志。",
+          "> 请按任务要求修正 printf/puts 的输出文本后重试。"
+        ];
       }
       return [
         "[ERROR] 编译失败",
@@ -34994,6 +35080,12 @@ ${item.code}
       return `${String(message || "")}\n\n${help}`;
     }
 
+    function appendCompileLifeRecoveryHelp(message = "", penalty = null) {
+      const recovery = penalty?.lifeZero ? String(penalty.recoveryMessage || "").trim() : "";
+      if (!recovery) return String(message || "");
+      return `${String(message || "")}\n\n${recovery}`;
+    }
+
     function resetEditorAfterCompileFailure(reason = "compile-failed") {
       setRunning(false);
       if (dom.runButton) {
@@ -36511,12 +36603,13 @@ ${item.code}
       dom.consoleOutput.innerHTML = `<span class="console-time">[${time}]</span> ${escapeHtml(displayMessage)}`;
       ideExperienceManager?.enrichConsole?.(displayMessage, type);
       if (type === "error") {
-        const targetLine = lineNumber || extractLineNumber(displayMessage);
+        const targetLine = isOutputMismatchDiagnostic(displayMessage) ? null : (lineNumber || extractLineNumber(displayMessage));
         flashErrorLine(targetLine);
         highlightEditorErrorLine(targetLine);
         showCompileErrorSystemLog(displayMessage, targetLine);
-        updateCodeExplanationPanel(files[currentFile] || "", { line: targetLine, message: displayMessage });
-        recordAbsoluteGuideCompileError({ line: targetLine, message: displayMessage });
+        if (targetLine) updateCodeExplanationPanel(files[currentFile] || "", { line: targetLine, message: displayMessage });
+        else updateCodeExplanationPanel(files[currentFile] || "", null);
+        recordAbsoluteGuideCompileError({ line: targetLine || 0, message: displayMessage });
         dom.consoleOutput.classList.add("console-shake");
         window.setTimeout(() => dom.consoleOutput.classList.remove("console-shake"), 320);
       } else if (type === "success") {
@@ -36652,7 +36745,7 @@ ${item.code}
         tutorialAnimationManager.trigger("T08_COMPILE_FAILURE", { scene: gameState.scene, chapter });
         markAbsoluteGuideAction("compileError", { chapterId: chapter?.id, reason: preflight.reason });
         resetEditorAfterCompileFailure(preflight.reason);
-        setOutput(appendCompileFailureHelp(preflight.message, chapter, penalty.failureCount), "error");
+        setOutput(appendCompileLifeRecoveryHelp(appendCompileFailureHelp(preflight.message, chapter, penalty.failureCount), penalty), "error");
         return;
       }
       clearExactCodeReferenceForCurrentTask();
@@ -36723,7 +36816,7 @@ ${item.code}
           triggerStoryCinematicBars("编译失败：错误不是惩罚，是世界给你的回声。", 1500);
           tutorialAnimationManager.trigger("T08_COMPILE_FAILURE", { scene: gameState.scene, chapter });
           resetEditorAfterCompileFailure("validate-result");
-          setOutput(appendCompileFailureHelp(failureMessage, chapter, penalty.failureCount), "error");
+          setOutput(appendCompileLifeRecoveryHelp(appendCompileFailureHelp(failureMessage, chapter, penalty.failureCount), penalty), "error");
         }
       } catch (error) {
         restoreEditorSourceAfterFailedRun(userSourceBeforeRun, "exception");
@@ -36737,7 +36830,7 @@ ${item.code}
         triggerMusicCompileError();
         triggerStoryCinematicBars("沙箱异常：系统已保护现场，请修改后重试。", 1500);
         resetEditorAfterCompileFailure("exception");
-        setOutput(appendCompileFailureHelp(failureMessage, chapter, penalty.failureCount), "error");
+        setOutput(appendCompileLifeRecoveryHelp(appendCompileFailureHelp(failureMessage, chapter, penalty.failureCount), penalty), "error");
       } finally {
         setRunning(false);
       }
