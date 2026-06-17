@@ -107,6 +107,11 @@ globalThis.__gameApi = {
   resolveStartupRouteFromSave: typeof resolveStartupRouteFromSave === "function" ? resolveStartupRouteFromSave : undefined,
   applyManualEditorKeyOperation: typeof applyManualEditorKeyOperation === "function" ? applyManualEditorKeyOperation : undefined,
   manualEditorOperationFromBeforeInput: typeof manualEditorOperationFromBeforeInput === "function" ? manualEditorOperationFromBeforeInput : undefined,
+  COMMON_ASCII_CODE_SYMBOLS: typeof COMMON_ASCII_CODE_SYMBOLS !== "undefined" ? COMMON_ASCII_CODE_SYMBOLS : undefined,
+  getEditorDeviceSymbolHint: typeof getEditorDeviceSymbolHint === "function" ? getEditorDeviceSymbolHint : undefined,
+  getNpcQuestAction: typeof getNpcQuestAction === "function" ? getNpcQuestAction : undefined,
+  getNearestNpcInteraction: typeof getNearestNpcInteraction === "function" ? getNearestNpcInteraction : undefined,
+  handleNpcInteraction: typeof handleNpcInteraction === "function" ? handleNpcInteraction : undefined,
   C_TUTORIAL_COURSE: typeof C_TUTORIAL_COURSE !== "undefined" ? C_TUTORIAL_COURSE : undefined,
   QUEST_DATA: typeof QUEST_DATA !== "undefined" ? QUEST_DATA : undefined,
   getStonePuzzleSpec: typeof getStonePuzzleSpec === "function" ? getStonePuzzleSpec : undefined,
@@ -493,6 +498,16 @@ assert(/body\.mobile-input #codeInput\s*\{[\s\S]*overflow:\s*auto[\s\S]*-webkit-
 assert(/const active = Boolean\(narrow \|\| coarse \|\| touch\)/m.test(html), "narrow editor viewports should use the mobile editor layout even when touch detection is unavailable");
 assert(/body\.mobile-input \.vscode-window\.code-block-guided \.editor-main\s*\{[\s\S]*grid-template-columns:\s*minmax\(0,\s*1fr\)/m.test(html), "mobile guided-code editor should collapse explicit desktop columns so the code area fills the screen");
 assert(/body\.mobile-input \.code-wrap\s*\{[\s\S]*grid-template-columns:\s*clamp\(28px,\s*8vw,\s*34px\)\s+minmax\(0,\s*1fr\)/m.test(html), "mobile editor line-number gutter should stay compact so code remains visible on narrow phones");
+assert(typeof api.getEditorDeviceSymbolHint === "function", "editor should expose a testable device-specific symbol hint helper");
+assert(Array.isArray(api.COMMON_ASCII_CODE_SYMBOLS) && [";", "(", ")", "{", "}", "\"", "'", "#"].every((symbol) => api.COMMON_ASCII_CODE_SYMBOLS.includes(symbol)), "editor should define a reusable common ASCII symbol palette for C code");
+assert(api.getEditorDeviceSymbolHint(true).includes("手机符号助手") && api.getEditorDeviceSymbolHint(false).includes("PC提示"), "editor symbol hint should distinguish mobile symbol buttons from PC English-symbol guidance");
+assert(/id="editorDeviceSymbolHint"/m.test(html) && /id="editorSymbolPalette"/m.test(html), "main in-game editor should include device hint and common ASCII symbol palette DOM");
+assert(/id="codeGenesisDeviceSymbolHint"/m.test(html) && /id="codeGenesisSymbolPalette"/m.test(html), "protagonist creation editor should include the same device hint and common ASCII symbol palette DOM");
+assert(/body\.mobile-input\.is-editor-open \.editor-symbol-palette\s*\{[\s\S]*display:\s*flex/m.test(html), "mobile main editor should show common ASCII symbol buttons while editing");
+assert(/body\.mobile-input \.code-genesis-symbol-palette\s*\{[\s\S]*display:\s*flex/m.test(html), "mobile protagonist creation editor should show common ASCII symbol buttons while typing code");
+assert(/editorSymbolPalette\?\.addEventListener\("click"[\s\S]*insertAsciiSymbolIntoEditor/m.test(html), "main editor symbol palette should insert symbols into the active code input");
+assert(/codeGenesisSymbolPalette\?\.addEventListener\("click"[\s\S]*insertAsciiSymbolIntoCodeGenesis/m.test(html), "protagonist creation symbol palette should insert symbols into the creation code input");
+assert(/PC提示：代码符号请使用英文半角/m.test(html), "PC editor users should be reminded to type code symbols with English half-width punctuation");
 assert(/\.vscode-window\.code-explain-collapsed \.editor-main\s*\{[\s\S]*grid-template-columns:\s*210px minmax\(0,\s*1fr\) 260px 46px/m.test(html), "collapsing the mentor analysis panel should shrink its grid column instead of reserving the full desktop width");
 assert(/function setCodeExplainCollapsed[\s\S]*code-explain-collapsed[\s\S]*dom\.codeExplainToggleButton\?\.addEventListener\("click",\s*\(\)\s*=>\s*setCodeExplainCollapsed\(\)\)/m.test(html), "mentor analysis collapse button should update the editor window layout class");
 
@@ -814,6 +829,22 @@ assert(/collect_basic_fragments/m.test(html), "new player task should collect th
 assert(/function createCoreNpcs/m.test(html), "scene should create core NPCs on the map");
 assert(/function updateNpcQuestIndicators/m.test(html), "NPCs should show task-state indicators");
 assert(/const nameLabel = scene\.add\.text\(0, -63, data\.name \|\| "NPC"/m.test(html), "NPCs should render their names above their heads");
+assert(typeof api.getNpcQuestAction === "function", "NPC quest action helper should be exported for crash regression tests");
+assert(typeof api.getNearestNpcInteraction === "function", "nearest NPC interaction helper should be exported for crash regression tests");
+assert(typeof api.handleNpcInteraction === "function", "NPC interaction entrypoint should be exported for crash regression tests");
+{
+  const action = api.getNpcQuestAction({ taskIds: ["missing_quest_id"] });
+  assert(action && !action.ready && !action.available && !action.active, "NPC quest action lookup should treat missing quest states as locked instead of crashing");
+  assert(api.getNearestNpcInteraction({ coreNpcs: [{ container: { x: 10, y: 10 } }] }) === null, "nearest NPC lookup should ignore NPCs until the player object is ready");
+  let invalidNpcThrew = false;
+  let invalidNpcResult = null;
+  try {
+    invalidNpcResult = api.handleNpcInteraction({}, { data: { id: "broken", type: "lost", name: "Broken NPC", taskIds: [] } });
+  } catch (error) {
+    invalidNpcThrew = true;
+  }
+  assert(!invalidNpcThrew && invalidNpcResult === false, "interacting with an NPC missing its world container should fail softly instead of reaching the global error restart dialog");
+}
 assert(/function renderQuestTracker/m.test(html), "quest tracker UI should render current progress");
 assert(/function showQuestReward/m.test(html), "completed quests should show a reward window");
 assert(/questManager\.acceptTask\("collect_basic_fragments"/m.test(html), "new game should auto accept the beginner collect quest");
@@ -1351,17 +1382,17 @@ assert(/启动公告只提示当前版本|历史版本改到主菜单查看/.tes
 assert(/STARTUP_ANNOUNCEMENT_AUTO_HIDE_MS\s*=\s*14000/m.test(html), "announcement should remain visible long enough to read the current update");
 assert(/function showStartupAnnouncement/m.test(html), "announcement should be controlled by a startup function");
 assert(/id="announcementCloseButton"/m.test(html), "announcement should include a minimal close control");
-assert(/World Build v1\.0\.32/m.test(html) || /GAME_VERSION\s*=\s*"v1\.0\.32"/m.test(html), "game version should increment when shipping a new update");
+assert(/World Build v1\.0\.33/m.test(html) || /GAME_VERSION\s*=\s*"v1\.0\.33"/m.test(html), "game version should increment when shipping a new update");
 assert(/UPDATE_HISTORY\s*=\s*Object\.freeze\(\[[\s\S]*v1\.0\.1[\s\S]*零基础新手指引[\s\S]*v1\.0\.0[\s\S]*手机端适配/m.test(html), "update history should keep detailed previous release notes");
 assert(/data-menu-action="history"[\s\S]*历史更新内容/.test(html) && /id="updateHistoryOverlay"/m.test(html) && /function renderUpdateHistoryList/m.test(html), "main menu should expose update history with detailed notes");
-assert(/GAME_VERSION\s*=\s*"v1\.0\.32"/m.test(html), "game version should increment for the NPC close and music island release");
+assert(/GAME_VERSION\s*=\s*"v1\.0\.33"/m.test(html), "game version should increment for the NPC stability and symbol helper release");
 assert(html.includes('const OFFICIAL_SITE_HREF = "./official-site.html";') && /data-menu-action="official"[\s\S]*访问官方网站/.test(html) && /action === "official"[\s\S]*openOfficialWebsite\(\)/m.test(html), "main menu should expose and handle an official website entry");
 assert(/SYSTEM_BOOT_FORCE_RELEASE_MS\s*=\s*3200/m.test(html) && /system-boot-force-release/m.test(html) && /SYSTEM_BOOT_FORCE_RELEASE_MS \+ 1400/m.test(html), "startup boot overlay should have tracked and native failsafe release timers");
 assert(/function markAppRendered\(reason = "script-started"\)[\s\S]*classList\?\.add\("app-rendered"\)[\s\S]*staticRescue/m.test(html), "normal script startup should hide the static rescue layer");
-assert(/html\.app-rendered \.static-rescue/m.test(html) && /safeMode=true&noAudio=true&v=1\.0\.32/m.test(html), "static rescue should only appear if the app script does not render");
+assert(/html\.app-rendered \.static-rescue/m.test(html) && /safeMode=true&noAudio=true&v=1\.0\.33/m.test(html), "static rescue should only appear if the app script does not render");
 assert(/isStrictSecurityMode\(\)[\s\S]*removeItem\?\.\("codeAwakenerStrictSecurity"\)[\s\S]*params\.get\("strictSecurity"\) === "1"/m.test(html), "stale localStorage strict-security flags should not white-screen normal browsers");
-assert(/UPDATE_ANNOUNCEMENT_PAGES\s*=\s*Object\.freeze\(\[\s*\{\s*title:\s*"> 消息 \/ 本次更新"[\s\S]*v1\.0\.32[\s\S]*NPC关闭[\s\S]*音乐灵动岛[\s\S]*414374792/m.test(html), "startup announcement should show only the current v1.0.32 NPC close and music island update");
-assert(/id="announcementPageBody"[\s\S]*v1\.0\.32：NPC关闭与音乐灵动岛增强[\s\S]*官方Q群：414374792/m.test(initialBodyMarkup), "static startup announcement placeholder should match the current v1.0.32 update before script hydration");
+assert(/UPDATE_ANNOUNCEMENT_PAGES\s*=\s*Object\.freeze\(\[\s*\{\s*title:\s*"> 消息 \/ 本次更新"[\s\S]*v1\.0\.33[\s\S]*NPC交互稳定[\s\S]*手机代码符号助手[\s\S]*414374792/m.test(html), "startup announcement should show only the current v1.0.33 NPC stability and symbol helper update");
+assert(/id="announcementPageBody"[\s\S]*v1\.0\.33：NPC交互稳定与手机代码符号助手[\s\S]*官方Q群：414374792/m.test(initialBodyMarkup), "static startup announcement placeholder should match the current v1.0.33 update before script hydration");
 assert(!/公告只保留关闭、课程锁定、自由模式通关后显示/m.test(initialBodyMarkup), "static startup announcement placeholder should not show stale update copy");
 assert(/UPDATE_HISTORY\s*=\s*Object\.freeze\(\[[\s\S]*v1\.0\.31[\s\S]*QQ音乐外部模式与自定义场景音乐[\s\S]*播放\/暂停切换[\s\S]*IndexedDB[\s\S]*414374792/m.test(html), "update history should record the v1.0.31 custom music connector release");
 assert(/UPDATE_HISTORY\s*=\s*Object\.freeze\(\[[\s\S]*v1\.0\.30[\s\S]*Pixabay 真实音乐与音效接入[\s\S]*Gamer Menu[\s\S]*音乐切换器[\s\S]*外部音频失败回退[\s\S]*414374792/m.test(html), "update history should record the v1.0.30 Pixabay music and sound-effect release");
@@ -1413,7 +1444,7 @@ assert(!/id="announcementExpandButton"/m.test(html) && !/announcementExpandButto
 assert(/UPDATE_HISTORY\s*=\s*Object\.freeze\(\[[\s\S]*v1\.0\.13[\s\S]*手机版设置入口[\s\S]*误开菜单[\s\S]*公告折叠状态/m.test(html), "update history should record the v1.0.13 mobile settings and announcement fix");
 assert(/UPDATE_HISTORY\s*=\s*Object\.freeze\(\[[\s\S]*v1\.0\.12[\s\S]*移除防白屏手动选项[\s\S]*CRT 雪花噪声 canvas 默认隐藏/m.test(html), "update history should record the v1.0.12 anti-white-screen option removal");
 assert(/UPDATE_HISTORY\s*=\s*Object\.freeze\(\[[\s\S]*v1\.0\.11[\s\S]*防白屏高档位白色噪点闪烁修复[\s\S]*CRT 噪声[\s\S]*每6帧[\s\S]*最多18个/m.test(html), "update history should record the v1.0.11 anti-white-noise release");
-assert(/UPDATE_ANNOUNCEMENT_PAGES\s*=\s*Object\.freeze\(\[[\s\S]*v1\.0\.32[\s\S]*NPC交互选择窗[\s\S]*关闭本次悬浮窗[\s\S]*414374792/m.test(html), "startup announcement should describe the current NPC close and music island update");
+assert(/UPDATE_ANNOUNCEMENT_PAGES\s*=\s*Object\.freeze\(\[[\s\S]*v1\.0\.33[\s\S]*NPC交互链路加入防崩保护[\s\S]*常用英文代码符号栏[\s\S]*414374792/m.test(html), "startup announcement should describe the current NPC stability and symbol helper update");
 assert(/id="announcementCloseButton"[\s\S]*>×<\/button>/m.test(html), "announcement close button should be a compact icon, not wrapping text");
 assert(/function isCTutorialChapterUnlocked/m.test(html) && /course-lesson-item[\s\S]*locked[\s\S]*disabled aria-disabled/m.test(html), "course progress should lock future chapters until the player reaches them");
 assert(/function isCTutorialFullyCompleted/m.test(html) && /const unlocked = isCTutorialFullyCompleted\(\)/m.test(html), "free mode editor should only unlock after full course completion");

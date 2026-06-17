@@ -14,7 +14,7 @@
   <meta http-equiv="Cache-Control" content="no-store, max-age=0, must-revalidate">
   <meta http-equiv="Pragma" content="no-cache">
   <meta http-equiv="Expires" content="0">
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self' file:; base-uri 'self'; object-src 'none'; frame-ancestors 'none'; script-src 'self' 'nonce-code-awakener-inline' file: 'sha256-jFc06SR0yKkwUcF9u30TEhGsqGj73cQafIqGWMQzjZo='; style-src 'self' 'nonce-code-awakener-inline' file: 'sha256-eOaTH8C7R5pSziC0oyQtzHurxKjM3HbjQkBqzUXWfPI='; style-src-attr 'unsafe-inline'; font-src 'self' file: data:; img-src 'self' file: data: blob: https://cdn.pixabay.com; media-src 'self' file: data: blob: https: http: https://cdn.pixabay.com; worker-src 'self' file: blob:; child-src 'self' file: blob:; connect-src 'self' file: http://localhost:8000 http://127.0.0.1:8000 https://cdn.pixabay.com https://pixabay.com;">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self' file:; base-uri 'self'; object-src 'none'; frame-ancestors 'none'; script-src 'self' 'nonce-code-awakener-inline' file: 'sha256-HdBSDxk85PodkfHyM37+x+8IjcmPBGOLM0OcYYJiTqI='; style-src 'self' 'nonce-code-awakener-inline' file: 'sha256-eItKV3ej7b1xpV5MA2IqQ1Vyvr5OsUkfkuuLvlyzDPw='; style-src-attr 'unsafe-inline'; font-src 'self' file: data:; img-src 'self' file: data: blob: https://cdn.pixabay.com; media-src 'self' file: data: blob: https: http: https://cdn.pixabay.com; worker-src 'self' file: blob:; child-src 'self' file: blob:; connect-src 'self' file: http://localhost:8000 http://127.0.0.1:8000 https://cdn.pixabay.com https://pixabay.com;">
   <title>编程学习 RPG：C 语言启航村</title>
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%23020617'/%3E%3Cpath d='M22 20 10 32l12 12M42 20l12 12-12 12' fill='none' stroke='%2300ff88' stroke-width='6' stroke-linecap='round' stroke-linejoin='round'/%3E%3Cpath d='m36 16-8 32' stroke='%2300ccff' stroke-width='5' stroke-linecap='round'/%3E%3C/svg%3E">
   <script src="./vendor/phaser.min.js"></script>
@@ -5729,7 +5729,7 @@
 
     .console {
       display: grid;
-      grid-template-rows: 38px 1fr;
+      grid-template-rows: 38px auto auto minmax(0, 1fr) auto;
       min-height: 0;
       background: #181818;
       border-top: 1px solid #303030;
@@ -5798,6 +5798,54 @@
       color: #9cdcfe;
       text-overflow: ellipsis;
       white-space: nowrap;
+    }
+
+    .editor-device-symbol-hint {
+      padding: 6px 12px;
+      border-bottom: 1px solid rgba(48, 48, 48, 0.88);
+      color: #facc15;
+      background: rgba(24, 24, 24, 0.94);
+      font: 700 11px/1.45 var(--font-code);
+    }
+
+    .editor-symbol-palette,
+    .code-genesis-symbol-palette {
+      display: none;
+      gap: 6px;
+      padding: 7px 10px;
+      overflow-x: auto;
+      border-bottom: 1px solid rgba(48, 48, 48, 0.88);
+      background: rgba(8, 20, 34, 0.9);
+      scrollbar-width: thin;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    .ascii-symbol-button {
+      flex: 0 0 auto;
+      min-width: 34px;
+      min-height: 34px;
+      border: 1px solid rgba(103, 232, 249, 0.52);
+      border-radius: 6px;
+      background: rgba(15, 23, 42, 0.92);
+      color: #e0f2fe;
+      font: 900 15px/1 var(--font-code);
+      cursor: pointer;
+      touch-action: manipulation;
+    }
+
+    .ascii-symbol-button:active {
+      transform: translateY(1px);
+      border-color: rgba(250, 204, 21, 0.72);
+      color: #fef3c7;
+    }
+
+    body.mobile-input.is-editor-open .editor-symbol-palette {
+      display: flex;
+    }
+
+    body.mobile-input.is-editor-open .editor-device-symbol-hint {
+      color: #bae6fd;
+      background: rgba(8, 20, 34, 0.94);
     }
 
     .spinner {
@@ -9459,7 +9507,7 @@
       }
 
       body.mobile-input .console {
-        grid-template-rows: auto minmax(0, 1fr) auto;
+        grid-template-rows: auto auto auto minmax(0, 1fr) auto;
         overflow: hidden;
       }
 
@@ -9663,6 +9711,26 @@
       overflow: auto;
       caret-color: #00ff88;
       tab-size: 4;
+    }
+
+    .code-genesis-device-symbol-hint {
+      margin-top: 10px;
+      padding: 8px 10px;
+      border: 1px solid rgba(250, 204, 21, 0.26);
+      border-radius: 10px;
+      color: #fde68a;
+      background: rgba(113, 63, 18, 0.18);
+      font: 700 12px/1.5 var(--font-code);
+    }
+
+    .code-genesis-symbol-palette {
+      margin-top: 8px;
+      border: 1px solid rgba(103, 232, 249, 0.22);
+      border-radius: 12px;
+    }
+
+    body.mobile-input .code-genesis-symbol-palette {
+      display: flex;
     }
 
     .code-genesis-helper {
@@ -10777,8 +10845,8 @@
       <p>&gt; 如果这里一直空白，说明浏览器缓存、旧存档或脚本自检阻塞了启动。</p>
       <p>&gt; 使用下面入口可以绕过旧缓存并关闭重型特效，学习进度仍会保留。</p>
       <div class="static-rescue-actions">
-        <a href="./programming-rpg-c-basics.html?safeMode=true&noAudio=true&v=1.0.32">安全启动</a>
-        <a href="./programming-rpg-c-basics.html?v=1.0.32">强制刷新</a>
+        <a href="./programming-rpg-c-basics.html?safeMode=true&noAudio=true&v=1.0.33">安全启动</a>
+        <a href="./programming-rpg-c-basics.html?v=1.0.33">强制刷新</a>
       </div>
       <p>作者：杀戮 · QQ：3424636983 · 官方Q群：414374792</p>
     </div>
@@ -10820,6 +10888,8 @@
       <div id="codeGenesisTerminal" class="code-genesis-terminal">
         <pre id="codeGenesisOutput" class="code-genesis-output"></pre>
         <label class="code-genesis-input-row"><span>&gt;</span><textarea id="codeGenesisInput" class="code-genesis-input" rows="4" inputmode="text" enterkeyhint="enter" autocomplete="off" autocapitalize="none" autocorrect="off" spellcheck="false" aria-label="输入 C 语言创世代码" placeholder="下一行：int hp = 88;"></textarea></label>
+        <div id="codeGenesisDeviceSymbolHint" class="code-genesis-device-symbol-hint" role="status"></div>
+        <div id="codeGenesisSymbolPalette" class="code-genesis-symbol-palette" aria-label="创角终端常用英文代码符号"></div>
         <div class="code-genesis-helper" aria-label="零基础创角说明">
           <strong class="code-genesis-helper-title">&gt; 零基础说明：跟着一行一行打</strong>
           <pre id="codeGenesisHelperText">// 先别急着全写完。
@@ -10980,7 +11050,7 @@
       <canvas id="menuFxCanvas" width="1280" height="720"></canvas>
       <div class="main-menu-card glass-panel">
         <h1 class="game-logo">CODE AWAKENER<br>C 语言启航村</h1>
-        <div class="version-label" id="versionLabel">World Build v1.0.32 · develop.fan C Basics</div>
+        <div class="version-label" id="versionLabel">World Build v1.0.33 · develop.fan C Basics</div>
         <div id="musicSwitcher" class="music-switcher" aria-label="音乐主题切换器">
           <div class="music-switcher-copy">
             <span class="music-switcher-kicker">♪ 当前音乐主题</span>
@@ -11728,16 +11798,12 @@ int main(void) {
       <button id="announcementCloseButton" class="announcement-close" type="button" aria-label="关闭公告">×</button>
       <h2 id="startupAnnouncementTitle" class="startup-announcement-title">> 消息 / 本次更新</h2>
       <div id="announcementPageBody" class="startup-announcement-body">
-        <p>// v1.0.32：NPC关闭与音乐灵动岛增强。</p>
-        <p>// NPC交互选择窗新增关闭按钮和关闭选项，手机端也能快速退出。</p>
-        <p>// 音乐灵动岛保留缩小按钮，并新增关闭本次悬浮窗按钮。</p>
-        <p>// 缩小后的灵动岛会显示当前外部/自定义音乐的歌词状态行。</p>
-        <p>// 灵动岛气泡颜色、光晕和缩放会跟随当前音量节奏起伏。</p>
-        <p>// QQ外部模式、自定义音乐、游戏内置音乐和官网音乐切换改为自然淡入淡出。</p>
-        <p>// QQ音乐灵动岛展开后左上缩小、右上隐藏，卡片更透明更低，不挡视野。</p>
-        <p>// 主菜单图鉴入口增加图标，图鉴面板加入统计、分类和图标卡片。</p>
-        <p>// 主界面重新压缩 Logo、音乐条和菜单选项大小，低高度屏幕也能看全并滚动。</p>
-        <p>// QQ音乐与自定义音乐仍保留独立音量偏好，原生音效音乐继续最低优先级。</p>
+        <p>// v1.0.33：NPC交互稳定与手机代码符号助手。</p>
+        <p>// NPC交互链路加入容错保护，缺失任务状态或临时坐标时不再触发系统故障重启。</p>
+        <p>// 手机端主编辑器新增常用英文代码符号栏，方便输入 ;、()、{}、#、引号等 C 语言符号。</p>
+        <p>// 主角创建终端同步加入英文符号助手，零基础创角时不用频繁切键盘页面。</p>
+        <p>// PC端编辑器明确提示代码符号要使用英文半角，中文文字仍可写在字符串里。</p>
+        <p>// 编译器、公告和安全自检已同步到 v1.0.33，便于绕过旧缓存。</p>
         <p>// 作者：杀戮，QQ：3424636983。</p>
         <p>// 官方Q群：414374792。</p>
         <p>// 作者：杀戮</p>
@@ -11904,6 +11970,8 @@ int main(void) {
             <span id="editorStatusText">导师提示：先读任务，再运行小步验证。</span>
             <button id="closeEditorButton" class="close-button">关闭编辑器</button>
           </div>
+          <div id="editorDeviceSymbolHint" class="editor-device-symbol-hint" role="status"></div>
+          <div id="editorSymbolPalette" class="editor-symbol-palette" aria-label="常用英文代码符号"></div>
           <pre id="consoleOutput">等待运行。请在 main.c 中补全 C 语言 Hello World 程序。</pre>
             <div id="editorRichConsole" class="editor-rich-console" aria-live="polite">彩色控制台：等待编译信号。</div>
         </div>
@@ -12241,28 +12309,36 @@ int main() {
     const SAVE_CLEAR_CONFIRM_MS = 3000;
     const STARTUP_ANNOUNCEMENT_AUTO_HIDE_MS = 14000;
     const SYSTEM_BOOT_FORCE_RELEASE_MS = 3200;
-    const GAME_VERSION = "v1.0.32";
+    const GAME_VERSION = "v1.0.33";
     const OFFICIAL_SITE_HREF = "./official-site.html";
     const UPDATE_ANNOUNCEMENT_PAGES = Object.freeze([
       {
         title: "> 消息 / 本次更新",
         lines: [
-          "// v1.0.32：NPC关闭与音乐灵动岛增强。",
-          "// NPC交互选择窗新增右上关闭按钮，并在选项列表加入“关闭”，避免点错后只能按 Esc。",
-          "// 音乐灵动岛保留“缩小”，新增“关闭本次悬浮窗”，当前 QQ/自定义音乐不变，只隐藏岛。",
-          "// 缩小后的灵动岛显示正在播放的歌词状态行：自定义音乐显示曲目/场景状态，QQ 音乐提示外部歌词以 QQ 页面为准。",
-          "// 灵动岛气泡颜色、光晕和大小会跟随 QQ/自定义音量偏好与节奏起伏。",
-          "// QQ外部模式、自定义音乐、Pixabay内置音乐、WebAudio兜底音乐和官网音乐切换时改为淡入淡出，不再突然硬切。",
-          "// QQ音乐灵动岛展开后左上角缩小、右上角隐藏，卡片更透明、更低、更不挡游戏视野。",
-          "// 主菜单各选项补上图标；图鉴系统整理成统计头、分类标签和带图标的记录卡。",
-          "// 主界面重新分配 UI 空间：Logo、音乐播放器和菜单选项更紧凑，菜单列表独占剩余高度并可滚动。",
-          "// 自定义音乐和 QQ 音乐仍可单独调节音量偏好，原来的 WebAudio 合成音乐/音效继续保持最低优先级。",
-          "// 安全启动与强制刷新入口已切到 v1.0.32，方便绕过旧缓存。",
+          "// v1.0.33：NPC交互稳定与手机代码符号助手。",
+          "// NPC交互链路加入防崩保护：缺失任务状态、玩家对象或NPC临时坐标时，只跳过本次交互，不再触发系统故障重启。",
+          "// 手机端主编辑器新增常用英文代码符号栏，可快速输入 ;、()、{}、[]、#、引号、运算符等 C 语言符号。",
+          "// 主角创建终端同步加入英文符号助手，创角代码不用频繁切换手机键盘符号页。",
+          "// PC端编辑器显示英文半角符号提示，提醒代码语法符号不要用中文全角。",
+          "// NPC气泡逐字显示增加失效保护，场景切换或对象销毁后不会把旧回调冒泡成全局错误。",
+          "// 安全启动、强制刷新、CSP 和脚本自检已同步到 v1.0.33，方便绕过旧缓存。",
           "// 作者：杀戮，QQ：3424636983，官方Q群：414374792。"
         ]
       }
     ]);
     const UPDATE_HISTORY = Object.freeze([
+      {
+        version: "v1.0.33",
+        date: "2026-06-17",
+        title: "NPC交互稳定与手机代码符号助手",
+        details: [
+          "NPC交互入口、任务状态读取和最近NPC距离判断加入容错保护，缺失状态会按锁定处理，缺坐标或缺玩家对象会安全跳过。",
+          "NPC气泡的延迟逐字回调会先确认气泡仍可写，避免场景切换后旧对象触发全局错误弹窗。",
+          "手机端主编辑器新增常用英文代码符号栏，方便输入 ;、括号、花括号、引号、# 和常见运算符。",
+          "主角创建终端复用同一套符号助手，零基础创角时能更快输入 C 代码。",
+          "PC端编辑器显示英文半角符号提示，减少中文全角标点导致的编译错误。官方Q群：414374792。"
+        ]
+      },
       {
         version: "v1.0.32",
         date: "2026-06-17",
@@ -13433,7 +13509,7 @@ return 0;`;
       directSaveAs: "reduced-by-inline-resources"
     });
     const SECURITY_CONFIG = Object.freeze({
-      expectedScriptHash: "LivMssYnaG3wLuK0DbyBKdGo4DQ5NVwn/F0LM1cfWrg=",
+      expectedScriptHash: "YKTarN7KDAL7yVAIjWu9MpFUFuNp4PkftVcme18YR0U=",
       selfCheckIntervalMs: 45000,
       tamperRefreshMs: 5000,
       devToolsRefreshMs: 2000,
@@ -13554,6 +13630,9 @@ return 0;`;
       { id: "find", key: "Ctrl+F", code: "KeyF", ctrl: true, label: "查找（浏览器会被拦截为编辑器内操作）", modes: ["full"] },
       { id: "homeEnd", key: "Home/End", code: "LineEdge", label: "跳到行首 / 行尾", modes: ["full"] },
       { id: "close", key: "Esc", code: "Escape", label: "关闭引导 / 退出编辑器", modes: ["full", "simple"] }
+    ]);
+    const COMMON_ASCII_CODE_SYMBOLS = Object.freeze([
+      ";", "(", ")", "{", "}", "[", "]", "<", ">", "=", "+", "-", "*", "/", "&", "|", "\"", "'", "#", ",", ".", "_", "!"
     ]);
     const TUTORIAL_ANIMATION_IDS = Object.freeze([
       "T01_AWAKENING_PROMPT",
@@ -20485,6 +20564,8 @@ int main(void) {
       runSpinner: document.getElementById("runSpinner"),
       closeEditorButton: document.getElementById("closeEditorButton"),
       editorStatusText: document.getElementById("editorStatusText"),
+      editorDeviceSymbolHint: document.getElementById("editorDeviceSymbolHint"),
+      editorSymbolPalette: document.getElementById("editorSymbolPalette"),
       editorMinimap: document.getElementById("editorMinimap"),
       editorFoldButton: document.getElementById("editorFoldButton"),
       editorNotesPanel: document.getElementById("editorNotesPanel"),
@@ -20754,6 +20835,8 @@ int main(void) {
       codeGenesisTerminal: document.getElementById("codeGenesisTerminal"),
       codeGenesisOutput: document.getElementById("codeGenesisOutput"),
       codeGenesisInput: document.getElementById("codeGenesisInput"),
+      codeGenesisDeviceSymbolHint: document.getElementById("codeGenesisDeviceSymbolHint"),
+      codeGenesisSymbolPalette: document.getElementById("codeGenesisSymbolPalette"),
       codeGenesisHelperText: document.getElementById("codeGenesisHelperText"),
       codeGenesisExampleButton: document.getElementById("codeGenesisExampleButton"),
       codeGenesisExplainButton: document.getElementById("codeGenesisExplainButton"),
@@ -21357,8 +21440,32 @@ int main(void) {
       const active = Boolean(narrow || coarse || touch);
       document.body.classList.toggle("mobile-input", active);
       applyMobileEditorLayout(active);
+      refreshEditorDeviceSymbolAssist(active);
       if (active) showMobileTouchInteractionNotice();
       return active;
+    }
+
+    function getEditorDeviceSymbolHint(isMobile = document.body.classList.contains("mobile-input")) {
+      return isMobile
+        ? "手机符号助手：点击常用英文符号快速输入 C 代码。"
+        : "PC提示：代码符号请使用英文半角；中文文字可以写在字符串里。";
+    }
+
+    function renderAsciiSymbolPalette(container, target = "editor") {
+      if (!container) return false;
+      container.innerHTML = COMMON_ASCII_CODE_SYMBOLS.map((symbol) => `
+        <button class="ascii-symbol-button" type="button" data-symbol-target="${escapeHtml(target)}" data-ascii-symbol="${escapeHtml(symbol)}">${escapeHtml(symbol)}</button>
+      `).join("");
+      return true;
+    }
+
+    function refreshEditorDeviceSymbolAssist(isMobile = document.body.classList.contains("mobile-input")) {
+      const hint = getEditorDeviceSymbolHint(isMobile);
+      if (dom.editorDeviceSymbolHint) dom.editorDeviceSymbolHint.textContent = hint;
+      if (dom.codeGenesisDeviceSymbolHint) dom.codeGenesisDeviceSymbolHint.textContent = hint;
+      renderAsciiSymbolPalette(dom.editorSymbolPalette, "editor");
+      renderAsciiSymbolPalette(dom.codeGenesisSymbolPalette, "codeGenesis");
+      return hint;
     }
 
     function applyMobilePowerSaveMode(enabled = true, reason = "battery") {
@@ -22606,6 +22713,7 @@ ${item.code}
       resetCodeGenesisVisualState();
       dom.codeGenesisOverlay?.classList.add("active");
       dom.codeGenesisOverlay?.setAttribute?.("aria-hidden", "false");
+      refreshEditorDeviceSymbolAssist(document.body.classList.contains("mobile-input"));
       appendCodeGenesisOutput("/* ACT 1: 觉醒提示 */");
       appendCodeGenesisOutput("黑暗中只有一个终端。你不用一次写完，只要跟着提示一行一行打。");
       appendCodeGenesisOutput("先输入 int hp = 88; 然后按 Enter。系统会一步一步读懂你写的代码。");
@@ -26872,7 +26980,7 @@ ${item.code}
 
     function renderQuestTracker() {
       if (!dom.questList || !questManager) return;
-      const openTasks = questManager.getVisibleTasks().filter((task) => questManager.getState(task.id).status !== TASK_STATUS.closed);
+      const openTasks = questManager.getVisibleTasks().filter((task) => getQuestStatusSafe(task.id) !== TASK_STATUS.closed);
       const tasks = openTasks.length ? openTasks : questManager.getVisibleTasks().slice(-1);
       dom.questList.innerHTML = `${renderWorldRepairQuestSummary()}${tasks.map((task) => renderQuestIslandSummary(task)).join("")}` ||
         `<article class="quest-island-summary"><span class="quest-island-title">// 当前没有任务</span><span class="quest-island-progress">寻找 NPC</span></article>`;
@@ -27045,7 +27153,7 @@ ${item.code}
       const curious = npcMemory.filter((item) => item?.tone === "curious").length;
       const distant = npcMemory.filter((item) => item?.tone === "distant").length;
       const killCount = (progress.defeatedCodeEnemies || []).length;
-      const favorability = friendly * 3 + (questManager?.getState("collect_basic_fragments").status === TASK_STATUS.closed ? 2 : 0);
+      const favorability = friendly * 3 + (getQuestStatusSafe("collect_basic_fragments") === TASK_STATUS.closed ? 2 : 0);
       const collected = getCourseFragmentProgressCount();
       const fixedErrors = Object.values(progress.tutorialFixedErrors || {}).filter(Boolean).length;
       const compiled = (progress.compiledHistory || []).length + (Number(progress.worldEvolutionCompileCount) || 0);
@@ -31436,7 +31544,7 @@ ${item.code}
       if (worldId !== "c") return new WorldExplorationData({ worldId, totalMainQuests: 1, totalFragments: 1, totalHiddenElements: 1, totalNpcInteractions: 1 });
       const progress = getCWorldProgress();
       const hiddenFound = Number(gameState.progress.redScarfHermitFound) + Math.min(1, gameState.progress.roomFireplaceOfferings || 0) + Math.min(1, gameState.progress.collectedImprints?.length || 0);
-      const npcDone = Object.keys(gameState.progress.npcMemory || {}).length + (questManager?.getState("collect_basic_fragments").status === TASK_STATUS.closed ? 1 : 0);
+      const npcDone = Object.keys(gameState.progress.npcMemory || {}).length + (getQuestStatusSafe("collect_basic_fragments") === TASK_STATUS.closed ? 1 : 0);
       return new WorldExplorationData({ worldId, mainQuestProgress: progress.questClosed, totalMainQuests: progress.questTotal, fragmentCollected: progress.fragments, totalFragments: progress.total, hiddenElementsFound: hiddenFound, totalHiddenElements: 3, npcInteractionsCompleted: npcDone, totalNpcInteractions: 6, isWorldCompleted: gameState.progress.completedWorlds.includes("c") });
     }
 
@@ -32979,6 +33087,7 @@ ${item.code}
       dom.overlay.classList.add("active");
       dom.overlay.classList.remove("closing");
       document.body.classList.add("is-editor-open");
+      refreshEditorDeviceSymbolAssist(document.body.classList.contains("mobile-input"));
       audioManager.setEditorFocus(true);
       audioManager.playBgm("puzzle");
       adaptiveSymphonicAudioDirector?.setVerticalLayer("teaching");
@@ -33624,6 +33733,25 @@ ${item.code}
       dom.codeInput.setAttribute("autocapitalize", "none");
       dom.codeInput.setAttribute("autocorrect", "off");
       return true;
+    }
+
+    function insertAsciiSymbolIntoEditor(symbol = "") {
+      const text = String(symbol ?? "");
+      if (!text || !gameState.editorOpen || !dom.codeInput || dom.codeInput.readOnly || currentFile === "README.md") return false;
+      focusMobileEditorKeyboard(dom.codeInput.selectionStart ?? dom.codeInput.value.length);
+      return commitManualEditorOperation(replaceManualEditorSelection(getManualEditorDomState(), text));
+    }
+
+    function insertAsciiSymbolIntoCodeGenesis(symbol = "") {
+      const text = String(symbol ?? "");
+      if (!text || !dom.codeGenesisOverlay?.classList.contains("active") || !dom.codeGenesisInput) return false;
+      try {
+        dom.codeGenesisInput.focus({ preventScroll: true });
+      } catch (error) {
+        dom.codeGenesisInput.focus?.();
+      }
+      playCodeGenesisTypeSound();
+      return commitCodeGenesisEditorOperation(replaceManualEditorSelection(getCodeGenesisEditorState(), text));
     }
 
     function handleManualEditorInputKey(event, clipboardText = "") {
@@ -38670,7 +38798,7 @@ ${item.code}
 
     function getQuestGuidanceTargetData(scene) {
       const visible = questManager?.getVisibleTasks?.() || [];
-      const task = visible.find((item) => questManager.getState(item.id).status !== TASK_STATUS.closed);
+      const task = visible.find((item) => getQuestStatusSafe(item.id) !== TASK_STATUS.closed);
       if (!task) return null;
       const state = questManager.getState(task.id);
       const guideType = getTaskGuideType(task, state);
@@ -39490,12 +39618,41 @@ ${item.code}
       return scene.coreNpcs;
     }
 
+    function getQuestStatusSafe(id, manager = questManager) {
+      return manager?.getState?.(id)?.status || TASK_STATUS.locked;
+    }
+
+    function getNpcTaskIds(data = {}) {
+      return Array.isArray(data?.taskIds) ? data.taskIds.filter(Boolean) : [];
+    }
+
     function getNpcQuestAction(data) {
-      const taskIds = data.taskIds || [];
-      const ready = taskIds.find((id) => questManager?.getState(id).status === TASK_STATUS.readyToSubmit);
-      const available = taskIds.find((id) => questManager?.getState(id).status === TASK_STATUS.available);
-      const active = taskIds.find((id) => questManager?.getState(id).status === TASK_STATUS.inProgress);
+      const taskIds = getNpcTaskIds(data);
+      const ready = taskIds.find((id) => getQuestStatusSafe(id) === TASK_STATUS.readyToSubmit);
+      const available = taskIds.find((id) => getQuestStatusSafe(id) === TASK_STATUS.available);
+      const active = taskIds.find((id) => getQuestStatusSafe(id) === TASK_STATUS.inProgress);
       return { ready, available, active };
+    }
+
+    function getNpcWorldPoint(npc) {
+      if (!npc?.container) return null;
+      const x = Number(npc.container.x);
+      const y = Number(npc.container.y);
+      if (!Number.isFinite(x) || !Number.isFinite(y)) return null;
+      return { x, y };
+    }
+
+    function getWorldDistance(ax, ay, bx, by) {
+      return Phaser?.Math?.Distance?.Between
+        ? Phaser.Math.Distance.Between(ax, ay, bx, by)
+        : Math.hypot(ax - bx, ay - by);
+    }
+
+    function triggerNpcInteractionRipple(scene, npc) {
+      const point = getNpcWorldPoint(npc);
+      if (!point) return false;
+      triggerInteractionRipple(scene, point.x, point.y);
+      return true;
     }
 
     function applyNpcQuestIndicator(npc, action = getNpcQuestAction(npc?.data || {})) {
@@ -39529,21 +39686,29 @@ ${item.code}
     }
 
     function getNearestNpcInteraction(scene) {
-      if (!scene?.coreNpcs?.length) return null;
-      return scene.coreNpcs.find((npc) => Phaser.Math.Distance.Between(scene.player.x, scene.player.y, npc.container.x, npc.container.y) < 78) || null;
+      if (!scene?.player || !scene?.coreNpcs?.length) return null;
+      const playerX = Number(scene.player.x);
+      const playerY = Number(scene.player.y);
+      if (!Number.isFinite(playerX) || !Number.isFinite(playerY)) return null;
+      return scene.coreNpcs.find((npc) => {
+        const point = getNpcWorldPoint(npc);
+        return point ? getWorldDistance(playerX, playerY, point.x, point.y) < 78 : false;
+      }) || null;
     }
 
     function showNpcBubble(scene, npc, text) {
       if (!scene?.time || !npc?.bubble) return;
-      npc.bubble.setText("").setAlpha(1).setY(-108);
+      const bubble = npc.bubble;
+      bubble.setText("").setAlpha(1).setY(-108);
       const chars = Array.from(String(text || ""));
       chars.forEach((char, index) => {
         scene.time.delayedCall(index * 28, () => {
-          npc.bubble.setText(npc.bubble.text + char);
+          if (!bubble?.setText || bubble.destroyed || bubble.active === false) return;
+          bubble.setText(String(bubble.text || "") + char);
           if (index % 2 === 0) audioManager.type();
         });
       });
-      scene.tweens.add({ targets: npc.bubble, y: -122, alpha: { from: 1, to: 0 }, delay: Math.max(900, chars.length * 28 + 900), duration: 520, ease: "Cubic.easeOut" });
+      scene.tweens.add({ targets: bubble, y: -122, alpha: { from: 1, to: 0 }, delay: Math.max(900, chars.length * 28 + 900), duration: 520, ease: "Cubic.easeOut" });
     }
 
     function interactWithMentor(scene, npc) {
@@ -39676,7 +39841,11 @@ ${item.code}
       dom.narrativeChoiceOverlay.classList.add("active");
       dom.narrativeChoiceOverlay.setAttribute("aria-hidden", "false");
       dom.choiceOptions.querySelectorAll("[data-npc-action]").forEach((button) => {
-        button.addEventListener("click", () => performNpcAction(scene, npc, button.dataset.npcAction));
+        button.addEventListener("click", () => SafeExecute.run(
+          () => performNpcAction(scene, npc, button.dataset.npcAction),
+          "NPC交互出现小故障，系统已保护现场。",
+          { source: "npc-action", showDialog: false, fallback: false }
+        ));
       });
       showNpcBubble(scene, npc, "要交流、任务、商店，还是线索？");
       audioManager?.uiClick?.();
@@ -39684,9 +39853,17 @@ ${item.code}
     }
 
     function handleNpcInteraction(scene, npc) {
-      if (!npc?.data) return;
-      triggerInteractionRipple(scene, npc.container.x, npc.container.y);
-      openNpcActionChooser(scene, npc);
+      if (!npc?.data) return false;
+      const point = getNpcWorldPoint(npc);
+      if (!point) {
+        showBrowserShortcutWarning?.("这个 NPC 暂时没有稳定坐标，系统已跳过本次交互。");
+        return false;
+      }
+      return SafeExecute.run(() => {
+        triggerInteractionRipple(scene, point.x, point.y);
+        openNpcActionChooser(scene, npc);
+        return true;
+      }, "NPC交互出现小故障，系统已保护现场。", { source: "npc-interaction", showDialog: false, fallback: false });
     }
 
     function showQuestDialogueChoices(taskId) {
@@ -39722,7 +39899,7 @@ ${item.code}
 
     function updateNpcWorldReactions(scene) {
       if (!scene?.coreNpcs) return;
-      const hasMajorWin = questManager?.getState("collect_basic_fragments").status === TASK_STATUS.closed;
+      const hasMajorWin = getQuestStatusSafe("collect_basic_fragments") === TASK_STATUS.closed;
       scene.coreNpcs.forEach((npc) => {
         if (hasMajorWin && npc.data.type !== NPC_TYPES.redScarfHermit) npc.data.worldReaction = "听说你成功了，干得漂亮！";
       });
@@ -40053,7 +40230,7 @@ ${item.code}
     function updateAiCompanion(scene) {
       const companion = scene?.aiCompanion;
       if (!companion || !scene.player) return;
-      companion.unlocked = companion.unlocked || questManager?.getState("collect_basic_fragments").status === TASK_STATUS.closed;
+      companion.unlocked = companion.unlocked || getQuestStatusSafe("collect_basic_fragments") === TASK_STATUS.closed;
       companion.orb.setVisible(companion.unlocked);
       companion.halo.setVisible(companion.unlocked);
       companion.bubble.setVisible(companion.unlocked);
@@ -40607,7 +40784,7 @@ ${item.code}
       performCurrentInteraction(source = "keyboard", interaction = this.getInteraction()) {
         audioManager.ding();
         if (interaction?.type === "npc") {
-          triggerInteractionRipple(this, interaction.npc.container.x, interaction.npc.container.y);
+          triggerNpcInteractionRipple(this, interaction.npc);
         } else if (interaction?.type === "roomEntrance") {
           triggerInteractionRipple(this, this.playerRoomEntrance.door.x, this.playerRoomEntrance.door.y);
         } else if (interaction?.type === "oldComputer") {
@@ -41150,7 +41327,7 @@ ${item.code}
 
     function showActiveQuestProgressToast() {
       const task = (questManager?.getVisibleTasks?.() || []).find((item) => {
-        const status = questManager.getState(item.id).status;
+        const status = getQuestStatusSafe(item.id);
         return status === TASK_STATUS.inProgress || status === TASK_STATUS.readyToSubmit;
       });
       return showQuestProgressToast(task);
@@ -41269,6 +41446,12 @@ ${item.code}
     dom.mobileEditorKeyboardButton?.addEventListener("click", () => {
       focusMobileEditorKeyboard(dom.codeInput?.selectionStart ?? dom.codeInput?.value?.length ?? 0);
       queueEditorFlowMessage("手机键盘已接入：可以直接输入 C 代码。", true);
+    });
+    dom.editorSymbolPalette?.addEventListener("click", (event) => {
+      const button = event.target?.closest?.("[data-ascii-symbol]");
+      if (!button) return;
+      event.preventDefault();
+      insertAsciiSymbolIntoEditor(button.dataset.asciiSymbol || "");
     });
 
     dom.fileItems.forEach((item) => {
@@ -41679,6 +41862,12 @@ ${item.code}
     dom.codeGenesisInput?.addEventListener("compositionend", handleCodeGenesisCompositionEnd);
     dom.codeGenesisInput?.addEventListener("input", handleCodeGenesisNativeInputFallback);
     dom.codeGenesisInput?.addEventListener("keydown", handleCodeGenesisTerminalKey);
+    dom.codeGenesisSymbolPalette?.addEventListener("click", (event) => {
+      const button = event.target?.closest?.("[data-ascii-symbol]");
+      if (!button) return;
+      event.preventDefault();
+      insertAsciiSymbolIntoCodeGenesis(button.dataset.asciiSymbol || "");
+    });
     dom.codeGenesisInput?.addEventListener("paste", (event) => {
       if (!dom.codeGenesisOverlay?.classList.contains("active")) return;
       handleCodeGenesisTerminalKey({ ...event, key: "v", ctrlKey: true, preventDefault: () => event.preventDefault(), stopPropagation: () => event.stopPropagation() }, event.clipboardData?.getData("text/plain") || "");
