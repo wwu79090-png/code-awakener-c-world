@@ -763,7 +763,11 @@ assert(/function updateCorridorLedInteractionLight/m.test(html), "entering an in
   const cinematic = api.buildCompilerCabinCinematicTimeline();
   assert(cinematic.durationMs === 90000, "compiler cabin cinematic should be exactly 1 minute 30 seconds");
   assert(["split", "explain", "highlight", "demo"].every((phase) => cinematic.phases.some((item) => item.type === phase)), "compiler cabin cinematic should include split, explain, highlight, and demo phases");
+  assert(cinematic.phases.length >= 6, "compiler cabin cinematic should use short beginner micro-scenes instead of four long holds");
+  assert(cinematic.phases.every((phase) => phase.endMs - phase.startMs <= 15000), "compiler cabin cinematic phases should not hold one visual longer than 15 seconds for zero-basis pacing");
+  assert(cinematic.phases.some((phase) => phase.type === "practice"), "compiler cabin cinematic should include a hands-on practice demo phase before handing control to the player");
   assert(cinematic.script.some((line) => /发快递|快递/.test(line.text)) && cinematic.script.some((line) => /编译器/.test(line.text)), "compiler cabin script should cover the courier metaphor and compiler demonstration");
+  assert(cinematic.script.some((line) => /实战|运行按钮|自己点击/.test(line.text)), "compiler cabin narration should explicitly bridge the movie into a hands-on run-button demonstration");
 }
 {
   const deconstruction = api.buildPrintfCharacterDeconstructionTimeline('printf("Hello World!");');
@@ -926,10 +930,14 @@ assert(/VARIABLE_THEATER_KEYWORDS\s*=\s*Object\.freeze\(\["变量",\s*"int",\s*"
 assert(/class VariableTheaterController/m.test(html), "variable theater controller should coordinate the opening flow");
 assert(/function showVariableOpeningTheater/m.test(html), "first-time opening should be routed through the variable theater");
 assert(/variablesTheaterSeen:\s*false/m.test(html), "progress state should persist whether the variable theater has been seen");
-assert(/showNewPlayerCourseIntro[\s\S]*showVariableOpeningTheater/m.test(html), "new player course intro should start the variable theater");
+{
+  const newPlayerCourseIntroBlock = html.match(/function showNewPlayerCourseIntro\(\) \{[\s\S]*?\n    \}/)?.[0] || "";
+  assert(!/showVariableOpeningTheater|T01_AWAKENING_PROMPT|老程序员/.test(newPlayerCourseIntroBlock), "new player course intro should not auto-play the old variable theater before the Main Corridor lesson");
+  assert(/startAbsoluteGuide\(false\)/m.test(newPlayerCourseIntroBlock), "new player course intro should hand off to the Main Corridor visual guide instead of directly opening an editor");
+}
 {
   const creationCompleteBlock = html.match(/async function OnCreationComplete[\s\S]*?state\.handoffDone = true;/)?.[0] || "";
-  assert(/showNewPlayerCourseIntro\(\)/m.test(creationCompleteBlock), "new character world entry should also trigger the variable theater");
+  assert(/showNewPlayerCourseIntro\(\)/m.test(creationCompleteBlock), "new character world entry should trigger the Main Corridor guide");
 }
 assert(!/showNewPlayerCourseIntro[\s\S]*showOpeningNarrativeTerminal\(startMentorDialogue\)/m.test(html), "new player opening should no longer directly start the old overview terminal flow");
 assert(/body\.variable-theater-open/m.test(html), "theater should expose a body state class");
@@ -1593,11 +1601,10 @@ assert(/SYSTEM_BOOT_FORCE_RELEASE_MS\s*=\s*3200/m.test(html) && /system-boot-for
 assert(/function markAppRendered\(reason = "script-started"\)[\s\S]*classList\?\.add\("app-rendered"\)[\s\S]*staticRescue/m.test(html), "normal script startup should hide the static rescue layer");
 assert(/html\.app-rendered \.static-rescue/m.test(html) && /safeMode=true&noAudio=true&v=1\.2\.0/m.test(html), "static rescue should only appear if the app script does not render");
 assert(/isStrictSecurityMode\(\)[\s\S]*removeItem\?\.\("codeAwakenerStrictSecurity"\)[\s\S]*params\.get\("strictSecurity"\) === "1"/m.test(html), "stale localStorage strict-security flags should not white-screen normal browsers");
-assert(/UPDATE_ANNOUNCEMENT_PAGES\s*=\s*Object\.freeze\(\[\s*\{\s*title:\s*"> 消息 \/ 本次更新"[\s\S]*v1\.2\.0[\s\S]*Main Corridor[\s\S]*变量立绘剧场[\s\S]*1200×1600 WebP atlas[\s\S]*ChatTTS[\s\S]*EmotiVoice[\s\S]*414374792/m.test(html), "startup announcement should show the current v1.2.0 Main Corridor and variable theater release");
-assert(/UPDATE_ANNOUNCEMENT_PAGES\s*=\s*Object\.freeze\(\[\s*\{[\s\S]*v1\.2\.0 热修[\s\S]*五幕记忆内核[\s\S]*启动游戏不再反复进入剧情桥[\s\S]*清理上一条 BGM[\s\S]*两首音乐同时播放[\s\S]*414374792/m.test(html), "startup announcement should include the current memory-core and BGM overlap hotfix before upload");
-assert(/id="announcementPageBody"[\s\S]*v1\.2\.0：第一世界重构为 Main Corridor[\s\S]*变量立绘剧场[\s\S]*1200×1600 WebP atlas[\s\S]*ChatTTS[\s\S]*EmotiVoice[\s\S]*官方Q群：414374792/m.test(initialBodyMarkup), "static startup announcement placeholder should match the current v1.2.0 variable theater update before script hydration");
-assert(/id="announcementPageBody"[\s\S]*v1\.2\.0 热修[\s\S]*启动游戏不再反复进入剧情桥[\s\S]*两首音乐同时播放/m.test(initialBodyMarkup), "static startup announcement placeholder should include the current hotfix before script hydration");
+assert(/UPDATE_ANNOUNCEMENT_PAGES\s*=\s*Object\.freeze\(\[\s*\{\s*title:\s*"> 消息 \/ 本次更新"[\s\S]*v1\.2\.0-hotfix\.2[\s\S]*新建角色后不再自动播放旧变量剧场[\s\S]*Main Corridor 视觉引导[\s\S]*《认识你的编译器》90 秒电影教学[\s\S]*本地服务未启动[\s\S]*ChatTTS \+ EmotiVoice[\s\S]*414374792/m.test(html), "startup announcement should show the current compiler-cabin and new-player-flow hotfix before upload");
+assert(/id="announcementPageBody"[\s\S]*v1\.2\.0-hotfix\.2[\s\S]*新建角色后不再自动播放旧变量剧场[\s\S]*第一学习舱不会再被绝对引导绕过[\s\S]*本地服务未启动[\s\S]*官方Q群：414374792/m.test(initialBodyMarkup), "static startup announcement placeholder should match the current compiler-cabin hotfix before script hydration");
 assert(!/公告只保留关闭、课程锁定、自由模式通关后显示/m.test(initialBodyMarkup), "static startup announcement placeholder should not show stale update copy");
+assert(/UPDATE_HISTORY\s*=\s*Object\.freeze\(\[\s*\{[\s\S]*v1\.2\.0-hotfix\.2[\s\S]*第一学习舱电影与新号入场热修[\s\S]*老程序员只说一句[\s\S]*T05\/T09[\s\S]*官方Q群：414374792/m.test(html), "update history should record the compiler-cabin and new-player-flow hotfix");
 assert(/UPDATE_HISTORY\s*=\s*Object\.freeze\(\[\s*\{[\s\S]*v1\.2\.0-hotfix\.1[\s\S]*五幕剧情桥与 BGM 叠加热修[\s\S]*memoryCoreChoice[\s\S]*Pixabay\/自定义 BGM[\s\S]*官方Q群：414374792/m.test(html), "update history should record the memory-core and BGM overlap hotfix");
 assert(/UPDATE_HISTORY\s*=\s*Object\.freeze\(\[[\s\S]*v1\.0\.31[\s\S]*QQ音乐外部模式与自定义场景音乐[\s\S]*播放\/暂停切换[\s\S]*IndexedDB[\s\S]*414374792/m.test(html), "update history should record the v1.0.31 custom music connector release");
 assert(/UPDATE_HISTORY\s*=\s*Object\.freeze\(\[[\s\S]*v1\.0\.30[\s\S]*Pixabay 真实音乐与音效接入[\s\S]*Gamer Menu[\s\S]*音乐切换器[\s\S]*外部音频失败回退[\s\S]*414374792/m.test(html), "update history should record the v1.0.30 Pixabay music and sound-effect release");
@@ -2497,11 +2504,51 @@ assert(/runCodeGenesisEditor[\s\S]*const source = dom\.codeGenesisInput\.value[\
 assert(/CODE_AWAKENER_TTS_ENGINES\s*=\s*Object\.freeze[\s\S]*ChatTTS[\s\S]*EmotiVoice/m.test(html), "TTS should select open-source ChatTTS and EmotiVoice engines");
 assert(/function createOpenSourceVoicePipeline/m.test(html) && /steps:\s*\["import-engine",\s*"generate-clone-file",\s*"game-demand-playback"\]/m.test(html), "TTS should document import, clone generation, and game playback steps");
 assert(/function speakWithOpenSourceTts/m.test(html) && /fetch\(pipeline\.endpoint[\s\S]*clone_file[\s\S]*emotion/m.test(html), "TTS should call the configured open-source engine adapter with clone file and emotion prompts");
+assert(/OPEN_SOURCE_TTS_CACHE_MANIFEST\s*=\s*Object\.freeze/m.test(html) && /function playOpenSourceTtsCache/m.test(html), "TTS should support pre-generated open-source voice cache playback before network generation");
+assert(/speakWithOpenSourceTts[\s\S]*playOpenSourceTtsCache\(pipeline/m.test(html), "TTS should try bundled/cache audio first so narration is not silent when local engines are offline");
+assert(/function markOpenSourceTtsUnavailable/m.test(html) && /data-tts-status/m.test(html), "TTS failures should expose a visible diagnostic status instead of failing silently");
+assert(/TTS 本地服务未启动/.test(html) && /\$\{pipeline\?\.engine \|\| "TTS"\} 本地服务未启动/.test(html), "TTS failure status should explain that the local service is not running");
 assert(/voiceEnabled:\s*true/m.test(html), "TTS should be enabled for the interactive cinematic lesson");
 assert(/browserSpeechFallback:\s*false/m.test(html), "browser robot TTS fallback should be disabled by default");
 assert(/function shouldUseBrowserSpeechFallback/m.test(html) && /return false;/m.test(html), "browser speech fallback should stay disabled");
 assert(/speakGameText[\s\S]*speakWithOpenSourceTts\(text,\s*options\)/m.test(html), "game speech should route through open-source TTS instead of browser voices");
 assert(/Browser speech synthesis stays disabled/m.test(html), "runtime should explicitly document that browser speech synthesis is disabled");
+const cinematicLetterboxZ = Number((html.match(/\.cinematic-letterbox\s*\{[\s\S]*?z-index:\s*(\d+)/m) || [])[1] || 0);
+const compilerCabinStageZ = Number((html.match(/\.compiler-cabin-cinematic-stage\s*\{[\s\S]*?z-index:\s*(\d+)/m) || [])[1] || 0);
+assert(cinematicLetterboxZ > compilerCabinStageZ, "cinematic subtitles should render above the compiler-cabin movie stage");
+const cinematicLetterboxBlock = (html.match(/\.cinematic-letterbox\s*\{([\s\S]*?)\}/m) || [])[1] || "";
+assert(/position:\s*fixed/m.test(cinematicLetterboxBlock), "cinematic subtitles should be fixed to the viewport instead of trapped in a lower stacking context");
+assert(/compiler-cabin-scene package-split/m.test(html) && /compiler-cabin-scene sorting-center/m.test(html) && /compiler-cabin-scene compiler-inspection/m.test(html) && /compiler-cabin-scene terminal-demo/m.test(html), "compiler cabin movie should contain distinct phase scenes instead of one looping abstract core");
+assert(/data-phase="split"[\s\S]*data-phase="explain"[\s\S]*data-phase="highlight"[\s\S]*data-phase="demo"/m.test(html), "compiler cabin movie should declare all four visible phase scenes");
+assert(/compiler-cabin-scene practice-demo/m.test(html) && /data-phase="practice"/m.test(html), "compiler cabin movie should include a visible hands-on practice demo scene");
+assert(html.includes("电脑不会猜意思") && (html.includes('printf("Hello World!");') || html.includes('printf(\\"Hello World!\\");')) && html.includes("编译器像检查站") && html.includes("逐字符检查") && html.includes("运行结果"), "compiler cabin movie should use explicit beginner-readable Chinese teaching copy instead of abstract visuals only");
+assert(html.includes("你写给电脑的一句话") && html.includes("写一句命令") && html.includes("送进编译器检查机") && html.includes("屏幕显示 Hello World"), "compiler cabin movie should explain the compiler flow as a beginner-friendly cause-and-effect story");
+assert(/data-motion-actor="learner-hand"/m.test(html) && /data-motion-actor="code-note"/m.test(html) && /data-motion-actor="compiler-machine"/m.test(html) && /data-motion-actor="check-lamp"/m.test(html) && /data-motion-actor="screen-output"/m.test(html), "compiler cabin movie should use concrete beginner story actors: writing hand, code note, compiler machine, check lamps, and output screen");
+assert(/data-motion-actor="practice-editor"/m.test(html) && /data-motion-actor="practice-run-button"/m.test(html) && /data-motion-actor="practice-output"/m.test(html), "compiler cabin movie should demonstrate the actual edit-run-output practice loop");
+assert(/@keyframes compilerHandWrite/m.test(html) && /@keyframes compilerCodeNoteTravel/m.test(html) && /@keyframes compilerMachineProcess/m.test(html) && /@keyframes compilerLampPass/m.test(html) && /@keyframes compilerScreenOutput/m.test(html), "compiler cabin movie should animate the beginner story actors instead of relying on static labels");
+assert(/@keyframes compilerPracticeType/m.test(html) && /@keyframes compilerPracticeClick/m.test(html) && /@keyframes compilerPracticeOutput/m.test(html), "compiler cabin practice scene should animate typing, run click, and output feedback");
+assert(!/@keyframes compilerCodeCharacterFly[\s\S]*var\(--tx\)/m.test(html), "compiler cabin character animation should use restrained focus motion instead of chaotic large scatter flight");
+assert(!/<span>object\.o<\/span>/m.test(html), "compiler cabin movie should not present object.o as a primary beginner visual before the player understands compilation");
+assert(/data-cinematic-rate="1"[\s\S]*data-cinematic-rate="2"[\s\S]*data-cinematic-rate="4"[\s\S]*data-cinematic-replay[\s\S]*data-cinematic-skip/m.test(html), "compiler cabin movie should expose real speed, replay, and skip controls");
+assert(/function setCompilerCabinPlaybackRate/m.test(html) && /playheadMs[\s\S]*requestFrame\(tick\)/m.test(html), "compiler cabin controls should drive a playback head instead of fixed unchangeable timers");
+assert(!/class="lesson-card"/m.test(html), "compiler cabin movie should not be a static lesson-card slideshow");
+assert(/data-motion-actor="code-character"/m.test(html) && /data-motion-actor="courier-package"/m.test(html) && /data-motion-actor="compiler-scanner"/m.test(html) && /data-motion-actor="terminal-typewriter"/m.test(html), "compiler cabin movie should use animated scene actors for characters, package travel, scanning, and terminal output");
+assert(/@keyframes compilerCodeCharacterFly/m.test(html) && /@keyframes compilerCourierPackageTravel/m.test(html) && /@keyframes compilerScannerSweep/m.test(html) && /@keyframes compilerTerminalType/m.test(html), "compiler cabin movie should define real motion keyframes instead of static panels");
+assert(/--compiler-cabin-motion-scale/m.test(html) && /setProperty\("--compiler-cabin-motion-scale"/m.test(html), "compiler cabin playback speed should also affect CSS motion timing");
+assert(/function enterCompilerCabinCinematicAudioFocus/m.test(html) && /audioManager\.stopBgm/m.test(html), "compiler cabin movie should stop background music while cinematic narration plays");
+assert(/suppressMusic\("compiler-cabin"/m.test(html) && /releaseMusicSuppression\("compiler-cabin"/m.test(html), "compiler cabin movie should hold a hard music suppression token while narration is active");
+assert(/playBgm\(mode = "town"\)[\s\S]*isMusicSuppressed\(\)[\s\S]*return false/m.test(html), "BGM playback requests should be rejected while cinematic narration suppresses music");
+assert(/playPrintfCharacterDeconstruction[\s\S]*suppressMusic\("printf-deconstruction"/m.test(html), "printf character narration should also keep BGM suppressed during hands-on explanation");
+assert(/function exitCompilerCabinCinematicAudioFocus/m.test(html) && /resumeProceduralMusic/m.test(html), "compiler cabin movie should restore procedural audio focus after the cinematic");
+assert(/function isCompilerCabinCinematicActive/m.test(html) && /compilerCabinCinematicActive/m.test(html), "compiler cabin movie should expose an active lock so other tutorial layers cannot interrupt it after the first line");
+assert(/playCompilerCabinCinematic[\s\S]*compilerCabinCinematicActive\s*=\s*true[\s\S]*finish[\s\S]*compilerCabinCinematicActive\s*=\s*false/m.test(html), "compiler cabin movie should hold and release the active lock for its full 90 second playback");
+assert(/function canAutoStartGuidance[\s\S]*!isCompilerCabinCinematicActive\(\)/m.test(html), "auto novice and foundation guides should not start while compiler cabin cinematic is active");
+assert(/function completeStoneCodePuzzle[\s\S]*if \(chapterId !== FIRST_MAINLINE_CHAPTER_ID\)[\s\S]*T05_STONE_CODE_FILL[\s\S]*T09_STONE_PULSE/m.test(html), "first compiler cabin lesson should not layer old stone-fill or stone-pulse tutorial animations over the cinematic");
+assert(/function ensureCompilerCabinLessonGameplayLayer[\s\S]*gameState\.menuOpen = false[\s\S]*dom\.mainMenu\?\.classList\.remove\("active"\)/m.test(html), "compiler cabin lesson should clear menu state before entering hands-on editor");
+assert(/interaction\?\.type === "lesson"[\s\S]*interaction\.chapter\.id !== FIRST_MAINLINE_CHAPTER_ID[\s\S]*openEditor\(interaction\.chapter\.id\)[\s\S]*this\.startLesson\(interaction\.chapter\.id/m.test(html), "absolute guide must not bypass the first compiler cabin cinematic by opening the editor directly");
+assert(/playCompilerCabinCinematic\(chapter\)\.then\(\(\) => \{[\s\S]*openEditor\(chapter\.id\)[\s\S]*playPrintfCharacterDeconstruction\('printf\("Hello World!"\);'\)[\s\S]*focusButtonWithVisualPulse\(dom\.runButton\)/m.test(html), "compiler cabin should open the editor before starting visible printf character deconstruction");
+assert(!/nearStone && !isLearned\(chapter\.id\)/m.test(html), "learned learning pods should remain rewatchable so a missed cinematic is not permanently inaccessible");
+assert(/return unlocked \? \{ type: "lesson", chapter, replay: isLearned\(chapter\.id\) \} : \{ type: "locked", chapter \}/m.test(html), "learning pod interaction should carry a replay flag while preserving lock checks");
 assert(/function openNoviceGuideRealEditor/m.test(html), "novice guide should open the real VS Code-style editor for hands-on code");
 assert(/renderNoviceGuideStep[\s\S]*step\.id === "guidedCode"[\s\S]*openNoviceGuideRealEditor/m.test(html), "guided code step should bring up the normal editor");
 assert(/handleNoviceGuideCompile[\s\S]*dom\.codeInput\?\.value[\s\S]*NOVICE_GUIDE_HELLO_CODE/m.test(html), "novice guide compile should read code from the real editor first");

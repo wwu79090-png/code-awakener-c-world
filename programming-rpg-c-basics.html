@@ -14,7 +14,7 @@
   <meta http-equiv="Cache-Control" content="no-store, max-age=0, must-revalidate">
   <meta http-equiv="Pragma" content="no-cache">
   <meta http-equiv="Expires" content="0">
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self' file:; base-uri 'self'; object-src 'none'; script-src 'self' 'nonce-code-awakener-inline' file: 'sha256-a0wXNqLQkJHQajXS5i7QQdD9SLgG77eKzNtSeE6BWNE='; style-src 'self' 'nonce-code-awakener-inline' file: 'sha256-3OEBcoAS3gplA/brmASCZ27L2kFZG36hg+RDP4wIrIs='; style-src-attr 'unsafe-inline'; font-src 'self' file: data:; img-src 'self' file: data: blob: https://cdn.pixabay.com; media-src 'self' file: data: blob: https: http: https://cdn.pixabay.com; worker-src 'self' file: blob:; child-src 'self' file: blob:; connect-src 'self' file: http://localhost:8000 http://127.0.0.1:8000 http://localhost:9966 http://127.0.0.1:9966 http://localhost:9977 http://127.0.0.1:9977 https://cdn.pixabay.com https://pixabay.com;">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self' file:; base-uri 'self'; object-src 'none'; script-src 'self' 'nonce-code-awakener-inline' file: 'sha256-beS4RSCa/PuOla/Oc18AxALywmHyzoiEaQxJq4J57lM='; style-src 'self' 'nonce-code-awakener-inline' file: 'sha256-cPzD20+/gLnmKVRe1FfITjSxvkn16zrAKweZGO/YHQ0='; style-src-attr 'unsafe-inline'; font-src 'self' file: data:; img-src 'self' file: data: blob: https://cdn.pixabay.com; media-src 'self' file: data: blob: https: http: https://cdn.pixabay.com; worker-src 'self' file: blob:; child-src 'self' file: blob:; connect-src 'self' file: http://localhost:8000 http://127.0.0.1:8000 http://localhost:9966 http://127.0.0.1:9966 http://localhost:9977 http://127.0.0.1:9977 https://cdn.pixabay.com https://pixabay.com;">
   <title>代码觉醒者：Main Corridor</title>
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%23020617'/%3E%3Cpath d='M22 20 10 32l12 12M42 20l12 12-12 12' fill='none' stroke='%2300ff88' stroke-width='6' stroke-linecap='round' stroke-linejoin='round'/%3E%3Cpath d='m36 16-8 32' stroke='%2300ccff' stroke-width='5' stroke-linecap='round'/%3E%3C/svg%3E">
   <script src="./vendor/phaser.min.js"></script>
@@ -8977,9 +8977,9 @@
     }
 
     .cinematic-letterbox {
-      position: absolute;
+      position: fixed;
       inset: 0;
-      z-index: 58;
+      z-index: 1450;
       pointer-events: none;
       opacity: 0;
       transition: opacity 260ms ease-out;
@@ -10584,86 +10584,1656 @@
       place-items: center;
       pointer-events: none;
       opacity: 0;
+      overflow: hidden;
       background:
-        linear-gradient(90deg, rgba(2, 6, 23, 0.92), rgba(8, 19, 34, 0.84)),
+        radial-gradient(circle at 50% 45%, rgba(14, 165, 233, 0.18), transparent 34%),
+        linear-gradient(90deg, rgba(2, 6, 23, 0.96), rgba(8, 19, 34, 0.9)),
         repeating-linear-gradient(90deg, rgba(56, 189, 248, 0.08) 0 2px, transparent 2px 120px);
       transition: opacity 360ms ease;
+    }
+
+    .compiler-cabin-cinematic-stage::before {
+      content: "";
+      position: absolute;
+      inset: -20%;
+      background:
+        linear-gradient(90deg, transparent 0 48%, rgba(56, 189, 248, 0.08) 49% 51%, transparent 52% 100%),
+        linear-gradient(0deg, transparent 0 48%, rgba(34, 197, 94, 0.05) 49% 51%, transparent 52% 100%);
+      background-size: 96px 96px;
+      transform: perspective(720px) rotateX(58deg) translateY(6%);
+      animation: compilerCabinGridDrift 12000ms linear infinite;
+      opacity: 0.44;
     }
 
     .compiler-cabin-cinematic-stage.active {
       opacity: 1;
     }
 
-    .compiler-cabin-rail {
-      position: absolute;
-      left: 10vw;
-      right: 10vw;
-      top: 50%;
-      height: 4px;
-      background: linear-gradient(90deg, transparent, rgba(250, 204, 21, 0.88), rgba(56, 189, 248, 0.92), transparent);
-      box-shadow: 0 0 28px rgba(250, 204, 21, 0.44);
+    .compiler-cabin-stage-grid {
+      position: relative;
+      width: min(980px, 86vw);
+      height: min(560px, 64vh);
+      border: 1px solid rgba(56, 189, 248, 0.34);
+      border-radius: 14px;
+      background: rgba(2, 6, 23, 0.86);
+      box-shadow: inset 0 0 80px rgba(56, 189, 248, 0.08), 0 0 70px rgba(34, 197, 94, 0.12);
+      overflow: hidden;
     }
 
-    .compiler-cabin-rail span {
+    .compiler-cabin-progress {
       position: absolute;
-      top: -7px;
+      left: 28px;
+      right: 28px;
+      bottom: 24px;
+      height: 5px;
+      border-radius: 999px;
+      overflow: hidden;
+      background: rgba(15, 23, 42, 0.82);
+      box-shadow: 0 0 20px rgba(56, 189, 248, 0.18);
+    }
+
+    .compiler-cabin-progress span {
+      display: block;
+      width: 0;
+      height: 100%;
+      border-radius: inherit;
+      background: linear-gradient(90deg, #facc15, #22c55e, #38bdf8);
+      box-shadow: 0 0 18px rgba(56, 189, 248, 0.62);
+      transition-property: width;
+      transition-timing-function: linear;
+    }
+
+    .compiler-cabin-scene {
+      position: absolute;
+      inset: 0;
+      display: grid;
+      place-items: center;
+      opacity: 0;
+      transform: translateY(18px) scale(0.98);
+      transition: opacity 520ms ease, transform 620ms ease;
+    }
+
+    .compiler-cabin-cinematic-stage[data-phase="goal"] .goal-preview,
+    .compiler-cabin-cinematic-stage[data-phase="split"] .package-split,
+    .compiler-cabin-cinematic-stage[data-phase="explain"] .sorting-center,
+    .compiler-cabin-cinematic-stage[data-phase="highlight"] .compiler-inspection,
+    .compiler-cabin-cinematic-stage[data-phase="practice"] .practice-demo,
+    .compiler-cabin-cinematic-stage[data-phase="demo"] .terminal-demo {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+
+    .source-envelope {
+      position: relative;
+      width: min(420px, 60vw);
+      min-height: 150px;
+      display: grid;
+      place-items: center;
+      border: 2px solid rgba(250, 204, 21, 0.78);
+      border-radius: 18px;
+      color: #fef3c7;
+      background: linear-gradient(135deg, rgba(113, 63, 18, 0.78), rgba(2, 6, 23, 0.78));
+      font: 900 26px/1.2 var(--font-code);
+      box-shadow: 0 0 46px rgba(250, 204, 21, 0.22);
+      animation: compilerCabinPackageOpen 5000ms ease-in-out infinite;
+    }
+
+    .source-envelope::before,
+    .source-envelope::after {
+      content: "";
+      position: absolute;
+      inset: 22px;
+      border-top: 2px solid rgba(250, 204, 21, 0.44);
+      transform: skewY(-18deg);
+    }
+
+    .source-envelope::after {
+      transform: skewY(18deg);
+    }
+
+    .split-token {
+      position: absolute;
+      min-width: 86px;
+      padding: 8px 12px;
+      border: 1px solid rgba(56, 189, 248, 0.62);
+      border-radius: 999px;
+      color: #dffcff;
+      background: rgba(2, 6, 23, 0.78);
+      text-align: center;
+      font: 800 13px/1.2 var(--font-code);
+      box-shadow: 0 0 22px rgba(56, 189, 248, 0.2);
+      animation: compilerCabinTokenDrift 5200ms ease-in-out infinite;
+    }
+
+    .split-token.keyword { left: 12%; top: 18%; animation-delay: 300ms; }
+    .split-token.function { right: 13%; top: 22%; animation-delay: 700ms; }
+    .split-token.string { left: 16%; bottom: 28%; animation-delay: 1100ms; }
+    .split-token.semicolon { right: 18%; bottom: 26%; animation-delay: 1500ms; }
+
+    .sorting-belt {
+      position: absolute;
+      left: 8%;
+      right: 8%;
+      top: 52%;
+      height: 8px;
+      border-radius: 999px;
+      background: linear-gradient(90deg, rgba(250, 204, 21, 0.1), rgba(250, 204, 21, 0.9), rgba(56, 189, 248, 0.92), rgba(34, 197, 94, 0.75));
+      box-shadow: 0 0 34px rgba(56, 189, 248, 0.26);
+    }
+
+    .sorting-hub {
+      width: 190px;
+      height: 190px;
+      display: grid;
+      place-items: center;
+      border: 2px solid rgba(56, 189, 248, 0.74);
+      border-radius: 50%;
+      color: #dffcff;
+      background: rgba(2, 6, 23, 0.72);
+      font: 900 18px/1.25 var(--font-code);
+      text-align: center;
+      box-shadow: inset 0 0 46px rgba(56, 189, 248, 0.14), 0 0 60px rgba(34, 197, 94, 0.16);
+    }
+
+    .delivery-dot {
+      position: absolute;
+      top: calc(52% - 10px);
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      background: #facc15;
+      box-shadow: 0 0 26px rgba(250, 204, 21, 0.76);
+      animation: compilerCabinDelivery 4300ms linear infinite;
+    }
+
+    .delivery-dot:nth-child(2) { animation-delay: 900ms; background: #38bdf8; }
+    .delivery-dot:nth-child(3) { animation-delay: 1800ms; background: #22c55e; }
+
+    .compiler-panel {
+      width: min(540px, 72vw);
+      min-height: 260px;
+      display: grid;
+      grid-template-columns: 150px minmax(0, 1fr);
+      gap: 28px;
+      align-items: center;
+    }
+
+    .compiler-lens {
+      width: 148px;
+      height: 148px;
+      border: 2px solid rgba(56, 189, 248, 0.82);
+      border-radius: 24px;
+      background:
+        linear-gradient(90deg, transparent 0 46%, rgba(56, 189, 248, 0.6) 48% 52%, transparent 54% 100%),
+        rgba(2, 6, 23, 0.84);
+      box-shadow: inset 0 0 46px rgba(56, 189, 248, 0.16), 0 0 38px rgba(56, 189, 248, 0.2);
+      animation: compilerCabinScanner 2800ms ease-in-out infinite;
+    }
+
+    .compiler-checks {
+      display: grid;
+      gap: 14px;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .compiler-checks li {
+      display: grid;
+      grid-template-columns: 34px minmax(0, 1fr);
+      gap: 12px;
+      align-items: center;
+      color: #dffcff;
+      font: 800 16px/1.25 var(--font-code);
+      opacity: 0.72;
+      animation: compilerCabinCheckPulse 4200ms ease-in-out infinite;
+    }
+
+    .compiler-checks li::before {
+      content: "";
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      border: 2px solid rgba(34, 197, 94, 0.75);
+      box-shadow: 0 0 18px rgba(34, 197, 94, 0.38);
+    }
+
+    .compiler-checks li:nth-child(2) { animation-delay: 700ms; }
+    .compiler-checks li:nth-child(3) { animation-delay: 1400ms; }
+    .compiler-checks li:nth-child(4) { animation-delay: 2100ms; }
+
+    .compile-chain {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 18px;
+      margin-bottom: 28px;
+      color: #fef3c7;
+      font: 900 17px/1 var(--font-code);
+    }
+
+    .compile-chain span {
+      min-width: 106px;
+      padding: 12px 14px;
+      border: 1px solid rgba(250, 204, 21, 0.48);
+      border-radius: 10px;
+      background: rgba(2, 6, 23, 0.72);
+      text-align: center;
+      box-shadow: 0 0 24px rgba(250, 204, 21, 0.16);
+      animation: compilerCabinArtifact 4200ms ease-in-out infinite;
+    }
+
+    .compile-chain span:nth-child(2) { animation-delay: 760ms; border-color: rgba(56, 189, 248, 0.58); color: #dffcff; }
+    .compile-chain span:nth-child(3) { animation-delay: 1520ms; border-color: rgba(34, 197, 94, 0.62); color: #bbf7d0; }
+
+    .compile-chain b {
+      color: rgba(56, 189, 248, 0.8);
+      font-size: 24px;
+    }
+
+    .terminal-screen {
+      min-width: min(620px, 78vw);
+      min-height: 160px;
+      margin: 0;
+      padding: 22px 24px;
+      border: 1px solid rgba(34, 197, 94, 0.48);
+      border-radius: 12px;
+      color: #bbf7d0;
+      background: rgba(2, 6, 23, 0.86);
+      box-shadow: inset 0 0 38px rgba(34, 197, 94, 0.08), 0 0 32px rgba(34, 197, 94, 0.16);
+      font: 800 18px/1.75 var(--font-code);
+    }
+
+    .terminal-screen .cursor {
+      display: inline-block;
+      width: 10px;
+      height: 1.1em;
+      margin-left: 3px;
+      vertical-align: -0.15em;
+      background: #bbf7d0;
+      animation: compilerCabinCursor 900ms steps(2, end) infinite;
+    }
+
+    @keyframes compilerCabinGridDrift {
+      from { background-position: 0 0; }
+      to { background-position: 96px 96px; }
+    }
+
+    @keyframes compilerCabinPackageOpen {
+      0%, 100% { transform: scale(0.96); filter: brightness(0.86); }
+      45%, 65% { transform: scale(1.04); filter: brightness(1.35); }
+    }
+
+    @keyframes compilerCabinTokenDrift {
+      0%, 100% { transform: translateY(0) scale(0.92); opacity: 0.54; }
+      48%, 70% { transform: translateY(-22px) scale(1.08); opacity: 1; }
+    }
+
+    @keyframes compilerCabinDelivery {
+      from { left: 8%; opacity: 0; transform: scale(0.7); }
+      15% { opacity: 1; }
+      to { left: 88%; opacity: 0; transform: scale(1.18); }
+    }
+
+    @keyframes compilerCabinScanner {
+      0%, 100% { background-position: -90px 0, 0 0; transform: rotate(-3deg); }
+      50% { background-position: 90px 0, 0 0; transform: rotate(3deg); }
+    }
+
+    @keyframes compilerCabinCheckPulse {
+      0%, 100% { opacity: 0.44; transform: translateX(0); }
+      42%, 68% { opacity: 1; transform: translateX(8px); color: #bbf7d0; }
+    }
+
+    @keyframes compilerCabinArtifact {
+      0%, 100% { opacity: 0.46; transform: translateY(0); }
+      44%, 70% { opacity: 1; transform: translateY(-7px); }
+    }
+
+    @keyframes compilerCabinCursor {
+      0%, 45% { opacity: 1; }
+      46%, 100% { opacity: 0; }
+    }
+
+    .compiler-cabin-stage-grid {
+      width: min(1120px, 90vw);
+      height: min(620px, 72vh);
+      border-radius: 12px;
+      background: rgba(2, 6, 23, 0.72);
+      pointer-events: auto;
+    }
+
+    .compiler-cabin-header {
+      position: absolute;
+      left: 28px;
+      right: 28px;
+      top: 20px;
+      z-index: 4;
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 18px;
+      align-items: start;
+    }
+
+    .compiler-cabin-kicker {
+      margin: 0 0 6px;
+      color: #67e8f9;
+      font: 800 12px/1 var(--font-code);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .compiler-cabin-title {
+      margin: 0;
+      color: #f8fafc;
+      font: 900 clamp(20px, 3vw, 32px)/1.15 var(--font-ui);
+      letter-spacing: 0;
+    }
+
+    .compiler-cabin-brief {
+      max-width: 700px;
+      margin: 8px 0 0;
+      color: #cbd5e1;
+      font: 700 14px/1.55 var(--font-ui);
+    }
+
+    .compiler-cabin-controls {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px;
+      border: 1px solid rgba(56, 189, 248, 0.34);
+      border-radius: 10px;
+      background: rgba(2, 6, 23, 0.82);
+      box-shadow: 0 0 26px rgba(56, 189, 248, 0.14);
+    }
+
+    .compiler-cabin-controls button {
+      min-width: 42px;
+      height: 34px;
+      border: 1px solid rgba(148, 163, 184, 0.38);
+      border-radius: 8px;
+      color: #dffcff;
+      background: rgba(15, 23, 42, 0.88);
+      font: 900 12px/1 var(--font-code);
+      cursor: pointer;
+      transition: border-color 160ms ease, background 160ms ease, transform 120ms ease;
+    }
+
+    .compiler-cabin-controls button:hover,
+    .compiler-cabin-controls button:focus-visible,
+    .compiler-cabin-controls button.active {
+      border-color: rgba(34, 197, 94, 0.88);
+      background: rgba(20, 83, 45, 0.72);
+      outline: none;
+    }
+
+    .compiler-cabin-controls button:active {
+      transform: translateY(1px);
+    }
+
+    .compiler-cabin-rate-label {
+      min-width: 46px;
+      color: #fde68a;
+      text-align: center;
+      font: 900 12px/1 var(--font-code);
+    }
+
+    .compiler-cabin-tts-status {
+      min-width: 96px;
+      padding: 7px 9px;
+      border: 1px solid rgba(56, 189, 248, 0.24);
+      border-radius: 999px;
+      color: #a7f3d0;
+      background: rgba(2, 6, 23, 0.72);
+      text-align: center;
+      font: 900 11px/1 var(--font-ui);
+    }
+
+    .compiler-cabin-cinematic-stage[data-tts-status="unavailable"] .compiler-cabin-tts-status {
+      color: #fde68a;
+      border-color: rgba(250, 204, 21, 0.42);
+      box-shadow: 0 0 16px rgba(250, 204, 21, 0.14);
+    }
+
+    .compiler-cabin-scene-inner {
+      width: min(920px, 78vw);
+      min-height: 310px;
+      display: grid;
+      gap: 22px;
+      align-items: center;
+      justify-items: center;
+      padding: 110px 0 118px;
+    }
+
+    .compiler-cabin-phase-note {
+      position: absolute;
+      left: 28px;
+      right: 28px;
+      bottom: 44px;
+      z-index: 4;
+      display: grid;
+      grid-template-columns: 86px minmax(0, 1fr);
+      gap: 14px;
+      align-items: center;
+      padding: 14px 16px;
+      border: 1px solid rgba(34, 197, 94, 0.34);
+      border-radius: 10px;
+      background: rgba(2, 6, 23, 0.82);
+      box-shadow: 0 0 24px rgba(34, 197, 94, 0.12);
+    }
+
+    .compiler-cabin-phase-note strong {
+      color: #fde68a;
+      font: 900 13px/1.2 var(--font-code);
+    }
+
+    .compiler-cabin-phase-note span {
+      color: #dffcff;
+      font: 800 14px/1.45 var(--font-ui);
+    }
+
+    .lesson-flow {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+      gap: 18px;
+      align-items: center;
+      width: 100%;
+    }
+
+    .lesson-flow-arrow {
+      color: #67e8f9;
+      font: 900 36px/1 var(--font-code);
+      text-shadow: 0 0 24px rgba(56, 189, 248, 0.46);
+    }
+
+    .lesson-card {
+      position: relative;
+      min-height: 170px;
+      padding: 20px;
+      border: 1px solid rgba(56, 189, 248, 0.42);
+      border-radius: 10px;
+      background: rgba(2, 6, 23, 0.78);
+      box-shadow: inset 0 0 40px rgba(56, 189, 248, 0.08);
+    }
+
+    .lesson-card h4 {
+      margin: 0 0 12px;
+      color: #93c5fd;
+      font: 900 13px/1.2 var(--font-ui);
+    }
+
+    .lesson-card p {
+      margin: 8px 0 0;
+      color: #cbd5e1;
+      font: 700 13px/1.55 var(--font-ui);
+    }
+
+    .code-paper {
+      display: grid;
+      gap: 8px;
+      padding: 16px;
+      border: 1px solid rgba(250, 204, 21, 0.48);
+      border-radius: 10px;
+      color: #fef3c7;
+      background: rgba(30, 41, 59, 0.72);
+      font: 900 18px/1.45 var(--font-code);
+      white-space: nowrap;
+    }
+
+    .code-paper span {
+      display: inline-block;
+      padding: 2px 4px;
+      border-radius: 5px;
+    }
+
+    .code-paper .code-fn { color: #7dd3fc; background: rgba(56, 189, 248, 0.16); }
+    .code-paper .code-param { color: #bbf7d0; background: rgba(34, 197, 94, 0.14); }
+    .code-paper .code-end { color: #fde68a; background: rgba(250, 204, 21, 0.18); }
+
+    .split-labels {
+      display: grid;
+      gap: 10px;
+      margin-top: 16px;
+    }
+
+    .split-label {
+      display: grid;
+      grid-template-columns: 88px minmax(0, 1fr);
+      gap: 10px;
+      align-items: center;
+      color: #e2e8f0;
+      font: 800 13px/1.35 var(--font-ui);
+    }
+
+    .split-label b {
+      padding: 5px 7px;
+      border-radius: 6px;
+      color: #020617;
+      background: #fde68a;
+      text-align: center;
+      font: 900 12px/1 var(--font-code);
+    }
+
+    .sorting-center .compiler-cabin-scene-inner {
+      grid-template-columns: minmax(0, 1fr) auto 190px auto minmax(0, 1fr);
+    }
+
+    .courier-card {
+      width: min(300px, 30vw);
+      padding: 20px;
+      border: 1px solid rgba(250, 204, 21, 0.44);
+      border-radius: 10px;
+      color: #fef3c7;
+      background: rgba(30, 41, 59, 0.76);
+      font: 800 14px/1.55 var(--font-ui);
+      box-shadow: 0 0 26px rgba(250, 204, 21, 0.12);
+    }
+
+    .courier-card strong {
+      display: block;
+      margin-bottom: 8px;
+      color: #fde68a;
+      font: 900 16px/1.2 var(--font-ui);
+    }
+
+    .sorting-center .delivery-dot:nth-of-type(2) { animation-delay: 900ms; background: #38bdf8; }
+    .sorting-center .delivery-dot:nth-of-type(3) { animation-delay: 1800ms; background: #22c55e; }
+
+    .inspection-board {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 250px;
+      gap: 28px;
+      align-items: center;
+      width: min(820px, 78vw);
+    }
+
+    .inspection-code {
+      position: relative;
+      padding: 26px 24px;
+      border: 1px solid rgba(56, 189, 248, 0.48);
+      border-radius: 10px;
+      background: rgba(2, 6, 23, 0.86);
+      color: #e2e8f0;
+      font: 900 clamp(18px, 2.2vw, 30px)/1.7 var(--font-code);
+      box-shadow: inset 0 0 34px rgba(56, 189, 248, 0.08), 0 0 34px rgba(56, 189, 248, 0.12);
+    }
+
+    .inspection-code .fn-token {
+      position: relative;
+      color: #7dd3fc;
+    }
+
+    .inspection-code .fn-token::after {
+      content: "";
+      position: absolute;
+      inset: -9px -12px;
+      border: 2px solid rgba(56, 189, 248, 0.88);
+      border-radius: 999px;
+      box-shadow: 0 0 22px rgba(56, 189, 248, 0.5);
+      animation: compilerCabinTokenFocus 1600ms ease-in-out infinite;
+    }
+
+    .inspection-code .param-token {
+      color: #bbf7d0;
+      animation: compilerCabinQuoteFlash 1200ms ease-in-out infinite;
+    }
+
+    .inspection-code .paren-token {
+      color: #fde68a;
+      animation: compilerCabinBracketFlash 1100ms ease-in-out infinite;
+    }
+
+    .inspection-code .end-token {
+      color: #fef08a;
+      background: rgba(250, 204, 21, 0.18);
+      box-shadow: 0 0 22px rgba(250, 204, 21, 0.38);
+      animation: compilerCabinSemicolonDing 1800ms ease-in-out infinite;
+    }
+
+    .terminal-demo .compiler-cabin-scene-inner {
+      width: min(760px, 76vw);
+    }
+
+    .demo-result-label {
+      width: 100%;
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 10px;
+      color: #cbd5e1;
+      font: 900 12px/1.25 var(--font-ui);
+      text-align: center;
+    }
+
+    .demo-result-label span {
+      padding: 9px 8px;
+      border: 1px solid rgba(56, 189, 248, 0.28);
+      border-radius: 8px;
+      background: rgba(15, 23, 42, 0.7);
+    }
+
+    .terminal-next-step {
+      width: 100%;
+      padding: 12px 14px;
+      border: 1px solid rgba(34, 197, 94, 0.38);
+      border-radius: 10px;
+      color: #bbf7d0;
+      background: rgba(20, 83, 45, 0.36);
+      font: 900 14px/1.4 var(--font-ui);
+      text-align: center;
+    }
+
+    @keyframes compilerCabinTokenFocus {
+      0%, 100% { opacity: 0.5; transform: scale(0.96); }
+      50% { opacity: 1; transform: scale(1.08); }
+    }
+
+    @keyframes compilerCabinQuoteFlash {
+      0%, 100% { background: rgba(34, 197, 94, 0.08); }
+      50% { background: rgba(34, 197, 94, 0.28); }
+    }
+
+    @keyframes compilerCabinBracketFlash {
+      0%, 100% { text-shadow: none; }
+      50% { text-shadow: 0 0 18px rgba(250, 204, 21, 0.9); }
+    }
+
+    @keyframes compilerCabinSemicolonDing {
+      0%, 100% { transform: translateY(0) scale(1); }
+      42% { transform: translateY(-6px) scale(1.2); }
+      58% { transform: translateY(0) scale(1); }
+    }
+
+    .compiler-cabin-cinematic-stage {
+      --compiler-cabin-motion-scale: 1;
+    }
+
+    .real-animation-scene {
+      padding-top: 96px;
+      padding-bottom: 94px;
+    }
+
+    .beginner-story-panel {
+      position: relative;
+      width: min(860px, 78vw);
+      min-height: 300px;
+      display: grid;
+      align-items: center;
+      justify-items: center;
+      gap: 14px;
+    }
+
+    .story-step-badge {
+      position: absolute;
+      left: 0;
+      top: 0;
+      z-index: 5;
+      padding: 8px 12px;
+      border: 1px solid rgba(250, 204, 21, 0.58);
+      border-radius: 999px;
+      color: #020617;
+      background: linear-gradient(90deg, #fde68a, #67e8f9);
+      box-shadow: 0 0 24px rgba(250, 204, 21, 0.22);
+      font: 900 13px/1 var(--font-ui);
+    }
+
+    .goal-flow {
+      min-height: 300px;
+      grid-template-rows: 1fr auto;
+      align-content: center;
+      gap: 28px;
+    }
+
+    .goal-screen {
+      width: min(560px, 58vw);
+      min-height: 190px;
+      display: grid;
+      place-items: center;
+      gap: 12px;
+      padding: 28px;
+      border: 2px solid rgba(34, 197, 94, 0.62);
+      border-radius: 16px;
+      color: #bbf7d0;
+      background:
+        radial-gradient(circle at 50% 50%, rgba(34, 197, 94, 0.16), transparent 58%),
+        rgba(2, 6, 23, 0.92);
+      box-shadow: inset 0 0 44px rgba(34, 197, 94, 0.12), 0 0 40px rgba(34, 197, 94, 0.18);
+      animation: compilerGoalScreenPulse calc(3200ms * var(--compiler-cabin-motion-scale)) ease-in-out infinite;
+      animation-play-state: var(--compiler-cabin-animation-state, running);
+    }
+
+    .goal-screen span {
+      color: #dffcff;
+      font: 900 15px/1 var(--font-ui);
+    }
+
+    .goal-screen b {
+      color: #f8fafc;
+      font: 900 clamp(34px, 4vw, 54px)/1 var(--font-code);
+      text-shadow: 0 0 28px rgba(34, 197, 94, 0.5);
+    }
+
+    .goal-road {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 54px minmax(0, 1fr) 54px minmax(0, 1fr);
+      gap: 10px;
+      align-items: center;
+      width: min(680px, 68vw);
+    }
+
+    .goal-road span {
+      padding: 10px 12px;
+      border: 1px solid rgba(56, 189, 248, 0.36);
+      border-radius: 999px;
+      color: #dffcff;
+      background: rgba(15, 23, 42, 0.72);
+      text-align: center;
+      font: 900 13px/1.2 var(--font-ui);
+    }
+
+    .goal-road i {
+      height: 3px;
+      border-radius: 999px;
+      background: linear-gradient(90deg, #fde68a, #67e8f9);
+      box-shadow: 0 0 18px rgba(56, 189, 248, 0.42);
+    }
+
+    .write-flow {
+      grid-template-columns: minmax(240px, 0.82fr) minmax(390px, 1.18fr);
+      column-gap: 26px;
+    }
+
+    .learner-workbench {
+      position: relative;
+      width: min(300px, 28vw);
+      height: 250px;
+      justify-self: start;
+      border-radius: 14px;
+      background:
+        radial-gradient(circle at 24% 22%, rgba(250, 204, 21, 0.18), transparent 26%),
+        linear-gradient(145deg, rgba(15, 23, 42, 0.72), rgba(2, 6, 23, 0.92));
+      box-shadow: inset 0 0 36px rgba(56, 189, 248, 0.08), 0 0 30px rgba(34, 197, 94, 0.1);
+    }
+
+    .learner-avatar {
+      position: absolute;
+      left: 18px;
+      top: 18px;
+      width: 68px;
+      height: 68px;
+      display: grid;
+      place-items: center;
+      border: 2px solid rgba(56, 189, 248, 0.64);
+      border-radius: 50%;
+      color: #dffcff;
+      background: rgba(2, 6, 23, 0.86);
+      box-shadow: 0 0 24px rgba(56, 189, 248, 0.26);
+      font: 900 18px/1 var(--font-ui);
+    }
+
+    .learner-avatar::after {
+      content: "";
+      position: absolute;
+      left: 16px;
+      top: 58px;
+      width: 34px;
+      height: 58px;
+      border: 2px solid rgba(56, 189, 248, 0.44);
+      border-top: 0;
+      border-radius: 0 0 18px 18px;
+      background: rgba(14, 165, 233, 0.1);
+    }
+
+    .writing-card {
+      position: absolute;
+      left: 88px;
+      top: 36px;
+      width: 196px;
+      min-height: 108px;
+      display: grid;
+      align-content: center;
+      gap: 10px;
+      padding: 14px;
+      border: 2px solid rgba(250, 204, 21, 0.7);
+      border-radius: 12px;
+      color: #fef3c7;
+      background: linear-gradient(135deg, rgba(113, 63, 18, 0.72), rgba(15, 23, 42, 0.9));
+      box-shadow: 0 0 30px rgba(250, 204, 21, 0.18);
+    }
+
+    .writing-card span {
+      color: #dffcff;
+      font: 900 12px/1.25 var(--font-ui);
+    }
+
+    .writing-card code {
+      color: #fef3c7;
+      font: 900 15px/1.25 var(--font-code);
+      white-space: nowrap;
+    }
+
+    .learner-hand {
+      position: absolute;
+      left: 26px;
+      bottom: 18px;
+      width: 54px;
+      height: 24px;
+      border-radius: 999px 12px 12px 999px;
+      background: linear-gradient(90deg, #fde68a, #fbbf24);
+      box-shadow: 0 0 18px rgba(250, 204, 21, 0.42);
+      animation: compilerHandWrite calc(2300ms * var(--compiler-cabin-motion-scale)) ease-in-out infinite;
+      animation-play-state: var(--compiler-cabin-animation-state, running);
+    }
+
+    .learner-hand::after {
+      content: "";
+      position: absolute;
+      right: -30px;
+      top: 8px;
+      width: 42px;
+      height: 5px;
+      border-radius: 999px;
+      background: #67e8f9;
+      transform: rotate(-24deg);
+      box-shadow: 0 0 12px rgba(103, 232, 249, 0.58);
+    }
+
+    .code-note {
+      display: grid;
+      gap: 6px;
+      padding: 10px 12px;
+      border: 2px solid rgba(250, 204, 21, 0.66);
+      border-radius: 12px;
+      color: #fef3c7;
+      background: linear-gradient(135deg, rgba(113, 63, 18, 0.82), rgba(15, 23, 42, 0.92));
+      box-shadow: 0 0 26px rgba(250, 204, 21, 0.22);
+      animation: compilerCodeNoteTravel calc(3600ms * var(--compiler-cabin-motion-scale)) ease-in-out infinite;
+      animation-play-state: var(--compiler-cabin-animation-state, running);
+    }
+
+    .code-note b {
+      color: #fde68a;
+      font: 900 13px/1 var(--font-ui);
+    }
+
+    .code-note span {
+      color: #dffcff;
+      font: 900 12px/1.3 var(--font-ui);
+    }
+
+    .starter-note {
+      position: absolute;
+      right: 18px;
+      bottom: 20px;
+      width: 172px;
+    }
+
+    .beginner-code-breakdown {
+      width: min(480px, 44vw);
+      height: 250px;
+      justify-self: end;
+    }
+
+    .beginner-code-breakdown .source-code-strip {
+      min-width: 356px;
+      min-height: 54px;
+      padding: 12px 16px;
+    }
+
+    .beginner-code-breakdown .source-code-strip [data-motion-actor="code-character"] {
+      min-width: 17px;
+      height: 28px;
+      font-size: 17px;
+    }
+
+    .beginner-code-breakdown .source-code-strip::before {
+      content: "纸条被拆开看";
+      color: rgba(226, 232, 240, 0.72);
+      font-family: var(--font-ui);
+    }
+
+    .beginner-code-breakdown .motion-token-bucket {
+      width: 150px;
+      min-height: 60px;
+      padding: 9px;
+    }
+
+    .beginner-code-breakdown .motion-token-bucket b {
+      font-size: 12px;
+    }
+
+    .beginner-code-breakdown .motion-token-bucket span {
+      font-size: 11px;
+    }
+
+    .beginner-code-breakdown .command-bucket {
+      top: 50px;
+    }
+
+    .beginner-story-panel .motion-caption {
+      display: none;
+    }
+
+    .machine-flow .compiler-conveyor {
+      width: min(840px, 76vw);
+      height: 315px;
+    }
+
+    .machine-flow .moving-code-package {
+      left: 10%;
+      width: 184px;
+      min-height: 92px;
+      padding: 0;
+      border: 0;
+      background: transparent;
+      box-shadow: none;
+    }
+
+    .machine-flow .compiler-stamp,
+    .machine-flow .compiler-arm {
+      display: none;
+    }
+
+    .travel-note {
+      width: 174px;
+      min-height: 78px;
+      place-content: center;
+    }
+
+    .novice-compiler-machine {
+      position: absolute;
+      left: 50%;
+      top: 15%;
+      width: 190px;
+      min-height: 128px;
+      display: grid;
+      place-items: center;
+      gap: 7px;
+      padding: 16px 14px;
+      border: 2px solid rgba(56, 189, 248, 0.72);
+      border-radius: 18px;
+      color: #dffcff;
+      background:
+        linear-gradient(90deg, rgba(56, 189, 248, 0.1), rgba(2, 6, 23, 0.9)),
+        rgba(2, 6, 23, 0.86);
+      box-shadow: inset 0 0 42px rgba(56, 189, 248, 0.12), 0 0 38px rgba(56, 189, 248, 0.2);
+      transform: translateX(-50%);
+      text-align: center;
+      animation: compilerMachineProcess calc(2600ms * var(--compiler-cabin-motion-scale)) ease-in-out infinite;
+      animation-play-state: var(--compiler-cabin-animation-state, running);
+    }
+
+    .novice-compiler-machine b {
+      color: #93c5fd;
+      font: 900 16px/1.15 var(--font-ui);
+    }
+
+    .novice-compiler-machine span {
+      color: #bbf7d0;
+      font: 900 12px/1.25 var(--font-ui);
+    }
+
+    .novice-compiler-machine i {
+      width: 92px;
+      height: 8px;
+      border-radius: 999px;
+      background: linear-gradient(90deg, #facc15, #22c55e, #38bdf8);
+      box-shadow: 0 0 18px rgba(34, 197, 94, 0.5);
+    }
+
+    .beginner-check-lamps {
+      position: absolute;
+      right: 0;
+      bottom: 4px;
+      display: grid;
+      gap: 8px;
+      width: 190px;
+    }
+
+    .beginner-check-lamps span {
+      display: grid;
+      grid-template-columns: 28px minmax(0, 1fr);
+      gap: 8px;
+      align-items: center;
+      padding: 8px 10px;
+      border: 1px solid rgba(34, 197, 94, 0.38);
+      border-radius: 999px;
+      color: #dffcff;
+      background: rgba(2, 6, 23, 0.78);
+      box-shadow: 0 0 18px rgba(34, 197, 94, 0.12);
+      font: 900 12px/1.2 var(--font-ui);
+      animation: compilerLampPass calc(4200ms * var(--compiler-cabin-motion-scale)) ease-in-out infinite;
+      animation-play-state: var(--compiler-cabin-animation-state, running);
+    }
+
+    .beginner-check-lamps span:nth-child(2) { animation-delay: calc(700ms * var(--compiler-cabin-motion-scale)); }
+    .beginner-check-lamps span:nth-child(3) { animation-delay: calc(1400ms * var(--compiler-cabin-motion-scale)); }
+
+    .beginner-check-lamps b {
+      display: grid;
+      place-items: center;
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      color: #022c22;
+      background: #22c55e;
+      box-shadow: 0 0 14px rgba(34, 197, 94, 0.72);
+      font: 900 12px/1 var(--font-code);
+    }
+
+    .inspect-flow .live-scan-board {
+      width: min(780px, 76vw);
+    }
+
+    .result-flow .compile-assembly-line {
+      width: min(720px, 74vw);
+      padding-top: 14px;
+    }
+
+    .result-flow .terminal-next-step {
+      display: none;
+    }
+
+    .practice-flow {
+      grid-template-columns: minmax(300px, 1fr) 120px minmax(240px, 0.8fr);
+      column-gap: 28px;
+      min-height: 300px;
+    }
+
+    .practice-editor {
+      position: relative;
+      width: min(430px, 38vw);
+      min-height: 190px;
+      justify-self: end;
+      display: grid;
+      grid-template-rows: auto 1fr;
+      border: 1px solid rgba(56, 189, 248, 0.48);
+      border-radius: 14px;
+      overflow: hidden;
+      background: rgba(2, 6, 23, 0.9);
+      box-shadow: inset 0 0 34px rgba(56, 189, 248, 0.1), 0 0 34px rgba(56, 189, 248, 0.14);
+      animation: compilerPracticeEditorFocus calc(4200ms * var(--compiler-cabin-motion-scale)) ease-in-out infinite;
+      animation-play-state: var(--compiler-cabin-animation-state, running);
+    }
+
+    .practice-editor-title {
+      padding: 10px 14px;
+      color: #93c5fd;
+      background: rgba(15, 23, 42, 0.86);
+      border-bottom: 1px solid rgba(56, 189, 248, 0.22);
+      font: 900 12px/1 var(--font-ui);
+    }
+
+    .practice-editor pre {
+      margin: 0;
+      padding: 28px 22px;
+      color: #fef3c7;
+      font: 900 clamp(17px, 1.9vw, 24px)/1.55 var(--font-code);
+    }
+
+    .practice-typed-code {
+      display: inline-block;
+      max-width: 24ch;
+      width: 0;
+      overflow: hidden;
+      white-space: nowrap;
+      vertical-align: bottom;
+      animation: compilerPracticeType calc(5600ms * var(--compiler-cabin-motion-scale)) steps(22, end) infinite;
+      animation-play-state: var(--compiler-cabin-animation-state, running);
+    }
+
+    .practice-editor pre i {
+      display: inline-block;
+      width: 10px;
+      height: 1.15em;
+      margin-left: 2px;
+      vertical-align: -0.18em;
+      background: #fde68a;
+      animation: compilerCabinCursor 900ms steps(2, end) infinite;
+      animation-play-state: var(--compiler-cabin-animation-state, running);
+    }
+
+    .practice-run-button {
+      position: relative;
+      z-index: 2;
+      width: 92px;
+      height: 48px;
+      justify-self: center;
+      align-self: center;
+      border: 1px solid rgba(34, 197, 94, 0.72);
+      border-radius: 999px;
+      color: #052e16;
+      background: linear-gradient(90deg, #bbf7d0, #67e8f9);
+      box-shadow: 0 0 24px rgba(34, 197, 94, 0.28);
+      font: 900 16px/1 var(--font-ui);
+      animation: compilerPracticeClick calc(5600ms * var(--compiler-cabin-motion-scale)) ease-in-out infinite;
+      animation-play-state: var(--compiler-cabin-animation-state, running);
+      pointer-events: none;
+    }
+
+    .practice-pointer {
+      position: absolute;
+      left: calc(50% - 10px);
+      top: calc(50% + 8px);
+      width: 0;
+      height: 0;
+      border-left: 14px solid #f8fafc;
+      border-top: 10px solid transparent;
+      border-bottom: 10px solid transparent;
+      filter: drop-shadow(0 0 12px rgba(56, 189, 248, 0.7));
+      animation: compilerPracticePointer calc(5600ms * var(--compiler-cabin-motion-scale)) ease-in-out infinite;
+      animation-play-state: var(--compiler-cabin-animation-state, running);
+    }
+
+    .practice-output {
+      width: min(270px, 26vw);
+      min-height: 150px;
+      justify-self: start;
+      display: grid;
+      place-items: center;
+      gap: 10px;
+      padding: 20px;
+      border: 1px solid rgba(34, 197, 94, 0.52);
+      border-radius: 14px;
+      color: #bbf7d0;
+      background: rgba(2, 6, 23, 0.9);
+      box-shadow: inset 0 0 34px rgba(34, 197, 94, 0.1), 0 0 34px rgba(34, 197, 94, 0.12);
+      opacity: 0.36;
+      animation: compilerPracticeOutput calc(5600ms * var(--compiler-cabin-motion-scale)) ease-in-out infinite;
+      animation-play-state: var(--compiler-cabin-animation-state, running);
+    }
+
+    .practice-output span {
+      color: #dffcff;
+      font: 900 13px/1 var(--font-ui);
+    }
+
+    .practice-output b {
+      color: #bbf7d0;
+      font: 900 26px/1 var(--font-code);
+      text-shadow: 0 0 22px rgba(34, 197, 94, 0.48);
+    }
+
+    .terminal-screen[data-motion-actor="screen-output"] {
+      animation: compilerScreenOutput calc(3600ms * var(--compiler-cabin-motion-scale)) ease-in-out infinite;
+      animation-play-state: var(--compiler-cabin-animation-state, running);
+    }
+
+    .motion-caption {
+      position: absolute;
+      left: 50%;
+      bottom: -54px;
+      width: min(720px, 72vw);
+      transform: translateX(-50%);
+      color: #dffcff;
+      text-align: center;
+      font: 900 13px/1.45 var(--font-ui);
+      text-shadow: 0 0 18px rgba(56, 189, 248, 0.4);
+      opacity: 0.9;
+    }
+
+    .code-character-lab {
+      position: relative;
+      width: min(780px, 74vw);
+      height: 340px;
+    }
+
+    .source-code-strip {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 2px;
+      min-width: 430px;
+      min-height: 70px;
+      padding: 16px 22px;
+      border: 1px solid rgba(56, 189, 248, 0.48);
+      border-radius: 12px;
+      background: rgba(2, 6, 23, 0.86);
+      box-shadow: inset 0 0 34px rgba(56, 189, 248, 0.08), 0 0 38px rgba(56, 189, 248, 0.14);
+      transform: translate(-50%, -50%);
+    }
+
+    .source-code-strip::before {
+      content: "printf(\"Hello World!\");";
+      position: absolute;
+      inset: auto 22px calc(100% + 12px);
+      color: rgba(226, 232, 240, 0.4);
+      text-align: center;
+      font: 900 15px/1 var(--font-code);
+    }
+
+    .source-code-strip [data-motion-actor="code-character"] {
+      display: inline-grid;
+      place-items: center;
+      min-width: 20px;
+      height: 32px;
+      border-radius: 6px;
+      color: #f8fafc;
+      background: rgba(56, 189, 248, 0.16);
+      font: 900 20px/1 var(--font-code);
+      box-shadow: 0 0 16px rgba(56, 189, 248, 0.22);
+      animation:
+        compilerCodeCharacterFly calc(6200ms * var(--compiler-cabin-motion-scale)) cubic-bezier(0.22, 1, 0.36, 1) infinite,
+        compilerCodeCharacterGlow calc(1800ms * var(--compiler-cabin-motion-scale)) ease-in-out infinite;
+      animation-delay: calc(var(--i) * 86ms * var(--compiler-cabin-motion-scale));
+      animation-play-state: var(--compiler-cabin-animation-state, running);
+    }
+
+    .source-code-strip .text-char,
+    .source-code-strip .quote-char {
+      background: rgba(34, 197, 94, 0.18);
+      color: #bbf7d0;
+    }
+
+    .source-code-strip .paren-char {
+      background: rgba(250, 204, 21, 0.18);
+      color: #fde68a;
+    }
+
+    .source-code-strip .end-char {
+      background: rgba(250, 204, 21, 0.28);
+      color: #fef08a;
+    }
+
+    .motion-token-bucket {
+      position: absolute;
+      width: 190px;
+      min-height: 78px;
+      display: grid;
+      place-items: center;
+      gap: 4px;
+      padding: 12px;
+      border: 1px solid rgba(34, 197, 94, 0.42);
+      border-radius: 12px;
+      background: rgba(2, 6, 23, 0.78);
+      box-shadow: inset 0 0 30px rgba(34, 197, 94, 0.06), 0 0 28px rgba(34, 197, 94, 0.1);
+      animation: compilerBucketPulse calc(2400ms * var(--compiler-cabin-motion-scale)) ease-in-out infinite;
+      animation-play-state: var(--compiler-cabin-animation-state, running);
+    }
+
+    .motion-token-bucket b {
+      color: #fde68a;
+      font: 900 14px/1 var(--font-code);
+    }
+
+    .motion-token-bucket span {
+      color: #dffcff;
+      font: 800 12px/1.35 var(--font-ui);
+      text-align: center;
+    }
+
+    .command-bucket { left: 0; top: 0; }
+    .parameter-bucket { left: 50%; bottom: 0; transform: translateX(-50%); animation-delay: 500ms; }
+    .terminator-bucket { right: 0; top: 50%; transform: translateY(-50%); animation-delay: 1000ms; }
+
+    .compiler-conveyor {
+      position: relative;
+      width: min(820px, 76vw);
+      height: 330px;
+    }
+
+    .conveyor-rail {
+      position: absolute;
+      left: 4%;
+      right: 4%;
+      top: 52%;
+      height: 22px;
+      border-radius: 999px;
+      background:
+        repeating-linear-gradient(90deg, rgba(56, 189, 248, 0.2) 0 18px, rgba(2, 6, 23, 0.88) 18px 38px),
+        linear-gradient(90deg, rgba(250, 204, 21, 0.12), rgba(34, 197, 94, 0.22));
+      box-shadow: inset 0 0 18px rgba(56, 189, 248, 0.18), 0 0 30px rgba(56, 189, 248, 0.16);
+      animation: compilerConveyorMove calc(1500ms * var(--compiler-cabin-motion-scale)) linear infinite;
+      animation-play-state: var(--compiler-cabin-animation-state, running);
+    }
+
+    .moving-code-package {
+      position: absolute;
+      left: 4%;
+      top: calc(52% - 86px);
+      width: 150px;
+      min-height: 82px;
+      display: grid;
+      place-items: center;
+      padding: 10px;
+      border: 2px solid rgba(250, 204, 21, 0.72);
+      border-radius: 12px;
+      color: #fef3c7;
+      background: linear-gradient(135deg, rgba(113, 63, 18, 0.82), rgba(15, 23, 42, 0.88));
+      box-shadow: 0 0 34px rgba(250, 204, 21, 0.28);
+      animation: compilerCourierPackageTravel calc(7600ms * var(--compiler-cabin-motion-scale)) cubic-bezier(0.45, 0, 0.18, 1) infinite;
+      animation-play-state: var(--compiler-cabin-animation-state, running);
+    }
+
+    .moving-code-package span {
+      font: 900 17px/1 var(--font-code);
+    }
+
+    .moving-code-package small {
+      color: #cbd5e1;
+      font: 800 11px/1.2 var(--font-ui);
+    }
+
+    .compiler-gate {
+      position: absolute;
+      top: 26%;
+      width: 118px;
+      min-height: 110px;
+      display: grid;
+      place-items: center;
+      padding: 10px;
+      border: 1px solid rgba(56, 189, 248, 0.42);
+      border-radius: 12px;
+      background: rgba(2, 6, 23, 0.82);
+      color: #dffcff;
+      text-align: center;
+      box-shadow: inset 0 0 24px rgba(56, 189, 248, 0.08);
+    }
+
+    .compiler-gate b {
+      color: #93c5fd;
+      font: 900 15px/1 var(--font-ui);
+    }
+
+    .compiler-gate span {
+      font: 900 12px/1 var(--font-code);
+    }
+
+    .gate-lex { left: 20%; }
+    .gate-syntax { left: 45%; }
+    .gate-emit { right: 10%; }
+
+    .compiler-stamp {
+      position: absolute;
+      top: 15%;
+      width: 52px;
+      height: 52px;
+      display: grid;
+      place-items: center;
+      border: 2px solid rgba(34, 197, 94, 0.72);
+      border-radius: 50%;
+      color: #bbf7d0;
+      background: rgba(20, 83, 45, 0.38);
+      font: 900 12px/1 var(--font-code);
+      opacity: 0;
+      animation: compilerStampDrop calc(7600ms * var(--compiler-cabin-motion-scale)) ease-in-out infinite;
+      animation-play-state: var(--compiler-cabin-animation-state, running);
+    }
+
+    .stamp-one { left: 24%; animation-delay: calc(1300ms * var(--compiler-cabin-motion-scale)); }
+    .stamp-two { left: 49%; animation-delay: calc(3100ms * var(--compiler-cabin-motion-scale)); }
+    .stamp-three { right: 14%; animation-delay: calc(5000ms * var(--compiler-cabin-motion-scale)); }
+
+    .compiler-arm {
+      position: absolute;
+      left: 44%;
+      top: 7%;
+      width: 160px;
+      height: 12px;
+      border-radius: 999px;
+      background: linear-gradient(90deg, rgba(56, 189, 248, 0.15), rgba(56, 189, 248, 0.78));
+      transform-origin: 10% 50%;
+      animation: compilerArmSweep calc(2600ms * var(--compiler-cabin-motion-scale)) ease-in-out infinite;
+      animation-play-state: var(--compiler-cabin-animation-state, running);
+    }
+
+    .live-scan-board {
+      position: relative;
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 250px;
+      gap: 30px;
+      align-items: center;
+      width: min(830px, 78vw);
+    }
+
+    .scan-beam {
+      position: absolute;
+      top: 10px;
+      bottom: 10px;
+      width: 26px;
+      border-radius: 999px;
+      background: linear-gradient(90deg, transparent, rgba(56, 189, 248, 0.86), transparent);
+      box-shadow: 0 0 26px rgba(56, 189, 248, 0.65);
+      animation: compilerScannerSweep calc(4200ms * var(--compiler-cabin-motion-scale)) ease-in-out infinite;
+      animation-play-state: var(--compiler-cabin-animation-state, running);
+      pointer-events: none;
+    }
+
+    .ding-ring {
+      position: absolute;
+      right: 18px;
+      top: 50%;
+      width: 34px;
+      height: 34px;
+      border: 2px solid rgba(250, 204, 21, 0.76);
+      border-radius: 50%;
+      opacity: 0;
+      animation: compilerDingRing calc(2400ms * var(--compiler-cabin-motion-scale)) ease-out infinite;
+      animation-play-state: var(--compiler-cabin-animation-state, running);
+    }
+
+    .animated-checks li {
+      animation: compilerAnimatedCheck calc(5200ms * var(--compiler-cabin-motion-scale)) ease-in-out infinite;
+      animation-play-state: var(--compiler-cabin-animation-state, running);
+    }
+
+    .animated-checks li:nth-child(2) { animation-delay: calc(700ms * var(--compiler-cabin-motion-scale)); }
+    .animated-checks li:nth-child(3) { animation-delay: calc(1400ms * var(--compiler-cabin-motion-scale)); }
+    .animated-checks li:nth-child(4) { animation-delay: calc(2100ms * var(--compiler-cabin-motion-scale)); }
+
+    .compile-assembly-line {
+      position: relative;
+      width: min(760px, 76vw);
+      display: grid;
+      gap: 18px;
+      justify-items: center;
+    }
+
+    .animated-compile-chain span {
+      animation: compilerArtifactTravel calc(5200ms * var(--compiler-cabin-motion-scale)) ease-in-out infinite;
+      animation-play-state: var(--compiler-cabin-animation-state, running);
+    }
+
+    .animated-compile-chain span:nth-child(3) {
+      animation-delay: calc(900ms * var(--compiler-cabin-motion-scale));
+    }
+
+    .animated-compile-chain span:nth-child(5) {
+      animation-delay: calc(1800ms * var(--compiler-cabin-motion-scale));
+    }
+
+    .compile-pulse {
+      position: absolute;
+      top: 76px;
+      left: 18%;
       width: 18px;
       height: 18px;
       border-radius: 50%;
-      background: #facc15;
-      box-shadow: 0 0 24px rgba(250, 204, 21, 0.8);
-      animation: compilerCabinPacket 6000ms linear infinite;
+      background: #38bdf8;
+      box-shadow: 0 0 22px rgba(56, 189, 248, 0.76);
+      animation: compilerPulseTravel calc(3600ms * var(--compiler-cabin-motion-scale)) linear infinite;
+      animation-play-state: var(--compiler-cabin-animation-state, running);
     }
 
-    .compiler-cabin-rail span:nth-child(2) { animation-delay: 900ms; background: #38bdf8; }
-    .compiler-cabin-rail span:nth-child(3) { animation-delay: 1800ms; }
-    .compiler-cabin-rail span:nth-child(4) { animation-delay: 2700ms; background: #22c55e; }
+    .pulse-b { animation-delay: calc(450ms * var(--compiler-cabin-motion-scale)); }
+    .pulse-c { animation-delay: calc(900ms * var(--compiler-cabin-motion-scale)); }
 
-    @keyframes compilerCabinPacket {
-      from { left: 0; transform: scale(0.8); opacity: 0.2; }
-      18% { opacity: 1; }
-      to { left: 100%; transform: scale(1.18); opacity: 0; }
+    .terminal-typewriter {
+      display: inline-block;
+      width: 0;
+      max-width: 12ch;
+      overflow: hidden;
+      white-space: nowrap;
+      vertical-align: bottom;
+      animation: compilerTerminalType calc(3600ms * var(--compiler-cabin-motion-scale)) steps(12, end) infinite;
+      animation-play-state: var(--compiler-cabin-animation-state, running);
     }
 
-    .compiler-cabin-core {
-      width: min(42vw, 420px);
-      aspect-ratio: 1;
-      border: 2px solid rgba(56, 189, 248, 0.7);
-      border-radius: 50%;
-      display: grid;
-      place-items: center;
-      box-shadow: inset 0 0 56px rgba(56, 189, 248, 0.16), 0 0 64px rgba(34, 197, 94, 0.18);
+    .compiler-cabin-cinematic-stage .compiler-cabin-scene [data-motion-actor],
+    .compiler-cabin-cinematic-stage .motion-token-bucket,
+    .compiler-cabin-cinematic-stage .conveyor-rail,
+    .compiler-cabin-cinematic-stage .compiler-stamp,
+    .compiler-cabin-cinematic-stage .compiler-arm,
+    .compiler-cabin-cinematic-stage .animated-checks li,
+    .compiler-cabin-cinematic-stage .animated-compile-chain span,
+    .compiler-cabin-cinematic-stage .compile-pulse,
+    .compiler-cabin-cinematic-stage .practice-typed-code,
+    .compiler-cabin-cinematic-stage .practice-editor pre i {
+      animation-play-state: paused;
     }
 
-    .compiler-cabin-core i {
-      grid-area: 1 / 1;
-      width: 42%;
-      aspect-ratio: 1;
-      border: 2px solid rgba(250, 204, 21, 0.7);
-      border-radius: 18px;
-      animation: compilerCoreOrbit 5200ms ease-in-out infinite;
+    .compiler-cabin-cinematic-stage[data-phase="goal"] .goal-preview [data-motion-actor],
+    .compiler-cabin-cinematic-stage[data-phase="split"] .package-split [data-motion-actor],
+    .compiler-cabin-cinematic-stage[data-phase="split"] .package-split .motion-token-bucket,
+    .compiler-cabin-cinematic-stage[data-phase="explain"] .sorting-center [data-motion-actor],
+    .compiler-cabin-cinematic-stage[data-phase="explain"] .sorting-center .conveyor-rail,
+    .compiler-cabin-cinematic-stage[data-phase="explain"] .sorting-center .compiler-stamp,
+    .compiler-cabin-cinematic-stage[data-phase="explain"] .sorting-center .compiler-arm,
+    .compiler-cabin-cinematic-stage[data-phase="highlight"] .compiler-inspection [data-motion-actor],
+    .compiler-cabin-cinematic-stage[data-phase="highlight"] .compiler-inspection .animated-checks li,
+    .compiler-cabin-cinematic-stage[data-phase="practice"] .practice-demo [data-motion-actor],
+    .compiler-cabin-cinematic-stage[data-phase="practice"] .practice-demo .practice-typed-code,
+    .compiler-cabin-cinematic-stage[data-phase="practice"] .practice-demo .practice-editor pre i,
+    .compiler-cabin-cinematic-stage[data-phase="demo"] .terminal-demo [data-motion-actor],
+    .compiler-cabin-cinematic-stage[data-phase="demo"] .terminal-demo .animated-compile-chain span,
+    .compiler-cabin-cinematic-stage[data-phase="demo"] .terminal-demo .compile-pulse {
+      animation-play-state: var(--compiler-cabin-animation-state, running);
     }
 
-    .compiler-cabin-core i:nth-child(2) { width: 58%; animation-delay: 640ms; border-color: rgba(56, 189, 248, 0.7); }
-    .compiler-cabin-core i:nth-child(3) { width: 74%; animation-delay: 1280ms; border-color: rgba(34, 197, 94, 0.62); }
-
-    @keyframes compilerCoreOrbit {
-      0%, 100% { transform: rotate(0deg) scale(0.9); opacity: 0.48; }
-      50% { transform: rotate(90deg) scale(1.08); opacity: 0.92; }
+    @keyframes compilerCodeCharacterFly {
+      0%, 100% { transform: translateY(0) scale(1); opacity: 0.78; }
+      42%, 64% { transform: translateY(-10px) scale(1.08); opacity: 1; }
     }
 
-    .compiler-cabin-code {
-      position: absolute;
-      bottom: 17vh;
-      left: 50%;
-      transform: translateX(-50%);
-      margin: 0;
-      padding: 10px 16px;
-      color: #e0f2fe;
-      background: rgba(2, 6, 23, 0.42);
-      border: 1px solid rgba(56, 189, 248, 0.28);
-      border-radius: 8px;
-      box-shadow: 0 0 28px rgba(56, 189, 248, 0.18);
+    @keyframes compilerCodeCharacterGlow {
+      0%, 100% { filter: brightness(0.88); }
+      50% { filter: brightness(1.42); }
+    }
+
+    @keyframes compilerBucketPulse {
+      0%, 100% { border-color: rgba(34, 197, 94, 0.32); transform: scale(1); }
+      50% { border-color: rgba(250, 204, 21, 0.72); transform: scale(1.04); }
+    }
+
+    @keyframes compilerConveyorMove {
+      from { background-position: 0 0, 0 0; }
+      to { background-position: 76px 0, 0 0; }
+    }
+
+    @keyframes compilerCourierPackageTravel {
+      0% { transform: translateX(0) translateY(0) rotate(-2deg); }
+      22% { transform: translateX(145px) translateY(-8px) rotate(1deg); }
+      45% { transform: translateX(350px) translateY(4px) rotate(-1deg); }
+      70% { transform: translateX(570px) translateY(-6px) rotate(2deg); }
+      100% { transform: translateX(0) translateY(0) rotate(-2deg); }
+    }
+
+    @keyframes compilerStampDrop {
+      0%, 18%, 100% { opacity: 0; transform: translateY(-28px) scale(0.7); }
+      28%, 46% { opacity: 1; transform: translateY(24px) scale(1.05); }
+      58% { opacity: 0; transform: translateY(28px) scale(0.92); }
+    }
+
+    @keyframes compilerArmSweep {
+      0%, 100% { transform: rotate(-18deg); opacity: 0.46; }
+      50% { transform: rotate(18deg); opacity: 1; }
+    }
+
+    @keyframes compilerScannerSweep {
+      0%, 100% { left: 18px; opacity: 0; }
+      12% { opacity: 1; }
+      78% { left: calc(100% - 48px); opacity: 1; }
+      92% { opacity: 0; }
+    }
+
+    @keyframes compilerDingRing {
+      0%, 62% { opacity: 0; transform: translateY(-50%) scale(0.4); }
+      72% { opacity: 1; transform: translateY(-50%) scale(1); }
+      100% { opacity: 0; transform: translateY(-50%) scale(2.2); }
+    }
+
+    @keyframes compilerAnimatedCheck {
+      0%, 100% { opacity: 0.46; transform: translateX(0); }
+      38%, 62% { opacity: 1; transform: translateX(12px); color: #bbf7d0; }
+    }
+
+    @keyframes compilerArtifactTravel {
+      0%, 100% { transform: translateY(0) scale(0.96); opacity: 0.56; }
+      50% { transform: translateY(-10px) scale(1.08); opacity: 1; }
+    }
+
+    @keyframes compilerPulseTravel {
+      0% { left: 18%; opacity: 0; transform: scale(0.7); }
+      12% { opacity: 1; }
+      84% { left: 78%; opacity: 1; transform: scale(1.12); }
+      100% { left: 82%; opacity: 0; transform: scale(0.6); }
+    }
+
+    @keyframes compilerTerminalType {
+      0%, 18% { width: 0; }
+      72%, 100% { width: 12ch; }
+    }
+
+    @keyframes compilerGoalScreenPulse {
+      0%, 100% { filter: brightness(0.9); transform: scale(0.99); }
+      48%, 70% { filter: brightness(1.22); transform: scale(1.01); }
+    }
+
+    @keyframes compilerHandWrite {
+      0%, 100% { transform: translate(0, 0) rotate(-4deg); }
+      28% { transform: translate(54px, -8px) rotate(2deg); }
+      56% { transform: translate(92px, 10px) rotate(-2deg); }
+      78% { transform: translate(36px, 16px) rotate(4deg); }
+    }
+
+    @keyframes compilerCodeNoteTravel {
+      0%, 100% { transform: translate(0, 0) rotate(-2deg); filter: brightness(0.94); }
+      46% { transform: translate(14px, -7px) rotate(2deg); filter: brightness(1.18); }
+      72% { transform: translate(-6px, 5px) rotate(-1deg); filter: brightness(1.05); }
+    }
+
+    @keyframes compilerMachineProcess {
+      0%, 100% { filter: brightness(0.9); box-shadow: inset 0 0 42px rgba(56, 189, 248, 0.1), 0 0 30px rgba(56, 189, 248, 0.14); }
+      48%, 66% { filter: brightness(1.28); box-shadow: inset 0 0 52px rgba(56, 189, 248, 0.24), 0 0 52px rgba(34, 197, 94, 0.26); }
+    }
+
+    @keyframes compilerLampPass {
+      0%, 30%, 100% { border-color: rgba(34, 197, 94, 0.28); color: rgba(223, 252, 255, 0.64); transform: translateX(0); }
+      48%, 68% { border-color: rgba(34, 197, 94, 0.82); color: #bbf7d0; transform: translateX(10px); box-shadow: 0 0 22px rgba(34, 197, 94, 0.32); }
+    }
+
+    @keyframes compilerScreenOutput {
+      0%, 22% { filter: brightness(0.82); transform: scale(0.99); }
+      58%, 100% { filter: brightness(1.22); transform: scale(1); }
+    }
+
+    @keyframes compilerPracticeEditorFocus {
+      0%, 100% { border-color: rgba(56, 189, 248, 0.36); filter: brightness(0.92); }
+      18%, 52% { border-color: rgba(250, 204, 21, 0.6); filter: brightness(1.12); }
+    }
+
+    @keyframes compilerPracticeType {
+      0%, 12% { width: 0; }
+      54%, 100% { width: 22ch; }
+    }
+
+    @keyframes compilerPracticePointer {
+      0%, 50% { opacity: 0; transform: translate(-80px, -36px) rotate(14deg); }
+      62%, 78% { opacity: 1; transform: translate(0, 0) rotate(14deg); }
+      100% { opacity: 0; transform: translate(10px, 8px) rotate(14deg); }
+    }
+
+    @keyframes compilerPracticeClick {
+      0%, 58%, 100% { transform: scale(1); filter: brightness(0.92); }
+      70%, 80% { transform: scale(0.94); filter: brightness(1.18); }
+    }
+
+    @keyframes compilerPracticeOutput {
+      0%, 66% { opacity: 0.28; transform: translateY(8px); }
+      78%, 100% { opacity: 1; transform: translateY(0); }
     }
 
     .code-deconstruct-line {
@@ -12770,13 +14340,13 @@ int main(void) {
       <button id="announcementCloseButton" class="announcement-close" type="button" aria-label="关闭公告">×</button>
       <h2 id="startupAnnouncementTitle" class="startup-announcement-title">> 消息 / 本次更新</h2>
       <div id="announcementPageBody" class="startup-announcement-body">
-        <p>// v1.2.0 热修：已选过五幕记忆内核分支后，启动游戏不再反复进入剧情桥。</p>
-        <p>// 进入世界或切换场景音乐时会先清理上一条 BGM，避免两首音乐同时播放。</p>
-        <p>// v1.2.0：第一世界重构为 Main Corridor 单一走廊，学习舱按顺序点亮。</p>
-        <p>// 新玩家首次进入会打开变量立绘剧场，主角修复师与全息导师使用 1200×1600 WebP atlas。</p>
-        <p>// 《认识你的编译器》加入 1 分 30 秒交互式电影教学，printf("Hello World!"); 支持字符级解构。</p>
-        <p>// 配音管线改为 ChatTTS 系统播报 + EmotiVoice 导师语音，浏览器自带 TTS 已禁用。</p>
-        <p>// 视觉引导改为地面金色光流、变量关键词霓虹高亮、按钮中心脉冲和走廊 LED 变绿。</p>
+        <p>// v1.2.0-hotfix.2：新建角色后不再自动播放旧变量剧场，直接进入 Main Corridor 视觉引导。</p>
+        <p>// 第一学习舱不会再被绝对引导绕过，必须先播放《认识你的编译器》90 秒电影教学。</p>
+        <p>// 电影教学加入播放锁，旧石碑动画、自动新手引导和重复触发不会在第一句对白后打断流程。</p>
+        <p>// 《认识你的编译器》重做为 6 段短镜头，包含目标预览、代码纸条、编译器检查、逐字符高亮、实战运行演示。</p>
+        <p>// TTS 离线时会显示“本地服务未启动”，电影和 printf 字符解构期间会压制背景音乐。</p>
+        <p>// 变量立绘剧场与 1200×1600 WebP atlas 保留为角色演出资产，但不再抢新手开局主线。</p>
+        <p>// 第一世界仍为 Main Corridor 单一走廊，学习舱按顺序点亮，ChatTTS + EmotiVoice 管线保留。</p>
         <p>// 作者：杀戮，QQ：3424636983，官方Q群：414374792。</p>
         <p class="announcement-dismiss-hint">- 点击任意处关闭</p>
       </div>
@@ -13316,18 +14886,30 @@ int main() {
       {
         title: "> 消息 / 本次更新",
         lines: [
-          "// v1.2.0 热修：已选过五幕记忆内核分支后，启动游戏不再反复进入剧情桥。",
-          "// 进入世界或切换场景音乐时会先清理上一条 BGM，避免两首音乐同时播放。",
-          "// v1.2.0：第一世界重构为 Main Corridor 单一走廊，学习舱按顺序点亮，不再自由寻找。",
-          "// 新玩家首次进入会打开变量立绘剧场，主角修复师与全息导师使用 1200×1600 WebP atlas。",
-          "// 第一个学习舱《认识你的编译器》加入 1 分 30 秒交互式电影教学，printf(\"Hello World!\"); 支持字符级解构。",
-          "// 配音管线改为 ChatTTS 系统播报 + EmotiVoice 导师语音，浏览器自带 TTS 已禁用。",
-          "// 视觉引导改为地面金色光流、变量关键词霓虹高亮、按钮中心脉冲和走廊 LED 变绿。",
+          "// v1.2.0-hotfix.2：新建角色后不再自动播放旧变量剧场，直接进入 Main Corridor 视觉引导。",
+          "// 第一学习舱不会再被绝对引导绕过，必须先播放《认识你的编译器》90 秒电影教学。",
+          "// 电影教学加入播放锁，旧石碑动画、自动新手引导和重复触发不会在第一句对白后打断流程。",
+          "// 《认识你的编译器》重做为 6 段短镜头，包含目标预览、代码纸条、编译器检查、逐字符高亮、实战运行演示。",
+          "// TTS 离线时会显示“本地服务未启动”，电影和 printf 字符解构期间会压制背景音乐。",
+          "// 变量立绘剧场与 1200×1600 WebP atlas 保留为角色演出资产，但不再抢新手开局主线。",
+          "// 第一世界仍为 Main Corridor 单一走廊，学习舱按顺序点亮，ChatTTS + EmotiVoice 管线保留。",
           "// 作者：杀戮，QQ：3424636983，官方Q群：414374792。"
         ]
       }
     ]);
     const UPDATE_HISTORY = Object.freeze([
+      {
+        version: "v1.2.0-hotfix.2",
+        date: "2026-06-18",
+        title: "第一学习舱电影与新号入场热修",
+        details: [
+          "新建角色进入世界后不再自动播放旧变量剧场，避免老程序员只说一句就跳走的断裂体验。",
+          "绝对视觉引导激活时，第一学习舱不再直接打开编辑器，必须先进入《认识你的编译器》90 秒电影教学。",
+          "编译器电影新增播放锁，旧石碑动画 T05/T09、自动新手引导和重复触发不会在第一句对白后打断流程。",
+          "《认识你的编译器》优化为 6 段短镜头，增加实战运行演示、逐字符高亮和 0 基础因果讲解。",
+          "TTS 离线状态会明确显示本地服务未启动，电影和 printf 字符级解构期间会压制背景音乐。官方Q群：414374792。"
+        ]
+      },
       {
         version: "v1.2.0-hotfix.1",
         date: "2026-06-18",
@@ -14583,6 +16165,12 @@ return 0;`;
         emotionPrompt: "happy, excited, calm, serious, warm teacher, expressive intonation"
       })
     });
+    const OPEN_SOURCE_TTS_CACHE_MANIFEST = Object.freeze({
+      basePath: "assets/tts",
+      formats: Object.freeze(["mp3", "wav", "ogg"]),
+      system: Object.freeze({ engine: "ChatTTS", clips: Object.freeze({}) }),
+      mentor: Object.freeze({ engine: "EmotiVoice", clips: Object.freeze({}) })
+    });
     const EDGE_TTS_MODULE_URL = "https://edge-tts.com/_astro/edge-tts.CRIlRyMu.js";
     const EDGE_TTS_FEMALE_VOICES = Object.freeze({
       "zh-CN": "zh-CN-XiaoxiaoNeural",
@@ -14742,7 +16330,7 @@ return 0;`;
       directSaveAs: "reduced-by-inline-resources"
     });
     const SECURITY_CONFIG = Object.freeze({
-      expectedScriptHash: "S+NXq8CC3DvTJ3uMfCBZGGIki7JUTpPdnB+bSVKoP1o=",
+      expectedScriptHash: "pBsQZ2qWx4Q4KXOEZZSXGBPIPdM3wcMiTi8DlU+4GXs=",
       selfCheckIntervalMs: 45000,
       tamperRefreshMs: 5000,
       devToolsRefreshMs: 2000,
@@ -16364,6 +17952,10 @@ return 0;`;
       trigger(id, context = {}) {
         const definition = this.definitions[id];
         if (!definition) return Promise.resolve(false);
+        if (isCompilerCabinCinematicActive() && context?.allowDuringCompilerCabin !== true) {
+          context.onComplete?.({ skipped: true, disabled: true, id, reason: "compiler-cabin-cinematic" });
+          return Promise.resolve(false);
+        }
         if (!this.isEnabled() || (!context.force && this.hasSeen(id))) {
           this.markSeen(id);
           context.onComplete?.({ skipped: true, disabled: true, id });
@@ -18314,6 +19906,7 @@ return 0;`;
       safeMode: false,
       disabledEffects: {},
       timelineLocked: false,
+      compilerCabinCinematicActive: false,
       settings: savedSettings,
       activeChallengeId: "overview",
       editorOpen: false,
@@ -18688,6 +20281,7 @@ return 0;`;
         this.editorAudioFocus = false;
         this.dialogAudioFocus = false;
         this.dialogAudioFocusTokens = new Set();
+        this.musicSuppressionTokens = new Set();
         this.pixabayBgm = null;
         this.pixabayBgmTrack = null;
         this.pixabayBgmMode = "";
@@ -18704,7 +20298,7 @@ return 0;`;
       }
 
       hasMusicIntent() {
-        return Boolean(this.wantMusic && this.hasMusicEnabled());
+        return Boolean(this.wantMusic && this.hasMusicEnabled() && !this.isMusicSuppressed());
       }
 
       hasMusicEnabled() {
@@ -18714,6 +20308,24 @@ return 0;`;
           gameState.settings.masterVolume > 0 &&
           gameState.settings.musicVolume > 0
         );
+      }
+
+      isMusicSuppressed() {
+        return Boolean(this.musicSuppressionTokens?.size);
+      }
+
+      suppressMusic(reason = "cinematic") {
+        const token = String(reason || "cinematic");
+        this.musicSuppressionTokens.add(token);
+        this.stopBgm(0);
+        this.syncPixabayVolumes?.();
+        return true;
+      }
+
+      releaseMusicSuppression(reason = "cinematic") {
+        const token = String(reason || "cinematic");
+        this.musicSuppressionTokens.delete(token);
+        return !this.isMusicSuppressed();
       }
 
       hasExternalAudioEnabled() {
@@ -18750,6 +20362,7 @@ return 0;`;
       }
 
       getPixabayMusicVolume(track = this.pixabayBgmTrack) {
+        if (this.isMusicSuppressed()) return 0;
         const master = Math.max(0, Math.min(1.4, (gameState.settings.masterVolume || 0) / 100));
         const music = Math.max(0, Math.min(1.4, (gameState.settings.musicVolume || 0) / 100));
         const custom = track?.custom ? Math.max(0, Math.min(1.4, (gameState.settings.customMusicVolume ?? 100) / 100)) : 1;
@@ -18877,6 +20490,7 @@ return 0;`;
       }
 
       startPixabayBgm(mode = "town", forceTrackRefresh = false) {
+        if (this.isMusicSuppressed()) return false;
         if (this.externalMusicMode) return false;
         if (!this.hasMusicEnabled() || !this.hasExternalAudioEnabled()) return false;
         const now = performance.now();
@@ -19225,6 +20839,7 @@ return 0;`;
       }
 
       startLayeredBgm() {
+        if (this.isMusicSuppressed()) return false;
         if (this.externalMusicMode) return false;
         this.wantMusic = true;
         startCyberLofiBgm();
@@ -19232,6 +20847,10 @@ return 0;`;
       }
 
       ensureBgmRunning(mode = "town", forceStart = false) {
+        if (this.isMusicSuppressed()) {
+          this.stopBgm(0);
+          return false;
+        }
         if (forceStart) this.wantMusic = true;
         if (!this.hasMusicEnabled()) {
           this.stopBgm();
@@ -19376,6 +20995,10 @@ return 0;`;
       }
 
       playBgm(mode = "town") {
+        if (this.isMusicSuppressed()) {
+          this.stopBgm(0);
+          return false;
+        }
         if (this.externalMusicMode) return false;
         if (this.shouldSkipBgmRequest(mode)) return true;
         this.stopConflictingPixabayBgm(mode, 0);
@@ -19384,6 +21007,7 @@ return 0;`;
       }
 
       startSynthBgm(mode = "town") {
+        if (this.isMusicSuppressed()) return false;
         const now = performance.now();
         if (this.bgmTimer && this.bgmMode === mode) {
           this.applyMusicLayerMix(mode, this.isAudioFocusActive());
@@ -20459,6 +22083,13 @@ return 0;`;
     function pauseProceduralMusic() {
       const director = getProceduralMusicDirector();
       if (director?.musicGain && director.manager.ctx) director.musicGain.gain.setTargetAtTime(0.015, director.manager.ctx.currentTime, 0.08);
+      freezeReverbTail();
+    }
+
+    function silenceProceduralMusic() {
+      const director = getProceduralMusicDirector();
+      if (director?.musicGain && director.manager.ctx) director.musicGain.gain.setTargetAtTime(0.0001, director.manager.ctx.currentTime, 0.04);
+      director?.stop?.();
       freezeReverbTail();
     }
 
@@ -33488,6 +35119,108 @@ ${item.code}
     }
 
     let openSourceTtsAudioElement = null;
+    const openSourceTtsUnavailableUntilByEndpoint = new Map();
+
+    function createOpenSourceTtsCacheKey(pipeline) {
+      const input = `${pipeline?.engine || ""}|${pipeline?.role || ""}|${pipeline?.text || ""}`;
+      let hash = 2166136261;
+      for (let index = 0; index < input.length; index += 1) {
+        hash ^= input.charCodeAt(index);
+        hash = Math.imul(hash, 16777619);
+      }
+      return (hash >>> 0).toString(36);
+    }
+
+    function getOpenSourceTtsCacheCandidates(pipeline) {
+      const role = pipeline?.role === "system" ? "system" : "mentor";
+      const manifest = OPEN_SOURCE_TTS_CACHE_MANIFEST[role]?.clips || {};
+      const key = createOpenSourceTtsCacheKey(pipeline);
+      const engineFolder = String(pipeline?.engine || OPEN_SOURCE_TTS_CACHE_MANIFEST[role]?.engine || "tts").toLowerCase().replace(/[^a-z0-9-]+/g, "-");
+      const explicit = manifest[key];
+      const generated = OPEN_SOURCE_TTS_CACHE_MANIFEST.formats.map((format) => `${OPEN_SOURCE_TTS_CACHE_MANIFEST.basePath}/${engineFolder}/${role}-${key}.${format}`);
+      return [explicit, ...generated].filter(Boolean);
+    }
+
+    function updateOpenSourceTtsStatus(status = "idle", message = "") {
+      const stage = document.getElementById("compilerCabinCinematicStage");
+      if (stage) {
+        stage.dataset.ttsStatus = status;
+        const statusNode = stage.querySelector('[data-role="compiler-cabin-tts-status"]');
+        if (statusNode) statusNode.textContent = message || (status === "ready" ? "TTS 已连接" : status === "unavailable" ? "TTS 本地服务未启动" : "TTS 待机");
+      }
+      return status;
+    }
+
+    function markOpenSourceTtsUnavailable(pipeline, reason = "engine-unavailable") {
+      const endpoint = pipeline?.endpoint || "";
+      if (endpoint) openSourceTtsUnavailableUntilByEndpoint.set(endpoint, performance.now() + 45000);
+      updateOpenSourceTtsStatus("unavailable", `${pipeline?.engine || "TTS"} 本地服务未启动`);
+      reportSoftError?.(new Error(reason), ERROR_LEVELS.recoverable, { source: "open-source-tts", engine: pipeline?.engine, endpoint });
+      return false;
+    }
+
+    function isOpenSourceTtsEndpointCoolingDown(endpoint = "") {
+      const until = openSourceTtsUnavailableUntilByEndpoint.get(endpoint) || 0;
+      return until > performance.now();
+    }
+
+    function playAudioElementForTts(audio, url = "") {
+      return new Promise((resolve) => {
+        if (!audio) {
+          resolve(false);
+          return;
+        }
+        let settled = false;
+        const cleanup = () => {
+          audio.oncanplaythrough = null;
+          audio.onerror = null;
+          audio.onended = null;
+        };
+        const settle = (value) => {
+          if (settled) return;
+          settled = true;
+          cleanup();
+          resolve(value);
+        };
+        audio.oncanplaythrough = async () => {
+          try {
+            if (openSourceTtsAudioElement && openSourceTtsAudioElement !== audio) {
+              openSourceTtsAudioElement.pause();
+              if (openSourceTtsAudioElement.dataset.url) URL.revokeObjectURL(openSourceTtsAudioElement.dataset.url);
+            }
+            openSourceTtsAudioElement = audio;
+            audio.volume = Math.min(0.88, Math.max(0.12, (gameState.settings.sfxVolume || 80) / 110));
+            audio.onended = () => {
+              if (audio.dataset.url) URL.revokeObjectURL(audio.dataset.url);
+              updateOpenSourceTtsStatus("ready", "TTS 已播放");
+            };
+            await audio.play();
+            updateOpenSourceTtsStatus("ready", "TTS 播放中");
+            settle(true);
+          } catch (error) {
+            settle(false);
+          }
+        };
+        audio.onerror = () => settle(false);
+        trackedSetTimeout(() => settle(false), 1800, "open-source-tts-cache-timeout");
+        if (url) {
+          audio.preload = "auto";
+          audio.src = url;
+          audio.load?.();
+        }
+      });
+    }
+
+    async function playOpenSourceTtsCache(pipeline, options = {}) {
+      if (options.skipCache) return false;
+      const candidates = getOpenSourceTtsCacheCandidates(pipeline);
+      for (const url of candidates) {
+        const audio = new Audio(url);
+        const ok = await playAudioElementForTts(audio, url);
+        if (ok) return true;
+      }
+      return false;
+    }
 
     function getOpenSourceTtsEngineConfig(role = "mentor") {
       const normalized = role === "system" ? "system" : "mentor";
@@ -33523,10 +35256,16 @@ ${item.code}
       if (!phrase || gameState.settings?.voiceEnabled === false || gameState.settings?.masterVolume <= 0) return false;
       const role = options.role || (options.profile === "system" ? "system" : "mentor");
       const pipeline = createOpenSourceVoicePipeline(role, phrase, options);
+      if (await playOpenSourceTtsCache(pipeline, options)) return true;
+      if (isOpenSourceTtsEndpointCoolingDown(pipeline.endpoint)) return markOpenSourceTtsUnavailable(pipeline, "open-source-tts cooldown");
+      const controller = new AbortController();
+      const timeout = trackedSetTimeout(() => controller.abort(), options.timeoutMs || 2200, "open-source-tts-timeout");
       try {
+        updateOpenSourceTtsStatus("loading", `${pipeline.engine} 生成中`);
         const response = await fetch(pipeline.endpoint, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
+          signal: controller.signal,
           body: JSON.stringify({
             engine: pipeline.engine,
             role: pipeline.role,
@@ -33537,6 +35276,7 @@ ${item.code}
             response_format: options.responseFormat || "mp3"
           })
         });
+        timerTracker.clear(timeout);
         if (!response.ok) throw new Error(`${pipeline.engine} ${response.status}`);
         const audioBlob = await response.blob();
         if (!audioBlob.size) throw new Error(`${pipeline.engine} empty audio`);
@@ -33547,13 +35287,14 @@ ${item.code}
         }
         openSourceTtsAudioElement = new Audio(url);
         openSourceTtsAudioElement.dataset.url = url;
-        openSourceTtsAudioElement.volume = Math.min(0.82, Math.max(0.08, (gameState.settings.sfxVolume || 80) / 120));
+        openSourceTtsAudioElement.volume = Math.min(0.88, Math.max(0.12, (gameState.settings.sfxVolume || 80) / 110));
         openSourceTtsAudioElement.onended = () => URL.revokeObjectURL(url);
         await openSourceTtsAudioElement.play();
+        updateOpenSourceTtsStatus("ready", "TTS 播放中");
         return true;
       } catch (error) {
-        reportSoftError?.(error, ERROR_LEVELS.recoverable, { source: "open-source-tts", engine: pipeline.engine, endpoint: pipeline.endpoint });
-        return false;
+        timerTracker.clear(timeout);
+        return markOpenSourceTtsUnavailable(pipeline, error?.message || "open-source-tts unavailable");
       }
     }
 
@@ -33577,18 +35318,74 @@ ${item.code}
         title: "认识你的编译器",
         durationMs: 90000,
         phases: [
-          { type: "split", startMs: 0, endMs: 22000, visual: "source-code-package-splits-into-address-label-content-and-command" },
-          { type: "explain", startMs: 22000, endMs: 45000, visual: "courier-metaphor-maps-code-to-package-and-compiler-to-sorting-center" },
-          { type: "highlight", startMs: 45000, endMs: 68000, visual: "compiler-core-highlights-lexical-syntax-linking-checkpoints" },
-          { type: "demo", startMs: 68000, endMs: 90000, visual: "source-c-becomes-executable-and-terminal-output" }
+          {
+            type: "goal",
+            startMs: 0,
+            endMs: 15000,
+            title: "第1幕：先看最终目标",
+            brief: "这一关只追一个结果：让电脑屏幕显示 Hello World。",
+            note: "0 基础先不用背术语，只看因果：写一句命令，检查通过，屏幕显示结果。",
+            visual: "goal-first-screen-output"
+          },
+          {
+            type: "split",
+            startMs: 15000,
+            endMs: 30000,
+            title: "第2幕：写一句命令",
+            brief: "电脑不会猜意思。先把 printf(\"Hello World!\"); 当成你写给电脑的一句话：屏幕显示 Hello World。",
+            note: "先看动作：手把一句命令写到纸条上，纸条再被拆成要做的事、要显示的话和结束记号。",
+            visual: "source-code-package-splits-into-command-content-and-terminator"
+          },
+          {
+            type: "explain",
+            startMs: 30000,
+            endMs: 45000,
+            title: "第3幕：送进编译器检查机",
+            brief: "编译器像检查站：它先不运行代码，而是检查这句话电脑能不能听懂。",
+            note: "检查机只看三件新手最需要记住的事：认识 printf、括号配对、分号收尾。",
+            visual: "compiler-as-sorting-center-translates-human-readable-code"
+          },
+          {
+            type: "highlight",
+            startMs: 45000,
+            endMs: 60000,
+            title: "第4幕：逐字符检查亮绿灯",
+            brief: "编译器会看函数名、括号、引号和分号。哪一盏灯不亮，实操时就回去改那一处。",
+            note: "printf 是要做的事；引号里是要显示的内容；分号表示这句话说完了。",
+            visual: "printf-function-parameter-brackets-and-semicolon-highlight"
+          },
+          {
+            type: "practice",
+            startMs: 60000,
+            endMs: 75000,
+            title: "第5幕：实战演示：输入并点击运行",
+            brief: "现在看一次真正的操作：编辑器输入代码，点击运行按钮，下面出现输出。",
+            note: "下一步轮到你自己点击运行按钮；光圈会直接指到按钮中心。",
+            visual: "hands-on-editor-run-output-demo"
+          },
+          {
+            type: "demo",
+            startMs: 75000,
+            endMs: 90000,
+            title: "第6幕：轮到你：屏幕显示 Hello World",
+            brief: "全部检查通过后，程序才开始运行，电脑屏幕显示 Hello World。",
+            note: "电影结束后不会回菜单，会直接进入实操编辑器，并把光标引到运行按钮。",
+            visual: "source-c-compiler-app-exe-terminal-output"
+          }
         ],
         script: [
-          { atMs: 0, role: "mentor", emotion: "calm", text: "编程像发快递。你写下的源代码，是包裹里的说明和目的地。" },
-          { atMs: 14500, role: "mentor", emotion: "happy", text: "编译器就像智能分拣中心，它先拆开包裹，检查每个字符有没有放对。" },
-          { atMs: 31000, role: "system", emotion: "neutral", text: "第一步：拆分。关键字、函数名、括号、字符串和分号被逐一识别。" },
-          { atMs: 47500, role: "mentor", emotion: "serious", text: "如果括号没有闭合，或者分号缺失，编译器会停下来，把问题标亮。" },
-          { atMs: 63500, role: "system", emotion: "neutral", text: "第二步：转换。源代码被翻译成机器更容易执行的指令。" },
-          { atMs: 78500, role: "mentor", emotion: "excited", text: "当检查通过，程序被送达终端。现在，我们进入实操界面。" }
+          { atMs: 0, role: "mentor", emotion: "calm", text: "先看目标。我们只想让屏幕出现 Hello World。" },
+          { atMs: 8000, role: "mentor", emotion: "calm", text: "编程就是给电脑写一句它能照做的话，不是先背一堆术语。" },
+          { atMs: 16000, role: "mentor", emotion: "calm", text: "这张纸条写着 printf Hello World，意思是：请在屏幕显示 Hello World。" },
+          { atMs: 24000, role: "system", emotion: "neutral", text: "printf 是要做的事，引号里是要显示的话，最后的分号表示这句话结束。" },
+          { atMs: 31000, role: "mentor", emotion: "happy", text: "写完以后，就像发快递一样，把这张代码纸条送进编译器检查机。" },
+          { atMs: 39000, role: "system", emotion: "neutral", text: "检查机亮起三盏灯：认识 printf，括号配对，分号收尾。" },
+          { atMs: 47000, role: "mentor", emotion: "serious", text: "注意这四个位置：printf、括号、引号、分号。初学者最常错在这里。" },
+          { atMs: 55500, role: "system", emotion: "neutral", text: "如果少了右括号或分号，编译器会停下并提示错误。" },
+          { atMs: 62000, role: "mentor", emotion: "excited", text: "现在看实战演示：代码输入编辑器，然后点击运行按钮。" },
+          { atMs: 69000, role: "system", emotion: "neutral", text: "运行后，输出区出现 Hello World。这就是你马上要自己点击的流程。" },
+          { atMs: 77500, role: "mentor", emotion: "calm", text: "三盏灯都通过后，电脑才开始运行，屏幕显示 Hello World。" },
+          { atMs: 84500, role: "mentor", emotion: "calm", text: "现在进入实操。光圈会指到运行按钮，你自己点击它。" }
         ]
       };
     }
@@ -33622,51 +35419,399 @@ ${item.code}
       stage.id = "compilerCabinCinematicStage";
       stage.className = "compiler-cabin-cinematic-stage";
       stage.setAttribute("aria-hidden", "true");
+      stage.dataset.phase = "goal";
       stage.innerHTML = `
-        <div class="compiler-cabin-rail" aria-hidden="true">
-          <span></span><span></span><span></span><span></span>
+        <div class="compiler-cabin-stage-grid" aria-hidden="true">
+          <header class="compiler-cabin-header">
+            <div>
+              <p class="compiler-cabin-kicker" data-role="compiler-cabin-kicker">01 / 06 · COMPILER CABIN</p>
+              <h3 class="compiler-cabin-title" data-role="compiler-cabin-title">第1幕：先看最终目标</h3>
+              <p class="compiler-cabin-brief" data-role="compiler-cabin-brief">这一关只追一个结果：让电脑屏幕显示 Hello World。</p>
+            </div>
+            <div class="compiler-cabin-controls" aria-label="电影播放控制">
+              <button type="button" data-cinematic-rate="1" title="正常速度">1x</button>
+              <button type="button" data-cinematic-rate="2" title="两倍速度">2x</button>
+              <button type="button" data-cinematic-rate="4" title="四倍速度">4x</button>
+              <span class="compiler-cabin-rate-label" data-role="compiler-cabin-speed-label">1x</span>
+              <span class="compiler-cabin-tts-status" data-role="compiler-cabin-tts-status">TTS 待机</span>
+              <button type="button" data-cinematic-replay title="从头重播">重播</button>
+              <button type="button" data-cinematic-skip title="跳过电影进入实操">跳过</button>
+            </div>
+          </header>
+          <div class="compiler-cabin-scene goal-preview" data-phase="goal">
+            <div class="compiler-cabin-scene-inner real-animation-scene">
+              <div class="beginner-story-panel goal-flow">
+                <div class="story-step-badge">0 目标先行</div>
+                <div class="goal-screen" data-motion-actor="goal-screen">
+                  <span>最终你会看到</span>
+                  <b>Hello World!</b>
+                </div>
+                <div class="goal-road">
+                  <span>写一句命令</span>
+                  <i></i>
+                  <span>检查通过</span>
+                  <i></i>
+                  <span>屏幕显示</span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="compiler-cabin-scene package-split" data-phase="split">
+            <div class="compiler-cabin-scene-inner real-animation-scene">
+              <div class="beginner-story-panel write-flow">
+                <div class="story-step-badge">1 写一句命令</div>
+                <div class="learner-workbench">
+                  <div class="learner-avatar">你</div>
+                  <div class="writing-card">
+                    <span>你写给电脑的一句话</span>
+                    <code>printf("Hello World!");</code>
+                    <i class="learner-hand" data-motion-actor="learner-hand"></i>
+                  </div>
+                  <div class="code-note starter-note" data-motion-actor="code-note">
+                    <b>纸条</b>
+                    <span>屏幕显示 Hello World</span>
+                  </div>
+                </div>
+                <div class="code-character-lab beginner-code-breakdown">
+                  <div class="source-code-strip" aria-label="printf code character split">
+                    <span data-motion-actor="code-character" style="--i:0;--tx:-245px;--ty:-96px">p</span>
+                    <span data-motion-actor="code-character" style="--i:1;--tx:-218px;--ty:-96px">r</span>
+                    <span data-motion-actor="code-character" style="--i:2;--tx:-191px;--ty:-96px">i</span>
+                    <span data-motion-actor="code-character" style="--i:3;--tx:-164px;--ty:-96px">n</span>
+                    <span data-motion-actor="code-character" style="--i:4;--tx:-137px;--ty:-96px">t</span>
+                    <span data-motion-actor="code-character" style="--i:5;--tx:-110px;--ty:-96px">f</span>
+                    <span data-motion-actor="code-character" class="paren-char" style="--i:6;--tx:96px;--ty:-96px">(</span>
+                    <span data-motion-actor="code-character" class="quote-char" style="--i:7;--tx:-96px;--ty:92px">"</span>
+                    <span data-motion-actor="code-character" class="text-char" style="--i:8;--tx:-68px;--ty:92px">H</span>
+                    <span data-motion-actor="code-character" class="text-char" style="--i:9;--tx:-40px;--ty:92px">e</span>
+                    <span data-motion-actor="code-character" class="text-char" style="--i:10;--tx:-12px;--ty:92px">l</span>
+                    <span data-motion-actor="code-character" class="text-char" style="--i:11;--tx:16px;--ty:92px">l</span>
+                    <span data-motion-actor="code-character" class="text-char" style="--i:12;--tx:44px;--ty:92px">o</span>
+                    <span data-motion-actor="code-character" class="text-char" style="--i:13;--tx:72px;--ty:92px">!</span>
+                    <span data-motion-actor="code-character" class="quote-char" style="--i:14;--tx:100px;--ty:92px">"</span>
+                    <span data-motion-actor="code-character" class="paren-char" style="--i:15;--tx:132px;--ty:-96px">)</span>
+                    <span data-motion-actor="code-character" class="end-char" style="--i:16;--tx:238px;--ty:0">;</span>
+                  </div>
+                  <div class="motion-token-bucket command-bucket"><b>要做的事</b><span>printf：显示文字</span></div>
+                  <div class="motion-token-bucket parameter-bucket"><b>要显示的话</b><span>"Hello World!"</span></div>
+                  <div class="motion-token-bucket terminator-bucket"><b>结束记号</b><span>; 这句话说完</span></div>
+                </div>
+                <div class="motion-caption">先看懂目标：这行代码就是一张给电脑看的命令纸条。</div>
+              </div>
+            </div>
+          </div>
+          <div class="compiler-cabin-scene sorting-center" data-phase="explain">
+            <div class="compiler-cabin-scene-inner real-animation-scene">
+              <div class="beginner-story-panel machine-flow">
+                <div class="story-step-badge">2 送进编译器检查机</div>
+                <div class="compiler-conveyor">
+                <div class="conveyor-rail"></div>
+                <div class="moving-code-package" data-motion-actor="courier-package">
+                  <div class="code-note travel-note" data-motion-actor="code-note">
+                    <b>你的代码纸条</b>
+                    <span>printf("Hello World!");</span>
+                  </div>
+                </div>
+                <div class="novice-compiler-machine" data-motion-actor="compiler-machine">
+                  <b>编译器检查机</b>
+                  <span>先检查，再运行</span>
+                  <i></i>
+                </div>
+                <div class="compiler-gate gate-lex"><b>看懂命令</b><span>printf</span></div>
+                <div class="compiler-gate gate-syntax"><b>检查格式</b><span>() "" ;</span></div>
+                <div class="compiler-gate gate-emit"><b>允许运行</b><span>通过</span></div>
+                <div class="compiler-stamp stamp-one">OK</div>
+                <div class="compiler-stamp stamp-two">OK</div>
+                <div class="compiler-stamp stamp-three">RUN</div>
+                <div class="compiler-arm" aria-hidden="true"></div>
+                <div class="beginner-check-lamps">
+                  <span data-motion-actor="check-lamp"><b>1</b>认识 printf</span>
+                  <span data-motion-actor="check-lamp"><b>2</b>括号配对</span>
+                  <span data-motion-actor="check-lamp"><b>3</b>分号收尾</span>
+                </div>
+                </div>
+                <div class="motion-caption">纸条进入检查机，三盏灯都亮绿，才说明电脑能听懂。</div>
+              </div>
+            </div>
+          </div>
+          <div class="compiler-cabin-scene compiler-inspection" data-phase="highlight">
+            <div class="compiler-cabin-scene-inner real-animation-scene">
+              <div class="beginner-story-panel inspect-flow">
+              <div class="story-step-badge">3 逐字符检查</div>
+              <div class="live-scan-board">
+                <div class="inspection-code">
+                  <span class="fn-token">printf</span><span class="paren-token">(</span><span class="param-token">"Hello World!"</span><span class="paren-token">)</span><span class="end-token">;</span>
+                  <span class="scan-beam" data-motion-actor="compiler-scanner"></span>
+                  <span class="ding-ring"></span>
+                </div>
+                <ul class="compiler-checks animated-checks">
+                  <li>printf：要做“显示”</li>
+                  <li>()：把内容装进去</li>
+                  <li>" "：里面原样显示</li>
+                  <li>;：这句话结束</li>
+                </ul>
+              </div>
+              <div class="motion-caption">扫描光束一格一格扫过，亮起的位置就是实操时最该看清的字符。</div>
+              </div>
+            </div>
+          </div>
+          <div class="compiler-cabin-scene practice-demo" data-phase="practice">
+            <div class="compiler-cabin-scene-inner real-animation-scene">
+              <div class="beginner-story-panel practice-flow">
+                <div class="story-step-badge">5 实战演示</div>
+                <div class="practice-editor" data-motion-actor="practice-editor">
+                  <div class="practice-editor-title">实操编辑器</div>
+                  <pre><span class="practice-typed-code">printf("Hello World!");</span><i></i></pre>
+                </div>
+                <button type="button" class="practice-run-button" data-motion-actor="practice-run-button">运行</button>
+                <div class="practice-pointer" data-motion-actor="practice-pointer"></div>
+                <div class="practice-output" data-motion-actor="practice-output">
+                  <span>输出区</span>
+                  <b>Hello World!</b>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="compiler-cabin-scene terminal-demo" data-phase="demo">
+            <div class="compiler-cabin-scene-inner real-animation-scene">
+              <div class="beginner-story-panel result-flow">
+              <div class="story-step-badge">6 轮到你</div>
+              <div class="compile-assembly-line">
+                <div class="demo-result-label">
+                  <span>1. 你写代码</span><span>2. 检查通过</span><span>3. 程序运行</span><span>4. 屏幕显示</span>
+                </div>
+                <div class="compile-chain animated-compile-chain"><span>你写的代码</span><b>→</b><span>检查通过</span><b>→</b><span>开始运行</span></div>
+                <span class="compile-pulse pulse-a"></span>
+                <span class="compile-pulse pulse-b"></span>
+                <span class="compile-pulse pulse-c"></span>
+              <pre class="terminal-screen" data-motion-actor="screen-output">> 运行程序
+<span class="terminal-typewriter" data-motion-actor="terminal-typewriter">Hello World!</span><i class="cursor"></i></pre>
+              <div class="terminal-next-step">下一步：进入实操编辑器，发光指引会带你点击“运行”。</div>
+              </div>
+              </div>
+            </div>
+          </div>
+          <div class="compiler-cabin-phase-note"><strong data-role="compiler-cabin-phase-label">重点</strong><span data-role="compiler-cabin-phase-note">0 基础先不用背术语，只看因果：写一句命令，检查通过，屏幕显示结果。</span></div>
+          <div class="compiler-cabin-progress"><span data-role="compiler-cabin-progress-fill"></span></div>
         </div>
-        <div class="compiler-cabin-core" aria-hidden="true">
-          <i></i><i></i><i></i>
-        </div>
-        <pre class="compiler-cabin-code" aria-hidden="true">printf("Hello World!");</pre>`;
+      `;
       document.body.appendChild(stage);
       return stage;
     }
 
-    function playCompilerCabinCinematic(chapter = chapterById[FIRST_MAINLINE_CHAPTER_ID]) {
+    let compilerCabinAudioFocusState = null;
+    let activeCompilerCabinCinematicPromise = null;
+
+    function isCompilerCabinCinematicActive() {
+      return Boolean(gameState.compilerCabinCinematicActive);
+    }
+
+    function enterCompilerCabinCinematicAudioFocus() {
+      compilerCabinAudioFocusState = {
+        mode: audioManager?.bgmMode || (gameState.editorOpen ? "puzzle" : "town"),
+        wantedMusic: Boolean(audioManager?.hasMusicIntent?.())
+      };
+      if (audioManager?.suppressMusic) audioManager.suppressMusic("compiler-cabin");
+      audioManager?.stopBgm?.(0);
+      silenceProceduralMusic?.();
+      return compilerCabinAudioFocusState;
+    }
+
+    function exitCompilerCabinCinematicAudioFocus({ resumeBgm = false } = {}) {
+      const focus = compilerCabinAudioFocusState;
+      compilerCabinAudioFocusState = null;
+      if (audioManager?.releaseMusicSuppression) audioManager.releaseMusicSuppression("compiler-cabin");
+      if (resumeBgm && focus?.wantedMusic && !audioManager?.externalMusicMode) {
+        resumeProceduralMusic?.();
+        const mode = gameState.editorOpen ? "puzzle" : (focus.mode || "town");
+        trackedSetTimeout(() => audioManager?.playBgm?.(mode), 260, "compiler-cabin-resume-bgm");
+      }
+      return focus;
+    }
+
+    function getCompilerCabinPhaseIndex(timeline, playheadMs = 0) {
+      const phases = timeline?.phases || [];
+      return Math.max(0, phases.findIndex((phase, index) => {
+        const next = phases[index + 1];
+        return playheadMs >= phase.startMs && (!next || playheadMs < next.startMs);
+      }));
+    }
+
+    function updateCompilerCabinPhaseView(stage, timeline, phaseIndex = 0) {
+      const phases = timeline?.phases || [];
+      const phase = phases[phaseIndex] || phases[0];
+      if (!stage || !phase) return phase;
+      stage.dataset.phase = phase.type;
+      const phaseNo = String(phaseIndex + 1).padStart(2, "0");
+      const total = String(phases.length).padStart(2, "0");
+      const kicker = stage.querySelector('[data-role="compiler-cabin-kicker"]');
+      const title = stage.querySelector('[data-role="compiler-cabin-title"]');
+      const brief = stage.querySelector('[data-role="compiler-cabin-brief"]');
+      const label = stage.querySelector('[data-role="compiler-cabin-phase-label"]');
+      const note = stage.querySelector('[data-role="compiler-cabin-phase-note"]');
+      if (kicker) kicker.textContent = `${phaseNo} / ${total} · COMPILER CABIN`;
+      if (title) title.textContent = phase.title || timeline.title || "认识你的编译器";
+      if (brief) brief.textContent = phase.brief || "";
+      if (label) label.textContent = "重点";
+      if (note) note.textContent = phase.note || "";
+      return phase;
+    }
+
+    function setCompilerCabinProgress(stage, timeline, playheadMs = 0) {
+      const progressFill = stage?.querySelector?.('[data-role="compiler-cabin-progress-fill"]');
+      const duration = Math.max(1, Number(timeline?.durationMs) || 1);
+      const percent = Math.max(0, Math.min(100, (playheadMs / duration) * 100));
+      if (progressFill) {
+        progressFill.style.transitionDuration = "0ms";
+        progressFill.style.width = `${percent.toFixed(2)}%`;
+      }
+      return percent;
+    }
+
+    function setCompilerCabinPlaybackRate(stage, rate = 1, maxRate = 4) {
+      const normalized = Math.max(0.5, Math.min(maxRate, Number(rate) || 1));
+      if (!stage) return normalized;
+      stage.dataset.playbackRate = String(normalized);
+      stage.style.setProperty("--compiler-cabin-motion-scale", String(1 / normalized));
+      stage.style.setProperty("--compiler-cabin-animation-state", "running");
+      const label = stage.querySelector('[data-role="compiler-cabin-speed-label"]');
+      if (label) label.textContent = `${normalized % 1 === 0 ? normalized.toFixed(0) : normalized.toFixed(1)}x`;
+      stage.querySelectorAll("[data-cinematic-rate]").forEach((button) => {
+        button.classList.toggle("active", Number(button.dataset.cinematicRate) === normalized);
+      });
+      return normalized;
+    }
+
+    function ensureCompilerCabinLessonGameplayLayer() {
+      gameState.menuOpen = false;
+      gameState.paused = false;
+      audioManager.pixabayPreviewMode = "";
+      if (menuManager) menuManager.active = "game";
+      document.body.classList.remove("menu-open", "is-menu-open", "is-paused", "pause-menu-open", "is-settings-open");
+      dom.mainMenu?.classList.remove("active");
+      dom.pauseMenu?.classList.remove("active");
+      dom.settingsPanel?.classList.remove("active");
+      dom.creditsOverlay?.classList.remove("active");
+      dom.updateHistoryOverlay?.classList.remove("active");
+      dom.worldSelectOverlay?.classList.remove("active");
+      if (gameState.scene) gameState.scene.scene.resume();
+    }
+
+    function playCompilerCabinCinematic(chapter = chapterById[FIRST_MAINLINE_CHAPTER_ID], options = {}) {
+      if (activeCompilerCabinCinematicPromise && options.forceRestart !== true) return activeCompilerCabinCinematicPromise;
       const timeline = buildCompilerCabinCinematicTimeline();
       const stage = ensureCompilerCabinCinematicStage();
+      gameState.compilerCabinCinematicActive = true;
+      document.body.classList.add("compiler-cabin-cinematic-active");
+      enterCompilerCabinCinematicAudioFocus();
+      stage.dataset.phase = "split";
       stage.classList.add("active");
       stage.setAttribute("aria-hidden", "false");
       dom.cinematicLetterbox?.classList.add("active");
-      const timers = [];
-      timeline.phases.forEach((phase) => {
-        timers.push(trackedSetTimeout(() => {
-          stage.dataset.phase = phase.type;
-          stage.style.setProperty("--phase-progress", String(phase.startMs / timeline.durationMs));
-        }, phase.startMs, `compiler-cabin-phase-${phase.type}`));
-      });
-      timeline.script.forEach((line) => {
-        timers.push(trackedSetTimeout(() => {
-          if (dom.cinematicSubtitle) dom.cinematicSubtitle.textContent = line.text;
-          speakGameText(line.text, { role: line.role, profile: line.role, emotionPrompt: line.emotion, maxLength: 220 });
-        }, line.atMs, `compiler-cabin-voice-${line.atMs}`));
-      });
-      return new Promise((resolve) => {
-        timers.push(trackedSetTimeout(() => {
-          playPrintfCharacterDeconstruction('printf("Hello World!");');
+      updateCompilerCabinPhaseView(stage, timeline, 0);
+      setCompilerCabinProgress(stage, timeline, 0);
+
+      activeCompilerCabinCinematicPromise = new Promise((resolve) => {
+        const requestFrame = typeof window.requestAnimationFrame === "function"
+          ? window.requestAnimationFrame.bind(window)
+          : (callback) => trackedSetTimeout(() => callback(performance.now()), 16, "compiler-cabin-frame");
+        const cancelFrame = typeof window.cancelAnimationFrame === "function"
+          ? window.cancelAnimationFrame.bind(window)
+          : (id) => window.clearTimeout?.(id);
+        let playbackRate = setCompilerCabinPlaybackRate(stage, options.initialRate || 1, options.maxRate || 4);
+        let playheadMs = 0;
+        let lastNow = performance.now();
+        let phaseIndex = -1;
+        let frameId = 0;
+        let completed = false;
+        const spokenLines = new Set();
+        const disposers = [];
+
+        const finish = (skipped = false) => {
+          if (completed) return;
+          completed = true;
+          gameState.compilerCabinCinematicActive = false;
+          activeCompilerCabinCinematicPromise = null;
+          document.body.classList.remove("compiler-cabin-cinematic-active");
+          if (frameId) cancelFrame(frameId);
+          disposers.forEach((dispose) => dispose());
+          setCompilerCabinProgress(stage, timeline, timeline.durationMs);
           stage.classList.remove("active");
           stage.setAttribute("aria-hidden", "true");
           dom.cinematicLetterbox?.classList.remove("active");
           if (dom.cinematicSubtitle) dom.cinematicSubtitle.textContent = "";
-          resolve({ chapterId: chapter?.id || FIRST_MAINLINE_CHAPTER_ID, timeline });
-        }, timeline.durationMs, "compiler-cabin-complete"));
+          exitCompilerCabinCinematicAudioFocus({ resumeBgm: false });
+          resolve({ chapterId: chapter?.id || FIRST_MAINLINE_CHAPTER_ID, timeline, skipped });
+        };
+
+        const resetPlayback = () => {
+          playheadMs = 0;
+          phaseIndex = -1;
+          spokenLines.clear();
+          lastNow = performance.now();
+          if (dom.cinematicSubtitle) dom.cinematicSubtitle.textContent = "";
+          setCompilerCabinProgress(stage, timeline, 0);
+          updateCompilerCabinPhaseView(stage, timeline, 0);
+        };
+
+        stage.querySelectorAll("[data-cinematic-rate]").forEach((button) => {
+          const handler = () => {
+            playbackRate = setCompilerCabinPlaybackRate(stage, button.dataset.cinematicRate, options.maxRate || 4);
+            lastNow = performance.now();
+          };
+          button.addEventListener("click", handler);
+          disposers.push(() => button.removeEventListener("click", handler));
+        });
+        const replayButton = stage.querySelector("[data-cinematic-replay]");
+        if (replayButton) {
+          const handler = () => resetPlayback();
+          replayButton.addEventListener("click", handler);
+          disposers.push(() => replayButton.removeEventListener("click", handler));
+        }
+        const skipButton = stage.querySelector("[data-cinematic-skip]");
+        if (skipButton) {
+          const handler = () => finish(true);
+          skipButton.addEventListener("click", handler);
+          disposers.push(() => skipButton.removeEventListener("click", handler));
+        }
+
+        const tick = (now) => {
+          if (completed) return;
+          const delta = Math.max(0, Math.min(250, now - lastNow));
+          lastNow = now;
+          playheadMs = Math.min(timeline.durationMs, playheadMs + delta * playbackRate);
+          const nextPhaseIndex = getCompilerCabinPhaseIndex(timeline, playheadMs);
+          if (nextPhaseIndex !== phaseIndex) {
+            phaseIndex = nextPhaseIndex;
+            updateCompilerCabinPhaseView(stage, timeline, phaseIndex);
+          }
+          setCompilerCabinProgress(stage, timeline, playheadMs);
+          timeline.script.forEach((line, index) => {
+            if (spokenLines.has(index) || playheadMs < line.atMs) return;
+            spokenLines.add(index);
+            if (dom.cinematicSubtitle) dom.cinematicSubtitle.textContent = line.text;
+            if (!options.silent) {
+              speakGameText(line.text, { role: line.role, profile: line.role, emotionPrompt: line.emotion, maxLength: 220 });
+            }
+          });
+          if (playheadMs >= timeline.durationMs) {
+            finish(false);
+            return;
+          }
+          frameId = requestFrame(tick);
+        };
+
+        resetPlayback();
+        frameId = requestFrame(tick);
       });
+      return activeCompilerCabinCinematicPromise;
     }
 
     function playPrintfCharacterDeconstruction(code = 'printf("Hello World!");') {
       const timeline = buildPrintfCharacterDeconstructionTimeline(code);
+      if (audioManager?.suppressMusic) audioManager.suppressMusic("printf-deconstruction");
+      audioManager?.stopBgm?.(0);
+      silenceProceduralMusic?.();
       timeline.steps.forEach((step) => {
         trackedSetTimeout(() => {
           if (step.sfx === "ding") audioManager.ding();
@@ -33680,6 +35825,9 @@ ${item.code}
           }
         }, step.atMs, `printf-deconstruct-${step.kind}`);
       });
+      trackedSetTimeout(() => {
+        if (audioManager?.releaseMusicSuppression) audioManager.releaseMusicSuppression("printf-deconstruction");
+      }, timeline.totalMs + 1200, "printf-deconstruction-release-music");
       return timeline;
     }
 
@@ -33960,6 +36108,7 @@ ${item.code}
         !gameState.dialogOpen &&
         !gameState.noviceGuideActive &&
         !gameState.foundationGuideActive &&
+        !isCompilerCabinCinematicActive() &&
         !isGuidanceOverlayBlocking()
       );
     }
@@ -34380,16 +36529,14 @@ ${item.code}
       if (!shouldShowNewPlayerCourseIntro()) return false;
       gameState.progress.courseIntroSeen = true;
       saveProgress();
-      const startMentorDialogue = () => {
-        questManager?.acceptTask?.("collect_basic_fragments");
-        dom.questTracker?.classList.add("is-expanded");
-        renderQuestTracker();
-        showPrompt("跟随地面黄金箭头进入变量编辑器，先让 int 成为你的第一个稳定舱位。");
-        announceGameEvent("变量学舱已启动，请进入编辑器完成第一段 C 代码。");
-        showQuestProgressToast(questManager?.getTask?.("collect_basic_fragments"));
-        trackedSetTimeout(askPlayerName, 640, "cross-layer-name-prompt");
-      };
-      trackedSetTimeout(() => tutorialAnimationManager.trigger("T01_AWAKENING_PROMPT", { scene: gameState.scene }).then(() => showVariableOpeningTheater(startMentorDialogue)), 720, "new-player-course-intro");
+      questManager?.acceptTask?.("collect_basic_fragments");
+      dom.questTracker?.classList.add("is-expanded");
+      renderQuestTracker();
+      showPrompt("");
+      trackedSetTimeout(() => {
+        startAbsoluteGuide(false);
+        updateAbsoluteGuide(gameState.scene);
+      }, 720, "new-player-course-intro");
       return true;
     }
 
@@ -41738,7 +43885,7 @@ ${item.code}
     }
 
     function createLearningPodCodeInterface(scene, chapter, x, y) {
-      const sample = chapter.id === "overview" ? 'compiler("source.c") -> app.exe' : (chapter.taskExample || 'printf("Hello World!");').replace(/<[^>]*>/g, "");
+      const sample = chapter.id === "overview" ? "写代码 -> 检查 -> 屏幕显示" : (chapter.taskExample || 'printf("Hello World!");').replace(/<[^>]*>/g, "");
       const panel = scene.add.text(x, y + 56, sample, {
         fontFamily: "JetBrains Mono, Fira Code, monospace",
         fontSize: "11px",
@@ -41909,8 +44056,10 @@ ${item.code}
       showTerminalBurst(">> Success! Code Compiled.");
       scheduleAnimationOnStrongBeat("stone-pulse", () => triggerMicroGlitch());
       spawnCodeParticles(scene, objects.stone.x, objects.stone.y - 68, [objects.codePuzzle.answer, "OK", "UNLOCK"]);
-      tutorialAnimationManager.trigger("T05_STONE_CODE_FILL", { scene, chapterId });
-      tutorialAnimationManager.trigger("T09_STONE_PULSE", { scene, chapterId });
+      if (chapterId !== FIRST_MAINLINE_CHAPTER_ID) {
+        tutorialAnimationManager.trigger("T05_STONE_CODE_FILL", { scene, chapterId });
+        tutorialAnimationManager.trigger("T09_STONE_PULSE", { scene, chapterId });
+      }
     }
 
     function createNpcPatrol(scene) {
@@ -44238,7 +46387,7 @@ ${item.code}
           showCompilerSpark(window.innerWidth * 0.5, window.innerHeight * 0.5);
         }
         if (interaction?.type === "lesson") {
-          if (absoluteGuideRuntime.active) {
+          if (absoluteGuideRuntime.active && interaction.chapter.id !== FIRST_MAINLINE_CHAPTER_ID) {
             openEditor(interaction.chapter.id);
           } else if (this.chapterObjects[interaction.chapter.id]?.codePuzzle?.completed) this.startLesson(interaction.chapter.id, true);
           else tryFillStoneBlank(this, interaction.chapter.id);
@@ -44409,8 +46558,8 @@ ${item.code}
           const nearGate = objects.gate.active && Phaser.Math.Distance.BetweenPoints(this.player, objects.gate) < 92;
           const unlocked = this.isChapterUnlocked(chapter.id);
 
-          if (nearStone && !isLearned(chapter.id)) {
-            return unlocked ? { type: "lesson", chapter } : { type: "locked", chapter };
+          if (nearStone) {
+            return unlocked ? { type: "lesson", chapter, replay: isLearned(chapter.id) } : { type: "locked", chapter };
           }
 
           if (nearGate && !isLearned(chapter.id)) {
@@ -44456,13 +46605,17 @@ ${item.code}
         const pod = objects?.pod || objects?.stone;
         this.playerFrozen = true;
         showPrompt("");
-        spawnCodeParticles(this, pod.x, pod.y - 24, ["source.c", "compiler", "object", "exe"]);
+        spawnCodeParticles(this, pod.x, pod.y - 24, ["写代码", "检查", "运行", "显示"]);
         playCompilerCabinCinematic(chapter).then(() => {
           markLearned(chapter.id);
           this.markStoneLearned(chapter.id, true);
           this.revealGate(chapter.id, true);
+          ensureCompilerCabinLessonGameplayLayer();
           openEditor(chapter.id);
-          trackedSetTimeout(() => focusButtonWithVisualPulse(dom.runButton), 260, "compiler-cabin-run-button-focus");
+          trackedSetTimeout(() => {
+            playPrintfCharacterDeconstruction('printf("Hello World!");');
+            focusButtonWithVisualPulse(dom.runButton);
+          }, 420, "compiler-cabin-visible-deconstruction");
           this.playerFrozen = false;
         });
       }
