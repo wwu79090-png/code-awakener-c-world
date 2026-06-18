@@ -13,6 +13,8 @@ const indexPath = path.join(outDir, "index.html");
 const nojekyllPath = path.join(outDir, ".nojekyll");
 const vendorDir = path.join(root, "vendor");
 const vendorOutDir = path.join(outDir, "vendor");
+const assetsDir = path.join(root, "assets");
+const assetsOutDir = path.join(outDir, "assets");
 
 function createInlineProductionBundle(htmlSource) {
   const compact = String(htmlSource)
@@ -70,9 +72,13 @@ fs.writeFileSync(nojekyllPath, "");
 if (fs.existsSync(vendorDir)) {
   fs.cpSync(vendorDir, vendorOutDir, { recursive: true, force: true });
 }
+if (fs.existsSync(assetsDir)) {
+  fs.cpSync(assetsDir, assetsOutDir, { recursive: true, force: true });
+}
 
 console.log(`built ${path.relative(root, outPath)} (${gameOutput.length} bytes)`);
 console.log(`built ${path.relative(root, gamePagePath)} (${gameOutput.length} bytes)`);
 console.log(`built ${path.relative(root, officialSiteOutPath)} (${officialOutput.length} bytes)`);
 console.log(`built ${path.relative(root, indexPath)} (${officialOutput.length} bytes)`);
 if (fs.existsSync(vendorOutDir)) console.log(`copied ${path.relative(root, vendorOutDir)}`);
+if (fs.existsSync(assetsOutDir)) console.log(`copied ${path.relative(root, assetsOutDir)}`);

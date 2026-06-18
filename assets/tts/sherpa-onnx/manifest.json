@@ -1,0 +1,35 @@
+{
+  "system": {
+    "1jiur1": "assets/tts/sherpa-onnx/system-1jiur1.wav",
+    "16ja9lc": "assets/tts/sherpa-onnx/system-16ja9lc.wav",
+    "1hn9kdo": "assets/tts/sherpa-onnx/system-1hn9kdo.wav",
+    "rv9kdf": "assets/tts/sherpa-onnx/system-rv9kdf.wav",
+    "j08z6q": "assets/tts/sherpa-onnx/system-j08z6q.wav"
+  },
+  "mentor": {
+    "6ul4us": "assets/tts/sherpa-onnx/mentor-6ul4us.wav",
+    "1e6pbzs": "assets/tts/sherpa-onnx/mentor-1e6pbzs.wav",
+    "1lwe06j": "assets/tts/sherpa-onnx/mentor-1lwe06j.wav",
+    "pweh11": "assets/tts/sherpa-onnx/mentor-pweh11.wav",
+    "ekcwpr": "assets/tts/sherpa-onnx/mentor-ekcwpr.wav",
+    "hs3ywx": "assets/tts/sherpa-onnx/mentor-hs3ywx.wav",
+    "ghs64b": "assets/tts/sherpa-onnx/mentor-ghs64b.wav",
+    "wyuh52": "assets/tts/sherpa-onnx/mentor-wyuh52.wav",
+    "ve35ez": "assets/tts/sherpa-onnx/mentor-ve35ez.wav",
+    "142h458": "assets/tts/sherpa-onnx/mentor-142h458.wav",
+    "xitnpl": "assets/tts/sherpa-onnx/mentor-xitnpl.wav",
+    "c2ad4": "assets/tts/sherpa-onnx/mentor-c2ad4.wav",
+    "hy99b3": "assets/tts/sherpa-onnx/mentor-hy99b3.wav",
+    "flsp9z": "assets/tts/sherpa-onnx/mentor-flsp9z.wav",
+    "2mn21i": "assets/tts/sherpa-onnx/mentor-2mn21i.wav",
+    "yvjkjt": "assets/tts/sherpa-onnx/mentor-yvjkjt.wav",
+    "iz1o80": "assets/tts/sherpa-onnx/mentor-iz1o80.wav",
+    "1n1nejf": "assets/tts/sherpa-onnx/mentor-1n1nejf.wav",
+    "l0klxj": "assets/tts/sherpa-onnx/mentor-l0klxj.wav",
+    "1uw9yez": "assets/tts/sherpa-onnx/mentor-1uw9yez.wav",
+    "brlq41": "assets/tts/sherpa-onnx/mentor-brlq41.wav",
+    "rlih0d": "assets/tts/sherpa-onnx/mentor-rlih0d.wav",
+    "1mjy6pi": "assets/tts/sherpa-onnx/mentor-1mjy6pi.wav",
+    "jn0zcy": "assets/tts/sherpa-onnx/mentor-jn0zcy.wav"
+  }
+}

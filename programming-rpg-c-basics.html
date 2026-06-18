@@ -14,7 +14,7 @@
   <meta http-equiv="Cache-Control" content="no-store, max-age=0, must-revalidate">
   <meta http-equiv="Pragma" content="no-cache">
   <meta http-equiv="Expires" content="0">
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self' file:; base-uri 'self'; object-src 'none'; script-src 'self' 'nonce-code-awakener-inline' file: 'sha256-zomWEQ4fda4jAnyeMsuAX2RB3CVyUkrvGueijeDG4WE='; style-src 'self' 'nonce-code-awakener-inline' file: 'sha256-NXCT9rSrAb3DXe+PmxKY9vxvmr+gIUe+UxQ9nM9mX90='; style-src-attr 'unsafe-inline'; font-src 'self' file: data:; img-src 'self' file: data: blob: https://cdn.pixabay.com; media-src 'self' file: data: blob: https: http: https://cdn.pixabay.com; worker-src 'self' file: blob:; child-src 'self' file: blob:; connect-src 'self' file: http://localhost:8000 http://127.0.0.1:8000 http://localhost:9966 http://127.0.0.1:9966 http://localhost:9977 http://127.0.0.1:9977 https://cdn.pixabay.com https://pixabay.com;">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self' file:; base-uri 'self'; object-src 'none'; script-src 'self' 'nonce-code-awakener-inline' file: 'sha256-jxeMm7tvEvLwP41RwX6/XaeDvp/x4UB9PyufbedSuc8='; style-src 'self' 'nonce-code-awakener-inline' file: 'sha256-DEU2U7dOj3nHoZDG+zjiY75u08BWF61ZTw7hffhq2RE='; style-src-attr 'unsafe-inline'; font-src 'self' file: data:; img-src 'self' file: data: blob: https://cdn.pixabay.com; media-src 'self' file: data: blob: https: http: https://cdn.pixabay.com; worker-src 'self' file: blob:; child-src 'self' file: blob:; connect-src 'self' file: http://localhost:8000 http://127.0.0.1:8000 http://localhost:9966 http://127.0.0.1:9966 http://localhost:9977 http://127.0.0.1:9977 https://cdn.pixabay.com https://pixabay.com;">
   <title>代码觉醒者：Main Corridor</title>
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%23020617'/%3E%3Cpath d='M22 20 10 32l12 12M42 20l12 12-12 12' fill='none' stroke='%2300ff88' stroke-width='6' stroke-linecap='round' stroke-linejoin='round'/%3E%3Cpath d='m36 16-8 32' stroke='%2300ccff' stroke-width='5' stroke-linecap='round'/%3E%3C/svg%3E">
   <script src="./vendor/phaser.min.js"></script>
@@ -10665,8 +10665,9 @@
       display: grid;
       place-items: center;
       opacity: 0;
+      visibility: hidden;
       transform: translateY(18px) scale(0.98);
-      transition: opacity 520ms ease, transform 620ms ease;
+      transition: opacity 520ms ease, transform 620ms ease, visibility 0ms linear 520ms;
     }
 
     .compiler-cabin-cinematic-stage[data-phase="goal"] .goal-preview,
@@ -10676,7 +10677,9 @@
     .compiler-cabin-cinematic-stage[data-phase="practice"] .practice-demo,
     .compiler-cabin-cinematic-stage[data-phase="demo"] .terminal-demo {
       opacity: 1;
+      visibility: visible;
       transform: translateY(0) scale(1);
+      transition-delay: 0ms;
     }
 
     .source-envelope {
@@ -11012,6 +11015,99 @@
       box-shadow: 0 0 16px rgba(250, 204, 21, 0.14);
     }
 
+    .compiler-cabin-sequence-rail {
+      position: absolute;
+      left: 28px;
+      right: 28px;
+      top: 92px;
+      z-index: 5;
+      display: grid;
+      grid-template-columns: repeat(6, minmax(0, 1fr));
+      gap: 10px;
+      pointer-events: none;
+    }
+
+    .compiler-cabin-sequence-rail::before {
+      content: "";
+      position: absolute;
+      left: 4%;
+      right: 4%;
+      top: 18px;
+      height: 3px;
+      border-radius: 999px;
+      background: linear-gradient(90deg, rgba(250, 204, 21, 0.35), rgba(56, 189, 248, 0.35), rgba(34, 197, 94, 0.35));
+      box-shadow: 0 0 18px rgba(56, 189, 248, 0.22);
+    }
+
+    .compiler-cabin-sequence-rail span {
+      position: relative;
+      z-index: 1;
+      display: grid;
+      justify-items: center;
+      gap: 6px;
+      color: rgba(203, 213, 225, 0.66);
+      font: 900 11px/1.2 var(--font-ui);
+      text-align: center;
+      transition: color 220ms ease, transform 220ms ease, opacity 220ms ease;
+    }
+
+    .compiler-cabin-sequence-rail b {
+      display: grid;
+      place-items: center;
+      width: 36px;
+      height: 36px;
+      border: 1px solid rgba(148, 163, 184, 0.38);
+      border-radius: 50%;
+      color: #94a3b8;
+      background: rgba(2, 6, 23, 0.94);
+      box-shadow: inset 0 0 16px rgba(56, 189, 248, 0.06);
+      font: 900 15px/1 var(--font-code);
+      transition: border-color 220ms ease, color 220ms ease, background 220ms ease, box-shadow 220ms ease;
+    }
+
+    .compiler-cabin-cinematic-stage[data-phase="goal"] [data-sequence-step="goal"],
+    .compiler-cabin-cinematic-stage[data-phase="split"] [data-sequence-step="split"],
+    .compiler-cabin-cinematic-stage[data-phase="explain"] [data-sequence-step="explain"],
+    .compiler-cabin-cinematic-stage[data-phase="highlight"] [data-sequence-step="highlight"],
+    .compiler-cabin-cinematic-stage[data-phase="practice"] [data-sequence-step="practice"],
+    .compiler-cabin-cinematic-stage[data-phase="demo"] [data-sequence-step="demo"] {
+      color: #f8fafc;
+      transform: translateY(-2px);
+    }
+
+    .compiler-cabin-cinematic-stage[data-phase="goal"] [data-sequence-step="goal"] b,
+    .compiler-cabin-cinematic-stage[data-phase="split"] [data-sequence-step="split"] b,
+    .compiler-cabin-cinematic-stage[data-phase="explain"] [data-sequence-step="explain"] b,
+    .compiler-cabin-cinematic-stage[data-phase="highlight"] [data-sequence-step="highlight"] b,
+    .compiler-cabin-cinematic-stage[data-phase="practice"] [data-sequence-step="practice"] b,
+    .compiler-cabin-cinematic-stage[data-phase="demo"] [data-sequence-step="demo"] b {
+      border-color: rgba(250, 204, 21, 0.92);
+      color: #020617;
+      background: linear-gradient(135deg, #fde68a, #67e8f9);
+      box-shadow: 0 0 28px rgba(250, 204, 21, 0.42), 0 0 44px rgba(56, 189, 248, 0.18);
+    }
+
+    .compiler-cabin-cinematic-stage[data-phase="split"] [data-sequence-step="goal"] b,
+    .compiler-cabin-cinematic-stage[data-phase="explain"] [data-sequence-step="goal"] b,
+    .compiler-cabin-cinematic-stage[data-phase="explain"] [data-sequence-step="split"] b,
+    .compiler-cabin-cinematic-stage[data-phase="highlight"] [data-sequence-step="goal"] b,
+    .compiler-cabin-cinematic-stage[data-phase="highlight"] [data-sequence-step="split"] b,
+    .compiler-cabin-cinematic-stage[data-phase="highlight"] [data-sequence-step="explain"] b,
+    .compiler-cabin-cinematic-stage[data-phase="practice"] [data-sequence-step="goal"] b,
+    .compiler-cabin-cinematic-stage[data-phase="practice"] [data-sequence-step="split"] b,
+    .compiler-cabin-cinematic-stage[data-phase="practice"] [data-sequence-step="explain"] b,
+    .compiler-cabin-cinematic-stage[data-phase="practice"] [data-sequence-step="highlight"] b,
+    .compiler-cabin-cinematic-stage[data-phase="demo"] [data-sequence-step="goal"] b,
+    .compiler-cabin-cinematic-stage[data-phase="demo"] [data-sequence-step="split"] b,
+    .compiler-cabin-cinematic-stage[data-phase="demo"] [data-sequence-step="explain"] b,
+    .compiler-cabin-cinematic-stage[data-phase="demo"] [data-sequence-step="highlight"] b,
+    .compiler-cabin-cinematic-stage[data-phase="demo"] [data-sequence-step="practice"] b {
+      border-color: rgba(34, 197, 94, 0.72);
+      color: #022c22;
+      background: #86efac;
+      box-shadow: 0 0 18px rgba(34, 197, 94, 0.28);
+    }
+
     .compiler-cabin-scene-inner {
       width: min(920px, 78vw);
       min-height: 310px;
@@ -11019,7 +11115,7 @@
       gap: 22px;
       align-items: center;
       justify-items: center;
-      padding: 110px 0 118px;
+      padding: 140px 0 118px;
     }
 
     .compiler-cabin-phase-note {
@@ -12119,6 +12215,179 @@
       animation-play-state: var(--compiler-cabin-animation-state, running);
     }
 
+    .compiler-cabin-cinematic-stage .real-animation-scene {
+      padding-top: 154px;
+      padding-bottom: 94px;
+    }
+
+    .compiler-cabin-cinematic-stage .beginner-story-panel {
+      filter: saturate(0.92);
+    }
+
+    .compiler-cabin-cinematic-stage .story-step-badge {
+      left: 50%;
+      top: -12px;
+      transform: translateX(-50%);
+      box-shadow: 0 0 28px rgba(250, 204, 21, 0.26);
+    }
+
+    .package-split .code-character-lab {
+      height: 270px;
+    }
+
+    .package-split .source-code-strip {
+      top: 42%;
+      min-height: 62px;
+    }
+
+    .package-split .source-code-strip [data-motion-actor="code-character"] {
+      animation: compilerReadableCodeFocus calc(5600ms * var(--compiler-cabin-motion-scale)) ease-in-out infinite;
+      animation-delay: calc(var(--i) * 78ms * var(--compiler-cabin-motion-scale));
+      animation-play-state: var(--compiler-cabin-animation-state, running);
+    }
+
+    .motion-token-bucket {
+      overflow: visible;
+      animation: compilerReadableBucketFocus calc(5600ms * var(--compiler-cabin-motion-scale)) ease-in-out infinite;
+    }
+
+    .motion-token-bucket::before,
+    .compiler-gate::before,
+    .practice-editor::after,
+    .practice-run-button::after,
+    .practice-output::before {
+      position: absolute;
+      display: grid;
+      place-items: center;
+      width: 26px;
+      height: 26px;
+      border-radius: 50%;
+      color: #020617;
+      background: #fde68a;
+      box-shadow: 0 0 16px rgba(250, 204, 21, 0.42);
+      font: 900 12px/1 var(--font-code);
+    }
+
+    .motion-token-bucket::before {
+      left: -10px;
+      top: -10px;
+    }
+
+    .command-bucket::before { content: "1"; }
+    .parameter-bucket::before { content: "2"; }
+    .terminator-bucket::before { content: "3"; }
+
+    .command-bucket { left: 4%; top: 72%; }
+    .parameter-bucket { left: 50%; bottom: -4px; transform: translateX(-50%); animation-delay: calc(700ms * var(--compiler-cabin-motion-scale)); }
+    .terminator-bucket { right: 4%; top: 72%; transform: translateY(0); animation-delay: calc(1400ms * var(--compiler-cabin-motion-scale)); }
+
+    .machine-flow .compiler-gate {
+      opacity: 0.58;
+      animation: compilerReadableGateFocus calc(6200ms * var(--compiler-cabin-motion-scale)) ease-in-out infinite;
+      animation-play-state: var(--compiler-cabin-animation-state, running);
+    }
+
+    .compiler-gate::before {
+      content: "1";
+      left: 50%;
+      top: -14px;
+      transform: translateX(-50%);
+    }
+
+    .gate-syntax {
+      animation-delay: calc(900ms * var(--compiler-cabin-motion-scale));
+    }
+
+    .gate-syntax::before { content: "2"; }
+
+    .gate-emit {
+      animation-delay: calc(1800ms * var(--compiler-cabin-motion-scale));
+    }
+
+    .gate-emit::before { content: "3"; }
+
+    .beginner-check-lamps {
+      opacity: 0.72;
+    }
+
+    .animated-checks li {
+      grid-template-columns: 30px minmax(0, 1fr);
+      opacity: 0.5;
+    }
+
+    .animated-checks li::before {
+      display: none;
+    }
+
+    .animated-checks li b {
+      display: grid;
+      place-items: center;
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      color: #022c22;
+      background: #86efac;
+      box-shadow: 0 0 12px rgba(34, 197, 94, 0.36);
+      font: 900 12px/1 var(--font-code);
+    }
+
+    .practice-flow::before,
+    .result-flow .compile-assembly-line::before {
+      content: "";
+      position: absolute;
+      left: 12%;
+      right: 12%;
+      top: 50%;
+      height: 4px;
+      border-radius: 999px;
+      background: linear-gradient(90deg, rgba(250, 204, 21, 0.5), rgba(56, 189, 248, 0.5), rgba(34, 197, 94, 0.5));
+      box-shadow: 0 0 22px rgba(56, 189, 248, 0.22);
+      pointer-events: none;
+    }
+
+    .practice-editor::after {
+      content: "1";
+      left: 12px;
+      top: 12px;
+    }
+
+    .practice-run-button::after {
+      content: "2";
+      left: 50%;
+      top: -34px;
+      transform: translateX(-50%);
+    }
+
+    .practice-output {
+      position: relative;
+    }
+
+    .practice-output::before {
+      content: "3";
+      left: 12px;
+      top: 12px;
+    }
+
+    .pulse-b,
+    .pulse-c {
+      display: none;
+    }
+
+    @keyframes compilerReadableCodeFocus {
+      0%, 100% { transform: translateY(0) scale(1); opacity: 0.58; filter: brightness(0.82); }
+      18%, 32% { transform: translateY(-8px) scale(1.14); opacity: 1; filter: brightness(1.5); }
+    }
+
+    @keyframes compilerReadableBucketFocus {
+      0%, 100% { border-color: rgba(34, 197, 94, 0.3); opacity: 0.68; filter: brightness(0.9); }
+      35%, 55% { border-color: rgba(250, 204, 21, 0.82); opacity: 1; filter: brightness(1.3); }
+    }
+
+    @keyframes compilerReadableGateFocus {
+      0%, 100% { opacity: 0.54; transform: translateY(0) scale(0.98); }
+      36%, 58% { opacity: 1; transform: translateY(-8px) scale(1.04); border-color: rgba(250, 204, 21, 0.86); }
+    }
+
     @keyframes compilerCodeCharacterFly {
       0%, 100% { transform: translateY(0) scale(1); opacity: 0.78; }
       42%, 64% { transform: translateY(-10px) scale(1.08); opacity: 1; }
@@ -12274,6 +12543,43 @@
     @media (max-width: 768px) {
       .memory-core-skip {
         min-width: 72px;
+      }
+
+      .compiler-cabin-stage-grid {
+        width: 94vw;
+        height: 76vh;
+      }
+
+      .compiler-cabin-header {
+        left: 16px;
+        right: 16px;
+        grid-template-columns: 1fr;
+      }
+
+      .compiler-cabin-controls {
+        max-width: 100%;
+        overflow-x: auto;
+      }
+
+      .compiler-cabin-sequence-rail {
+        left: 16px;
+        right: 16px;
+        top: 132px;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        row-gap: 8px;
+      }
+
+      .compiler-cabin-sequence-rail::before {
+        display: none;
+      }
+
+      .compiler-cabin-sequence-rail b {
+        width: 28px;
+        height: 28px;
+      }
+
+      .compiler-cabin-cinematic-stage .real-animation-scene {
+        padding-top: 210px;
       }
     }
 
@@ -13785,6 +14091,11 @@
               <label class="setting-row">自定义音乐 <input id="customMusicVolumeSlider" type="range" min="0" max="140" step="1"> <span id="customMusicVolumeValue">100</span></label>
               <label class="setting-row">QQ音乐偏好 <input id="qqMusicVolumeSlider" type="range" min="0" max="140" step="1"> <span id="qqMusicVolumeValue">100</span></label>
               <label class="setting-row">音效音量 <input id="sfxVolumeSlider" type="range" min="0" max="140" step="1"> <span id="sfxVolumeValue">100</span></label>
+              <label class="setting-row">解说音量 <input id="ttsVolumeSlider" type="range" min="0" max="140" step="1"> <span id="ttsVolumeValue">100</span></label>
+              <div class="custom-music-actions">
+                <button id="testTtsButton" class="pixel-button secondary" type="button">测试 Supertonic 旁白</button>
+              </div>
+              <div id="ttsConnectionStatus" class="custom-music-status">内置离线旁白待机：可直接播放，无需浏览器 TTS。</div>
               <label class="setting-row">音乐复杂度
                 <select id="musicComplexitySelect">
                   <option value="full">完整作曲</option>
@@ -14356,12 +14667,11 @@ int main(void) {
       <button id="announcementCloseButton" class="announcement-close" type="button" aria-label="关闭公告">×</button>
       <h2 id="startupAnnouncementTitle" class="startup-announcement-title">> 消息 / 本次更新</h2>
       <div id="announcementPageBody" class="startup-announcement-body">
-        <p>// v1.2.0-hotfix.3：电影教学结束后不再卡在编辑器，实战演示会把当前任务代码逐字写入 main.c。</p>
-        <p>// 修复旧变量残留导致只输入 # 后停止的问题，运行按钮会恢复可点并保持视觉脉冲。</p>
-        <p>// 进入编辑器时跳过旧 T06 IDE 弹窗和自动 guide，电影后的实操流程不会再被二次教学覆盖。</p>
-        <p>// printf 字符级拆解固定使用当前章节示例 printf("C language");，不再被普通行解析刷新覆盖。</p>
-        <p>// TTS 改为 Supertonic 本地离线服务，默认连接 127.0.0.1:8000/v1/audio/speech，未启动时给出启动命令。</p>
-        <p>// Supertonic 中文旁白使用语言无关 na 模式，仍禁用浏览器自带 TTS，背景音乐继续被教学旁白压制。</p>
+        <p>// v1.2.0-hotfix.4：第一学习舱电影教学加入 1-6 顺序轨，当前幕唯一高亮，旧幕残影彻底隐藏。</p>
+        <p>// 教程画面改成单焦点动线：写命令、编译器检查、逐字符高亮、实战演示按顺序推进。</p>
+        <p>// 解说统一为 ChatTTS 导师女声风格缓存，27 个导师片段固定同一个 speaker embedding。</p>
+        <p>// 英文代码词会先转成可读发音，printf / Hello World / include / int main 不再断读。</p>
+        <p>// TTS 缓存脚本支持增量、--force-keys 和懒加载，无缺失时约 0.45 秒跳过。</p>
         <p>// 第一世界仍为 Main Corridor 单一走廊，学习舱按顺序点亮；本次上传未修改 Pixi 版文件。</p>
         <p>// 作者：杀戮，QQ：3424636983，官方Q群：414374792。</p>
         <p class="announcement-dismiss-hint">- 点击任意处关闭</p>
@@ -14902,18 +15212,29 @@ int main() {
       {
         title: "> 消息 / 本次更新",
         lines: [
-          "// v1.2.0-hotfix.3：电影教学结束后不再卡在编辑器，实战演示会把当前任务代码逐字写入 main.c。",
-          "// 修复旧变量残留导致只输入 # 后停止的问题，运行按钮会恢复可点并保持视觉脉冲。",
-          "// 进入编辑器时跳过旧 T06 IDE 弹窗和自动 guide，电影后的实操流程不会再被二次教学覆盖。",
-          "// printf 字符级拆解固定使用当前章节示例 printf(\"C language\");，不再被普通行解析刷新覆盖。",
-          "// TTS 改为 Supertonic 本地离线服务，默认连接 127.0.0.1:8000/v1/audio/speech，未启动时给出启动命令。",
-          "// Supertonic 中文旁白使用语言无关 na 模式，仍禁用浏览器自带 TTS，背景音乐继续被教学旁白压制。",
+          "// v1.2.0-hotfix.4：第一学习舱电影教学加入 1-6 顺序轨，当前幕唯一高亮，旧幕残影彻底隐藏。",
+          "// 教程画面改成单焦点动线：写命令、编译器检查、逐字符高亮、实战演示按顺序推进。",
+          "// 解说统一为 ChatTTS 导师女声风格缓存，27 个导师片段固定同一个 speaker embedding。",
+          "// 英文代码词会先转成可读发音，printf / Hello World / include / int main 不再断读。",
+          "// TTS 缓存脚本支持增量、--force-keys 和懒加载，无缺失时约 0.45 秒跳过。",
           "// 第一世界仍为 Main Corridor 单一走廊，学习舱按顺序点亮；本次上传未修改 Pixi 版文件。",
           "// 作者：杀戮，QQ：3424636983，官方Q群：414374792。"
         ]
       }
     ]);
     const UPDATE_HISTORY = Object.freeze([
+      {
+        version: "v1.2.0-hotfix.4",
+        date: "2026-06-19",
+        title: "电影顺序轨与单导师女声热修",
+        details: [
+          "第一学习舱电影教学新增 1-6 顺序轨，当前幕唯一高亮，非当前幕 visibility hidden，避免旧画面残影和元素混乱。",
+          "逐字符检查、编译器检查、实战演示都改成编号焦点动线，让零基础玩家知道先看哪里、后看哪里。",
+          "电影和实战教程旁白统一走 ChatTTS 导师女声风格缓存，27 个导师片段固定同一 speaker embedding。",
+          "英文代码词统一发音归一，printf、Hello World、include、int main 不再读到英文断掉。",
+          "构建流程复制 assets 到 dist/assets，TTS 生成脚本支持增量和 --force-keys。官方Q群：414374792。"
+        ]
+      },
       {
         version: "v1.2.0-hotfix.3",
         date: "2026-06-19",
@@ -16204,8 +16525,49 @@ return 0;`;
     const OPEN_SOURCE_TTS_CACHE_MANIFEST = Object.freeze({
       basePath: "assets/tts",
       formats: Object.freeze(["mp3", "wav", "ogg"]),
-      system: Object.freeze({ engine: "Supertonic", clips: Object.freeze({}) }),
-      mentor: Object.freeze({ engine: "Supertonic", clips: Object.freeze({}) })
+      system: Object.freeze({
+        engine: "ChatTTS natural cache + Sherpa-ONNX Matcha zh-baker",
+        clips: Object.freeze({
+          "1jiur1": "assets/tts/sherpa-onnx/system-1jiur1.wav",
+          "16ja9lc": "assets/tts/sherpa-onnx/system-16ja9lc.wav",
+          "1hn9kdo": "assets/tts/sherpa-onnx/system-1hn9kdo.wav",
+          "rv9kdf": "assets/tts/sherpa-onnx/system-rv9kdf.wav",
+          "j08z6q": "assets/tts/sherpa-onnx/system-j08z6q.wav"
+        })
+      }),
+      mentor: Object.freeze({
+        engine: "ChatTTS natural cache + Sherpa-ONNX Matcha zh-baker",
+        clips: Object.freeze({
+          "6ul4us": "assets/tts/chattts/mentor-6ul4us.wav",
+          "1e6pbzs": "assets/tts/sherpa-onnx/mentor-1e6pbzs.wav",
+          "1lwe06j": "assets/tts/chattts/mentor-1lwe06j.wav",
+          "pweh11": "assets/tts/chattts/mentor-pweh11.wav",
+          "rl20w9": "assets/tts/chattts/mentor-rl20w9.wav",
+          "ekcwpr": "assets/tts/chattts/mentor-ekcwpr.wav",
+          "1jxp67w": "assets/tts/chattts/mentor-1jxp67w.wav",
+          "hs3ywx": "assets/tts/chattts/mentor-hs3ywx.wav",
+          "lrrfg8": "assets/tts/chattts/mentor-lrrfg8.wav",
+          "ghs64b": "assets/tts/chattts/mentor-ghs64b.wav",
+          "1no0dwn": "assets/tts/chattts/mentor-1no0dwn.wav",
+          "wyuh52": "assets/tts/chattts/mentor-wyuh52.wav",
+          "ve35ez": "assets/tts/chattts/mentor-ve35ez.wav",
+          "142h458": "assets/tts/chattts/mentor-142h458.wav",
+          "xitnpl": "assets/tts/chattts/mentor-xitnpl.wav",
+          "c2ad4": "assets/tts/chattts/mentor-c2ad4.wav",
+          "hy99b3": "assets/tts/chattts/mentor-hy99b3.wav",
+          "flsp9z": "assets/tts/chattts/mentor-flsp9z.wav",
+          "2mn21i": "assets/tts/chattts/mentor-2mn21i.wav",
+          "yvjkjt": "assets/tts/chattts/mentor-yvjkjt.wav",
+          "iz1o80": "assets/tts/chattts/mentor-iz1o80.wav",
+          "1n1nejf": "assets/tts/chattts/mentor-1n1nejf.wav",
+          "l0klxj": "assets/tts/chattts/mentor-l0klxj.wav",
+          "1uw9yez": "assets/tts/chattts/mentor-1uw9yez.wav",
+          "brlq41": "assets/tts/chattts/mentor-brlq41.wav",
+          "rlih0d": "assets/tts/chattts/mentor-rlih0d.wav",
+          "1mjy6pi": "assets/tts/chattts/mentor-1mjy6pi.wav",
+          "jn0zcy": "assets/tts/chattts/mentor-jn0zcy.wav"
+        })
+      })
     });
     const EDGE_TTS_MODULE_URL = "https://edge-tts.com/_astro/edge-tts.CRIlRyMu.js";
     const EDGE_TTS_FEMALE_VOICES = Object.freeze({
@@ -16366,7 +16728,7 @@ return 0;`;
       directSaveAs: "reduced-by-inline-resources"
     });
     const SECURITY_CONFIG = Object.freeze({
-      expectedScriptHash: "Ek9ucn729JvBWYIQVWf1ub3f2nyf6gkV8O3dfkvziLE=",
+      expectedScriptHash: "QYsxyZXUNnG1b8OFc8NKd7DvyHzwQH0HPkJA9/hEVMU=",
       selfCheckIntervalMs: 45000,
       tamperRefreshMs: 5000,
       devToolsRefreshMs: 2000,
@@ -19632,6 +19994,7 @@ return 0;`;
       customMusicVolume: 100,
       qqMusicVolume: 100,
       sfxVolume: 115,
+      ttsVolume: 120,
       audioCalibrationVersion: AUDIO_CALIBRATION_VERSION,
       editorTheme: "dark",
       editorFontSize: 14,
@@ -19757,8 +20120,10 @@ return 0;`;
       if (Number(next.masterVolume) > 0) next.masterVolume = Math.max(Number(next.masterVolume) || 0, 120);
       if (Number(next.musicVolume) > 0) next.musicVolume = Math.max(Number(next.musicVolume) || 0, 125);
       if (Number(next.sfxVolume) > 0) next.sfxVolume = Math.max(Number(next.sfxVolume) || 0, 115);
+      if (Number(next.ttsVolume) > 0) next.ttsVolume = Math.max(Number(next.ttsVolume) || 0, 120);
       next.customMusicVolume = Math.max(0, Math.min(140, Number(next.customMusicVolume ?? 100) || 0));
       next.qqMusicVolume = Math.max(0, Math.min(140, Number(next.qqMusicVolume ?? 100) || 0));
+      next.ttsVolume = Math.max(0, Math.min(140, Number(next.ttsVolume ?? 120) || 0));
       next.audioCalibrationVersion = AUDIO_CALIBRATION_VERSION;
       return next;
     }
@@ -24220,11 +24585,15 @@ int main(void) {
       customMusicVolumeSlider: document.getElementById("customMusicVolumeSlider"),
       qqMusicVolumeSlider: document.getElementById("qqMusicVolumeSlider"),
       sfxVolumeSlider: document.getElementById("sfxVolumeSlider"),
+      ttsVolumeSlider: document.getElementById("ttsVolumeSlider"),
       masterVolumeValue: document.getElementById("masterVolumeValue"),
       musicVolumeValue: document.getElementById("musicVolumeValue"),
       customMusicVolumeValue: document.getElementById("customMusicVolumeValue"),
       qqMusicVolumeValue: document.getElementById("qqMusicVolumeValue"),
       sfxVolumeValue: document.getElementById("sfxVolumeValue"),
+      ttsVolumeValue: document.getElementById("ttsVolumeValue"),
+      testTtsButton: document.getElementById("testTtsButton"),
+      ttsConnectionStatus: document.getElementById("ttsConnectionStatus"),
       musicDynamicIsland: document.getElementById("musicDynamicIsland"),
       musicIslandCompact: document.getElementById("musicIslandCompact"),
       musicIslandExpanded: document.getElementById("musicIslandExpanded"),
@@ -33327,11 +33696,13 @@ ${item.code}
         if (dom.customMusicVolumeSlider) dom.customMusicVolumeSlider.value = gameState.settings.customMusicVolume;
         if (dom.qqMusicVolumeSlider) dom.qqMusicVolumeSlider.value = gameState.settings.qqMusicVolume;
         dom.sfxVolumeSlider.value = gameState.settings.sfxVolume;
+        if (dom.ttsVolumeSlider) dom.ttsVolumeSlider.value = gameState.settings.ttsVolume;
         dom.masterVolumeValue.textContent = gameState.settings.masterVolume;
         dom.musicVolumeValue.textContent = gameState.settings.musicVolume;
         if (dom.customMusicVolumeValue) dom.customMusicVolumeValue.textContent = gameState.settings.customMusicVolume;
         if (dom.qqMusicVolumeValue) dom.qqMusicVolumeValue.textContent = gameState.settings.qqMusicVolume;
         dom.sfxVolumeValue.textContent = gameState.settings.sfxVolume;
+        if (dom.ttsVolumeValue) dom.ttsVolumeValue.textContent = gameState.settings.ttsVolume;
         if (dom.uiProfileSelect) dom.uiProfileSelect.value = gameState.settings.uiProfile || UI_PROFILES.default;
         dom.editorThemeSelect.value = gameState.settings.editorTheme;
         if (dom.editorFontSizeSlider) dom.editorFontSizeSlider.value = gameState.settings.editorFontSize || 14;
@@ -33428,6 +33799,7 @@ ${item.code}
       if (key === "musicComplexity" && value !== "off") getProceduralMusicDirector()?.start(gameState.worldSeed);
       if (key === "editorFontSize") applyEditorFontSize(value);
       if (key === "editorHighContrast") setEditorHighContrast(Boolean(value));
+      if (key === "ttsVolume" && openSourceTtsAudioElement) openSourceTtsAudioElement.volume = getTtsVolumeScale();
       if (key === "anonymousTelemetryEnabled") {
         recordTelemetryEvent("settings.telemetry", { enabled: Boolean(value) });
         flushTelemetryQueue();
@@ -35157,8 +35529,32 @@ ${item.code}
     let openSourceTtsAudioElement = null;
     const openSourceTtsUnavailableUntilByEndpoint = new Map();
 
+    function getTtsVolumeScale() {
+      if (gameState.settings?.voiceEnabled === false) return 0;
+      const master = Math.max(0, Math.min(1.4, Number(gameState.settings?.masterVolume ?? 100) / 100));
+      const narration = Math.max(0, Math.min(1.4, Number(gameState.settings?.ttsVolume ?? 120) / 100));
+      return Math.max(0, Math.min(0.95, master * narration * 0.72));
+    }
+
+    function normalizeTtsPronunciationText(text = "") {
+      return String(text || "")
+        .replace(/printf\s*\("Hello World!"\);/gi, "普林特艾夫，括号，引号，哈喽，沃德，引号，括号，分号")
+        .replace(/printf/gi, "普林特艾夫")
+        .replace(/Hello\s+World!?/gi, "哈喽，沃德")
+        .replace(/#include/gi, "井号，因克鲁德")
+        .replace(/\binclude\b/gi, "因克鲁德")
+        .replace(/\bint\s+main\b/gi, "主函数")
+        .replace(/\bmain\b/gi, "主函数")
+        .replace(/\bint\b/gi, "整数类型")
+        .replace(/\bSupertonic\b/gi, "苏帕托尼克")
+        .replace(/\bC\s*语言\b/g, "西语言")
+        .replace(/\bC\b/g, "字母西")
+        .replace(/\s+/g, " ")
+        .trim();
+    }
+
     function createOpenSourceTtsCacheKey(pipeline) {
-      const input = `${pipeline?.engine || ""}|${pipeline?.role || ""}|${pipeline?.text || ""}`;
+      const input = `${pipeline?.engine || ""}|${pipeline?.role || ""}|${pipeline?.cacheText || pipeline?.text || ""}`;
       let hash = 2166136261;
       for (let index = 0; index < input.length; index += 1) {
         hash ^= input.charCodeAt(index);
@@ -35178,21 +35574,36 @@ ${item.code}
     }
 
     function updateOpenSourceTtsStatus(status = "idle", message = "") {
+      const fallbackMessage = message || (status === "ready" ? "内置离线旁白已就绪" : status === "unavailable" ? "Supertonic 离线服务未启动" : "内置离线旁白待机");
       const stage = document.getElementById("compilerCabinCinematicStage");
       if (stage) {
         stage.dataset.ttsStatus = status;
         const statusNode = stage.querySelector('[data-role="compiler-cabin-tts-status"]');
-        if (statusNode) statusNode.textContent = message || (status === "ready" ? "Supertonic 已连接" : status === "unavailable" ? "Supertonic 离线服务未启动" : "Supertonic 待机");
+        if (statusNode) statusNode.textContent = fallbackMessage;
+      }
+      if (dom.ttsConnectionStatus) {
+        dom.ttsConnectionStatus.dataset.ttsStatus = status;
+        dom.ttsConnectionStatus.textContent = fallbackMessage;
       }
       return status;
     }
 
-    function markOpenSourceTtsUnavailable(pipeline, reason = "engine-unavailable") {
+    async function playBundledOfflineTtsFallback(pipeline, reason = "engine-unavailable") {
+      const fallbackPipeline = createOpenSourceVoicePipeline("system", "离线语音服务未启动，已切换为内置旁白缓存。", {
+        endpoint: pipeline?.endpoint,
+        emotionPrompt: "calm, concise offline fallback notice"
+      });
+      const played = await playOpenSourceTtsCache(fallbackPipeline, {});
+      if (played) updateOpenSourceTtsStatus("ready", "Sherpa-ONNX 内置旁白缓存播放中");
+      return played;
+    }
+
+    async function markOpenSourceTtsUnavailable(pipeline, reason = "engine-unavailable") {
       const endpoint = pipeline?.endpoint || "";
       if (endpoint) openSourceTtsUnavailableUntilByEndpoint.set(endpoint, performance.now() + 45000);
       updateOpenSourceTtsStatus("unavailable", "Supertonic 离线服务未启动：pip install 'supertonic[serve]' 后运行 supertonic serve");
       reportSoftError?.(new Error(reason), ERROR_LEVELS.recoverable, { source: "open-source-tts", engine: pipeline?.engine, endpoint });
-      return false;
+      return playBundledOfflineTtsFallback(pipeline, reason);
     }
 
     function isOpenSourceTtsEndpointCoolingDown(endpoint = "") {
@@ -35209,8 +35620,9 @@ ${item.code}
         let settled = false;
         const cleanup = () => {
           audio.oncanplaythrough = null;
+          audio.oncanplay = null;
+          audio.onloadeddata = null;
           audio.onerror = null;
-          audio.onended = null;
         };
         const settle = (value) => {
           if (settled) return;
@@ -35225,24 +35637,27 @@ ${item.code}
               if (openSourceTtsAudioElement.dataset.url) URL.revokeObjectURL(openSourceTtsAudioElement.dataset.url);
             }
             openSourceTtsAudioElement = audio;
-            audio.volume = Math.min(0.88, Math.max(0.12, (gameState.settings.sfxVolume || 80) / 110));
+            audio.volume = getTtsVolumeScale();
             audio.onended = () => {
               if (audio.dataset.url) URL.revokeObjectURL(audio.dataset.url);
-              updateOpenSourceTtsStatus("ready", "TTS 已播放");
+              updateOpenSourceTtsStatus("ready", "内置离线旁白已就绪");
             };
             await audio.play();
-            updateOpenSourceTtsStatus("ready", "TTS 播放中");
+            updateOpenSourceTtsStatus("ready", "内置离线旁白播放中");
             settle(true);
           } catch (error) {
             settle(false);
           }
         };
+        audio.oncanplay = audio.oncanplaythrough;
+        audio.onloadeddata = audio.oncanplaythrough;
         audio.onerror = () => settle(false);
-        trackedSetTimeout(() => settle(false), 1800, "open-source-tts-cache-timeout");
+        trackedSetTimeout(() => settle(false), 4200, "open-source-tts-cache-timeout");
         if (url) {
           audio.preload = "auto";
           audio.src = url;
           audio.load?.();
+          if (audio.readyState >= 2) audio.oncanplaythrough?.();
         }
       });
     }
@@ -35274,10 +35689,14 @@ ${item.code}
     function createOpenSourceVoicePipeline(role = "mentor", text = "", options = {}) {
       const engineConfig = getOpenSourceTtsEngineConfig(role);
       const emotionPrompt = options.emotionPrompt || engineConfig.emotionPrompt;
+      const rawText = String(text || "").trim();
+      const spokenText = options.spokenText || normalizeTtsPronunciationText(rawText);
       return {
         role: engineConfig.role,
         engine: engineConfig.engine,
-        text: String(text || "").trim(),
+        text: spokenText,
+        cacheText: rawText,
+        rawText,
         endpoint: options.endpoint || getOpenSourceTtsEndpoint(engineConfig),
         model: options.model || engineConfig.model || "supertonic-3",
         lang: options.lang || engineConfig.lang || "na",
@@ -35328,13 +35747,17 @@ ${item.code}
 
     async function speakWithOpenSourceTts(text = "", options = {}) {
       const phrase = String(text || "").trim().slice(0, options.maxLength || 180);
-      if (!phrase || gameState.settings?.voiceEnabled === false || gameState.settings?.masterVolume <= 0) return false;
+      if (!phrase || gameState.settings?.voiceEnabled === false || gameState.settings?.masterVolume <= 0 || getTtsVolumeScale() <= 0) return false;
       const role = options.role || (options.profile === "system" ? "system" : "mentor");
       const pipeline = createOpenSourceVoicePipeline(role, phrase, options);
       if (await playOpenSourceTtsCache(pipeline, options)) return true;
-      if (isOpenSourceTtsEndpointCoolingDown(pipeline.endpoint)) return markOpenSourceTtsUnavailable(pipeline, "open-source-tts cooldown");
+      if (!options.force && !options.allowRemoteGeneration) {
+        updateOpenSourceTtsStatus("idle", "该句暂无内置离线旁白缓存，已跳过实时生成");
+        return false;
+      }
+      if (!options.force && isOpenSourceTtsEndpointCoolingDown(pipeline.endpoint)) return markOpenSourceTtsUnavailable(pipeline, "open-source-tts cooldown");
       const controller = new AbortController();
-      const timeout = trackedSetTimeout(() => controller.abort(), options.timeoutMs || 2200, "open-source-tts-timeout");
+      const timeout = trackedSetTimeout(() => controller.abort(), options.timeoutMs || 15000, "open-source-tts-timeout");
       try {
         updateOpenSourceTtsStatus("loading", `${pipeline.engine} 生成中`);
         const response = await fetch(pipeline.endpoint, {
@@ -35354,7 +35777,7 @@ ${item.code}
         }
         openSourceTtsAudioElement = new Audio(url);
         openSourceTtsAudioElement.dataset.url = url;
-        openSourceTtsAudioElement.volume = Math.min(0.88, Math.max(0.12, (gameState.settings.sfxVolume || 80) / 110));
+        openSourceTtsAudioElement.volume = getTtsVolumeScale();
         openSourceTtsAudioElement.onended = () => URL.revokeObjectURL(url);
         await openSourceTtsAudioElement.play();
         updateOpenSourceTtsStatus("ready", "TTS 播放中");
@@ -35373,6 +35796,23 @@ ${item.code}
         }
       });
       return true;
+    }
+
+    async function testOpenSourceTtsConnection() {
+      const phrase = "Supertonic 本地离线旁白测试：如果你听到这句话，说明解说已经连接。";
+      const pipeline = createOpenSourceVoicePipeline("mentor", phrase);
+      if (pipeline.endpoint) openSourceTtsUnavailableUntilByEndpoint.delete(pipeline.endpoint);
+      updateOpenSourceTtsStatus("loading", "Supertonic 测试生成中...");
+      const ok = await speakWithOpenSourceTts("Supertonic 本地离线旁白测试", {
+        role: "mentor",
+        profile: "mentor",
+        maxLength: 80,
+        force: true,
+        timeoutMs: 15000,
+        emotionPrompt: "warm teacher, clear test voice"
+      });
+      updateOpenSourceTtsStatus(ok ? "ready" : "unavailable", ok ? "Supertonic 测试播放中" : "Supertonic 离线服务未启动：先运行 supertonic serve");
+      return ok;
     }
 
     function speakNoviceGuideLine(text = "") {
@@ -35441,18 +35881,18 @@ ${item.code}
           }
         ],
         script: [
-          { atMs: 0, role: "mentor", emotion: "calm", text: "先看目标。我们只想让屏幕出现 Hello World。" },
-          { atMs: 8000, role: "mentor", emotion: "calm", text: "编程就是给电脑写一句它能照做的话，不是先背一堆术语。" },
-          { atMs: 16000, role: "mentor", emotion: "calm", text: "这张纸条写着 printf Hello World，意思是：请在屏幕显示 Hello World。" },
-          { atMs: 24000, role: "system", emotion: "neutral", text: "printf 是要做的事，引号里是要显示的话，最后的分号表示这句话结束。" },
-          { atMs: 31000, role: "mentor", emotion: "happy", text: "写完以后，就像发快递一样，把这张代码纸条送进编译器检查机。" },
-          { atMs: 39000, role: "system", emotion: "neutral", text: "检查机亮起三盏灯：认识 printf，括号配对，分号收尾。" },
-          { atMs: 47000, role: "mentor", emotion: "serious", text: "注意这四个位置：printf、括号、引号、分号。初学者最常错在这里。" },
-          { atMs: 55500, role: "system", emotion: "neutral", text: "如果少了右括号或分号，编译器会停下并提示错误。" },
-          { atMs: 62000, role: "mentor", emotion: "excited", text: "现在看实战演示：代码输入编辑器，然后点击运行按钮。" },
-          { atMs: 69000, role: "system", emotion: "neutral", text: "运行后，输出区出现 Hello World。这就是你马上要自己点击的流程。" },
-          { atMs: 77500, role: "mentor", emotion: "calm", text: "三盏灯都通过后，电脑才开始运行，屏幕显示 Hello World。" },
-          { atMs: 84500, role: "mentor", emotion: "calm", text: "现在进入实操。光圈会指到运行按钮，你自己点击它。" }
+          { atMs: 0, role: "mentor", emotion: "calm", text: "先看最终目标。你不是在背代码，你只是让屏幕出现 Hello World。" },
+          { atMs: 8000, role: "mentor", emotion: "calm", text: "电脑不会猜你的意思，所以我们要写一句非常明确的命令给它。" },
+          { atMs: 16000, role: "mentor", emotion: "calm", text: "这句命令是 printf。你先把它理解成：请把一段文字显示到屏幕。" },
+          { atMs: 24000, role: "mentor", emotion: "calm", text: "引号里面的 Hello World 是要显示的文字；分号表示这一句到这里结束。" },
+          { atMs: 31000, role: "mentor", emotion: "happy", text: "这就像发快递：写好的代码是包裹，编译器检查机先确认地址和格式都对。" },
+          { atMs: 39000, role: "mentor", emotion: "calm", text: "检查机先问三件事：认识 printf 吗，括号配对吗，最后有分号吗。" },
+          { atMs: 47000, role: "mentor", emotion: "serious", text: "初学者先盯住四个位置：函数名、括号、引号里的文字、最后的分号。" },
+          { atMs: 55500, role: "mentor", emotion: "calm", text: "如果少了右括号或分号，编译器会停下。它不是惩罚你，而是在指出哪一处没写完。" },
+          { atMs: 62000, role: "mentor", emotion: "excited", text: "现在看实战演示：编辑器会先写工具箱，再写 main 主函数，最后写 printf。" },
+          { atMs: 69000, role: "mentor", emotion: "calm", text: "点击运行后，编译器检查通过，输出区才会出现 Hello World。" },
+          { atMs: 77500, role: "mentor", emotion: "calm", text: "所以完整顺序是：写代码，编译器检查，通过后运行，屏幕显示结果。" },
+          { atMs: 84500, role: "mentor", emotion: "calm", text: "现在进入实操。你只需要跟着光圈，点击运行按钮，亲眼看到结果。" }
         ]
       };
     }
@@ -35468,13 +35908,15 @@ ${item.code}
       return {
         id: "printf-character-deconstruction",
         code: source,
-        totalMs: 26000,
+        totalMs: 36000,
         steps: [
-          { atMs: 0, kind: "overall", token: source, range: [0, source.length], narration: "整行代码的意思是：让终端显示 Hello World。" },
-          { atMs: 5200, kind: "function", token: "printf", range: [printfStart, printfStart + 6], effect: "circle-zoom", narration: "printf 是核心函数，负责打印输出。" },
-          { atMs: 10400, kind: "brackets", token: "()", range: [openParen, closeParen + 1], effect: "bracket-flash", narration: "括号告诉函数：里面这些内容是参数。" },
-          { atMs: 15000, kind: "parameters", token: source.slice(firstQuote, lastQuote + 1), range: [firstQuote, lastQuote + 1], effect: "quote-flash", narration: "双引号包住的文字，会原样出现在屏幕上。" },
-          { atMs: 21000, kind: "terminator", token: ";", range: [semicolon, semicolon + 1], effect: "stop-emphasis", sfx: "ding", narration: "分号表示这条语句结束。听到叮声，编译器就知道可以收尾。" }
+          { atMs: 0, kind: "overall", token: source, range: [0, source.length], narration: "先看整句。它只有一个目标：让屏幕显示 Hello World。" },
+          { atMs: 5000, kind: "function", token: "printf", range: [printfStart, printfStart + 6], effect: "circle-zoom", narration: "printf 是函数名。函数就是已经准备好的小工具，这个工具负责输出文字。" },
+          { atMs: 10000, kind: "open-paren", token: "(", range: [openParen, openParen + 1], effect: "bracket-flash", narration: "左括号表示：我要开始告诉这个工具，具体输出什么内容。" },
+          { atMs: 14500, kind: "parameters", token: source.slice(firstQuote, lastQuote + 1), range: [firstQuote, lastQuote + 1], effect: "quote-flash", narration: "双引号里面的 Hello World 是普通文字，会原样出现在屏幕上。" },
+          { atMs: 20500, kind: "close-paren", token: ")", range: [closeParen, closeParen + 1], effect: "bracket-flash", narration: "右括号表示：给 printf 的内容到这里结束。" },
+          { atMs: 26000, kind: "terminator", token: ";", range: [semicolon, semicolon + 1], effect: "stop-emphasis", sfx: "ding", narration: "分号表示这一句结束。听到叮声，就记住：C 语言每句命令通常要收尾。" },
+          { atMs: 32000, kind: "recap", token: source, range: [0, source.length], effect: "circle-zoom", narration: "连起来就是：使用 printf，把引号里的文字送到屏幕，然后用分号结束。" }
         ]
       };
     }
@@ -35489,10 +35931,64 @@ ${item.code}
       return printfLine || 'printf("Hello World!");';
     }
 
+    let compilerHandsOnDemoSession = null;
+
+    function cancelCompilerCabinHandsOnEditorDemo(reason = "cancelled") {
+      const session = compilerHandsOnDemoSession;
+      if (!session) return false;
+      session.cancelled = true;
+      session.timers.forEach((timerId) => timerTracker.clear(timerId));
+      session.timers.clear();
+      compilerHandsOnDemoSession = null;
+      document.body.classList.remove("compiler-hands-on-demo-active");
+      dom.runButton?.classList?.remove("compiler-hands-on-demo-ready");
+      if (dom.runButton) dom.runButton.disabled = false;
+      audioManager?.releaseMusicSuppression?.("compiler-hands-on-demo");
+      session.resolve?.(false);
+      return true;
+    }
+
+    function scheduleCompilerHandsOnTimer(session, callback, delay, label) {
+      const timerId = trackedSetTimeout(() => {
+        session.timers.delete(timerId);
+        if (session.cancelled || compilerHandsOnDemoSession !== session) return;
+        callback();
+      }, delay, label);
+      session.timers.add(timerId);
+      return timerId;
+    }
+
+    function playCompilerCabinHandsOnNarration(stage = "start", chapter = chapterById[FIRST_MAINLINE_CHAPTER_ID]) {
+      return speakGameText(({
+        start: "现在进入实战演示。先别急着记代码，我们只看电脑从哪里开始、最后显示什么。",
+        include: "第一行 include 是准备工具箱。它告诉编译器：等会儿我要用屏幕输出功能。",
+        main: "int main 是程序入口。你可以把它理解成电脑开始执行的第一扇门。",
+        printf: "printf 是这一关的核心动作：往屏幕打印一句话。现在只记住，它负责输出。",
+        string: "双引号里面的 Hello World，是要原样显示到屏幕上的文字，不是命令。",
+        semicolon: "最后这个分号表示这一句说完了。少了它，编译器就会停下来提醒你。",
+        finish: "代码写完了。现在只做一个动作：看发光光圈，点击运行按钮，让编译器检查并运行。"
+      })[stage] || "现在进入实战演示。请看编辑器里的代码逐字写入。", {
+        role: "mentor",
+        profile: "mentor",
+        maxLength: 220,
+        timeoutMs: 15000,
+        emotionPrompt: stage === "finish" ? "warm teacher, confident and clear" : "warm teacher, slow beginner explanation",
+        chapterId: chapter?.id || FIRST_MAINLINE_CHAPTER_ID
+      });
+    }
+
     function playCompilerCabinHandsOnEditorDemo(chapter) {
       if (!dom.codeInput || !dom.runButton) return Promise.resolve(false);
       const target = String(EXACT_TASK_CODE_BY_ID[chapter?.id] || chapter?.files?.["main.c"] || getCompilerCabinDeconstructionCode(chapter) || "").trimEnd();
       if (!target) return Promise.resolve(false);
+      cancelCompilerCabinHandsOnEditorDemo("restart");
+      const session = {
+        chapterId: chapter?.id || FIRST_MAINLINE_CHAPTER_ID,
+        cancelled: false,
+        timers: new Set(),
+        resolve: null
+      };
+      compilerHandsOnDemoSession = session;
       document.body.classList.add("compiler-hands-on-demo-active");
       dom.runButton.disabled = true;
       dom.runButton.classList.remove("compiler-hands-on-demo-ready");
@@ -35508,26 +36004,61 @@ ${item.code}
       scheduleEditorVisuals();
       setOutput("实战演示：导师正在把刚才的命令写进真实编辑器。看完后点击运行。", "info");
       queueEditorFlowMessage("实战演示：这不是图片，代码会逐字写入 main.c。", true);
+      playCompilerCabinHandsOnNarration("start", chapter);
       return new Promise((resolve) => {
+        session.resolve = resolve;
         let index = 0;
+        let includeNarrated = false;
+        let mainNarrated = false;
+        let printfNarrated = false;
+        let stringNarrated = false;
+        let semicolonNarrated = false;
         const step = () => {
+          if (session.cancelled || compilerHandsOnDemoSession !== session || !gameState.editorOpen || gameState.activeChallengeId !== session.chapterId) {
+            cancelCompilerCabinHandsOnEditorDemo("editor-left");
+            return;
+          }
           index = Math.min(target.length, index + 1);
           dom.codeInput.value = target.slice(0, index);
           dom.codeInput.selectionStart = index;
           dom.codeInput.selectionEnd = index;
           files["main.c"] = dom.codeInput.value;
           editorHistory.lastValue = dom.codeInput.value;
+          if (!includeNarrated && /#include\s*</.test(dom.codeInput.value)) {
+            includeNarrated = true;
+            playCompilerCabinHandsOnNarration("include", chapter);
+          }
+          if (!mainNarrated && /int\s+main\s*\(/.test(dom.codeInput.value)) {
+            mainNarrated = true;
+            playCompilerCabinHandsOnNarration("main", chapter);
+          }
+          if (!printfNarrated && /printf\s*\(/.test(dom.codeInput.value)) {
+            printfNarrated = true;
+            playCompilerCabinHandsOnNarration("printf", chapter);
+          }
+          if (!stringNarrated && /"Hello World!"/.test(dom.codeInput.value)) {
+            stringNarrated = true;
+            playCompilerCabinHandsOnNarration("string", chapter);
+          }
+          if (!semicolonNarrated && /printf\s*\("Hello World!"\)\s*;/.test(dom.codeInput.value)) {
+            semicolonNarrated = true;
+            playCompilerCabinHandsOnNarration("semicolon", chapter);
+          }
           if (index % 3 === 0 || index >= target.length) scheduleEditorVisuals();
           if (index < target.length) {
-            trackedSetTimeout(step, gameState.settings.animationQuality === ANIMATION_QUALITY.off ? 1 : 24, "compiler-hands-on-editor-type");
+            const pauseAtCheckpoint = /#include\s*<stdio\.h>\s*$|int\s+main\s*\(\s*void\s*\)\s*\{\s*$|printf\s*\($|"Hello World!"$|printf\s*\("Hello World!"\)\s*;$/.test(dom.codeInput.value);
+            const delay = pauseAtCheckpoint ? 620 : 36;
+            scheduleCompilerHandsOnTimer(session, step, gameState.settings.animationQuality === ANIMATION_QUALITY.off ? 1 : delay, "compiler-hands-on-editor-type");
             return;
           }
           scheduleEditorVisuals();
+          compilerHandsOnDemoSession = null;
           document.body.classList.remove("compiler-hands-on-demo-active");
           dom.runButton.disabled = false;
           dom.runButton.classList.add("compiler-hands-on-demo-ready");
           setOutput("实战演示完成。现在点击运行按钮，让编译器检查并输出结果。", "info");
           queueEditorFlowMessage("代码已经写入 main.c。下一步只看一个动作：点击运行。", true);
+          playCompilerCabinHandsOnNarration("finish", chapter);
           focusButtonWithVisualPulse(dom.runButton);
           trackedSetTimeout(() => {
             dom.runButton.classList.remove("compiler-hands-on-demo-ready");
@@ -35535,7 +36066,7 @@ ${item.code}
           }, 7200, "compiler-hands-on-release");
           resolve(true);
         };
-        trackedSetTimeout(step, gameState.settings.animationQuality === ANIMATION_QUALITY.off ? 20 : 360, "compiler-hands-on-editor-start");
+        scheduleCompilerHandsOnTimer(session, step, gameState.settings.animationQuality === ANIMATION_QUALITY.off ? 20 : 360, "compiler-hands-on-editor-start");
       });
     }
 
@@ -35560,15 +36091,23 @@ ${item.code}
               <button type="button" data-cinematic-rate="2" title="两倍速度">2x</button>
               <button type="button" data-cinematic-rate="4" title="四倍速度">4x</button>
               <span class="compiler-cabin-rate-label" data-role="compiler-cabin-speed-label">1x</span>
-              <span class="compiler-cabin-tts-status" data-role="compiler-cabin-tts-status">Supertonic 待机</span>
+              <span class="compiler-cabin-tts-status" data-role="compiler-cabin-tts-status">内置离线旁白待机</span>
               <button type="button" data-cinematic-replay title="从头重播">重播</button>
               <button type="button" data-cinematic-skip title="跳过电影进入实操">跳过</button>
             </div>
           </header>
+          <div class="compiler-cabin-sequence-rail" aria-hidden="true">
+            <span data-sequence-step="goal"><b>1</b>目标</span>
+            <span data-sequence-step="split"><b>2</b>写命令</span>
+            <span data-sequence-step="explain"><b>3</b>编译器检查</span>
+            <span data-sequence-step="highlight"><b>4</b>逐字符看</span>
+            <span data-sequence-step="practice"><b>5</b>实战演示</span>
+            <span data-sequence-step="demo"><b>6</b>你来点击</span>
+          </div>
           <div class="compiler-cabin-scene goal-preview" data-phase="goal">
             <div class="compiler-cabin-scene-inner real-animation-scene">
               <div class="beginner-story-panel goal-flow">
-                <div class="story-step-badge">0 目标先行</div>
+                <div class="story-step-badge">1 目标先行</div>
                 <div class="goal-screen" data-motion-actor="goal-screen">
                   <span>最终你会看到</span>
                   <b>Hello World!</b>
@@ -35586,7 +36125,7 @@ ${item.code}
           <div class="compiler-cabin-scene package-split" data-phase="split">
             <div class="compiler-cabin-scene-inner real-animation-scene">
               <div class="beginner-story-panel write-flow">
-                <div class="story-step-badge">1 写一句命令</div>
+                <div class="story-step-badge">2 写一句命令</div>
                 <div class="learner-workbench">
                   <div class="learner-avatar">你</div>
                   <div class="writing-card">
@@ -35630,7 +36169,7 @@ ${item.code}
           <div class="compiler-cabin-scene sorting-center" data-phase="explain">
             <div class="compiler-cabin-scene-inner real-animation-scene">
               <div class="beginner-story-panel machine-flow">
-                <div class="story-step-badge">2 送进编译器检查机</div>
+                <div class="story-step-badge">3 送进编译器检查机</div>
                 <div class="compiler-conveyor">
                 <div class="conveyor-rail"></div>
                 <div class="moving-code-package" data-motion-actor="courier-package">
@@ -35664,7 +36203,7 @@ ${item.code}
           <div class="compiler-cabin-scene compiler-inspection" data-phase="highlight">
             <div class="compiler-cabin-scene-inner real-animation-scene">
               <div class="beginner-story-panel inspect-flow">
-              <div class="story-step-badge">3 逐字符检查</div>
+              <div class="story-step-badge">4 逐字符检查</div>
               <div class="live-scan-board">
                 <div class="inspection-code">
                   <span class="fn-token">printf</span><span class="paren-token">(</span><span class="param-token">"Hello World!"</span><span class="paren-token">)</span><span class="end-token">;</span>
@@ -35672,10 +36211,10 @@ ${item.code}
                   <span class="ding-ring"></span>
                 </div>
                 <ul class="compiler-checks animated-checks">
-                  <li>printf：要做“显示”</li>
-                  <li>()：把内容装进去</li>
-                  <li>" "：里面原样显示</li>
-                  <li>;：这句话结束</li>
+                  <li><b>1</b> printf：要做“显示”</li>
+                  <li><b>2</b> ()：把内容装进去</li>
+                  <li><b>3</b> " "：里面原样显示</li>
+                  <li><b>4</b> ;：这句话结束</li>
                 </ul>
               </div>
               <div class="motion-caption">扫描光束一格一格扫过，亮起的位置就是实操时最该看清的字符。</div>
@@ -35918,7 +36457,7 @@ ${item.code}
             spokenLines.add(index);
             if (dom.cinematicSubtitle) dom.cinematicSubtitle.textContent = line.text;
             if (!options.silent) {
-              speakGameText(line.text, { role: line.role, profile: line.role, emotionPrompt: line.emotion, maxLength: 220 });
+              speakGameText(line.text, { role: "mentor", profile: "mentor", emotionPrompt: line.emotion, maxLength: 220 });
             }
           });
           if (playheadMs >= timeline.durationMs) {
@@ -35934,8 +36473,34 @@ ${item.code}
       return activeCompilerCabinCinematicPromise;
     }
 
+    let printfDeconstructionSession = null;
+
+    function cancelPrintfCharacterDeconstruction(reason = "cancelled") {
+      const session = printfDeconstructionSession;
+      if (!session) return false;
+      session.cancelled = true;
+      session.timers.forEach((timerId) => timerTracker.clear(timerId));
+      session.timers.clear();
+      printfDeconstructionSession = null;
+      audioManager?.releaseMusicSuppression?.("printf-deconstruction");
+      return true;
+    }
+
+    function schedulePrintfDeconstructionTimer(session, callback, delay, label) {
+      const timerId = trackedSetTimeout(() => {
+        session.timers.delete(timerId);
+        if (session.cancelled || printfDeconstructionSession !== session || !gameState.editorOpen) return;
+        callback();
+      }, delay, label);
+      session.timers.add(timerId);
+      return timerId;
+    }
+
     function playPrintfCharacterDeconstruction(code = 'printf("Hello World!");') {
+      cancelPrintfCharacterDeconstruction("restart");
       const timeline = buildPrintfCharacterDeconstructionTimeline(code);
+      const session = { cancelled: false, timers: new Set() };
+      printfDeconstructionSession = session;
       window.clearTimeout(editorVisualTimer);
       if (editorVisualRaf) {
         cancelAnimationFrame(editorVisualRaf);
@@ -35945,7 +36510,7 @@ ${item.code}
       audioManager?.stopBgm?.(0);
       silenceProceduralMusic?.();
       timeline.steps.forEach((step) => {
-        trackedSetTimeout(() => {
+        schedulePrintfDeconstructionTimer(session, () => {
           if (step.sfx === "ding") audioManager.ding();
           speakGameText(step.narration, { role: "mentor", profile: "mentor", emotionPrompt: step.kind === "terminator" ? "happy" : "calm" });
           if (dom.codeExplainBody) {
@@ -35957,7 +36522,8 @@ ${item.code}
           }
         }, step.atMs, `printf-deconstruct-${step.kind}`);
       });
-      trackedSetTimeout(() => {
+      schedulePrintfDeconstructionTimer(session, () => {
+        printfDeconstructionSession = null;
         if (audioManager?.releaseMusicSuppression) audioManager.releaseMusicSuppression("printf-deconstruction");
       }, timeline.totalMs + 1200, "printf-deconstruction-release-music");
       return timeline;
@@ -38528,8 +39094,18 @@ ${item.code}
 
     function openEditor(chapterId, options = {}) {
       if (isCleared(chapterId) || gameState.dialogOpen) return;
-      loadChapterTask(chapterId);
-      clearExactCodeReferenceForCurrentTask();
+      const preserveExistingCode = Boolean(options.preserveExistingCode && gameState.activeChallengeId === chapterId && typeof files["main.c"] === "string");
+      if (!preserveExistingCode) {
+        loadChapterTask(chapterId);
+        clearExactCodeReferenceForCurrentTask();
+      } else {
+        gameState.activeChallengeId = chapterId;
+        const chapter = chapterById[chapterId];
+        dom.taskGoal.innerHTML = chapter.taskGoal;
+        dom.taskTarget.innerHTML = chapter.taskTarget;
+        dom.taskExample.innerHTML = chapter.taskExample;
+        dom.taskHint.innerHTML = chapter.taskHint;
+      }
       gameState.editorOpen = true;
       inputManager.setMode(INPUT_MODES.editor);
       triggerGlitchEffect();
@@ -38543,7 +39119,13 @@ ${item.code}
       audioManager.playBgm("puzzle");
       adaptiveSymphonicAudioDirector?.setVerticalLayer("teaching");
       selectFile("main.c", { skipSaveCurrent: true });
-      clearEditorSourceForTask(chapterId);
+      if (!preserveExistingCode) {
+        clearEditorSourceForTask(chapterId);
+      } else {
+        dom.codeInput.value = files["main.c"] || dom.codeInput.value || "";
+        resetEditorHistory(dom.codeInput.value);
+        scheduleEditorVisuals();
+      }
       codeBlockSelection = [];
       renderCodeBlockMode();
       if (!options.skipOpenTutorialAnimation) tutorialAnimationManager.trigger("T06_EDITOR_OPEN", { scene: gameState.scene, chapterId });
@@ -38590,6 +39172,8 @@ ${item.code}
 
     function closeEditor(resume = true) {
       if (!gameState.editorOpen) return;
+      cancelCompilerCabinHandsOnEditorDemo("editor-close");
+      cancelPrintfCharacterDeconstruction("editor-close");
       dismissExecutionVisualization("editor-close");
       gameState.editorOpen = false;
       inputManager.setMode(INPUT_MODES.game);
@@ -46737,6 +47321,16 @@ ${item.code}
         const chapter = chapterById[chapterId];
         const objects = this.chapterObjects[chapterId];
         const pod = objects?.pod || objects?.stone;
+        if (isLearned(chapter.id)) {
+          cancelCompilerCabinHandsOnEditorDemo("learned-reenter");
+          cancelPrintfCharacterDeconstruction("learned-reenter");
+          ensureCompilerCabinLessonGameplayLayer();
+          openEditor(chapter.id, { skipOpenTutorialAnimation: true, skipEditorGuide: true, skipStoryBanner: true, preserveExistingCode: true });
+          this.playerFrozen = false;
+          return;
+        }
+        if (gameState.compilerCabinLessonActive) return;
+        gameState.compilerCabinLessonActive = true;
         this.playerFrozen = true;
         showPrompt("");
         spawnCodeParticles(this, pod.x, pod.y - 24, ["写代码", "检查", "运行", "显示"]);
@@ -46746,11 +47340,18 @@ ${item.code}
           this.revealGate(chapter.id, true);
           ensureCompilerCabinLessonGameplayLayer();
           openEditor(chapter.id, { skipOpenTutorialAnimation: true, skipEditorGuide: true, skipStoryBanner: true });
-          playCompilerCabinHandsOnEditorDemo(chapter).then(() => {
-            playPrintfCharacterDeconstruction(getCompilerCabinDeconstructionCode(chapter));
-            focusButtonWithVisualPulse(dom.runButton);
+          playCompilerCabinHandsOnEditorDemo(chapter).then((completed) => {
+            if (completed && gameState.editorOpen && gameState.activeChallengeId === chapter.id) {
+              playPrintfCharacterDeconstruction(getCompilerCabinDeconstructionCode(chapter));
+              focusButtonWithVisualPulse(dom.runButton);
+            }
+            gameState.compilerCabinLessonActive = false;
           });
           this.playerFrozen = false;
+        }).catch((error) => {
+          gameState.compilerCabinLessonActive = false;
+          this.playerFrozen = false;
+          reportSoftError?.(error, ERROR_LEVELS.recoverable, { source: "compiler-cabin-lesson", chapterId });
         });
       }
 
@@ -47319,6 +47920,8 @@ ${item.code}
     dom.musicIslandCustomVolume?.addEventListener("input", (event) => updateSetting("customMusicVolume", Number(event.target.value)));
     dom.musicIslandQqVolume?.addEventListener("input", (event) => updateSetting("qqMusicVolume", Number(event.target.value)));
     dom.sfxVolumeSlider.addEventListener("input", (event) => updateSetting("sfxVolume", Number(event.target.value)));
+    dom.ttsVolumeSlider?.addEventListener("input", (event) => updateSetting("ttsVolume", Number(event.target.value)));
+    dom.testTtsButton?.addEventListener("click", () => testOpenSourceTtsConnection());
     dom.uiProfileSelect?.addEventListener("change", (event) => updateSetting("uiProfile", event.target.value));
     dom.editorThemeSelect.addEventListener("change", (event) => updateSetting("editorTheme", event.target.value));
     dom.editorFontSizeSlider?.addEventListener("input", (event) => updateSetting("editorFontSize", Number(event.target.value)));
@@ -47891,6 +48494,10 @@ ${item.code}
           runButtonPulse: Boolean(document.querySelector("#visualButtonFocusPulse.active")),
           topButtonId: topNode?.closest?.("button")?.id || "",
           ttsStatus: document.querySelector('[data-role="compiler-cabin-tts-status"]')?.textContent || "",
+          ttsAudioSrc: openSourceTtsAudioElement?.currentSrc || openSourceTtsAudioElement?.src || "",
+          ttsAudioPaused: openSourceTtsAudioElement ? openSourceTtsAudioElement.paused : true,
+          compilerHandsOnActive: Boolean(compilerHandsOnDemoSession),
+          printfDeconstructionActive: Boolean(printfDeconstructionSession),
           bodyClass: document.body.className
         };
       },
