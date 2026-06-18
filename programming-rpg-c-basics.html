@@ -14,7 +14,7 @@
   <meta http-equiv="Cache-Control" content="no-store, max-age=0, must-revalidate">
   <meta http-equiv="Pragma" content="no-cache">
   <meta http-equiv="Expires" content="0">
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self' file:; base-uri 'self'; object-src 'none'; script-src 'self' 'nonce-code-awakener-inline' file: 'sha256-beS4RSCa/PuOla/Oc18AxALywmHyzoiEaQxJq4J57lM='; style-src 'self' 'nonce-code-awakener-inline' file: 'sha256-cPzD20+/gLnmKVRe1FfITjSxvkn16zrAKweZGO/YHQ0='; style-src-attr 'unsafe-inline'; font-src 'self' file: data:; img-src 'self' file: data: blob: https://cdn.pixabay.com; media-src 'self' file: data: blob: https: http: https://cdn.pixabay.com; worker-src 'self' file: blob:; child-src 'self' file: blob:; connect-src 'self' file: http://localhost:8000 http://127.0.0.1:8000 http://localhost:9966 http://127.0.0.1:9966 http://localhost:9977 http://127.0.0.1:9977 https://cdn.pixabay.com https://pixabay.com;">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self' file:; base-uri 'self'; object-src 'none'; script-src 'self' 'nonce-code-awakener-inline' file: 'sha256-zomWEQ4fda4jAnyeMsuAX2RB3CVyUkrvGueijeDG4WE='; style-src 'self' 'nonce-code-awakener-inline' file: 'sha256-NXCT9rSrAb3DXe+PmxKY9vxvmr+gIUe+UxQ9nM9mX90='; style-src-attr 'unsafe-inline'; font-src 'self' file: data:; img-src 'self' file: data: blob: https://cdn.pixabay.com; media-src 'self' file: data: blob: https: http: https://cdn.pixabay.com; worker-src 'self' file: blob:; child-src 'self' file: blob:; connect-src 'self' file: http://localhost:8000 http://127.0.0.1:8000 http://localhost:9966 http://127.0.0.1:9966 http://localhost:9977 http://127.0.0.1:9977 https://cdn.pixabay.com https://pixabay.com;">
   <title>代码觉醒者：Main Corridor</title>
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%23020617'/%3E%3Cpath d='M22 20 10 32l12 12M42 20l12 12-12 12' fill='none' stroke='%2300ff88' stroke-width='6' stroke-linecap='round' stroke-linejoin='round'/%3E%3Cpath d='m36 16-8 32' stroke='%2300ccff' stroke-width='5' stroke-linecap='round'/%3E%3C/svg%3E">
   <script src="./vendor/phaser.min.js"></script>
@@ -10570,6 +10570,22 @@
       animation: visualButtonFocusPulse 1180ms ease-out infinite;
     }
 
+    body.compiler-hands-on-demo-active #codeInput {
+      box-shadow:
+        inset 0 0 0 1px rgba(250, 204, 21, 0.42),
+        0 0 34px rgba(250, 204, 21, 0.18);
+    }
+
+    body.compiler-hands-on-demo-active #runButton,
+    #runButton.compiler-hands-on-demo-ready {
+      animation: compilerHandsOnRunPulse 900ms ease-in-out infinite alternate;
+    }
+
+    @keyframes compilerHandsOnRunPulse {
+      from { box-shadow: 0 0 0 rgba(250, 204, 21, 0), inset 0 0 0 rgba(34, 197, 94, 0); }
+      to { box-shadow: 0 0 26px rgba(250, 204, 21, 0.46), inset 0 0 18px rgba(34, 197, 94, 0.18); }
+    }
+
     @keyframes visualButtonFocusPulse {
       0% { width: 18px; height: 18px; opacity: 0.92; }
       70% { width: 96px; height: 96px; opacity: 0.22; }
@@ -14340,13 +14356,13 @@ int main(void) {
       <button id="announcementCloseButton" class="announcement-close" type="button" aria-label="关闭公告">×</button>
       <h2 id="startupAnnouncementTitle" class="startup-announcement-title">> 消息 / 本次更新</h2>
       <div id="announcementPageBody" class="startup-announcement-body">
-        <p>// v1.2.0-hotfix.2：新建角色后不再自动播放旧变量剧场，直接进入 Main Corridor 视觉引导。</p>
-        <p>// 第一学习舱不会再被绝对引导绕过，必须先播放《认识你的编译器》90 秒电影教学。</p>
-        <p>// 电影教学加入播放锁，旧石碑动画、自动新手引导和重复触发不会在第一句对白后打断流程。</p>
-        <p>// 《认识你的编译器》重做为 6 段短镜头，包含目标预览、代码纸条、编译器检查、逐字符高亮、实战运行演示。</p>
-        <p>// TTS 离线时会显示“本地服务未启动”，电影和 printf 字符解构期间会压制背景音乐。</p>
-        <p>// 变量立绘剧场与 1200×1600 WebP atlas 保留为角色演出资产，但不再抢新手开局主线。</p>
-        <p>// 第一世界仍为 Main Corridor 单一走廊，学习舱按顺序点亮，ChatTTS + EmotiVoice 管线保留。</p>
+        <p>// v1.2.0-hotfix.3：电影教学结束后不再卡在编辑器，实战演示会把当前任务代码逐字写入 main.c。</p>
+        <p>// 修复旧变量残留导致只输入 # 后停止的问题，运行按钮会恢复可点并保持视觉脉冲。</p>
+        <p>// 进入编辑器时跳过旧 T06 IDE 弹窗和自动 guide，电影后的实操流程不会再被二次教学覆盖。</p>
+        <p>// printf 字符级拆解固定使用当前章节示例 printf("C language");，不再被普通行解析刷新覆盖。</p>
+        <p>// TTS 改为 Supertonic 本地离线服务，默认连接 127.0.0.1:8000/v1/audio/speech，未启动时给出启动命令。</p>
+        <p>// Supertonic 中文旁白使用语言无关 na 模式，仍禁用浏览器自带 TTS，背景音乐继续被教学旁白压制。</p>
+        <p>// 第一世界仍为 Main Corridor 单一走廊，学习舱按顺序点亮；本次上传未修改 Pixi 版文件。</p>
         <p>// 作者：杀戮，QQ：3424636983，官方Q群：414374792。</p>
         <p class="announcement-dismiss-hint">- 点击任意处关闭</p>
       </div>
@@ -14886,18 +14902,29 @@ int main() {
       {
         title: "> 消息 / 本次更新",
         lines: [
-          "// v1.2.0-hotfix.2：新建角色后不再自动播放旧变量剧场，直接进入 Main Corridor 视觉引导。",
-          "// 第一学习舱不会再被绝对引导绕过，必须先播放《认识你的编译器》90 秒电影教学。",
-          "// 电影教学加入播放锁，旧石碑动画、自动新手引导和重复触发不会在第一句对白后打断流程。",
-          "// 《认识你的编译器》重做为 6 段短镜头，包含目标预览、代码纸条、编译器检查、逐字符高亮、实战运行演示。",
-          "// TTS 离线时会显示“本地服务未启动”，电影和 printf 字符解构期间会压制背景音乐。",
-          "// 变量立绘剧场与 1200×1600 WebP atlas 保留为角色演出资产，但不再抢新手开局主线。",
-          "// 第一世界仍为 Main Corridor 单一走廊，学习舱按顺序点亮，ChatTTS + EmotiVoice 管线保留。",
+          "// v1.2.0-hotfix.3：电影教学结束后不再卡在编辑器，实战演示会把当前任务代码逐字写入 main.c。",
+          "// 修复旧变量残留导致只输入 # 后停止的问题，运行按钮会恢复可点并保持视觉脉冲。",
+          "// 进入编辑器时跳过旧 T06 IDE 弹窗和自动 guide，电影后的实操流程不会再被二次教学覆盖。",
+          "// printf 字符级拆解固定使用当前章节示例 printf(\"C language\");，不再被普通行解析刷新覆盖。",
+          "// TTS 改为 Supertonic 本地离线服务，默认连接 127.0.0.1:8000/v1/audio/speech，未启动时给出启动命令。",
+          "// Supertonic 中文旁白使用语言无关 na 模式，仍禁用浏览器自带 TTS，背景音乐继续被教学旁白压制。",
+          "// 第一世界仍为 Main Corridor 单一走廊，学习舱按顺序点亮；本次上传未修改 Pixi 版文件。",
           "// 作者：杀戮，QQ：3424636983，官方Q群：414374792。"
         ]
       }
     ]);
     const UPDATE_HISTORY = Object.freeze([
+      {
+        version: "v1.2.0-hotfix.3",
+        date: "2026-06-19",
+        title: "电影实战演示与 Supertonic 离线热修",
+        details: [
+          "电影教学结束后会进入真实编辑器实战演示，当前任务代码会逐字写入 main.c，不再只停在第一个 #。",
+          "实战演示完成后运行按钮会恢复可点并出现持续视觉脉冲，旧 T06 IDE 弹窗和自动 guide 不再覆盖电影后的流程。",
+          "printf 字符级拆解固定使用当前章节示例 printf(\"C language\");，不会被普通编辑器行解析刷新覆盖。",
+          "TTS 改为 Supertonic 本地离线服务，默认连接 127.0.0.1:8000/v1/audio/speech；中文旁白使用 na 模式并禁用浏览器自带 TTS。官方Q群：414374792。"
+        ]
+      },
       {
         version: "v1.2.0-hotfix.2",
         date: "2026-06-18",
@@ -14930,7 +14957,7 @@ int main() {
           "新玩家首次进入会打开变量立绘剧场，主角修复师与全息导师使用 1200×1600 WebP atlas，并在移动端切换低特效布局保持 60FPS 目标。",
           "新增《认识你的编译器》1 分 30 秒交互式电影教学，覆盖编程像发快递、编译器展示和编译过程演示。",
           "新增 printf(\"Hello World!\"); 字符级解构时间线，包含整体释义、printf 圈选放大、括号与参数闪烁、分号叮声音效。",
-          "配音系统选定 ChatTTS 与 EmotiVoice，建立系统播报音和导师语音的开源引擎适配流程，并禁用浏览器自带 TTS。",
+          "配音系统改为 Supertonic 本地离线 TTS：系统播报音和导师语音默认走 127.0.0.1:8000，不再依赖 ChatTTS/EmotiVoice 服务。",
           "视觉引导系统改为地面金色光流、变量关键词霓虹高亮、按钮中心脉冲和走廊 LED 交互变绿。官方Q群：414374792。"
         ]
       },
@@ -16142,34 +16169,43 @@ return 0;`;
       { engine: "YouDub", naturalness: 6, emotionControl: 5, cloneSupport: "dubbing-pipeline", note: "偏视频翻译/配音流程，游戏内按需播报集成成本偏高。" },
       { engine: "VideoLingo", naturalness: 6, emotionControl: 5, cloneSupport: "dubbing-pipeline", note: "偏长视频本地化，不适合低延迟教学触发。" },
       { engine: "Fish Speech", naturalness: 9, emotionControl: 8, cloneSupport: "short-reference-clone", note: "自然度很强，但资源占用高，第一阶段作为候补高配方案。" },
-      { engine: "VoxCPM", naturalness: 8, emotionControl: 7, cloneSupport: "prompted-speech", note: "表现有潜力，但生态和游戏接入成熟度低于 ChatTTS/EmotiVoice。" }
+      { engine: "VoxCPM", naturalness: 8, emotionControl: 7, cloneSupport: "prompted-speech", note: "表现有潜力，但生态和游戏接入成熟度低于 Supertonic 的本地 HTTP/ONNX 部署。" },
+      { engine: "Supertonic", naturalness: 8, emotionControl: 6, cloneSupport: "voice-style-json", offline: true, note: "ONNX Runtime 本地推理，支持 supertonic serve 与 OpenAI 兼容接口，适合作为游戏默认离线配音后端。" }
     ]);
     const CODE_AWAKENER_TTS_ENGINES = Object.freeze({
       browserSpeechSynthesisAllowed: false,
       system: Object.freeze({
         role: "system",
-        engine: "ChatTTS",
-        endpointStorageKey: "codeAwakenerChatTtsEndpoint",
-        defaultEndpoint: "http://localhost:9966/tts",
-        voiceId: "system_clean_siri_like",
-        cloneFile: "assets/voice-clones/system-chattts-clean.wav",
-        emotionPrompt: "calm, clean, neutral, siri-like, precise pacing"
+        engine: "Supertonic",
+        endpointStorageKey: "codeAwakenerSupertonicEndpoint",
+        defaultEndpoint: "http://127.0.0.1:8000/v1/audio/speech",
+        model: "supertonic-3",
+        lang: "na",
+        voiceId: "M1",
+        voiceStyle: "system_clean_siri_like",
+        cloneFile: "assets/voice-styles/supertonic-system-clean.json",
+        installCommand: "pip install 'supertonic[serve]' && supertonic serve --host 127.0.0.1 --port 8000",
+        emotionPrompt: "calm, clean, neutral, precise pacing, no extra acting"
       }),
       mentor: Object.freeze({
         role: "mentor",
-        engine: "EmotiVoice",
-        endpointStorageKey: "codeAwakenerEmotiVoiceEndpoint",
-        defaultEndpoint: "http://localhost:9977/tts",
-        voiceId: "mentor_warm_emotional",
-        cloneFile: "assets/voice-clones/mentor-emotivoice-warm.wav",
-        emotionPrompt: "happy, excited, calm, serious, warm teacher, expressive intonation"
+        engine: "Supertonic",
+        endpointStorageKey: "codeAwakenerSupertonicEndpoint",
+        defaultEndpoint: "http://127.0.0.1:8000/v1/audio/speech",
+        model: "supertonic-3",
+        lang: "na",
+        voiceId: "M2",
+        voiceStyle: "mentor_warm_teacher",
+        cloneFile: "assets/voice-styles/supertonic-mentor-warm.json",
+        installCommand: "pip install 'supertonic[serve]' && supertonic serve --host 127.0.0.1 --port 8000",
+        emotionPrompt: "warm teacher, calm explanation, gentle emotion, short breath, occasional sigh for emphasis"
       })
     });
     const OPEN_SOURCE_TTS_CACHE_MANIFEST = Object.freeze({
       basePath: "assets/tts",
       formats: Object.freeze(["mp3", "wav", "ogg"]),
-      system: Object.freeze({ engine: "ChatTTS", clips: Object.freeze({}) }),
-      mentor: Object.freeze({ engine: "EmotiVoice", clips: Object.freeze({}) })
+      system: Object.freeze({ engine: "Supertonic", clips: Object.freeze({}) }),
+      mentor: Object.freeze({ engine: "Supertonic", clips: Object.freeze({}) })
     });
     const EDGE_TTS_MODULE_URL = "https://edge-tts.com/_astro/edge-tts.CRIlRyMu.js";
     const EDGE_TTS_FEMALE_VOICES = Object.freeze({
@@ -16330,7 +16366,7 @@ return 0;`;
       directSaveAs: "reduced-by-inline-resources"
     });
     const SECURITY_CONFIG = Object.freeze({
-      expectedScriptHash: "pBsQZ2qWx4Q4KXOEZZSXGBPIPdM3wcMiTi8DlU+4GXs=",
+      expectedScriptHash: "Ek9ucn729JvBWYIQVWf1ub3f2nyf6gkV8O3dfkvziLE=",
       selfCheckIntervalMs: 45000,
       tamperRefreshMs: 5000,
       devToolsRefreshMs: 2000,
@@ -35146,7 +35182,7 @@ ${item.code}
       if (stage) {
         stage.dataset.ttsStatus = status;
         const statusNode = stage.querySelector('[data-role="compiler-cabin-tts-status"]');
-        if (statusNode) statusNode.textContent = message || (status === "ready" ? "TTS 已连接" : status === "unavailable" ? "TTS 本地服务未启动" : "TTS 待机");
+        if (statusNode) statusNode.textContent = message || (status === "ready" ? "Supertonic 已连接" : status === "unavailable" ? "Supertonic 离线服务未启动" : "Supertonic 待机");
       }
       return status;
     }
@@ -35154,7 +35190,7 @@ ${item.code}
     function markOpenSourceTtsUnavailable(pipeline, reason = "engine-unavailable") {
       const endpoint = pipeline?.endpoint || "";
       if (endpoint) openSourceTtsUnavailableUntilByEndpoint.set(endpoint, performance.now() + 45000);
-      updateOpenSourceTtsStatus("unavailable", `${pipeline?.engine || "TTS"} 本地服务未启动`);
+      updateOpenSourceTtsStatus("unavailable", "Supertonic 离线服务未启动：pip install 'supertonic[serve]' 后运行 supertonic serve");
       reportSoftError?.(new Error(reason), ERROR_LEVELS.recoverable, { source: "open-source-tts", engine: pipeline?.engine, endpoint });
       return false;
     }
@@ -35243,11 +35279,50 @@ ${item.code}
         engine: engineConfig.engine,
         text: String(text || "").trim(),
         endpoint: options.endpoint || getOpenSourceTtsEndpoint(engineConfig),
+        model: options.model || engineConfig.model || "supertonic-3",
+        lang: options.lang || engineConfig.lang || "na",
         voiceId: options.voiceId || engineConfig.voiceId,
+        voiceStyle: options.voiceStyle || engineConfig.voiceStyle || engineConfig.voiceId,
         cloneFile: options.cloneFile || engineConfig.cloneFile,
+        installCommand: engineConfig.installCommand,
+        offline: true,
         emotionPrompt,
         browserSpeechSynthesisAllowed: CODE_AWAKENER_TTS_ENGINES.browserSpeechSynthesisAllowed,
-        steps: ["import-engine", "generate-clone-file", "game-demand-playback"]
+        steps: ["install-supertonic", "cache-openrail-weights", "game-demand-playback"]
+      };
+    }
+
+    function normalizeSupertonicLang(lang = "na") {
+      const normalized = String(lang || "na").trim();
+      const lower = normalized.toLowerCase();
+      if (lower === "na" || lower.startsWith("zh")) return "na";
+      if (lower.startsWith("ja")) return "ja";
+      if (lower.startsWith("ko")) return "ko";
+      return lower.slice(0, 2) || "en";
+    }
+
+    function createSupertonicSpeechPayload(pipeline, options = {}) {
+      const responseFormat = options.responseFormat || "wav";
+      const lang = normalizeSupertonicLang(options.lang || pipeline.lang);
+      if (/\/v1\/tts\/?$/.test(pipeline.endpoint || "")) {
+        return {
+          text: pipeline.text,
+          voice: options.voiceId || pipeline.voiceId,
+          voice_style: options.voiceStyle || pipeline.voiceStyle || pipeline.cloneFile,
+          lang,
+          emotion: options.emotionPrompt || pipeline.emotionPrompt,
+          output_format: responseFormat,
+          speed: options.speed || 1
+        };
+      }
+      return {
+        model: options.model || pipeline.model || "supertonic-3",
+        input: pipeline.text,
+        voice: options.voiceId || pipeline.voiceId || "M1",
+        voice_style: options.voiceStyle || pipeline.voiceStyle || pipeline.cloneFile,
+        lang,
+        response_format: responseFormat,
+        speed: options.speed || 1
       };
     }
 
@@ -35266,15 +35341,7 @@ ${item.code}
           method: "POST",
           headers: { "Content-Type": "application/json" },
           signal: controller.signal,
-          body: JSON.stringify({
-            engine: pipeline.engine,
-            role: pipeline.role,
-            input: pipeline.text,
-            voice: pipeline.voiceId,
-            clone_file: pipeline.cloneFile,
-            emotion: pipeline.emotionPrompt,
-            response_format: options.responseFormat || "mp3"
-          })
+          body: JSON.stringify(createSupertonicSpeechPayload(pipeline, options))
         });
         timerTracker.clear(timeout);
         if (!response.ok) throw new Error(`${pipeline.engine} ${response.status}`);
@@ -35412,6 +35479,66 @@ ${item.code}
       };
     }
 
+    function getCompilerCabinDeconstructionCode(chapter) {
+      const example = String(chapter?.taskExample || "")
+        .replace(/<[^>]*>/g, "")
+        .replace(/&quot;/g, '"')
+        .replace(/&#34;/g, '"')
+        .trim();
+      const printfLine = (example.match(/printf\s*\([^;]+;/) || [])[0];
+      return printfLine || 'printf("Hello World!");';
+    }
+
+    function playCompilerCabinHandsOnEditorDemo(chapter) {
+      if (!dom.codeInput || !dom.runButton) return Promise.resolve(false);
+      const target = String(EXACT_TASK_CODE_BY_ID[chapter?.id] || chapter?.files?.["main.c"] || getCompilerCabinDeconstructionCode(chapter) || "").trimEnd();
+      if (!target) return Promise.resolve(false);
+      document.body.classList.add("compiler-hands-on-demo-active");
+      dom.runButton.disabled = true;
+      dom.runButton.classList.remove("compiler-hands-on-demo-ready");
+      if (audioManager?.suppressMusic) audioManager.suppressMusic("compiler-hands-on-demo");
+      audioManager?.stopBgm?.(0);
+      silenceProceduralMusic?.();
+      currentFile = "main.c";
+      dom.codeInput.readOnly = false;
+      dom.codeInput.focus();
+      dom.codeInput.value = "";
+      files["main.c"] = "";
+      resetEditorHistory("");
+      scheduleEditorVisuals();
+      setOutput("实战演示：导师正在把刚才的命令写进真实编辑器。看完后点击运行。", "info");
+      queueEditorFlowMessage("实战演示：这不是图片，代码会逐字写入 main.c。", true);
+      return new Promise((resolve) => {
+        let index = 0;
+        const step = () => {
+          index = Math.min(target.length, index + 1);
+          dom.codeInput.value = target.slice(0, index);
+          dom.codeInput.selectionStart = index;
+          dom.codeInput.selectionEnd = index;
+          files["main.c"] = dom.codeInput.value;
+          editorHistory.lastValue = dom.codeInput.value;
+          if (index % 3 === 0 || index >= target.length) scheduleEditorVisuals();
+          if (index < target.length) {
+            trackedSetTimeout(step, gameState.settings.animationQuality === ANIMATION_QUALITY.off ? 1 : 24, "compiler-hands-on-editor-type");
+            return;
+          }
+          scheduleEditorVisuals();
+          document.body.classList.remove("compiler-hands-on-demo-active");
+          dom.runButton.disabled = false;
+          dom.runButton.classList.add("compiler-hands-on-demo-ready");
+          setOutput("实战演示完成。现在点击运行按钮，让编译器检查并输出结果。", "info");
+          queueEditorFlowMessage("代码已经写入 main.c。下一步只看一个动作：点击运行。", true);
+          focusButtonWithVisualPulse(dom.runButton);
+          trackedSetTimeout(() => {
+            dom.runButton.classList.remove("compiler-hands-on-demo-ready");
+            audioManager?.releaseMusicSuppression?.("compiler-hands-on-demo");
+          }, 7200, "compiler-hands-on-release");
+          resolve(true);
+        };
+        trackedSetTimeout(step, gameState.settings.animationQuality === ANIMATION_QUALITY.off ? 20 : 360, "compiler-hands-on-editor-start");
+      });
+    }
+
     function ensureCompilerCabinCinematicStage() {
       let stage = document.getElementById("compilerCabinCinematicStage");
       if (stage) return stage;
@@ -35433,7 +35560,7 @@ ${item.code}
               <button type="button" data-cinematic-rate="2" title="两倍速度">2x</button>
               <button type="button" data-cinematic-rate="4" title="四倍速度">4x</button>
               <span class="compiler-cabin-rate-label" data-role="compiler-cabin-speed-label">1x</span>
-              <span class="compiler-cabin-tts-status" data-role="compiler-cabin-tts-status">TTS 待机</span>
+              <span class="compiler-cabin-tts-status" data-role="compiler-cabin-tts-status">Supertonic 待机</span>
               <button type="button" data-cinematic-replay title="从头重播">重播</button>
               <button type="button" data-cinematic-skip title="跳过电影进入实操">跳过</button>
             </div>
@@ -35809,6 +35936,11 @@ ${item.code}
 
     function playPrintfCharacterDeconstruction(code = 'printf("Hello World!");') {
       const timeline = buildPrintfCharacterDeconstructionTimeline(code);
+      window.clearTimeout(editorVisualTimer);
+      if (editorVisualRaf) {
+        cancelAnimationFrame(editorVisualRaf);
+        editorVisualRaf = 0;
+      }
       if (audioManager?.suppressMusic) audioManager.suppressMusic("printf-deconstruction");
       audioManager?.stopBgm?.(0);
       silenceProceduralMusic?.();
@@ -38394,7 +38526,7 @@ ${item.code}
       return { ok: true, source, taskId: chapterId };
     }
 
-    function openEditor(chapterId) {
+    function openEditor(chapterId, options = {}) {
       if (isCleared(chapterId) || gameState.dialogOpen) return;
       loadChapterTask(chapterId);
       clearExactCodeReferenceForCurrentTask();
@@ -38414,18 +38546,20 @@ ${item.code}
       clearEditorSourceForTask(chapterId);
       codeBlockSelection = [];
       renderCodeBlockMode();
-      tutorialAnimationManager.trigger("T06_EDITOR_OPEN", { scene: gameState.scene, chapterId });
+      if (!options.skipOpenTutorialAnimation) tutorialAnimationManager.trigger("T06_EDITOR_OPEN", { scene: gameState.scene, chapterId });
       setOutput(`等待运行。当前任务：${chapterById[chapterId].title}。\n${getPersonalNoteHint(chapterId)}`, "info");
       markAbsoluteGuideAction("openEditor", { chapterId, code: dom.codeInput.value });
       ideExperienceManager?.enrichConsole?.(`当前挑战：${chapterById[chapterId].title}。导师正在观察你的代码节奏。`, "info");
       gameState.progress.editorUseStartedAt = Date.now();
       queueEditorFlowMessage("导师提示：先让代码安静地跑起来。");
-      triggerStoryCinematicBars("编辑器已接入世界：代码将直接改变场景。", 1300);
+      if (!options.skipStoryBanner) triggerStoryCinematicBars("编辑器已接入世界：代码将直接改变场景。", 1300);
       suspendSceneForEditor(gameState.scene);
       updateContextualHint();
-      trackedSetTimeout(() => {
-        if (!absoluteGuideRuntime.active) openEditorGuide(false);
-      }, 120, "editor-guide-auto-open");
+      if (!options.skipEditorGuide) {
+        trackedSetTimeout(() => {
+          if (!absoluteGuideRuntime.active) openEditorGuide(false);
+        }, 120, "editor-guide-auto-open");
+      }
       window.setTimeout(() => {
         updateMobileEditorViewport();
         dom.codeInput.focus();
@@ -46611,11 +46745,11 @@ ${item.code}
           this.markStoneLearned(chapter.id, true);
           this.revealGate(chapter.id, true);
           ensureCompilerCabinLessonGameplayLayer();
-          openEditor(chapter.id);
-          trackedSetTimeout(() => {
-            playPrintfCharacterDeconstruction('printf("Hello World!");');
+          openEditor(chapter.id, { skipOpenTutorialAnimation: true, skipEditorGuide: true, skipStoryBanner: true });
+          playCompilerCabinHandsOnEditorDemo(chapter).then(() => {
+            playPrintfCharacterDeconstruction(getCompilerCabinDeconstructionCode(chapter));
             focusButtonWithVisualPulse(dom.runButton);
-          }, 420, "compiler-cabin-visible-deconstruction");
+          });
           this.playerFrozen = false;
         });
       }
@@ -47726,6 +47860,45 @@ ${item.code}
     }
 
     gameState.game = initializeGameSafely();
+    publishGlobal("CodeAwakenerPhaserHooks", Object.freeze({
+      forceCompilerCabinHandsOn(chapterId = FIRST_MAINLINE_CHAPTER_ID) {
+        const scene = gameState.scene;
+        if (!scene?.playCompilerCabinLesson) return false;
+        const originalCinematic = playCompilerCabinCinematic;
+        try {
+          playCompilerCabinCinematic = () => Promise.resolve({ skipped: true, chapterId });
+          scene.playCompilerCabinLesson(chapterId);
+          return true;
+        } finally {
+          playCompilerCabinCinematic = originalCinematic;
+        }
+      },
+      snapshot() {
+        const runRect = dom.runButton?.getBoundingClientRect?.();
+        const topNode = runRect ? document.elementFromPoint(runRect.left + runRect.width / 2, runRect.top + runRect.height / 2) : null;
+        return {
+          editorOpen: gameState.editorOpen,
+          activeChallengeId: gameState.activeChallengeId,
+          inputMode: inputManager?.mode,
+          tutorialPlaying: tutorialAnimationManager?.playing,
+          tutorialCurrent: tutorialAnimationManager?.current?.id || null,
+          codeValue: dom.codeInput?.value || "",
+          expectedOverviewCode: EXACT_TASK_CODE_BY_ID.overview,
+          codeExplainText: dom.codeExplainBody?.textContent || "",
+          outputText: dom.output?.textContent || "",
+          runDisabled: Boolean(dom.runButton?.disabled),
+          runButtonReady: Boolean(dom.runButton?.classList?.contains("compiler-hands-on-demo-ready")),
+          runButtonPulse: Boolean(document.querySelector("#visualButtonFocusPulse.active")),
+          topButtonId: topNode?.closest?.("button")?.id || "",
+          ttsStatus: document.querySelector('[data-role="compiler-cabin-tts-status"]')?.textContent || "",
+          bodyClass: document.body.className
+        };
+      },
+      ttsPipeline(role = "mentor", text = "测试离线配音") {
+        const pipeline = createOpenSourceVoicePipeline(role, text);
+        return { ...pipeline, payload: createSupertonicSpeechPayload(pipeline) };
+      }
+    }));
   </script>
 </body>
 </html>

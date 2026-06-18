@@ -778,13 +778,13 @@ assert(/function updateCorridorLedInteractionLight/m.test(html), "entering an in
   assert(deconstruction.steps.some((step) => step.kind === "terminator" && step.token === ";" && step.sfx === "ding"), "semicolon should be emphasized with a ding sound");
 }
 assert(api.FIRST_WORLD_TTS_ENGINE_EVALUATION?.length >= 10, "TTS evaluation should cover every candidate repository from the task");
-assert(api.CODE_AWAKENER_TTS_ENGINES?.system?.engine === "ChatTTS" && api.CODE_AWAKENER_TTS_ENGINES?.mentor?.engine === "EmotiVoice", "first world should select ChatTTS for system narration and EmotiVoice for mentor narration");
+assert(api.CODE_AWAKENER_TTS_ENGINES?.system?.engine === "Supertonic" && api.CODE_AWAKENER_TTS_ENGINES?.mentor?.engine === "Supertonic", "first world should select Supertonic for both system and mentor narration so it can run offline");
 assert(api.CODE_AWAKENER_TTS_ENGINES?.browserSpeechSynthesisAllowed === false, "browser built-in TTS should be forbidden for the first-world voice pipeline");
 {
   const pipeline = api.createOpenSourceVoicePipeline("mentor", "理解 printf 时，先看函数，再看括号里的参数。");
-  assert(pipeline.engine === "EmotiVoice" && pipeline.cloneFile.endsWith(".wav"), "mentor voice pipeline should generate a cloned voice file through EmotiVoice");
-  assert(pipeline.steps.includes("import-engine") && pipeline.steps.includes("generate-clone-file") && pipeline.steps.includes("game-demand-playback"), "voice pipeline should document import, clone generation, and game playback steps");
-  assert(/happy|excited|calm|serious/.test(JSON.stringify(pipeline.emotionPrompt)), "voice pipeline should include explicit emotion prompts");
+  assert(pipeline.engine === "Supertonic" && /127\.0\.0\.1:8000\/v1\/audio\/speech/.test(pipeline.endpoint), "mentor voice pipeline should call the local Supertonic offline HTTP server by default");
+  assert(pipeline.offline === true && pipeline.steps.includes("install-supertonic") && pipeline.steps.includes("cache-openrail-weights") && pipeline.steps.includes("game-demand-playback"), "voice pipeline should document Supertonic install, offline weights cache, and game playback steps");
+  assert(/calm|warm|teacher|emotion|sigh|breath/.test(JSON.stringify(pipeline.emotionPrompt)), "voice pipeline should include Supertonic-compatible emotion/style hints");
 }
 assert(/NEON_CYBER_BOOK_STYLE/m.test(html), "visual direction should switch to neon cyber book style");
 assert(/function drawNeonHoodiePlayer/m.test(html), "player should be rendered as a neon outlined hoodie character");
@@ -1601,9 +1601,10 @@ assert(/SYSTEM_BOOT_FORCE_RELEASE_MS\s*=\s*3200/m.test(html) && /system-boot-for
 assert(/function markAppRendered\(reason = "script-started"\)[\s\S]*classList\?\.add\("app-rendered"\)[\s\S]*staticRescue/m.test(html), "normal script startup should hide the static rescue layer");
 assert(/html\.app-rendered \.static-rescue/m.test(html) && /safeMode=true&noAudio=true&v=1\.2\.0/m.test(html), "static rescue should only appear if the app script does not render");
 assert(/isStrictSecurityMode\(\)[\s\S]*removeItem\?\.\("codeAwakenerStrictSecurity"\)[\s\S]*params\.get\("strictSecurity"\) === "1"/m.test(html), "stale localStorage strict-security flags should not white-screen normal browsers");
-assert(/UPDATE_ANNOUNCEMENT_PAGES\s*=\s*Object\.freeze\(\[\s*\{\s*title:\s*"> 消息 \/ 本次更新"[\s\S]*v1\.2\.0-hotfix\.2[\s\S]*新建角色后不再自动播放旧变量剧场[\s\S]*Main Corridor 视觉引导[\s\S]*《认识你的编译器》90 秒电影教学[\s\S]*本地服务未启动[\s\S]*ChatTTS \+ EmotiVoice[\s\S]*414374792/m.test(html), "startup announcement should show the current compiler-cabin and new-player-flow hotfix before upload");
-assert(/id="announcementPageBody"[\s\S]*v1\.2\.0-hotfix\.2[\s\S]*新建角色后不再自动播放旧变量剧场[\s\S]*第一学习舱不会再被绝对引导绕过[\s\S]*本地服务未启动[\s\S]*官方Q群：414374792/m.test(initialBodyMarkup), "static startup announcement placeholder should match the current compiler-cabin hotfix before script hydration");
+assert(/UPDATE_ANNOUNCEMENT_PAGES\s*=\s*Object\.freeze\(\[\s*\{\s*title:\s*"> 消息 \/ 本次更新"[\s\S]*v1\.2\.0-hotfix\.3[\s\S]*逐字写入 main\.c[\s\S]*只输入 #[\s\S]*旧 T06 IDE 弹窗[\s\S]*printf\(\\"C language\\"\);[\s\S]*Supertonic[\s\S]*na 模式[\s\S]*414374792/m.test(html), "startup announcement should show the current editor hands-on and Supertonic hotfix before upload");
+assert(/id="announcementPageBody"[\s\S]*v1\.2\.0-hotfix\.3[\s\S]*逐字写入 main\.c[\s\S]*只输入 #[\s\S]*Supertonic[\s\S]*na 模式[\s\S]*官方Q群：414374792/m.test(initialBodyMarkup), "static startup announcement placeholder should match the current hands-on editor and Supertonic hotfix before script hydration");
 assert(!/公告只保留关闭、课程锁定、自由模式通关后显示/m.test(initialBodyMarkup), "static startup announcement placeholder should not show stale update copy");
+assert(/UPDATE_HISTORY\s*=\s*Object\.freeze\(\[\s*\{[\s\S]*v1\.2\.0-hotfix\.3[\s\S]*电影实战演示与 Supertonic 离线热修[\s\S]*不再只停在第一个 #[\s\S]*printf\("C language"\);[\s\S]*官方Q群：414374792/m.test(html), "update history should record the current hands-on editor and Supertonic hotfix");
 assert(/UPDATE_HISTORY\s*=\s*Object\.freeze\(\[\s*\{[\s\S]*v1\.2\.0-hotfix\.2[\s\S]*第一学习舱电影与新号入场热修[\s\S]*老程序员只说一句[\s\S]*T05\/T09[\s\S]*官方Q群：414374792/m.test(html), "update history should record the compiler-cabin and new-player-flow hotfix");
 assert(/UPDATE_HISTORY\s*=\s*Object\.freeze\(\[\s*\{[\s\S]*v1\.2\.0-hotfix\.1[\s\S]*五幕剧情桥与 BGM 叠加热修[\s\S]*memoryCoreChoice[\s\S]*Pixabay\/自定义 BGM[\s\S]*官方Q群：414374792/m.test(html), "update history should record the memory-core and BGM overlap hotfix");
 assert(/UPDATE_HISTORY\s*=\s*Object\.freeze\(\[[\s\S]*v1\.0\.31[\s\S]*QQ音乐外部模式与自定义场景音乐[\s\S]*播放\/暂停切换[\s\S]*IndexedDB[\s\S]*414374792/m.test(html), "update history should record the v1.0.31 custom music connector release");
@@ -2501,13 +2502,14 @@ assert(/function showCodeGenesisNextLineHint/m.test(html) && /function explainCo
 assert(/function refreshCodeGenesisGuideFromInput/m.test(html) && /codeGenesisInput\.placeholder/m.test(html), "code genesis helper and placeholder should refresh from the current typed code");
 assert(/commitCodeGenesisEditorOperation[\s\S]*refreshCodeGenesisGuideFromInput/m.test(html), "code genesis typing should refresh the current guide without waiting for helper buttons");
 assert(/runCodeGenesisEditor[\s\S]*const source = dom\.codeGenesisInput\.value[\s\S]*!source\.trim\(\)/m.test(html), "code genesis create button should validate player-typed code instead of auto-running the full template");
-assert(/CODE_AWAKENER_TTS_ENGINES\s*=\s*Object\.freeze[\s\S]*ChatTTS[\s\S]*EmotiVoice/m.test(html), "TTS should select open-source ChatTTS and EmotiVoice engines");
-assert(/function createOpenSourceVoicePipeline/m.test(html) && /steps:\s*\["import-engine",\s*"generate-clone-file",\s*"game-demand-playback"\]/m.test(html), "TTS should document import, clone generation, and game playback steps");
-assert(/function speakWithOpenSourceTts/m.test(html) && /fetch\(pipeline\.endpoint[\s\S]*clone_file[\s\S]*emotion/m.test(html), "TTS should call the configured open-source engine adapter with clone file and emotion prompts");
+assert(/CODE_AWAKENER_TTS_ENGINES\s*=\s*Object\.freeze[\s\S]*Supertonic[\s\S]*127\.0\.0\.1:8000\/v1\/audio\/speech/m.test(html), "TTS should select Supertonic as the offline local voice engine");
+assert(/function createOpenSourceVoicePipeline/m.test(html) && /steps:\s*\["install-supertonic",\s*"cache-openrail-weights",\s*"game-demand-playback"\]/m.test(html), "TTS should document Supertonic install, local weights cache, and game playback steps");
+assert(/function createSupertonicSpeechPayload/m.test(html) && /response_format[\s\S]*voice_style[\s\S]*lang/m.test(html), "TTS should support Supertonic OpenAI-compatible and native payload shapes");
+assert(/function speakWithOpenSourceTts/m.test(html) && /fetch\(pipeline\.endpoint[\s\S]*createSupertonicSpeechPayload\(pipeline/m.test(html), "TTS should call the configured Supertonic offline adapter");
 assert(/OPEN_SOURCE_TTS_CACHE_MANIFEST\s*=\s*Object\.freeze/m.test(html) && /function playOpenSourceTtsCache/m.test(html), "TTS should support pre-generated open-source voice cache playback before network generation");
 assert(/speakWithOpenSourceTts[\s\S]*playOpenSourceTtsCache\(pipeline/m.test(html), "TTS should try bundled/cache audio first so narration is not silent when local engines are offline");
 assert(/function markOpenSourceTtsUnavailable/m.test(html) && /data-tts-status/m.test(html), "TTS failures should expose a visible diagnostic status instead of failing silently");
-assert(/TTS 本地服务未启动/.test(html) && /\$\{pipeline\?\.engine \|\| "TTS"\} 本地服务未启动/.test(html), "TTS failure status should explain that the local service is not running");
+assert(/Supertonic 离线服务未启动/.test(html) && /pip install 'supertonic\[serve\]'/.test(html) && /supertonic serve/.test(html), "TTS failure status should explain how to start the offline Supertonic service");
 assert(/voiceEnabled:\s*true/m.test(html), "TTS should be enabled for the interactive cinematic lesson");
 assert(/browserSpeechFallback:\s*false/m.test(html), "browser robot TTS fallback should be disabled by default");
 assert(/function shouldUseBrowserSpeechFallback/m.test(html) && /return false;/m.test(html), "browser speech fallback should stay disabled");
@@ -2546,7 +2548,11 @@ assert(/function canAutoStartGuidance[\s\S]*!isCompilerCabinCinematicActive\(\)/
 assert(/function completeStoneCodePuzzle[\s\S]*if \(chapterId !== FIRST_MAINLINE_CHAPTER_ID\)[\s\S]*T05_STONE_CODE_FILL[\s\S]*T09_STONE_PULSE/m.test(html), "first compiler cabin lesson should not layer old stone-fill or stone-pulse tutorial animations over the cinematic");
 assert(/function ensureCompilerCabinLessonGameplayLayer[\s\S]*gameState\.menuOpen = false[\s\S]*dom\.mainMenu\?\.classList\.remove\("active"\)/m.test(html), "compiler cabin lesson should clear menu state before entering hands-on editor");
 assert(/interaction\?\.type === "lesson"[\s\S]*interaction\.chapter\.id !== FIRST_MAINLINE_CHAPTER_ID[\s\S]*openEditor\(interaction\.chapter\.id\)[\s\S]*this\.startLesson\(interaction\.chapter\.id/m.test(html), "absolute guide must not bypass the first compiler cabin cinematic by opening the editor directly");
-assert(/playCompilerCabinCinematic\(chapter\)\.then\(\(\) => \{[\s\S]*openEditor\(chapter\.id\)[\s\S]*playPrintfCharacterDeconstruction\('printf\("Hello World!"\);'\)[\s\S]*focusButtonWithVisualPulse\(dom\.runButton\)/m.test(html), "compiler cabin should open the editor before starting visible printf character deconstruction");
+assert(/function getCompilerCabinDeconstructionCode\(chapter[\s\S]*chapter\?\.taskExample[\s\S]*printf\("Hello World!"\);/m.test(html), "compiler cabin deconstruction should use the current chapter example before falling back to Hello World");
+assert(/function playCompilerCabinHandsOnEditorDemo\(chapter[\s\S]*EXACT_TASK_CODE_BY_ID\[chapter\?\.id[\s\S]*dom\.codeInput\.value = target\.slice\(0, index\)[\s\S]*focusButtonWithVisualPulse\(dom\.runButton\)/m.test(html), "compiler cabin hands-on demo should type the real task code into the actual editor before focusing Run");
+assert(!/normalizedTarget/.test(html), "compiler cabin hands-on demo should not reference stale renamed variables that stop typing after the first character");
+assert(/function openEditor\(chapterId,\s*options = \{\}\)[\s\S]*!options\.skipOpenTutorialAnimation[\s\S]*T06_EDITOR_OPEN[\s\S]*!options\.skipEditorGuide[\s\S]*openEditorGuide/m.test(html), "compiler cabin editor entry should be able to skip the legacy IDE popup and auto guide");
+assert(/openEditor\(chapter\.id,\s*\{\s*skipOpenTutorialAnimation:\s*true,\s*skipEditorGuide:\s*true[\s\S]*playCompilerCabinHandsOnEditorDemo\(chapter\)[\s\S]*playPrintfCharacterDeconstruction\(getCompilerCabinDeconstructionCode\(chapter\)\)/m.test(html), "compiler cabin should enter the editor through the real hands-on demo instead of a static side-panel-only explanation");
 assert(!/nearStone && !isLearned\(chapter\.id\)/m.test(html), "learned learning pods should remain rewatchable so a missed cinematic is not permanently inaccessible");
 assert(/return unlocked \? \{ type: "lesson", chapter, replay: isLearned\(chapter\.id\) \} : \{ type: "locked", chapter \}/m.test(html), "learning pod interaction should carry a replay flag while preserving lock checks");
 assert(/function openNoviceGuideRealEditor/m.test(html), "novice guide should open the real VS Code-style editor for hands-on code");
