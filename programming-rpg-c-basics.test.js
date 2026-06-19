@@ -99,6 +99,7 @@ globalThis.__gameApi = {
   simulateCOutput,
   autoInjectStdIoHeader,
   normalizeProgramOutput,
+  formatProgramOutputForDisplay,
   compareProgramOutput,
   createInitialGameData,
   resetGameData,
@@ -132,6 +133,19 @@ globalThis.__gameApi = {
   getMerchantHpSupplyCount: typeof getMerchantHpSupplyCount === "function" ? getMerchantHpSupplyCount : undefined,
   hasMemoryCoreCinematicResolved: typeof hasMemoryCoreCinematicResolved === "function" ? hasMemoryCoreCinematicResolved : undefined,
   shouldPlayMemoryCoreCinematicBeforeWorldEntry: typeof shouldPlayMemoryCoreCinematicBeforeWorldEntry === "function" ? shouldPlayMemoryCoreCinematicBeforeWorldEntry : undefined,
+  GameDatabase: typeof GameDatabase !== "undefined" ? GameDatabase : undefined,
+  createOmniCoreGameDatabase: typeof createOmniCoreGameDatabase === "function" ? createOmniCoreGameDatabase : undefined,
+  gameDatabase: typeof gameDatabase !== "undefined" ? gameDatabase : undefined,
+  OmniTilemapDocument: typeof OmniTilemapDocument !== "undefined" ? OmniTilemapDocument : undefined,
+  createOmniTilemapDocument: typeof createOmniTilemapDocument === "function" ? createOmniTilemapDocument : undefined,
+  LayerStack: typeof LayerStack !== "undefined" ? LayerStack : undefined,
+  uiLayerStack: typeof uiLayerStack !== "undefined" ? uiLayerStack : undefined,
+  FrameProfiler: typeof FrameProfiler !== "undefined" ? FrameProfiler : undefined,
+  frameProfiler: typeof frameProfiler !== "undefined" ? frameProfiler : undefined,
+  OmniLiveEditSession: typeof OmniLiveEditSession !== "undefined" ? OmniLiveEditSession : undefined,
+  omniLiveEditSession: typeof omniLiveEditSession !== "undefined" ? omniLiveEditSession : undefined,
+  applyOmniLiveEditPatch: typeof applyOmniLiveEditPatch === "function" ? applyOmniLiveEditPatch : undefined,
+  toggleOmniLiveEditPause: typeof toggleOmniLiveEditPause === "function" ? toggleOmniLiveEditPause : undefined,
   gameState: typeof gameState !== "undefined" ? gameState : undefined,
   C_TUTORIAL_COURSE: typeof C_TUTORIAL_COURSE !== "undefined" ? C_TUTORIAL_COURSE : undefined,
   QUEST_DATA: typeof QUEST_DATA !== "undefined" ? QUEST_DATA : undefined,
@@ -178,6 +192,111 @@ const officialSiteHtml = fs.existsSync("official-site.html") ? fs.readFileSync("
 const buildScript = fs.existsSync("build-single-html.cjs") ? fs.readFileSync("build-single-html.cjs", "utf8") : "";
 const initialBodyMarkup = html.match(/<body[\s\S]*?<script\b/)?.[0] || "";
 const cspContent = html.match(/Content-Security-Policy" content="([^"]+)"/)?.[1] || "";
+
+assert(/class GameDatabase/m.test(html) && /function createOmniCoreGameDatabase/m.test(html), "OmniCore should expose a central game database for worlds, enemies, tile palettes, and UI layers");
+assert(/class OmniLiveEditSession/m.test(html) && /function applyOmniLiveEditPatch/m.test(html), "OmniCore should expose runtime live-edit pause and patch operations");
+assert(/class OmniTilemapDocument/m.test(html) && /function createOmniTilemapDocument/m.test(html), "OmniCore should include a native tilemap document and brush model");
+assert(/class LayerStack/m.test(html) && /pushOverlay/m.test(html) && /pauseBelow/m.test(html), "OmniCore should include an overlay layer stack that can pause lower layers");
+assert(/class FrameProfiler/m.test(html) && /renderWaterfallText/m.test(html), "OmniCore should include a frame profiler with waterfall output");
+assert(/liveEdit/m.test(html) && /profiler/m.test(html), "debug overlay should report live-edit and profiler state");
+
+{
+  assert(typeof api.createOmniCoreGameDatabase === "function", "game database factory should be exported");
+  const database = api.createOmniCoreGameDatabase({
+    enemyRules: {
+      logicGuard: { type: "logicGuard", label: "逻辑守卫", hp: 3, color: 0x60a5fa },
+      byChapterIndex: [
+        { enemies: [] },
+        { enemies: [{ type: "logicGuard", hp: 3, repair: "嵌套循环" }] }
+      ]
+    },
+    gameData: {
+      world: { id: "c-language-world", worldKey: "c", title: "Main Corridor" },
+      map: { width: 3200, height: 1280 }
+    }
+  });
+  assert(database.getRow("worlds", "c").title === "Main Corridor", "game database should register worlds by world key");
+  assert(database.getRow("enemies", "logicGuard").hp === 3, "game database should register enemy defaults");
+  database.updateRow("enemies", "logicGuard", { hp: 100, repair: "runtime table edit" });
+  assert(database.getRow("enemies", "logicGuard").hp === 100, "game database should edit enemy table rows at runtime");
+  const spawnRows = database.getEnemySpawnRowsForChapter(1);
+  assert(spawnRows[0].hp === 100 && spawnRows[0].repair === "嵌套循环", "chapter spawn rows should merge table edits with chapter spawn data");
+}
+
+{
+  assert(typeof api.createOmniTilemapDocument === "function", "tilemap factory should be exported");
+  const tilemap = api.createOmniTilemapDocument({ width: 4, height: 3, tileSize: 32, layers: [{ id: "ground" }] });
+  tilemap.brush("ground", 1, 2, "floor");
+  assert(tilemap.getTile("ground", 1, 2).tileId === "floor", "tilemap brush should paint a tile into a native layer");
+  tilemap.brush("collision", 2, 1, { tileId: "rock", solid: true });
+  assert(tilemap.getTile("collision", 2, 1).solid === true, "tilemap brush should create collision-layer solid tiles without Tiled");
+  tilemap.erase("ground", 1, 2);
+  assert(tilemap.getTile("ground", 1, 2) === null, "tilemap erase should remove painted tiles");
+}
+
+{
+  assert(typeof api.LayerStack === "function", "layer stack class should be exported");
+  const stack = new api.LayerStack();
+  stack.pushOverlay({ id: "inventory", pauseBelow: true, source: "test" });
+  stack.pushOverlay({ id: "settings", pauseBelow: false, source: "test" });
+  assert(stack.top().id === "settings", "layer stack should keep the latest overlay on top");
+  assert(stack.shouldPauseBelow() === true, "layer stack should pause lower gameplay while any overlay requests it");
+  stack.popOverlay("inventory");
+  assert(stack.shouldPauseBelow() === false, "layer stack should resume lower layers after the pausing overlay closes");
+}
+
+{
+  assert(typeof api.FrameProfiler === "function", "frame profiler class should be exported");
+  const profiler = new api.FrameProfiler({ maxFrames: 4 });
+  profiler.beginFrame(0);
+  profiler.startSegment("Entity Update", 0);
+  profiler.endSegment("Entity Update", 5);
+  profiler.startSegment("Renderer", 5);
+  profiler.endSegment("Renderer", 7);
+  profiler.endFrame(8);
+  const snapshot = profiler.snapshot();
+  assert(snapshot.frameMs === 8 && snapshot.segments.length === 2, "frame profiler should record segment timings for the latest frame");
+  assert(/Entity Update/.test(profiler.renderWaterfallText()), "frame profiler should render a text waterfall for debug panels");
+}
+
+{
+  assert(typeof api.OmniLiveEditSession === "function", "live-edit session class should be exported");
+  let paused = false;
+  let resumed = false;
+  const fakePlayer = {
+    x: 10,
+    y: 20,
+    setPosition(x, y) { this.x = x; this.y = y; return this; },
+    setVelocity(x, y) { this.vx = x; this.vy = y; return this; }
+  };
+  const fakeGameState = {
+    paused: false,
+    menuOpen: false,
+    editorOpen: false,
+    dialogOpen: false,
+    progress: {
+      activeCodeEnemies: [{ id: "overview:logicGuard:0", type: "logicGuard", hp: 3, x: 100, y: 120, defeated: false }]
+    }
+  };
+  const session = new api.OmniLiveEditSession({
+    getScene: () => ({
+      player: fakePlayer,
+      scene: {
+        pause() { paused = true; },
+        resume() { resumed = true; }
+      }
+    }),
+    getGameState: () => fakeGameState
+  });
+  session.pause("test");
+  assert(paused && fakeGameState.paused && fakeGameState.liveEditPaused, "live edit pause should pause the running world");
+  session.applyPatch({ target: "player", x: 44, y: 55 });
+  assert(fakePlayer.x === 44 && fakePlayer.y === 55 && fakePlayer.vx === 0 && fakePlayer.vy === 0, "live edit patch should move the player while paused");
+  session.applyPatch({ target: "enemy", id: "overview:logicGuard:0", hp: 100, x: 150 });
+  assert(fakeGameState.progress.activeCodeEnemies[0].hp === 100 && fakeGameState.progress.activeCodeEnemies[0].x === 150, "live edit patch should edit enemy runtime data");
+  session.resume();
+  assert(resumed && fakeGameState.paused === false && fakeGameState.liveEditPaused === false, "live edit resume should continue the world from the edited state");
+}
 const rawStyleContent = html.match(/<style[^>]*>([\s\S]*?)<\/style>/)?.[1] || "";
 const rawInlineScriptContent = [...html.matchAll(/<script([^>]*)>([\s\S]*?)<\/script>/g)]
   .find((match) => !/src=/.test(match[1]))?.[2] || "";
@@ -390,9 +509,11 @@ for (const id of expectedIds) {
 const injected = api.autoInjectStdIoHeader('int main(void) { printf("Hi"); return 0; }');
 assert(/^#include <stdio\.h>/.test(injected), "C preprocessing should add stdio.h when printf is used without include");
 assert(api.normalizeProgramOutput("Hello\n\n") === "Hello", "program output comparison should ignore trailing whitespace");
+assert(api.formatProgramOutputForDisplay("C language\n\n") === "C language", "program output display should preserve meaningful spaces");
 assert(api.compareProgramOutput("Hello\n", "Hello").ok, "output comparison should allow trailing newline differences");
 assert(api.compareProgramOutput(" Hello World \n", "HelloWorld").ok, "output comparison should ignore output whitespace");
 assert(api.compareProgramOutput("Wrong", "Right").message.includes("预期输出"), "output mismatch should explain expected and actual output");
+assert(api.simulateCOutput('#include <stdio.h>\nint main(void) { printf("C language"); return 0; }', api.chapterById.overview) === "C language", "simulated stdout should keep spaces inside string literals");
 const initialGameData = api.createInitialGameData();
 assert(initialGameData.progress.learned.length === 0, "initial game data should have no learned lessons");
 assert(initialGameData.codeInventory.length === 0, "initial game data should have zero fragments");
@@ -1604,10 +1725,11 @@ assert(/SYSTEM_BOOT_FORCE_RELEASE_MS\s*=\s*3200/m.test(html) && /system-boot-for
 assert(/function markAppRendered\(reason = "script-started"\)[\s\S]*classList\?\.add\("app-rendered"\)[\s\S]*staticRescue/m.test(html), "normal script startup should hide the static rescue layer");
 assert(/html\.app-rendered \.static-rescue/m.test(html) && /safeMode=true&noAudio=true&v=1\.2\.0/m.test(html), "static rescue should only appear if the app script does not render");
 assert(/isStrictSecurityMode\(\)[\s\S]*removeItem\?\.\("codeAwakenerStrictSecurity"\)[\s\S]*params\.get\("strictSecurity"\) === "1"/m.test(html), "stale localStorage strict-security flags should not white-screen normal browsers");
-assert(/UPDATE_ANNOUNCEMENT_PAGES\s*=\s*Object\.freeze\(\[\s*\{\s*title:\s*"> 消息 \/ 本次更新"[\s\S]*v1\.2\.0-hotfix\.5[\s\S]*电影分镜重新排版[\s\S]*三列检查卡[\s\S]*第5幕实战演示新增三步字幕[\s\S]*真实编辑器实战新增持续字幕条[\s\S]*6 个分镜主要元素均无重叠、无越界[\s\S]*414374792/m.test(html), "startup announcement should show the current cinematic layout and hands-on subtitle hotfix before upload");
-assert(/id="announcementPageBody"[\s\S]*v1\.2\.0-hotfix\.5[\s\S]*电影分镜重新排版[\s\S]*三列检查卡[\s\S]*第5幕实战演示新增三步字幕[\s\S]*真实编辑器实战新增持续字幕条[\s\S]*官方Q群：414374792/m.test(initialBodyMarkup), "static startup announcement placeholder should match the current cinematic layout and hands-on subtitle hotfix before script hydration");
+assert(/UPDATE_ANNOUNCEMENT_PAGES\s*=\s*Object\.freeze\(\[\s*\{\s*title:\s*"> 消息 \/ 本次更新"[\s\S]*v1\.2\.0-hotfix\.6[\s\S]*实战运行链路重修[\s\S]*真正点击运行[\s\S]*保留 C language 中间的空格[\s\S]*字幕条上移[\s\S]*printf 字符级解构[\s\S]*414374792/m.test(html), "startup announcement should show the current hands-on run synchronization hotfix before upload");
+assert(/id="announcementPageBody"[\s\S]*v1\.2\.0-hotfix\.6[\s\S]*实战运行链路重修[\s\S]*真正点击运行[\s\S]*保留 C language 中间的空格[\s\S]*字幕条上移[\s\S]*printf 字符级解构[\s\S]*官方Q群：414374792/m.test(initialBodyMarkup), "static startup announcement placeholder should match the current hands-on run synchronization hotfix before script hydration");
 assert(!/公告只保留关闭、课程锁定、自由模式通关后显示/m.test(initialBodyMarkup), "static startup announcement placeholder should not show stale update copy");
-assert(/UPDATE_HISTORY\s*=\s*Object\.freeze\(\[\s*\{[\s\S]*v1\.2\.0-hotfix\.5[\s\S]*电影分镜排版与实战字幕热修[\s\S]*顺序轨、画面主体和底部重点字幕[\s\S]*三列检查卡[\s\S]*真实编辑器实战新增持续字幕条[\s\S]*官方Q群：414374792/m.test(html), "update history should record the current cinematic layout and hands-on subtitle hotfix");
+assert(/UPDATE_HISTORY\s*=\s*Object\.freeze\(\[\s*\{[\s\S]*v1\.2\.0-hotfix\.6[\s\S]*实战运行同步与输出讲解热修[\s\S]*停在编辑器内显示输出区结果[\s\S]*真正点击运行[\s\S]*保留 C language 中间的空格[\s\S]*未改动 Pixi 版文件[\s\S]*官方Q群：414374792/m.test(html), "update history should record the current hands-on run synchronization hotfix");
+assert(/UPDATE_HISTORY\s*=\s*Object\.freeze\(\[\s*\{[\s\S]*v1\.2\.0-hotfix\.5[\s\S]*电影分镜排版与实战字幕热修[\s\S]*顺序轨、画面主体和底部重点字幕[\s\S]*三列检查卡[\s\S]*真实编辑器实战新增持续字幕条[\s\S]*官方Q群：414374792/m.test(html), "update history should keep the previous cinematic layout and hands-on subtitle hotfix");
 assert(/UPDATE_HISTORY\s*=\s*Object\.freeze\(\[\s*\{[\s\S]*v1\.2\.0-hotfix\.4[\s\S]*电影顺序轨与单导师女声热修[\s\S]*visibility hidden[\s\S]*编号焦点动线[\s\S]*ChatTTS[\s\S]*printf、Hello World、include、int main[\s\S]*--force-keys[\s\S]*官方Q群：414374792/m.test(html), "update history should keep the previous cinematic rail and ChatTTS hotfix");
 assert(/UPDATE_HISTORY\s*=\s*Object\.freeze\(\[\s*\{[\s\S]*v1\.2\.0-hotfix\.3[\s\S]*电影实战演示与 Supertonic 离线热修[\s\S]*不再只停在第一个 #[\s\S]*printf\("C language"\);[\s\S]*官方Q群：414374792/m.test(html), "update history should keep the previous hands-on editor and Supertonic hotfix");
 assert(/UPDATE_HISTORY\s*=\s*Object\.freeze\(\[\s*\{[\s\S]*v1\.2\.0-hotfix\.2[\s\S]*第一学习舱电影与新号入场热修[\s\S]*老程序员只说一句[\s\S]*T05\/T09[\s\S]*官方Q群：414374792/m.test(html), "update history should record the compiler-cabin and new-player-flow hotfix");
@@ -2573,9 +2695,31 @@ assert(/interaction\?\.type === "lesson"[\s\S]*interaction\.chapter\.id !== FIRS
 assert(/function getCompilerCabinDeconstructionCode\(chapter[\s\S]*chapter\?\.taskExample[\s\S]*printf\("Hello World!"\);/m.test(html), "compiler cabin deconstruction should use the current chapter example before falling back to Hello World");
 assert(/function playCompilerCabinHandsOnEditorDemo\(chapter[\s\S]*EXACT_TASK_CODE_BY_ID\[chapter\?\.id[\s\S]*dom\.codeInput\.value = target\.slice\(0, index\)[\s\S]*focusButtonWithVisualPulse\(dom\.runButton\)/m.test(html), "compiler cabin hands-on demo should type the real task code into the actual editor before focusing Run");
 assert(/function playCompilerCabinHandsOnNarration\([\s\S]*speakGameText\([\s\S]*现在进入实战演示[\s\S]*printf 是这一关的核心动作[\s\S]*运行按钮/m.test(html), "compiler cabin hands-on demo should include spoken mentor narration for zero-basis players");
-assert(/playCompilerCabinHandsOnNarration\("main"/m.test(html) && /playCompilerCabinHandsOnNarration\("string"/m.test(html) && /playCompilerCabinHandsOnNarration\("semicolon"/m.test(html), "hands-on demo should narrate main function, string content, and semicolon checkpoints for true beginners");
+assert(/waitForCompilerCabinHandsOnNarrationStage\(session, "main"/m.test(html) && /waitForCompilerCabinHandsOnNarrationStage\(session, "string"/m.test(html) && /waitForCompilerCabinHandsOnNarrationStage\(session, "semicolon"/m.test(html), "hands-on demo should narrate main function, string content, and semicolon checkpoints for true beginners");
 assert(/id="compilerHandsOnSubtitle"[\s\S]*data-hands-on-step="editor"[\s\S]*data-hands-on-step="run"[\s\S]*data-role="compiler-hands-on-text"/m.test(html), "hands-on editor demo should keep a persistent subtitle and ordered focus strip on screen");
 assert(/const COMPILER_HANDS_ON_SUBTITLE_COPY[\s\S]*include:[\s\S]*#include 是准备工具箱[\s\S]*semicolon:[\s\S]*分号表示这一句结束[\s\S]*finish:[\s\S]*跟着光圈点击/m.test(html), "hands-on subtitles should explain each beginner checkpoint without relying only on TTS");
+assert(/async function speakGameText\(text = "", options = \{\}\)[\s\S]*const ok = await speakWithOpenSourceTts[\s\S]*return ok/m.test(html), "TTS helper should return an awaitable promise instead of reporting success before speech finishes");
+assert(/function playAudioElementForTts\(audio, url = ""[\s\S]*audio\.onended = \(\) => \{[\s\S]*settle\(true\)[\s\S]*await audio\.play\(\)[\s\S]*updateOpenSourceTtsStatus\("ready", "内置离线旁白播放中"\)/m.test(html), "cached offline TTS should resolve after audio ends so tutorial progress can stay synchronized with speech");
+assert(/function queueCompilerCabinHandsOnNarration\(stage = "start"[\s\S]*playCompilerCabinHandsOnNarration\(stage, chapter\)[\s\S]*compilerHandsOnNarrationChain\s*=\s*compilerHandsOnNarrationChain\.then\(runNarration, runNarration\)/m.test(html), "hands-on narration should be queued so several checkpoint clips cannot overlap or lag behind the visual step");
+assert(/function waitForCompilerCabinHandsOnNarrationStage\(session, stage[\s\S]*queueCompilerCabinHandsOnNarration\(stage, chapter\)[\s\S]*Math\.max\(0, minWaitMs/m.test(html), "hands-on typing checkpoints should wait for the spoken explanation or a readable minimum duration before continuing");
+assert(/COMPILER_HANDS_ON_NARRATION_MAX_MS[\s\S]*stopCurrentOpenSourceTtsPlayback\("hands-on-narration-timeout"\)/m.test(html), "hands-on narration should have a bounded wait so long or stale TTS clips cannot stall the real editor demo");
+assert(!/双引号里的 Hello World 是要原样显示的文字/.test(html) && /双引号里的文字是要原样显示的内容/.test(html), "hands-on subtitles should not hard-code Hello World when the active task prints C language");
+assert(/function getOpenSourceTtsCacheCandidates\(pipeline, options = \{\}\)[\s\S]*options\.probeGeneratedCache \? generated : \[\][\s\S]*async function isOpenSourceTtsCacheAssetAvailable\(url = ""\)[\s\S]*playOpenSourceTtsCache\(pipeline, options = \{\}\)[\s\S]*isOpenSourceTtsCacheAssetAvailable\(url\)[\s\S]*new Audio\(url\)/m.test(html), "TTS cache probing should avoid creating audio elements for missing generated clips that spam browser 404 errors");
+assert(/playCompilerCabinHandsOnEditorDemo\(chapter\)/m.test(html) && /waitForCompilerCabinHandsOnNarrationStage\(session, "start"/m.test(html) && /waitForCompilerCabinHandsOnNarrationStage\(session, "include"/m.test(html) && /waitForCompilerCabinHandsOnNarrationStage\(session, "main"/m.test(html) && /waitForCompilerCabinHandsOnNarrationStage\(session, "printf"/m.test(html) && /waitForCompilerCabinHandsOnNarrationStage\(session, "string"/m.test(html) && /waitForCompilerCabinHandsOnNarrationStage\(session, "semicolon"/m.test(html) && /waitForCompilerCabinHandsOnNarrationStage\(session, "return"/m.test(html), "hands-on demo should synchronize code typing with beginner narration through include, main, printf, string, semicolon, and return checkpoints");
+assert(/function waitForCompilerCabinHandsOnRun\(chapter[\s\S]*compilerHandsOnRunWaiter[\s\S]*function notifyCompilerCabinHandsOnRunComplete/m.test(html), "compiler cabin should wait for the player to really run the code before continuing to later deconstruction");
+assert(/playCompilerCabinHandsOnEditorDemo\(chapter\)\.then\(\(completed\) => \{[\s\S]*waitForCompilerCabinHandsOnRun\(chapter\)\.then\(\(ran\) => \{[\s\S]*playPrintfCharacterDeconstruction/m.test(html), "printf deconstruction should start only after the hands-on Run button has actually completed");
+assert(!/trackedSetTimeout\(\(\) => \{[\s\S]*compiler-hands-on-demo-ready[\s\S]*compiler-hands-on-release/m.test(html), "hands-on Run highlight should not expire on a fixed timer before the player clicks it");
+assert(/function shouldDeferCompilerCabinAutoComplete\(chapterId[\s\S]*compilerHandsOnRunWaiter[\s\S]*deferCompilerCabinAutoComplete[\s\S]*setCompilerHandsOnSubtitle\("output"\)[\s\S]*return result[\s\S]*tutorialAnimationManager\.trigger\("T07_COMPILE_SUCCESS"/m.test(html), "first cabin hands-on success should show output inside the editor before auto-completing the chapter");
+assert(/notifyCompilerCabinHandsOnRunComplete[\s\S]*clearButtonVisualPulse\(\)[\s\S]*setCompilerHandsOnSubtitle\("output"\)/m.test(html), "clicking the guided Run button should clear the old pulse and move guidance to the output area");
+assert(/outputText:\s*dom\.consoleOutput\?\.textContent \|\| ""/m.test(html), "browser validation hooks should read the real editor output console");
+assert(
+  html.includes('queueCompilerCabinHandsOnNarration("output", chapter).finally')
+    && html.includes('const timeline = playPrintfCharacterDeconstruction(getCompilerCabinDeconstructionCode(chapter));')
+    && html.includes('"compiler-hands-on-complete-after-deconstruction"')
+    && html.includes('then(() => completeChallenge())'),
+  "compiler cabin should narrate output, deconstruct printf, then complete the chapter"
+);
+assert(/\.compiler-hands-on-subtitle \{[\s\S]*bottom:\s*clamp\(270px,\s*31vh,\s*318px\)[\s\S]*max-height:\s*min\(190px,\s*32vh\)[\s\S]*overflow:\s*visible/m.test(html), "hands-on subtitles should sit above the editor console black bar and remain readable");
 assert(/function setCompilerHandsOnSubtitle\(stage = "start"\)[\s\S]*panel\.dataset\.focus[\s\S]*compiler-hands-on-text[\s\S]*导师提示：/m.test(html), "hands-on subtitle updates should also synchronize the visible editor status text");
 assert(/playCompilerCabinHandsOnEditorDemo\(chapter\)[\s\S]*setCompilerHandsOnSubtitle\("start"\)[\s\S]*setCompilerHandsOnSubtitle\("include"\)[\s\S]*setCompilerHandsOnSubtitle\("main"\)[\s\S]*setCompilerHandsOnSubtitle\("printf"\)[\s\S]*setCompilerHandsOnSubtitle\("string"\)[\s\S]*setCompilerHandsOnSubtitle\("semicolon"\)[\s\S]*setCompilerHandsOnSubtitle\("finish"\)/m.test(html), "hands-on demo should switch subtitles at every typing checkpoint and run-button handoff");
 assert(/dom\.runButton\.addEventListener\("click"[\s\S]*setCompilerHandsOnSubtitle\("output"\)[\s\S]*runChallenge\(\)/m.test(html), "run-button click should point subtitles to the output area after the player acts");

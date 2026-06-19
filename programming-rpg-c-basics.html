@@ -14,7 +14,7 @@
   <meta http-equiv="Cache-Control" content="no-store, max-age=0, must-revalidate">
   <meta http-equiv="Pragma" content="no-cache">
   <meta http-equiv="Expires" content="0">
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self' file:; base-uri 'self'; object-src 'none'; script-src 'self' 'nonce-code-awakener-inline' file: 'sha256-Zh2xoddQ360kb7kqPFIcvd0FS2cq/XoQg2R6WY8BN7Y='; style-src 'self' 'nonce-code-awakener-inline' file: 'sha256-+W2p3mYyL1cO8W06g8VvE4BXKgQlzNiHR79zpUtY/c8='; style-src-attr 'unsafe-inline'; font-src 'self' file: data:; img-src 'self' file: data: blob: https://cdn.pixabay.com; media-src 'self' file: data: blob: https: http: https://cdn.pixabay.com; worker-src 'self' file: blob:; child-src 'self' file: blob:; connect-src 'self' file: http://localhost:8000 http://127.0.0.1:8000 http://localhost:9966 http://127.0.0.1:9966 http://localhost:9977 http://127.0.0.1:9977 https://cdn.pixabay.com https://pixabay.com;">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self' file:; base-uri 'self'; object-src 'none'; script-src 'self' 'nonce-code-awakener-inline' file: 'sha256-4WYkeo2hsSbrbJr0jZWo4C+krc0BGPUSBXL1JF1h4BU='; style-src 'self' 'nonce-code-awakener-inline' file: 'sha256-1FbRjyqa6gf6TA9DHYIIXnkEygAJ/YHWiCKpYQ8t+h0='; style-src-attr 'unsafe-inline'; font-src 'self' file: data:; img-src 'self' file: data: blob: https://cdn.pixabay.com; media-src 'self' file: data: blob: https: http: https://cdn.pixabay.com; worker-src 'self' file: blob:; child-src 'self' file: blob:; connect-src 'self' file: http://localhost:8000 http://127.0.0.1:8000 http://localhost:9966 http://127.0.0.1:9966 http://localhost:9977 http://127.0.0.1:9977 https://cdn.pixabay.com https://pixabay.com;">
   <title>代码觉醒者：Main Corridor</title>
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%23020617'/%3E%3Cpath d='M22 20 10 32l12 12M42 20l12 12-12 12' fill='none' stroke='%2300ff88' stroke-width='6' stroke-linecap='round' stroke-linejoin='round'/%3E%3Cpath d='m36 16-8 32' stroke='%2300ccff' stroke-width='5' stroke-linecap='round'/%3E%3C/svg%3E">
   <script src="./vendor/phaser.min.js"></script>
@@ -12643,9 +12643,11 @@
     .compiler-hands-on-subtitle {
       position: absolute;
       left: 50%;
-      bottom: 22px;
-      z-index: 165;
-      width: min(820px, calc(100% - 36px));
+      bottom: clamp(270px, 31vh, 318px);
+      z-index: 220;
+      width: min(920px, calc(100% - 72px));
+      max-height: min(190px, 32vh);
+      overflow: visible;
       display: none;
       gap: 10px;
       padding: 12px 14px;
@@ -15106,12 +15108,13 @@ int main(void) {
       <button id="announcementCloseButton" class="announcement-close" type="button" aria-label="关闭公告">×</button>
       <h2 id="startupAnnouncementTitle" class="startup-announcement-title">> 消息 / 本次更新</h2>
       <div id="announcementPageBody" class="startup-announcement-body">
-        <p>// v1.2.0-hotfix.5：第一学习舱电影分镜重新排版，顺序轨、画面主体和底部重点字幕彻底分开。</p>
-        <p>// 第3幕编译器检查机改成三列检查卡，隐藏重复检查灯，避免元素互相压住。</p>
-        <p>// 第5幕实战演示新增三步字幕：先看编辑器、再看运行按钮、最后看输出区。</p>
-        <p>// 真实编辑器实战新增持续字幕条，include、main、printf、字符串、分号和运行按钮都有同步提示。</p>
-        <p>// 电影舞台高度放宽到 82vh，并用 Playwright 逐幕测量，6 个分镜主要元素均无重叠、无越界。</p>
-        <p>// 第一世界仍为 Main Corridor 单一走廊，学习舱按顺序点亮；本次上传未修改 Pixi 版文件。</p>
+        <p>// v1.2.0-hotfix.6：第一学习舱实战运行链路重修，运行后先停在编辑器内看输出，不再直接跳回主界面。</p>
+        <p>// 语音、逐字输入和运行按钮进度重新同步，代码写完后必须等玩家真正点击运行再进入下一步。</p>
+        <p>// 输出区会保留 C language 中间的空格，判题宽容和屏幕显示分离，避免误导零基础玩家。</p>
+        <p>// 字幕条上移到控制台黑条上方，点击运行后光圈自动收起，并把视觉引导切到“看输出”。</p>
+        <p>// 运行成功后新增输出讲解，再播放 printf 字符级解构，最后才完成关卡结算。</p>
+        <p>// Main Corridor 单一走廊主线保持不变，变量立绘剧场历史内容仍可在主菜单历史更新查看。</p>
+        <p>// 本次上传只修改 Phaser 3.80.1 版文件；Pixi 版文件未混放、未改动。</p>
         <p>// 作者：杀戮，QQ：3424636983，官方Q群：414374792。</p>
         <p class="announcement-dismiss-hint">- 点击任意处关闭</p>
       </div>
@@ -15652,6 +15655,451 @@ int main() {
         { enemies: [{ type: "logicGuard", hp: 3, repair: "嵌套循环" }] }
       ]
     });
+
+    function cloneRuntimeData(value) {
+      if (value === null || typeof value !== "object") return value;
+      return JSON.parse(JSON.stringify(value));
+    }
+
+    class GameDatabase {
+      constructor({ tables = {}, metadata = {} } = {}) {
+        this.tables = new Map();
+        this.metadata = cloneRuntimeData(metadata);
+        Object.entries(tables).forEach(([name, rows]) => this.registerTable(name, rows));
+      }
+
+      registerTable(name, rows = [], idKey = "id") {
+        const tableName = String(name || "").trim();
+        if (!tableName) throw new Error("GameDatabase table name is required.");
+        const table = new Map();
+        const sourceRows = Array.isArray(rows) ? rows : Object.values(rows || {});
+        sourceRows.forEach((row, index) => {
+          const record = cloneRuntimeData(row || {});
+          const id = String(record[idKey] || record.type || record.key || index);
+          record.id = id;
+          table.set(id, record);
+        });
+        this.tables.set(tableName, table);
+        return this;
+      }
+
+      getTable(name) {
+        return Array.from(this.tables.get(name)?.values?.() || []).map((row) => cloneRuntimeData(row));
+      }
+
+      getRow(name, id) {
+        const row = this.tables.get(name)?.get(String(id));
+        return row ? cloneRuntimeData(row) : null;
+      }
+
+      updateRow(name, id, patch = {}) {
+        const table = this.tables.get(name);
+        if (!table) throw new Error(`GameDatabase table not found: ${name}`);
+        const key = String(id);
+        const current = table.get(key) || { id: key };
+        const next = { ...current, ...cloneRuntimeData(patch), id: key };
+        table.set(key, next);
+        return cloneRuntimeData(next);
+      }
+
+      getEnemySpawnRowsForChapter(chapterIndex = 0) {
+        const rules = this.metadata.enemySpawns || [];
+        const rule = rules[Math.max(0, Number(chapterIndex) || 0)] || { enemies: [] };
+        return (rule.enemies || []).map((spawn) => {
+          const tableRow = this.getRow("enemies", spawn.type) || {};
+          return {
+            ...tableRow,
+            ...cloneRuntimeData(spawn),
+            hp: Number(tableRow.hp ?? spawn.hp ?? 1) || 1,
+            label: tableRow.label || spawn.label || spawn.type,
+            repairHint: tableRow.repairHint || spawn.repairHint || spawn.repair || "",
+            repair: spawn.repair || tableRow.repair || tableRow.repairHint || ""
+          };
+        });
+      }
+    }
+
+    function createOmniCoreGameDatabase({ enemyRules = ENEMY_ENCOUNTER_RULES, gameData = null } = {}) {
+      const spawnRows = (enemyRules.byChapterIndex || []).flatMap((rule) => rule.enemies || []);
+      const enemyTypes = Object.keys(enemyRules).filter((key) => key !== "byChapterIndex");
+      const enemies = enemyTypes.map((type) => {
+        const rule = enemyRules[type] || {};
+        const spawn = spawnRows.find((enemy) => enemy.type === type) || {};
+        return {
+          id: type,
+          type,
+          label: rule.label || type,
+          color: rule.color || 0xffffff,
+          hp: Number(rule.hp ?? spawn.hp ?? 1) || 1,
+          repair: spawn.repair || rule.repair || rule.repairHint || "",
+          repairHint: rule.repairHint || spawn.repair || "",
+          projectile: rule.projectile || ""
+        };
+      });
+      const world = gameData?.world ? {
+        id: gameData.world.worldKey || gameData.world.id,
+        worldId: gameData.world.id,
+        worldKey: gameData.world.worldKey || gameData.world.id,
+        title: gameData.world.title || gameData.world.name || gameData.world.id,
+        name: gameData.world.name || gameData.world.title || gameData.world.id,
+        width: gameData.map?.width || 0,
+        height: gameData.map?.height || 0
+      } : { id: "c", worldId: "c-language-world", worldKey: "c", title: "Main Corridor", name: "C Runtime", width: 3200, height: 1280 };
+      return new GameDatabase({
+        tables: {
+          worlds: [world],
+          enemies,
+          tilePalette: [
+            { id: "floor", label: "Floor", solid: false, color: "#111827" },
+            { id: "rock", label: "Rock", solid: true, color: "#64748b" },
+            { id: "tree", label: "Tree", solid: true, color: "#22c55e" },
+            { id: "gate", label: "Gate", solid: true, color: "#f59e0b" }
+          ],
+          uiLayers: [
+            { id: "pause", label: "Pause Menu", pauseBelow: true },
+            { id: "inventory", label: "Inventory", pauseBelow: true },
+            { id: "settings", label: "Settings", pauseBelow: true },
+            { id: "debug", label: "Debug Overlay", pauseBelow: false }
+          ]
+        },
+        metadata: {
+          enemySpawns: cloneRuntimeData(enemyRules.byChapterIndex || [])
+        }
+      });
+    }
+
+    let gameDatabase = null;
+
+    function getRuntimeEnemyDefinition(type = "logicGuard") {
+      return gameDatabase?.getRow("enemies", type) || ENEMY_ENCOUNTER_RULES[type] || { id: type, type, label: type, hp: 1 };
+    }
+
+    function getRuntimeEnemySpawnRowsForChapter(chapterIndex = 0) {
+      const databaseRows = gameDatabase?.getEnemySpawnRowsForChapter(chapterIndex) || [];
+      if (databaseRows.length) return databaseRows;
+      const fallbackRule = ENEMY_ENCOUNTER_RULES.byChapterIndex[chapterIndex] || { enemies: [] };
+      return cloneRuntimeData(fallbackRule.enemies || []);
+    }
+
+    class OmniTilemapDocument {
+      constructor({ width = 1, height = 1, tileSize = 48, layers = [] } = {}) {
+        this.width = Math.max(1, Number(width) || 1);
+        this.height = Math.max(1, Number(height) || 1);
+        this.tileSize = Math.max(1, Number(tileSize) || 48);
+        this.layers = new Map();
+        (layers.length ? layers : [{ id: "ground" }, { id: "collision" }]).forEach((layer) => this.ensureLayer(layer.id || layer));
+      }
+
+      ensureLayer(layerId) {
+        const id = String(layerId || "ground");
+        if (!this.layers.has(id)) this.layers.set(id, new Map());
+        return this.layers.get(id);
+      }
+
+      key(x, y) {
+        return `${Math.max(0, Math.floor(Number(x) || 0))}:${Math.max(0, Math.floor(Number(y) || 0))}`;
+      }
+
+      assertInside(x, y) {
+        const tx = Math.floor(Number(x) || 0);
+        const ty = Math.floor(Number(y) || 0);
+        if (tx < 0 || ty < 0 || tx >= this.width || ty >= this.height) throw new Error(`Tile outside map: ${tx},${ty}`);
+        return { x: tx, y: ty };
+      }
+
+      brush(layerId, x, y, tile) {
+        const point = this.assertInside(x, y);
+        const record = typeof tile === "string" ? { tileId: tile } : cloneRuntimeData(tile || {});
+        const tileId = record.tileId || record.id || "empty";
+        const next = { ...record, tileId, x: point.x, y: point.y };
+        this.ensureLayer(layerId).set(this.key(point.x, point.y), next);
+        return cloneRuntimeData(next);
+      }
+
+      erase(layerId, x, y) {
+        const point = this.assertInside(x, y);
+        return this.ensureLayer(layerId).delete(this.key(point.x, point.y));
+      }
+
+      getTile(layerId, x, y) {
+        const point = this.assertInside(x, y);
+        const tile = this.ensureLayer(layerId).get(this.key(point.x, point.y));
+        return tile ? cloneRuntimeData(tile) : null;
+      }
+
+      toJSON() {
+        const layers = {};
+        this.layers.forEach((tiles, id) => {
+          layers[id] = Array.from(tiles.values()).map((tile) => cloneRuntimeData(tile));
+        });
+        return { width: this.width, height: this.height, tileSize: this.tileSize, layers };
+      }
+    }
+
+    function createOmniTilemapDocument(options = {}) {
+      return new OmniTilemapDocument(options);
+    }
+
+    let omniTilemapDocument = null;
+
+    class LayerStack {
+      constructor({ onChange = null } = {}) {
+        this.layers = [];
+        this.onChange = onChange;
+      }
+
+      emit() {
+        this.onChange?.(this.snapshot());
+        return this.snapshot();
+      }
+
+      pushOverlay(layer = {}) {
+        const id = String(layer.id || layer.name || `layer-${this.layers.length + 1}`);
+        this.layers = this.layers.filter((item) => item.id !== id);
+        this.layers.push({
+          id,
+          label: layer.label || id,
+          source: layer.source || "runtime",
+          pauseBelow: Boolean(layer.pauseBelow),
+          modal: layer.modal !== false,
+          openedAt: Date.now()
+        });
+        return this.emit();
+      }
+
+      popOverlay(id = this.top()?.id) {
+        if (!id) return this.emit();
+        this.layers = this.layers.filter((layer) => layer.id !== String(id));
+        return this.emit();
+      }
+
+      top() {
+        return this.layers[this.layers.length - 1] || null;
+      }
+
+      shouldPauseBelow() {
+        return this.layers.some((layer) => layer.pauseBelow);
+      }
+
+      snapshot() {
+        return {
+          depth: this.layers.length,
+          top: this.top(),
+          pauseBelow: this.shouldPauseBelow(),
+          layers: this.layers.map((layer) => ({ ...layer }))
+        };
+      }
+    }
+
+    const uiLayerStack = new LayerStack({
+      onChange(snapshot) {
+        document.body?.classList?.toggle("ui-layer-pauses-world", snapshot.pauseBelow);
+      }
+    });
+
+    function pushUiOverlayLayer(layer = {}) {
+      return uiLayerStack.pushOverlay(layer);
+    }
+
+    function popUiOverlayLayer(id) {
+      return uiLayerStack.popOverlay(id);
+    }
+
+    class FrameProfiler {
+      constructor({ maxFrames = 120, maxSegments = 16 } = {}) {
+        this.maxFrames = Math.max(1, Number(maxFrames) || 120);
+        this.maxSegments = Math.max(1, Number(maxSegments) || 16);
+        this.frames = [];
+        this.current = null;
+      }
+
+      beginFrame(now = performance.now()) {
+        this.current = { startedAt: now, endedAt: now, frameMs: 0, segments: [], active: new Map() };
+        return this.current;
+      }
+
+      startSegment(name, now = performance.now()) {
+        if (!this.current) this.beginFrame(now);
+        this.current.active.set(name, now);
+        return now;
+      }
+
+      endSegment(name, now = performance.now()) {
+        if (!this.current) return null;
+        const startedAt = this.current.active.get(name);
+        if (typeof startedAt !== "number") return null;
+        this.current.active.delete(name);
+        const segment = { name, ms: Math.max(0, now - startedAt) };
+        this.current.segments.push(segment);
+        if (this.current.segments.length > this.maxSegments) this.current.segments.shift();
+        return segment;
+      }
+
+      measure(name, callback) {
+        this.startSegment(name);
+        try {
+          return callback();
+        } finally {
+          this.endSegment(name);
+        }
+      }
+
+      endFrame(now = performance.now()) {
+        if (!this.current) this.beginFrame(now);
+        this.current.endedAt = now;
+        this.current.frameMs = Math.max(0, now - this.current.startedAt);
+        const frame = {
+          frameMs: this.current.frameMs,
+          segments: this.current.segments.map((segment) => ({ ...segment }))
+        };
+        this.frames.push(frame);
+        if (this.frames.length > this.maxFrames) this.frames.shift();
+        this.current = null;
+        return frame;
+      }
+
+      snapshot() {
+        const frame = this.frames[this.frames.length - 1] || { frameMs: 0, segments: [] };
+        return {
+          frameMs: frame.frameMs,
+          segments: frame.segments.map((segment) => ({ ...segment })),
+          frameCount: this.frames.length
+        };
+      }
+
+      renderWaterfallText(limit = 6) {
+        const snapshot = this.snapshot();
+        if (!snapshot.segments.length) return "profiler: idle";
+        return snapshot.segments
+          .slice(0, limit)
+          .map((segment) => {
+            const blocks = "█".repeat(Math.max(1, Math.min(18, Math.round(segment.ms))));
+            return `${segment.name} ${blocks} ${segment.ms.toFixed(2)}ms`;
+          })
+          .join("\n");
+      }
+    }
+
+    const frameProfiler = new FrameProfiler({ maxFrames: 120 });
+
+    class OmniLiveEditSession {
+      constructor({ getScene = () => null, getGameState = () => null, database = null } = {}) {
+        this.getScene = getScene;
+        this.getGameState = getGameState;
+        this.database = database;
+        this.paused = false;
+        this.previousPaused = false;
+        this.edits = [];
+      }
+
+      snapshot() {
+        return {
+          paused: this.paused,
+          edits: this.edits.slice(-10).map((edit) => ({ ...edit }))
+        };
+      }
+
+      pause(reason = "live-edit") {
+        const state = this.getGameState?.();
+        const scene = this.getScene?.();
+        if (!this.paused) this.previousPaused = Boolean(state?.paused);
+        this.paused = true;
+        if (state) {
+          state.liveEditPaused = true;
+          state.paused = true;
+        }
+        document.body?.classList?.add("live-edit-paused");
+        scene?.player?.setVelocity?.(0, 0);
+        scene?.scene?.pause?.();
+        this.edits.push({ type: "pause", reason, at: Date.now() });
+        return this.snapshot();
+      }
+
+      resume(reason = "live-edit") {
+        const state = this.getGameState?.();
+        const scene = this.getScene?.();
+        this.paused = false;
+        if (state) {
+          state.liveEditPaused = false;
+          if (!this.previousPaused && !state.menuOpen && !state.editorOpen && !state.dialogOpen) {
+            state.paused = false;
+            scene?.scene?.resume?.();
+          }
+        } else {
+          scene?.scene?.resume?.();
+        }
+        document.body?.classList?.remove("live-edit-paused");
+        this.edits.push({ type: "resume", reason, at: Date.now() });
+        return this.snapshot();
+      }
+
+      movePlayer({ x, y } = {}) {
+        const scene = this.getScene?.();
+        if (!scene?.player) return false;
+        const nextX = Number.isFinite(Number(x)) ? Number(x) : scene.player.x;
+        const nextY = Number.isFinite(Number(y)) ? Number(y) : scene.player.y;
+        scene.player.setVelocity?.(0, 0);
+        scene.player.setPosition?.(nextX, nextY);
+        if (!scene.player.setPosition) {
+          scene.player.x = nextX;
+          scene.player.y = nextY;
+        }
+        this.edits.push({ type: "move-player", x: nextX, y: nextY, at: Date.now() });
+        return true;
+      }
+
+      editEnemy({ id, hp, x, y } = {}) {
+        const state = this.getGameState?.();
+        const enemy = (state?.progress?.activeCodeEnemies || []).find((item) => item.id === id);
+        if (!enemy) return false;
+        if (Number.isFinite(Number(hp))) enemy.hp = Math.max(0, Number(hp));
+        if (Number.isFinite(Number(x))) enemy.x = Number(x);
+        if (Number.isFinite(Number(y))) enemy.y = Number(y);
+        this.edits.push({ type: "edit-enemy", id, hp: enemy.hp, x: enemy.x, y: enemy.y, at: Date.now() });
+        return true;
+      }
+
+      editTable({ table, id, values = {} } = {}) {
+        const targetDatabase = this.database || gameDatabase;
+        if (!targetDatabase || !table || !id) return null;
+        const row = targetDatabase.updateRow(table, id, values);
+        this.edits.push({ type: "edit-table", table, id, at: Date.now() });
+        return row;
+      }
+
+      applyPatch(patch = {}) {
+        if (patch.target === "player") return this.movePlayer(patch);
+        if (patch.target === "enemy") return this.editEnemy(patch);
+        if (patch.table) return this.editTable(patch);
+        return false;
+      }
+    }
+
+    let omniLiveEditSession = null;
+
+    function getOmniLiveEditSession() {
+      if (!omniLiveEditSession) {
+        omniLiveEditSession = new OmniLiveEditSession({
+          getScene: () => gameState?.scene,
+          getGameState: () => gameState,
+          database: gameDatabase
+        });
+      }
+      return omniLiveEditSession;
+    }
+
+    function applyOmniLiveEditPatch(patch = {}) {
+      return getOmniLiveEditSession().applyPatch(patch);
+    }
+
+    function toggleOmniLiveEditPause(force) {
+      const session = getOmniLiveEditSession();
+      const shouldPause = typeof force === "boolean" ? force : !session.paused;
+      const snapshot = shouldPause ? session.pause("toggle") : session.resume("toggle");
+      toggleDebugOverlay?.(true);
+      return snapshot;
+    }
+
     const SAVE_RITUAL_TEXT = "> Saved.";
     const SAVE_SCHEMA_VERSION = 3;
     const SAVE_SIGNATURE_SALT = "c-world-local-integrity";
@@ -15664,17 +16112,30 @@ int main() {
       {
         title: "> 消息 / 本次更新",
         lines: [
-          "// v1.2.0-hotfix.5：第一学习舱电影分镜重新排版，顺序轨、画面主体和底部重点字幕彻底分开。",
-          "// 第3幕编译器检查机改成三列检查卡，隐藏重复检查灯，避免元素互相压住。",
-          "// 第5幕实战演示新增三步字幕：先看编辑器、再看运行按钮、最后看输出区。",
-          "// 真实编辑器实战新增持续字幕条，include、main、printf、字符串、分号和运行按钮都有同步提示。",
-          "// 电影舞台高度放宽到 82vh，并用 Playwright 逐幕测量，6 个分镜主要元素均无重叠、无越界。",
-          "// 第一世界仍为 Main Corridor 单一走廊，学习舱按顺序点亮；本次上传未修改 Pixi 版文件。",
+          "// v1.2.0-hotfix.6：第一学习舱实战运行链路重修，运行后先停在编辑器内看输出，不再直接跳回主界面。",
+          "// 语音、逐字输入和运行按钮进度重新同步，代码写完后必须等玩家真正点击运行再进入下一步。",
+          "// 输出区会保留 C language 中间的空格，判题宽容和屏幕显示分离，避免误导零基础玩家。",
+          "// 字幕条上移到控制台黑条上方，点击运行后光圈自动收起，并把视觉引导切到“看输出”。",
+          "// 运行成功后新增输出讲解，再播放 printf 字符级解构，最后才完成关卡结算。",
+          "// Main Corridor 单一走廊主线保持不变，变量立绘剧场历史内容仍可在主菜单历史更新查看。",
+          "// 本次上传只修改 Phaser 3.80.1 版文件；Pixi 版文件未混放、未改动。",
           "// 作者：杀戮，QQ：3424636983，官方Q群：414374792。"
         ]
       }
     ]);
     const UPDATE_HISTORY = Object.freeze([
+      {
+        version: "v1.2.0-hotfix.6",
+        date: "2026-06-19",
+        title: "实战运行同步与输出讲解热修",
+        details: [
+          "第一学习舱实战运行链路重修：点击运行后先停在编辑器内显示输出区结果，不再立刻关闭编辑器或跳回主界面。",
+          "语音、逐字输入、运行按钮和后续 printf 字符级解构重新串联，代码写完后必须等玩家真正点击运行才进入下一步。",
+          "判题归一化和屏幕显示分离，输出区保留 C language 中间的空格，避免把引号内容原样显示这一知识点讲错。",
+          "实战字幕条上移到控制台黑条上方；点击运行后按钮光圈自动收起，视觉引导切换到“看输出”。",
+          "浏览器复测确认运行后编辑器保持打开、输出区显示 C language、随后进入字符级解构。本次上传只修改 Phaser 3.80.1 版文件，未改动 Pixi 版文件。官方Q群：414374792。"
+        ]
+      },
       {
         version: "v1.2.0-hotfix.5",
         date: "2026-06-19",
@@ -17192,7 +17653,7 @@ return 0;`;
       directSaveAs: "reduced-by-inline-resources"
     });
     const SECURITY_CONFIG = Object.freeze({
-      expectedScriptHash: "cUJYVqek6W3Zhf99ItcOlo532YfO/SsDdUakgib1pu4=",
+      expectedScriptHash: "l34Fvy8zekGa5SrpqJzmUHcK8C9eSBMc5GlFlJ668D8=",
       selfCheckIntervalMs: 45000,
       tamperRefreshMs: 5000,
       devToolsRefreshMs: 2000,
@@ -18422,11 +18883,16 @@ return 0;`;
           const delta = this.lastTime ? now - this.lastTime : 16.67;
           this.lastTime = now;
           this.frame += 1;
-          this.callbacks.forEach((entry) => {
-            if (this.frame % entry.frameInterval !== 0) return;
-            if (!entry.enabled()) return;
-            entry.callback({ now, delta, frame: this.frame });
-          });
+          frameProfiler.beginFrame(now);
+          try {
+            this.callbacks.forEach((entry, name) => {
+              if (this.frame % entry.frameInterval !== 0) return;
+              if (!entry.enabled()) return;
+              frameProfiler.measure(name, () => entry.callback({ now, delta, frame: this.frame }));
+            });
+          } finally {
+            frameProfiler.endFrame(performance.now());
+          }
           this.rafId = window.requestAnimationFrame(loop);
         };
         this.rafId = window.requestAnimationFrame(loop);
@@ -32843,6 +33309,7 @@ ${item.code}
 
     function spawnLogicGuardEnemy(scene, x, y, enemyData = {}) {
       if (!scene?.add) return null;
+      const definition = getRuntimeEnemyDefinition(enemyData.type || "logicGuard");
       const ring = scene.add.circle(0, 0, 24, 0x1e3a8a, 0.28).setStrokeStyle(2, 0x93c5fd, 0.78);
       const body = scene.add.text(0, 0, "{ if }", {
         fontFamily: "JetBrains Mono, monospace",
@@ -32851,7 +33318,7 @@ ${item.code}
         stroke: "#020617",
         strokeThickness: 3
       }).setOrigin(0.5);
-      const label = scene.add.text(0, -38, "逻辑守卫", {
+      const label = scene.add.text(0, -38, definition.label || "逻辑守卫", {
         fontFamily: "JetBrains Mono, monospace",
         fontSize: "11px",
         color: "#bfdbfe",
@@ -32876,6 +33343,8 @@ ${item.code}
 
       getRuleForChapter(chapterId) {
         const index = getChapterLevelIndex(chapterId);
+        const runtimeEnemies = getRuntimeEnemySpawnRowsForChapter(index);
+        if (runtimeEnemies.length) return { enemies: runtimeEnemies };
         return ENEMY_ENCOUNTER_RULES.byChapterIndex[index] || {
           enemies: [
             { type: "logicGuard", hp: Math.min(5, index + 1), repair: "嵌套循环" }
@@ -33078,7 +33547,10 @@ ${item.code}
         `skins:${gameState.progress.unlockedSkins.length}`,
         `achievements:${gameState.achievements.length}`
       ].join(",");
-      dom.debugOverlay.innerHTML = `<strong>DEBUG</strong><br>pos: ${Math.round(player?.x || 0)}, ${Math.round(player?.y || 0)}<br>state: ${playerStateMachine.state}<br>fragmentCount: ${fragmentCount}<br>questProgress: ${questProgress}<br>unlockedFeatures: ${unlockedFeatures}<br>particles: ${particles}<br>timers: ${timerTracker.count()}`;
+      const liveEdit = omniLiveEditSession?.snapshot?.() || { paused: false, edits: [] };
+      const layerSnapshot = uiLayerStack.snapshot();
+      const profilerText = frameProfiler.renderWaterfallText(4).split("\n").map((line) => escapeHtml(line)).join("<br>");
+      dom.debugOverlay.innerHTML = `<strong>DEBUG</strong><br>pos: ${Math.round(player?.x || 0)}, ${Math.round(player?.y || 0)}<br>state: ${playerStateMachine.state}<br>liveEdit: ${liveEdit.paused ? "paused" : "ready"} edits:${liveEdit.edits.length}<br>layers: ${layerSnapshot.depth} top:${escapeHtml(layerSnapshot.top?.id || "none")} pauseBelow:${layerSnapshot.pauseBelow}<br>fragmentCount: ${fragmentCount}<br>questProgress: ${questProgress}<br>unlockedFeatures: ${unlockedFeatures}<br>particles: ${particles}<br>timers: ${timerTracker.count()}<br><strong>profiler</strong><br>${profilerText}`;
     }
 
     frameScheduler.register("debugOverlay", updateDebugOverlay, {
@@ -36028,14 +36500,14 @@ ${item.code}
       return (hash >>> 0).toString(36);
     }
 
-    function getOpenSourceTtsCacheCandidates(pipeline) {
+    function getOpenSourceTtsCacheCandidates(pipeline, options = {}) {
       const role = pipeline?.role === "system" ? "system" : "mentor";
       const manifest = OPEN_SOURCE_TTS_CACHE_MANIFEST[role]?.clips || {};
       const key = createOpenSourceTtsCacheKey(pipeline);
       const engineFolder = String(pipeline?.engine || OPEN_SOURCE_TTS_CACHE_MANIFEST[role]?.engine || "tts").toLowerCase().replace(/[^a-z0-9-]+/g, "-");
       const explicit = manifest[key];
       const generated = OPEN_SOURCE_TTS_CACHE_MANIFEST.formats.map((format) => `${OPEN_SOURCE_TTS_CACHE_MANIFEST.basePath}/${engineFolder}/${role}-${key}.${format}`);
-      return [explicit, ...generated].filter(Boolean);
+      return [explicit, ...(options.probeGeneratedCache ? generated : [])].filter(Boolean);
     }
 
     function updateOpenSourceTtsStatus(status = "idle", message = "") {
@@ -36051,6 +36523,30 @@ ${item.code}
         dom.ttsConnectionStatus.textContent = fallbackMessage;
       }
       return status;
+    }
+
+    function stopCurrentOpenSourceTtsPlayback(reason = "stopped") {
+      const activeAudio = openSourceTtsAudioElement;
+      if (!activeAudio) return false;
+      try {
+        activeAudio.pause?.();
+        activeAudio.currentTime = 0;
+        activeAudio.onended?.();
+      } catch (error) {
+        reportSoftError?.(error, ERROR_LEVELS.recoverable, { source: "open-source-tts-stop", reason });
+      }
+      updateOpenSourceTtsStatus("ready", "内置离线旁白已就绪");
+      return true;
+    }
+
+    async function isOpenSourceTtsCacheAssetAvailable(url = "") {
+      if (!url || /^data:|^blob:/i.test(url)) return Boolean(url);
+      try {
+        const response = await fetch(url, { method: "HEAD", cache: "no-store" });
+        return response.ok;
+      } catch (error) {
+        return true;
+      }
     }
 
     async function playBundledOfflineTtsFallback(pipeline, reason = "engine-unavailable") {
@@ -36083,11 +36579,14 @@ ${item.code}
           return;
         }
         let settled = false;
+        let loadTimeout = 0;
         const cleanup = () => {
+          if (loadTimeout) timerTracker.clear(loadTimeout);
           audio.oncanplaythrough = null;
           audio.oncanplay = null;
           audio.onloadeddata = null;
           audio.onerror = null;
+          audio.onended = null;
         };
         const settle = (value) => {
           if (settled) return;
@@ -36106,10 +36605,10 @@ ${item.code}
             audio.onended = () => {
               if (audio.dataset.url) URL.revokeObjectURL(audio.dataset.url);
               updateOpenSourceTtsStatus("ready", "内置离线旁白已就绪");
+              settle(true);
             };
             await audio.play();
             updateOpenSourceTtsStatus("ready", "内置离线旁白播放中");
-            settle(true);
           } catch (error) {
             settle(false);
           }
@@ -36117,7 +36616,7 @@ ${item.code}
         audio.oncanplay = audio.oncanplaythrough;
         audio.onloadeddata = audio.oncanplaythrough;
         audio.onerror = () => settle(false);
-        trackedSetTimeout(() => settle(false), 4200, "open-source-tts-cache-timeout");
+        loadTimeout = trackedSetTimeout(() => settle(false), 4200, "open-source-tts-cache-timeout");
         if (url) {
           audio.preload = "auto";
           audio.src = url;
@@ -36129,8 +36628,9 @@ ${item.code}
 
     async function playOpenSourceTtsCache(pipeline, options = {}) {
       if (options.skipCache) return false;
-      const candidates = getOpenSourceTtsCacheCandidates(pipeline);
+      const candidates = getOpenSourceTtsCacheCandidates(pipeline, options);
       for (const url of candidates) {
+        if (!(await isOpenSourceTtsCacheAssetAvailable(url))) continue;
         const audio = new Audio(url);
         const ok = await playAudioElementForTts(audio, url);
         if (ok) return true;
@@ -36240,27 +36740,24 @@ ${item.code}
           openSourceTtsAudioElement.pause();
           if (openSourceTtsAudioElement.dataset.url) URL.revokeObjectURL(openSourceTtsAudioElement.dataset.url);
         }
-        openSourceTtsAudioElement = new Audio(url);
-        openSourceTtsAudioElement.dataset.url = url;
-        openSourceTtsAudioElement.volume = getTtsVolumeScale();
-        openSourceTtsAudioElement.onended = () => URL.revokeObjectURL(url);
-        await openSourceTtsAudioElement.play();
-        updateOpenSourceTtsStatus("ready", "TTS 播放中");
-        return true;
+        const audio = new Audio(url);
+        audio.dataset.url = url;
+        const ok = await playAudioElementForTts(audio, url);
+        if (ok) updateOpenSourceTtsStatus("ready", "TTS 播放完成");
+        return ok;
       } catch (error) {
         timerTracker.clear(timeout);
         return markOpenSourceTtsUnavailable(pipeline, error?.message || "open-source-tts unavailable");
       }
     }
 
-    function speakGameText(text = "", options = {}) {
+    async function speakGameText(text = "", options = {}) {
       if (gameState.settings?.voiceEnabled === false) return false;
-      speakWithOpenSourceTts(text, options).then((ok) => {
-        if (!ok && shouldUseBrowserSpeechFallback(options)) {
-          speakWithBrowserFemale(text, options.lang || "zh-CN", options.profile || "mentor", options.maxLength || 160);
-        }
-      });
-      return true;
+      const ok = await speakWithOpenSourceTts(text, options);
+      if (!ok && shouldUseBrowserSpeechFallback(options)) {
+        return speakWithBrowserFemale(text, options.lang || "zh-CN", options.profile || "mentor", options.maxLength || 160);
+      }
+      return ok;
     }
 
     async function testOpenSourceTtsConnection() {
@@ -36397,6 +36894,32 @@ ${item.code}
     }
 
     let compilerHandsOnDemoSession = null;
+    let compilerHandsOnNarrationChain = Promise.resolve(false);
+    let compilerHandsOnRunWaiter = null;
+    const COMPILER_HANDS_ON_NARRATION_MIN_MS = Object.freeze({
+      start: 1800,
+      include: 2200,
+      main: 2300,
+      printf: 2300,
+      string: 2300,
+      semicolon: 2200,
+      return: 2300,
+      review: 2600,
+      finish: 1600,
+      output: 2200
+    });
+    const COMPILER_HANDS_ON_NARRATION_MAX_MS = Object.freeze({
+      start: 3600,
+      include: 3800,
+      main: 3800,
+      printf: 3800,
+      string: 3800,
+      semicolon: 3600,
+      return: 3600,
+      review: 4200,
+      finish: 3200,
+      output: 3800
+    });
 
     const COMPILER_HANDS_ON_SUBTITLE_COPY = Object.freeze({
       start: {
@@ -36422,12 +36945,22 @@ ${item.code}
       string: {
         focus: "explain",
         step: "实战 2/4",
-        text: "双引号里的 Hello World 是要原样显示的文字。"
+        text: "双引号里的文字是要原样显示的内容，当前任务会显示 C language。"
       },
       semicolon: {
         focus: "explain",
         step: "实战 2/4",
         text: "分号表示这一句结束，少了它编译器会停下提醒。"
+      },
+      return: {
+        focus: "explain",
+        step: "实战 2/4",
+        text: "return 0 表示程序正常结束，把完成信号交回给系统。"
+      },
+      review: {
+        focus: "explain",
+        step: "实战 2/4",
+        text: "代码写完后先检查四块：工具箱、入口、输出语句、正常结束。"
       },
       finish: {
         focus: "run",
@@ -36437,7 +36970,7 @@ ${item.code}
       output: {
         focus: "output",
         step: "实战 4/4",
-        text: "运行后看输出区：如果检查通过，就会显示 Hello World。"
+        text: "运行后看输出区：如果检查通过，就会显示引号里的文字。"
       }
     });
 
@@ -36477,6 +37010,7 @@ ${item.code}
       dom.runButton?.classList?.remove("compiler-hands-on-demo-ready");
       if (dom.runButton) dom.runButton.disabled = false;
       hideCompilerHandsOnSubtitle();
+      cancelCompilerCabinHandsOnRunWaiter(reason);
       audioManager?.releaseMusicSuppression?.("compiler-hands-on-demo");
       session.resolve?.(false);
       return true;
@@ -36492,15 +37026,103 @@ ${item.code}
       return timerId;
     }
 
+    function queueCompilerCabinHandsOnNarration(stage = "start", chapter = chapterById[FIRST_MAINLINE_CHAPTER_ID]) {
+      const runNarration = () => {
+        let timeoutId = 0;
+        const maxWaitMs = COMPILER_HANDS_ON_NARRATION_MAX_MS[stage] || 3600;
+        const timeout = new Promise((resolve) => {
+          timeoutId = trackedSetTimeout(() => {
+            stopCurrentOpenSourceTtsPlayback("hands-on-narration-timeout");
+            resolve(false);
+          }, maxWaitMs, `compiler-hands-on-${stage}-narration-timeout`);
+        });
+        const narration = Promise.resolve(playCompilerCabinHandsOnNarration(stage, chapter))
+          .catch((error) => {
+            reportSoftError?.(error, ERROR_LEVELS.recoverable, { source: "compiler-hands-on-narration", stage, chapterId: chapter?.id });
+            return false;
+          });
+        return Promise.race([narration, timeout]).finally(() => {
+          if (timeoutId) timerTracker.clear(timeoutId);
+        });
+      };
+      compilerHandsOnNarrationChain = compilerHandsOnNarrationChain.then(runNarration, runNarration);
+      return compilerHandsOnNarrationChain;
+    }
+
+    function waitForCompilerCabinHandsOnNarrationStage(session, stage, chapter, minWaitMs = COMPILER_HANDS_ON_NARRATION_MIN_MS[stage] || 1600) {
+      const startedAt = performance.now();
+      const narration = queueCompilerCabinHandsOnNarration(stage, chapter);
+      return Promise.resolve(narration).catch(() => false).then(() => new Promise((resolve) => {
+        if (session.cancelled || compilerHandsOnDemoSession !== session) {
+          resolve(false);
+          return;
+        }
+        const remainingMs = Math.max(0, minWaitMs - (performance.now() - startedAt));
+        if (remainingMs <= 0) {
+          resolve(true);
+          return;
+        }
+        scheduleCompilerHandsOnTimer(session, () => resolve(true), remainingMs, `compiler-hands-on-${stage}-readable`);
+      }));
+    }
+
+    function cancelCompilerCabinHandsOnRunWaiter(reason = "cancelled") {
+      const waiter = compilerHandsOnRunWaiter;
+      if (!waiter) return false;
+      compilerHandsOnRunWaiter = null;
+      if (waiter.timeoutId) timerTracker.clear(waiter.timeoutId);
+      waiter.resolve?.(false);
+      return true;
+    }
+
+    function waitForCompilerCabinHandsOnRun(chapter, timeoutMs = 90000) {
+      cancelCompilerCabinHandsOnRunWaiter("replace-waiter");
+      return new Promise((resolve) => {
+        const waiter = {
+          chapterId: chapter?.id || FIRST_MAINLINE_CHAPTER_ID,
+          resolve,
+          timeoutId: 0
+        };
+        waiter.timeoutId = trackedSetTimeout(() => {
+          if (compilerHandsOnRunWaiter !== waiter) return;
+          compilerHandsOnRunWaiter = null;
+          dom.runButton?.classList?.remove("compiler-hands-on-demo-ready");
+          audioManager?.releaseMusicSuppression?.("compiler-hands-on-demo");
+          resolve(false);
+        }, timeoutMs, "compiler-hands-on-run-wait-timeout");
+        compilerHandsOnRunWaiter = waiter;
+      });
+    }
+
+    function notifyCompilerCabinHandsOnRunComplete(chapterId = gameState.activeChallengeId) {
+      const waiter = compilerHandsOnRunWaiter;
+      if (!waiter || waiter.chapterId !== chapterId) return false;
+      compilerHandsOnRunWaiter = null;
+      if (waiter.timeoutId) timerTracker.clear(waiter.timeoutId);
+      dom.runButton?.classList?.remove("compiler-hands-on-demo-ready");
+      clearButtonVisualPulse();
+      audioManager?.releaseMusicSuppression?.("compiler-hands-on-demo");
+      setCompilerHandsOnSubtitle("output");
+      waiter.resolve?.(true);
+      return true;
+    }
+
+    function shouldDeferCompilerCabinAutoComplete(chapterId = gameState.activeChallengeId) {
+      return Boolean(compilerHandsOnRunWaiter && compilerHandsOnRunWaiter.chapterId === chapterId);
+    }
+
     function playCompilerCabinHandsOnNarration(stage = "start", chapter = chapterById[FIRST_MAINLINE_CHAPTER_ID]) {
       return speakGameText(({
         start: "现在进入实战演示。先别急着记代码，我们只看电脑从哪里开始、最后显示什么。",
         include: "第一行 include 是准备工具箱。它告诉编译器：等会儿我要用屏幕输出功能。",
         main: "int main 是程序入口。你可以把它理解成电脑开始执行的第一扇门。",
         printf: "printf 是这一关的核心动作：往屏幕打印一句话。现在只记住，它负责输出。",
-        string: "双引号里面的 Hello World，是要原样显示到屏幕上的文字，不是命令。",
+        string: "双引号里面的文字会原样显示到屏幕上。它是要输出的内容，不是命令。",
         semicolon: "最后这个分号表示这一句说完了。少了它，编译器就会停下来提醒你。",
-        finish: "代码写完了。现在只做一个动作：看发光光圈，点击运行按钮，让编译器检查并运行。"
+        return: "return 0 表示程序正常完成。你可以把它理解成告诉系统：我顺利结束了。",
+        review: "现在复盘一遍：include 准备工具箱，main 是入口，printf 输出文字，return 0 表示正常结束。",
+        finish: "代码写完了。现在只做一个动作：看发光光圈，点击运行按钮，让编译器检查并运行。",
+        output: "运行成功后先看输出区。这里显示的 C language，就是双引号里那段文字被程序打印出来的结果。"
       })[stage] || "现在进入实战演示。请看编辑器里的代码逐字写入。", {
         role: "mentor",
         profile: "mentor",
@@ -36539,7 +37161,6 @@ ${item.code}
       setCompilerHandsOnSubtitle("start");
       setOutput("实战演示：导师正在把刚才的命令写进真实编辑器。看完后点击运行。", "info");
       queueEditorFlowMessage("实战演示：这不是图片，代码会逐字写入 main.c。", true);
-      playCompilerCabinHandsOnNarration("start", chapter);
       return new Promise((resolve) => {
         session.resolve = resolve;
         let index = 0;
@@ -36548,6 +37169,16 @@ ${item.code}
         let printfNarrated = false;
         let stringNarrated = false;
         let semicolonNarrated = false;
+        let returnNarrated = false;
+        const scheduleNextStep = (delay, label = "compiler-hands-on-editor-type") => {
+          scheduleCompilerHandsOnTimer(session, step, gameState.settings.animationQuality === ANIMATION_QUALITY.off ? 1 : delay, label);
+        };
+        const continueAfterNarration = (narrationPromise, delay = 120) => {
+          Promise.resolve(narrationPromise).then((ok) => {
+            if (!ok || session.cancelled || compilerHandsOnDemoSession !== session) return;
+            scheduleNextStep(delay);
+          });
+        };
         const step = () => {
           if (session.cancelled || compilerHandsOnDemoSession !== session || !gameState.editorOpen || gameState.activeChallengeId !== session.chapterId) {
             cancelCompilerCabinHandsOnEditorDemo("editor-left");
@@ -36559,55 +37190,70 @@ ${item.code}
           dom.codeInput.selectionEnd = index;
           files["main.c"] = dom.codeInput.value;
           editorHistory.lastValue = dom.codeInput.value;
+          let narrationWait = null;
           if (!includeNarrated && /#include\s*</.test(dom.codeInput.value)) {
             includeNarrated = true;
             setCompilerHandsOnSubtitle("include");
-            playCompilerCabinHandsOnNarration("include", chapter);
+            narrationWait = waitForCompilerCabinHandsOnNarrationStage(session, "include", chapter);
           }
           if (!mainNarrated && /int\s+main\s*\(/.test(dom.codeInput.value)) {
             mainNarrated = true;
             setCompilerHandsOnSubtitle("main");
-            playCompilerCabinHandsOnNarration("main", chapter);
+            narrationWait = waitForCompilerCabinHandsOnNarrationStage(session, "main", chapter);
           }
           if (!printfNarrated && /printf\s*\(/.test(dom.codeInput.value)) {
             printfNarrated = true;
             setCompilerHandsOnSubtitle("printf");
-            playCompilerCabinHandsOnNarration("printf", chapter);
+            narrationWait = waitForCompilerCabinHandsOnNarrationStage(session, "printf", chapter);
           }
-          if (!stringNarrated && /"Hello World!"/.test(dom.codeInput.value)) {
+          if (!stringNarrated && /printf\s*\(\s*"[^"]+"/.test(dom.codeInput.value)) {
             stringNarrated = true;
             setCompilerHandsOnSubtitle("string");
-            playCompilerCabinHandsOnNarration("string", chapter);
+            narrationWait = waitForCompilerCabinHandsOnNarrationStage(session, "string", chapter);
           }
-          if (!semicolonNarrated && /printf\s*\("Hello World!"\)\s*;/.test(dom.codeInput.value)) {
+          if (!semicolonNarrated && /printf\s*\(\s*"[^"]*"\s*\)\s*;/.test(dom.codeInput.value)) {
             semicolonNarrated = true;
             setCompilerHandsOnSubtitle("semicolon");
-            playCompilerCabinHandsOnNarration("semicolon", chapter);
+            narrationWait = waitForCompilerCabinHandsOnNarrationStage(session, "semicolon", chapter);
+          }
+          if (!returnNarrated && /return\s+0\s*;/.test(dom.codeInput.value)) {
+            returnNarrated = true;
+            setCompilerHandsOnSubtitle("return");
+            narrationWait = waitForCompilerCabinHandsOnNarrationStage(session, "return", chapter);
           }
           if (index % 3 === 0 || index >= target.length) scheduleEditorVisuals();
           if (index < target.length) {
-            const pauseAtCheckpoint = /#include\s*<stdio\.h>\s*$|int\s+main\s*\(\s*void\s*\)\s*\{\s*$|printf\s*\($|"Hello World!"$|printf\s*\("Hello World!"\)\s*;$/.test(dom.codeInput.value);
-            const delay = pauseAtCheckpoint ? 620 : 36;
-            scheduleCompilerHandsOnTimer(session, step, gameState.settings.animationQuality === ANIMATION_QUALITY.off ? 1 : delay, "compiler-hands-on-editor-type");
+            if (narrationWait) {
+              continueAfterNarration(narrationWait);
+              return;
+            }
+            const pauseAtCheckpoint = /#include\s*<stdio\.h>\s*$|int\s+main\s*\(\s*void\s*\)\s*\{\s*$|printf\s*\($|printf\s*\(\s*"[^"]*"?$|printf\s*\(\s*"[^"]*"\s*\)\s*;$|return\s+0\s*;$/.test(dom.codeInput.value);
+            const delay = pauseAtCheckpoint ? 760 : 54;
+            scheduleNextStep(delay);
             return;
           }
           scheduleEditorVisuals();
-          compilerHandsOnDemoSession = null;
-          document.body.classList.remove("compiler-hands-on-demo-active");
-          dom.runButton.disabled = false;
-          dom.runButton.classList.add("compiler-hands-on-demo-ready");
-          setOutput("实战演示完成。现在点击运行按钮，让编译器检查并输出结果。", "info");
-          queueEditorFlowMessage("代码已经写入 main.c。下一步只看一个动作：点击运行。", true);
-          setCompilerHandsOnSubtitle("finish");
-          playCompilerCabinHandsOnNarration("finish", chapter);
-          focusButtonWithVisualPulse(dom.runButton);
-          trackedSetTimeout(() => {
-            dom.runButton.classList.remove("compiler-hands-on-demo-ready");
-            audioManager?.releaseMusicSuppression?.("compiler-hands-on-demo");
-          }, 7200, "compiler-hands-on-release");
-          resolve(true);
+          setCompilerHandsOnSubtitle("review");
+          setOutput("实战演示复盘：先确认工具箱、入口、输出语句和正常结束，再点击运行。", "info");
+          const reviewWait = waitForCompilerCabinHandsOnNarrationStage(session, "review", chapter);
+          Promise.resolve(reviewWait).then((ok) => {
+            if (!ok || session.cancelled || compilerHandsOnDemoSession !== session || !gameState.editorOpen || gameState.activeChallengeId !== session.chapterId) return;
+            compilerHandsOnDemoSession = null;
+            document.body.classList.remove("compiler-hands-on-demo-active");
+            dom.runButton.disabled = false;
+            dom.runButton.classList.add("compiler-hands-on-demo-ready");
+            setOutput("实战演示完成。现在点击运行按钮，让编译器检查并输出结果。", "info");
+            queueEditorFlowMessage("代码已经写入 main.c。下一步只看一个动作：点击运行。", true);
+            setCompilerHandsOnSubtitle("finish");
+            queueCompilerCabinHandsOnNarration("finish", chapter);
+            focusButtonWithVisualPulse(dom.runButton);
+            resolve(true);
+          });
         };
-        scheduleCompilerHandsOnTimer(session, step, gameState.settings.animationQuality === ANIMATION_QUALITY.off ? 20 : 360, "compiler-hands-on-editor-start");
+        waitForCompilerCabinHandsOnNarrationStage(session, "start", chapter).then((ok) => {
+          if (!ok || session.cancelled || compilerHandsOnDemoSession !== session) return;
+          scheduleCompilerHandsOnTimer(session, step, gameState.settings.animationQuality === ANIMATION_QUALITY.off ? 20 : 360, "compiler-hands-on-editor-start");
+        });
       });
     }
 
@@ -38616,6 +39262,8 @@ ${item.code}
         if (!audioManager.externalMusicMode) audioManager.pixabayPreviewMode = "menu";
         document.body.classList.add("menu-open", "is-paused");
         document.body.classList.remove("pause-menu-open");
+        popUiOverlayLayer("pause");
+        pushUiOverlayLayer({ id: "main-menu", label: "Main Menu", pauseBelow: true, source: "menuManager" });
         dom.mainMenu.classList.add("active");
         dom.worldSelectOverlay?.classList.remove("active");
         dom.pauseMenu.classList.remove("active");
@@ -38661,6 +39309,8 @@ ${item.code}
         gameState.paused = false;
         audioManager.pixabayPreviewMode = "";
         document.body.classList.remove("menu-open", "is-paused", "pause-menu-open");
+        popUiOverlayLayer("main-menu");
+        popUiOverlayLayer("pause");
         dom.mainMenu.classList.remove("active");
         dom.pauseMenu.classList.remove("active");
         dom.updateHistoryOverlay?.classList.remove("active");
@@ -38680,6 +39330,7 @@ ${item.code}
         this.selectedIndex = 0;
         gameState.paused = true;
         document.body.classList.add("is-paused", "pause-menu-open");
+        pushUiOverlayLayer({ id: "pause", label: "Pause Menu", pauseBelow: true, source: "menuManager" });
         dom.pauseMenu.classList.add("active");
         showCodePauseMenu();
         renderMusicSwitcher(audioManager.externalMusicMode ? "external" : (audioManager.pixabayPreviewMode || audioManager.bgmMode || "town"));
@@ -38694,6 +39345,7 @@ ${item.code}
         this.active = "game";
         gameState.paused = false;
         document.body.classList.remove("is-paused", "pause-menu-open");
+        popUiOverlayLayer("pause");
         dom.pauseMenu.classList.remove("active");
         resumeFrozenAnimations();
         if (gameState.scene) gameState.scene.scene.resume();
@@ -38706,6 +39358,7 @@ ${item.code}
         dismissExecutionVisualization("settings-open");
         toggleInfoSideMenu(false);
         audioManager.settingsOpen();
+        pushUiOverlayLayer({ id: "settings", label: "Settings", pauseBelow: from !== "main", source: "menuManager" });
         dom.settingsPanel.classList.add("active");
         document.body.classList.add("is-settings-open");
       }
@@ -38713,6 +39366,7 @@ ${item.code}
       openCredits() {
         this.previousPanel = this.active;
         this.active = "credits";
+        pushUiOverlayLayer({ id: "credits", label: "Credits", pauseBelow: gameState.paused, source: "menuManager" });
         dom.creditsOverlay.classList.add("active");
       }
 
@@ -38720,6 +39374,7 @@ ${item.code}
         this.previousPanel = this.active;
         this.active = "history";
         renderUpdateHistoryList();
+        pushUiOverlayLayer({ id: "update-history", label: "Update History", pauseBelow: gameState.paused, source: "menuManager" });
         dom.updateHistoryOverlay?.classList.add("active");
       }
 
@@ -38728,6 +39383,9 @@ ${item.code}
         dom.creditsOverlay.classList.remove("active");
         dom.updateHistoryOverlay?.classList.remove("active");
         document.body.classList.remove("is-settings-open");
+        popUiOverlayLayer("settings");
+        popUiOverlayLayer("credits");
+        popUiOverlayLayer("update-history");
         this.active = this.previousPanel || (gameState.menuOpen ? "main" : "pause");
       }
 
@@ -39721,6 +40379,7 @@ ${item.code}
     function closeEditor(resume = true) {
       if (!gameState.editorOpen) return;
       cancelCompilerCabinHandsOnEditorDemo("editor-close");
+      cancelCompilerCabinHandsOnRunWaiter("editor-close");
       hideCompilerHandsOnSubtitle();
       cancelPrintfCharacterDeconstruction("editor-close");
       dismissExecutionVisualization("editor-close");
@@ -41158,6 +41817,7 @@ ${item.code}
       const rawCCode = files["main.c"];
       const userSourceBeforeRun = rawCCode;
       const chapter = chapterById[gameState.activeChallengeId];
+      const deferCompilerCabinAutoComplete = shouldDeferCompilerCabinAutoComplete(chapter?.id);
       const preflight = validateEditorSubmissionForCurrentTask(rawCCode, chapter, gameState.activeChallengeId, gameState.activeChallengeId);
       if (!preflight.ok) {
         restoreEditorSourceAfterFailedRun(userSourceBeforeRun, preflight.reason);
@@ -41223,6 +41883,11 @@ ${item.code}
           }
           setOutput(`Compilation complete.\n通过：程序输出为 ${result.output}\n获得 ${chapter.skill}！`, "success");
           markAbsoluteGuideAction("compileSuccess", { chapterId: chapter?.id });
+          if (deferCompilerCabinAutoComplete) {
+            setCompilerHandsOnSubtitle("output");
+            queueEditorFlowMessage("运行成功：先看输出区，确认屏幕显示了引号里的文字。", true);
+            return result;
+          }
           triggerCinematicCompileBurst();
           triggerStoryCinematicBars("编译通过：知识圣殿的一块裂痕被修复。", 1900);
           if (gameState.scene?.player) spawnFractalNoiseShatter(gameState.scene, gameState.scene.player.x, gameState.scene.player.y - 24, 0xfacc15, { count: 18 });
@@ -41382,8 +42047,11 @@ ${item.code}
       if (!result.ok) return result;
       const comparison = compareProgramOutput(result.output, chapter.output);
       const lenientPass = !comparison.ok && isLenientChallengePass(cCode, chapter, result.output);
-      if (!comparison.ok && !lenientPass) return { ok: false, message: comparison.message, output: comparison.actual, mode: result.mode };
-      const acceptedOutput = comparison.ok ? comparison.actual : (comparison.actual || result.output || chapter.output || "compiled");
+      const displayActualOutput = formatProgramOutputForDisplay(result.output);
+      if (!comparison.ok && !lenientPass) return { ok: false, message: comparison.message, output: displayActualOutput || comparison.actual, mode: result.mode };
+      const acceptedOutput = comparison.ok
+        ? (displayActualOutput || formatProgramOutputForDisplay(chapter.output) || comparison.actual || "compiled")
+        : (displayActualOutput || comparison.actual || formatProgramOutputForDisplay(chapter.output) || "compiled");
       await renderAcceptedOutputToSandbox(acceptedOutput);
       return { ok: true, output: acceptedOutput, mode: result.mode, lenient: lenientPass };
     }
@@ -41950,6 +42618,10 @@ ${item.code}
 
     function normalizeProgramOutput(output = "") {
       return String(output ?? "").replace(/\r\n/g, "\n").replace(/\s+/g, "");
+    }
+
+    function formatProgramOutputForDisplay(output = "") {
+      return String(output ?? "").replace(/\r\n/g, "\n").replace(/[ \t]+$/gm, "").replace(/\n+$/g, "");
     }
 
     function compareProgramOutput(actual = "", expected = "") {
@@ -43276,6 +43948,14 @@ ${item.code}
         "  return 0;",
         "}"
       ].join("\n")
+    });
+
+    gameDatabase = createOmniCoreGameDatabase({ enemyRules: ENEMY_ENCOUNTER_RULES, gameData: GAME_DATA });
+    omniTilemapDocument = createOmniTilemapDocument({
+      width: Math.ceil(GAME_DATA.map.width / 48),
+      height: Math.ceil(GAME_DATA.map.height / 48),
+      tileSize: 48,
+      layers: [{ id: "ground" }, { id: "collision" }, { id: "decor" }]
     });
 
     const CPP_WORLD_PLACEHOLDER = Object.freeze({
@@ -45233,6 +45913,12 @@ ${item.code}
       pulse.classList.add("active");
       button.focus?.({ preventScroll: true });
       return true;
+    }
+
+    function clearButtonVisualPulse() {
+      const pulse = document.getElementById("visualButtonFocusPulse");
+      pulse?.classList?.remove("active");
+      return Boolean(pulse);
     }
 
     function cancelInteractionUiShielding() {
@@ -47872,6 +48558,7 @@ ${item.code}
         const pod = objects?.pod || objects?.stone;
         if (isLearned(chapter.id)) {
           cancelCompilerCabinHandsOnEditorDemo("learned-reenter");
+          cancelCompilerCabinHandsOnRunWaiter("learned-reenter");
           cancelPrintfCharacterDeconstruction("learned-reenter");
           ensureCompilerCabinLessonGameplayLayer();
           openEditor(chapter.id, { skipOpenTutorialAnimation: true, skipEditorGuide: true, skipStoryBanner: true, preserveExistingCode: true });
@@ -47891,8 +48578,29 @@ ${item.code}
           openEditor(chapter.id, { skipOpenTutorialAnimation: true, skipEditorGuide: true, skipStoryBanner: true });
           playCompilerCabinHandsOnEditorDemo(chapter).then((completed) => {
             if (completed && gameState.editorOpen && gameState.activeChallengeId === chapter.id) {
-              playPrintfCharacterDeconstruction(getCompilerCabinDeconstructionCode(chapter));
-              focusButtonWithVisualPulse(dom.runButton);
+              waitForCompilerCabinHandsOnRun(chapter).then((ran) => {
+                if (ran && gameState.editorOpen && gameState.activeChallengeId === chapter.id) {
+                  setCompilerHandsOnSubtitle("output");
+                  queueCompilerCabinHandsOnNarration("output", chapter).finally(() => {
+                    if (!gameState.editorOpen || gameState.activeChallengeId !== chapter.id) {
+                      gameState.compilerCabinLessonActive = false;
+                      return;
+                    }
+                    const timeline = playPrintfCharacterDeconstruction(getCompilerCabinDeconstructionCode(chapter));
+                    const settleDelay = Math.max(2600, Number(timeline?.totalMs || 0) + 1400);
+                    trackedSetTimeout(() => {
+                      if (gameState.editorOpen && gameState.activeChallengeId === chapter.id) {
+                        hideCompilerHandsOnSubtitle();
+                        tutorialAnimationManager.trigger("T07_COMPILE_SUCCESS", { scene: gameState.scene, chapter }).then(() => completeChallenge());
+                      }
+                      gameState.compilerCabinLessonActive = false;
+                    }, settleDelay, "compiler-hands-on-complete-after-deconstruction");
+                  });
+                  return;
+                }
+                gameState.compilerCabinLessonActive = false;
+              });
+              return;
             }
             gameState.compilerCabinLessonActive = false;
           });
@@ -48331,8 +49039,12 @@ ${item.code}
 
     dom.runButton.addEventListener("click", () => {
       if (dom.compilerHandsOnSubtitle?.classList?.contains("active")) setCompilerHandsOnSubtitle("output");
-      if (gameState.noviceGuideActive) return handleNoviceGuideCompile();
-      return runChallenge();
+      const activeChapterId = gameState.activeChallengeId;
+      const runResult = gameState.noviceGuideActive ? handleNoviceGuideCompile() : runChallenge();
+      if (compilerHandsOnRunWaiter && compilerHandsOnRunWaiter.chapterId === activeChapterId) {
+        Promise.resolve(runResult).finally(() => notifyCompilerCabinHandsOnRunComplete(activeChapterId));
+      }
+      return runResult;
     });
     dom.resetCodeButton.addEventListener("click", resetCurrentCode);
     dom.closeEditorButton.addEventListener("click", () => closeEditor(true));
@@ -48849,6 +49561,11 @@ ${item.code}
         event.preventDefault();
         return;
       }
+      if (event.ctrlKey && event.shiftKey && event.code === "KeyE" && !gameState.editorOpen && !gameState.dialogOpen) {
+        event.preventDefault();
+        toggleOmniLiveEditPause();
+        return;
+      }
       if (event.key === "Escape" && devConsole.open) {
         event.preventDefault();
         toggleDevConsole(false);
@@ -49038,7 +49755,8 @@ ${item.code}
           codeValue: dom.codeInput?.value || "",
           expectedOverviewCode: EXACT_TASK_CODE_BY_ID.overview,
           codeExplainText: dom.codeExplainBody?.textContent || "",
-          outputText: dom.output?.textContent || "",
+          outputText: dom.consoleOutput?.textContent || "",
+          richConsoleText: dom.editorRichConsole?.textContent || "",
           runDisabled: Boolean(dom.runButton?.disabled),
           runButtonReady: Boolean(dom.runButton?.classList?.contains("compiler-hands-on-demo-ready")),
           runButtonPulse: Boolean(document.querySelector("#visualButtonFocusPulse.active")),
