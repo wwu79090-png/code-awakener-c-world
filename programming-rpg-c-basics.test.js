@@ -157,7 +157,12 @@ globalThis.__gameApi = {
   CODE_AWAKENER_TTS_ENGINES: typeof CODE_AWAKENER_TTS_ENGINES !== "undefined" ? CODE_AWAKENER_TTS_ENGINES : undefined,
   FIRST_WORLD_TTS_ENGINE_EVALUATION: typeof FIRST_WORLD_TTS_ENGINE_EVALUATION !== "undefined" ? FIRST_WORLD_TTS_ENGINE_EVALUATION : undefined,
   createMainCorridorPositions: typeof createMainCorridorPositions === "function" ? createMainCorridorPositions : undefined,
+  canCreateWebGlContext: typeof canCreateWebGlContext === "function" ? canCreateWebGlContext : undefined,
+  getPreferredRendererType: typeof getPreferredRendererType === "function" ? getPreferredRendererType : undefined,
   buildCompilerCabinCinematicTimeline: typeof buildCompilerCabinCinematicTimeline === "function" ? buildCompilerCabinCinematicTimeline : undefined,
+  buildChapterTutorialTimeline: typeof buildChapterTutorialTimeline === "function" ? buildChapterTutorialTimeline : undefined,
+  getChapterTutorialCode: typeof getChapterTutorialCode === "function" ? getChapterTutorialCode : undefined,
+  highlightChapterTutorialCode: typeof highlightChapterTutorialCode === "function" ? highlightChapterTutorialCode : undefined,
   buildPrintfCharacterDeconstructionTimeline: typeof buildPrintfCharacterDeconstructionTimeline === "function" ? buildPrintfCharacterDeconstructionTimeline : undefined,
   createOpenSourceVoicePipeline: typeof createOpenSourceVoicePipeline === "function" ? createOpenSourceVoicePipeline : undefined,
   getLearningPodProgressState: typeof getLearningPodProgressState === "function" ? getLearningPodProgressState : undefined,
@@ -359,7 +364,7 @@ assert(!api.hasMemoryCoreCinematicResolved({ memoryCoreChoice: "", memoryCoreCin
 assert(/memoryCoreChoice:\s*""/m.test(html) && /memoryCoreChoice:\s*typeof savedProgress\.memoryCoreChoice === "string" \? savedProgress\.memoryCoreChoice : ""/m.test(html), "memory core choice should survive default and normalized progress state");
 assert(/playMemoryCoreCinematicBridge\(character[\s\S]*hasMemoryCoreCinematicResolved\(progress\)[\s\S]*return \{ skipped: true, reason: "already-resolved" \}/m.test(html), "memory core bridge should not reopen after the player has already chosen a branch");
 assert(/shouldPlayMemoryCoreCinematicBeforeWorldEntry\(\)[\s\S]*!hasMemoryCoreCinematicResolved\(progress\)/m.test(html), "start-game gate should suppress repeat memory core playback after a recorded choice");
-assert(/GAME_VERSION\s*=\s*"v1\.2\.0"/m.test(html) && /Main Corridor 单一走廊/m.test(html) && /变量立绘剧场/m.test(html), "startup announcement should be updated for the Main Corridor and variable theater release");
+assert(/GAME_VERSION\s*=\s*"v1\.2\.0"/m.test(html) && /v1\.2\.0-hotfix\.10/m.test(html) && /章节课前动画收藏与质量回归/m.test(html), "startup announcement should be updated for the current chapter tutorial collection release");
 
 assert(api.compressSavePayload, "save compressor should be exported for tests");
 assert(api.decompressSavePayload, "save decompressor should be exported for tests");
@@ -931,7 +936,7 @@ assert(/function drawVectorStone/m.test(html), "stones should use modern vector-
 assert(/function drawVectorGate/m.test(html), "compile gates should use modern vector-flat geometry");
 assert(/class BloomVignettePostProcess/m.test(html), "visual stack should include bloom and vignette post-processing");
 assert(/function applyGlobalPostProcessing/m.test(html), "post-processing should be applied as a global visual layer");
-assert(/type:\s*Phaser\.WEBGL/m.test(html), "Phaser renderer should force WebGL for the remastered visual pass");
+assert(/function getPreferredRendererType[\s\S]*canCreateWebGlContext\(\)\s*\?\s*Phaser\.WEBGL\s*:\s*Phaser\.CANVAS/m.test(html), "Phaser renderer should prefer WebGL but fall back to Canvas before WebGL context failures can surface");
 assert(/antialias:\s*true/m.test(html), "WebGL renderer should enable antialiasing");
 assert(/pixelArt:\s*false/m.test(html), "remastered renderer should disable raw pixel-art scaling");
 assert(/CINEMATIC_RENDER_MODES\s*=\s*Object\.freeze/m.test(html), "cinematic render modes should be centralized");
@@ -1725,10 +1730,11 @@ assert(/SYSTEM_BOOT_FORCE_RELEASE_MS\s*=\s*3200/m.test(html) && /system-boot-for
 assert(/function markAppRendered\(reason = "script-started"\)[\s\S]*classList\?\.add\("app-rendered"\)[\s\S]*staticRescue/m.test(html), "normal script startup should hide the static rescue layer");
 assert(/html\.app-rendered \.static-rescue/m.test(html) && /safeMode=true&noAudio=true&v=1\.2\.0/m.test(html), "static rescue should only appear if the app script does not render");
 assert(/isStrictSecurityMode\(\)[\s\S]*removeItem\?\.\("codeAwakenerStrictSecurity"\)[\s\S]*params\.get\("strictSecurity"\) === "1"/m.test(html), "stale localStorage strict-security flags should not white-screen normal browsers");
-assert(/UPDATE_ANNOUNCEMENT_PAGES\s*=\s*Object\.freeze\(\[\s*\{\s*title:\s*"> 消息 \/ 本次更新"[\s\S]*v1\.2\.0-hotfix\.9[\s\S]*运行按钮不再被 disabled 锁死[\s\S]*实战进度[\s\S]*跳到运行[\s\S]*等待器安装[\s\S]*C language[\s\S]*414374792/m.test(html), "startup announcement should show the current draggable progress and run-logic reset hotfix before upload");
-assert(/id="announcementPageBody"[\s\S]*v1\.2\.0-hotfix\.9[\s\S]*运行按钮不再被 disabled 锁死[\s\S]*实战进度[\s\S]*跳到运行[\s\S]*等待器安装[\s\S]*C language[\s\S]*官方Q群：414374792/m.test(initialBodyMarkup), "static startup announcement placeholder should match the current draggable progress and run-logic reset hotfix before script hydration");
+assert(/UPDATE_ANNOUNCEMENT_PAGES\s*=\s*Object\.freeze\(\[\s*\{\s*title:\s*"> 消息 \/ 本次更新"[\s\S]*v1\.2\.0-hotfix\.10[\s\S]*课前动画收藏[\s\S]*可调速\/可拖动播放器[\s\S]*WebGL[\s\S]*自动回退 Canvas[\s\S]*error\/warn 为 0[\s\S]*414374792/m.test(html), "startup announcement should show the current chapter tutorial collection and renderer fallback hotfix before upload");
+assert(/id="announcementPageBody"[\s\S]*v1\.2\.0-hotfix\.10[\s\S]*课前动画收藏[\s\S]*可调速\/可拖动播放器[\s\S]*WebGL[\s\S]*自动回退 Canvas[\s\S]*error\/warn 为 0[\s\S]*官方Q群：414374792/m.test(initialBodyMarkup), "static startup announcement placeholder should match the current chapter tutorial collection and renderer fallback hotfix before script hydration");
 assert(!/公告只保留关闭、课程锁定、自由模式通关后显示/m.test(initialBodyMarkup), "static startup announcement placeholder should not show stale update copy");
-assert(/UPDATE_HISTORY\s*=\s*Object\.freeze\(\[\s*\{[\s\S]*v1\.2\.0-hotfix\.9[\s\S]*实战进度可拖动与运行逻辑重置[\s\S]*原生 disabled 锁死[\s\S]*拖到 100%[\s\S]*Ctrl\+Enter[\s\S]*结果会先缓存[\s\S]*导师解析侧栏覆盖按钮[\s\S]*未改动 Pixi 版文件[\s\S]*官方Q群：414374792/m.test(html), "update history should record the current draggable progress and run-logic reset hotfix");
+assert(/UPDATE_HISTORY\s*=\s*Object\.freeze\(\[\s*\{[\s\S]*v1\.2\.0-hotfix\.10[\s\S]*章节课前动画收藏与质量回归[\s\S]*反复观看 16 个章节教程[\s\S]*1x\/2x\/4x[\s\S]*精确答案[\s\S]*WebGL context[\s\S]*控制台 error\/warn 为 0[\s\S]*官方Q群：414374792/m.test(html), "update history should record the current chapter tutorial collection and renderer fallback hotfix");
+assert(/UPDATE_HISTORY\s*=\s*Object\.freeze\(\[[\s\S]*v1\.2\.0-hotfix\.9[\s\S]*实战进度可拖动与运行逻辑重置[\s\S]*原生 disabled 锁死[\s\S]*拖到 100%[\s\S]*Ctrl\+Enter[\s\S]*结果会先缓存[\s\S]*导师解析侧栏覆盖按钮[\s\S]*未改动 Pixi 版文件[\s\S]*官方Q群：414374792/m.test(html), "update history should keep the previous draggable progress and run-logic reset hotfix");
 assert(/UPDATE_HISTORY\s*=\s*Object\.freeze\(\[[\s\S]*v1\.2\.0-hotfix\.8[\s\S]*点击运行即时解锁热修[\s\S]*立刻解锁[\s\S]*不再等待最后一句 TTS[\s\S]*保持在 disabled 状态[\s\S]*先释放按钮再触发真实运行[\s\S]*未改动 Pixi 版文件[\s\S]*官方Q群：414374792/m.test(html), "update history should keep the previous immediate run unlock hotfix");
 assert(/UPDATE_HISTORY\s*=\s*Object\.freeze\(\[[\s\S]*v1\.2\.0-hotfix\.7[\s\S]*点击运行代理与 TTS 同步热修[\s\S]*大号“点击运行”引导条[\s\S]*最后一句“点击运行”旁白[\s\S]*4\.2 秒[\s\S]*file scheme unsupported[\s\S]*未改动 Pixi 版文件[\s\S]*官方Q群：414374792/m.test(html), "update history should keep the previous guided run proxy and TTS synchronization hotfix");
 assert(/UPDATE_HISTORY\s*=\s*Object\.freeze\(\[\s*\{[\s\S]*v1\.2\.0-hotfix\.6[\s\S]*实战运行同步与输出讲解热修[\s\S]*停在编辑器内显示输出区结果[\s\S]*真正点击运行[\s\S]*保留 C language 中间的空格[\s\S]*未改动 Pixi 版文件[\s\S]*官方Q群：414374792/m.test(html), "update history should keep the previous hands-on run synchronization hotfix");
@@ -2745,6 +2751,31 @@ assert(/playCompilerCabinLesson\(chapterId\)[\s\S]*isLearned\(chapter\.id\)[\s\S
 assert(!/normalizedTarget/.test(html), "compiler cabin hands-on demo should not reference stale renamed variables that stop typing after the first character");
 assert(/function openEditor\(chapterId,\s*options = \{\}\)[\s\S]*!options\.skipOpenTutorialAnimation[\s\S]*T06_EDITOR_OPEN[\s\S]*!options\.skipEditorGuide[\s\S]*openEditorGuide/m.test(html), "compiler cabin editor entry should be able to skip the legacy IDE popup and auto guide");
 assert(/openEditor\(chapter\.id,\s*\{\s*skipOpenTutorialAnimation:\s*true,\s*skipEditorGuide:\s*true[\s\S]*playCompilerCabinHandsOnEditorDemo\(chapter\)[\s\S]*playPrintfCharacterDeconstruction\(getCompilerCabinDeconstructionCode\(chapter\)\)/m.test(html), "compiler cabin should enter the editor through the real hands-on demo instead of a static side-panel-only explanation");
+assert(/id="tutorialReplayGrid"/m.test(html) && /id="tutorialReplayCount"/m.test(html), "card album should include a tutorial replay collection area");
+assert(/id="chapterTutorialOverlay"/m.test(html) && /id="chapterTutorialProgress"/m.test(html) && /id="chapterTutorialSeek"/m.test(html), "chapter tutorial player should have a dedicated full-screen overlay, progress bar, and seek control");
+assert(/data-chapter-tutorial-rate="1"[\s\S]*data-chapter-tutorial-rate="2"[\s\S]*data-chapter-tutorial-rate="4"/m.test(html), "chapter tutorial player should expose 1x, 2x, and 4x speed controls");
+assert(/function buildChapterTutorialTimeline/m.test(html) && /function playChapterTutorialCinematic/m.test(html), "each chapter should use the reusable pre-level tutorial cinematic system");
+assert(/function renderTutorialReplayCollection[\s\S]*data-tutorial-replay[\s\S]*playCollectedChapterTutorial/m.test(html), "tutorial replay collection should render playable buttons wired to the cinematic player");
+assert(/startLesson\(chapterId[\s\S]*playChapterTutorialCinematic\(chapter\)[\s\S]*then\(startDialogAfterTutorial\)/m.test(html), "non-first learning pods should play the pre-level tutorial animation before the old dialogue flow");
+assert(/function playChapterTutorialCinematic[\s\S]*closeStartupAnnouncement\?\.\(\)/m.test(html) && /function openEditor\(chapterId[\s\S]*closeStartupAnnouncement\?\.\(\)/m.test(html), "startup announcement should close before tutorial movies or editor practice so it cannot cover teaching UI");
+assert(/playChapterTutorial\(chapterId = chapters\[1\]\?\.id[\s\S]*tutorialCollectionSnapshot/m.test(html), "test hooks should expose chapter tutorial playback and collection snapshots for browser QA");
+assert(/playChapterTutorialCinematic[\s\S]*enterCompilerCabinCinematicAudioFocus\?\.\(\)/m.test(html) && /stopCurrentOpenSourceTtsPlayback\("chapter-tutorial-stage"\)[\s\S]*speakGameText\(stage\.narration/m.test(html), "chapter tutorial narration should own audio focus, stop stale speech, and keep one mentor voice per stage");
+assert(/function updateChapterTutorialRateControls[\s\S]*playbackRate[\s\S]*seekInputHandler[\s\S]*seekCommitHandler[\s\S]*rateHandler/m.test(html), "chapter tutorial player should support rate changes and player-controlled seeking through the same playhead");
+assert(/function shouldUseBrowserSpeechFallback[\s\S]*return false/m.test(html), "browser speech synthesis fallback should remain disabled for the open-source/offline TTS pipeline");
+assert(/function canCreateWebGlContext[\s\S]*getContext\("webgl2"/m.test(html) && /function getPreferredRendererType[\s\S]*canCreateWebGlContext\(\)\s*\?\s*Phaser\.WEBGL\s*:\s*Phaser\.CANVAS/m.test(html) && /function buildPrimaryGameConfig[\s\S]*getPreferredRendererType\(\)/m.test(html), "boot should preflight WebGL and choose Canvas before Phaser can throw a WebGL context error");
+{
+  assert(typeof api.buildChapterTutorialTimeline === "function", "chapter tutorial timeline builder should be exported");
+  assert(typeof api.canCreateWebGlContext === "function" && typeof api.getPreferredRendererType === "function", "renderer preflight helpers should be exported for tests");
+  const variablesChapter = api.chapters.find((chapter) => chapter.id === "variables");
+  const timeline = api.buildChapterTutorialTimeline(variablesChapter);
+  assert(timeline.stages.length === 4, "chapter tutorial timeline should have four focused beginner stages");
+  assert(timeline.durationMs === timeline.stages.length * 6200, "chapter tutorial pacing should use short fixed stage timing");
+  ["先看本关结果", "找到要写的位置", "拆开关键符号", "进入实操检查"].forEach((title) => {
+    assert(timeline.stages.some((stage) => stage.title === title), `chapter tutorial should include stage ${title}`);
+  });
+  assert(timeline.code.includes("int level = 7") && timeline.code.includes("printf(\"%d\", level);"), "chapter tutorial should derive visible code from the exact task answer, not a generic example");
+  assert(api.highlightChapterTutorialCode("printf(\"ok\");", ["printf", ";"]).includes("<mark>printf</mark>"), "chapter tutorial code highlighter should mark important characters");
+}
 assert(!/nearStone && !isLearned\(chapter\.id\)/m.test(html), "learned learning pods should remain rewatchable so a missed cinematic is not permanently inaccessible");
 assert(/return unlocked \? \{ type: "lesson", chapter, replay: isLearned\(chapter\.id\) \} : \{ type: "locked", chapter \}/m.test(html), "learning pod interaction should carry a replay flag while preserving lock checks");
 assert(/function openNoviceGuideRealEditor/m.test(html), "novice guide should open the real VS Code-style editor for hands-on code");
