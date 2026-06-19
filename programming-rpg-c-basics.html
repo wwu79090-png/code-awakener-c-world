@@ -14,7 +14,7 @@
   <meta http-equiv="Cache-Control" content="no-store, max-age=0, must-revalidate">
   <meta http-equiv="Pragma" content="no-cache">
   <meta http-equiv="Expires" content="0">
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self' file:; base-uri 'self'; object-src 'none'; script-src 'self' 'nonce-code-awakener-inline' file: 'sha256-jxeMm7tvEvLwP41RwX6/XaeDvp/x4UB9PyufbedSuc8='; style-src 'self' 'nonce-code-awakener-inline' file: 'sha256-DEU2U7dOj3nHoZDG+zjiY75u08BWF61ZTw7hffhq2RE='; style-src-attr 'unsafe-inline'; font-src 'self' file: data:; img-src 'self' file: data: blob: https://cdn.pixabay.com; media-src 'self' file: data: blob: https: http: https://cdn.pixabay.com; worker-src 'self' file: blob:; child-src 'self' file: blob:; connect-src 'self' file: http://localhost:8000 http://127.0.0.1:8000 http://localhost:9966 http://127.0.0.1:9966 http://localhost:9977 http://127.0.0.1:9977 https://cdn.pixabay.com https://pixabay.com;">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self' file:; base-uri 'self'; object-src 'none'; script-src 'self' 'nonce-code-awakener-inline' file: 'sha256-Zh2xoddQ360kb7kqPFIcvd0FS2cq/XoQg2R6WY8BN7Y='; style-src 'self' 'nonce-code-awakener-inline' file: 'sha256-+W2p3mYyL1cO8W06g8VvE4BXKgQlzNiHR79zpUtY/c8='; style-src-attr 'unsafe-inline'; font-src 'self' file: data:; img-src 'self' file: data: blob: https://cdn.pixabay.com; media-src 'self' file: data: blob: https: http: https://cdn.pixabay.com; worker-src 'self' file: blob:; child-src 'self' file: blob:; connect-src 'self' file: http://localhost:8000 http://127.0.0.1:8000 http://localhost:9966 http://127.0.0.1:9966 http://localhost:9977 http://127.0.0.1:9977 https://cdn.pixabay.com https://pixabay.com;">
   <title>代码觉醒者：Main Corridor</title>
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%23020617'/%3E%3Cpath d='M22 20 10 32l12 12M42 20l12 12-12 12' fill='none' stroke='%2300ff88' stroke-width='6' stroke-linecap='round' stroke-linejoin='round'/%3E%3Cpath d='m36 16-8 32' stroke='%2300ccff' stroke-width='5' stroke-linecap='round'/%3E%3C/svg%3E">
   <script src="./vendor/phaser.min.js"></script>
@@ -10916,7 +10916,7 @@
 
     .compiler-cabin-stage-grid {
       width: min(1120px, 90vw);
-      height: min(620px, 72vh);
+      height: min(680px, 82vh);
       border-radius: 12px;
       background: rgba(2, 6, 23, 0.72);
       pointer-events: auto;
@@ -11019,7 +11019,7 @@
       position: absolute;
       left: 28px;
       right: 28px;
-      top: 92px;
+      top: 116px;
       z-index: 5;
       display: grid;
       grid-template-columns: repeat(6, minmax(0, 1fr));
@@ -12371,6 +12371,445 @@
     .pulse-b,
     .pulse-c {
       display: none;
+    }
+
+    .compiler-cabin-cinematic-stage .compiler-cabin-scene {
+      inset: 174px 34px 94px;
+      place-items: stretch;
+      overflow: hidden;
+    }
+
+    .compiler-cabin-cinematic-stage .compiler-cabin-scene-inner,
+    .compiler-cabin-cinematic-stage .real-animation-scene {
+      width: 100%;
+      height: 100%;
+      min-height: 0;
+      padding: 0;
+    }
+
+    .compiler-cabin-cinematic-stage .beginner-story-panel {
+      width: 100%;
+      height: 100%;
+      min-height: 0;
+      max-height: 100%;
+      padding: 44px 18px 12px;
+      gap: 14px;
+      align-items: center;
+      justify-items: stretch;
+      filter: none;
+      overflow: hidden;
+    }
+
+    .compiler-cabin-cinematic-stage .story-step-badge {
+      left: 18px;
+      top: 12px;
+      transform: none;
+      z-index: 8;
+    }
+
+    .compiler-cabin-cinematic-stage .beginner-story-panel .motion-caption,
+    .compiler-cabin-cinematic-stage .motion-caption,
+    .compiler-cabin-cinematic-stage .terminal-next-step {
+      position: static;
+      display: block;
+      grid-column: 1 / -1;
+      align-self: end;
+      justify-self: stretch;
+      width: 100%;
+      transform: none;
+      padding: 9px 12px;
+      border: 1px solid rgba(56, 189, 248, 0.28);
+      border-radius: 10px;
+      color: #dffcff;
+      background: rgba(2, 6, 23, 0.76);
+      text-align: center;
+      font: 900 12px/1.45 var(--font-ui);
+      text-shadow: 0 0 18px rgba(56, 189, 248, 0.28);
+    }
+
+    .compiler-cabin-cinematic-stage .goal-flow {
+      grid-template-rows: minmax(0, 1fr) auto auto;
+      align-content: center;
+    }
+
+    .compiler-cabin-cinematic-stage .goal-screen {
+      width: min(520px, 70vw);
+      min-height: 150px;
+      justify-self: center;
+    }
+
+    .compiler-cabin-cinematic-stage .goal-road {
+      width: 100%;
+      max-width: 680px;
+      justify-self: center;
+    }
+
+    .compiler-cabin-cinematic-stage .write-flow {
+      grid-template-columns: minmax(240px, 0.88fr) minmax(0, 1.12fr);
+      grid-template-rows: minmax(0, 1fr) auto;
+      column-gap: 20px;
+      row-gap: 12px;
+    }
+
+    .compiler-cabin-cinematic-stage .learner-workbench {
+      width: 100%;
+      max-width: 310px;
+      height: 202px;
+      justify-self: center;
+      align-self: center;
+      overflow: hidden;
+    }
+
+    .compiler-cabin-cinematic-stage .beginner-code-breakdown {
+      width: 100%;
+      height: 202px;
+      justify-self: stretch;
+      align-self: center;
+      overflow: hidden;
+    }
+
+    .compiler-cabin-cinematic-stage .package-split .source-code-strip {
+      top: 38%;
+      min-width: min(356px, 100%);
+      max-width: 100%;
+    }
+
+    .compiler-cabin-cinematic-stage .command-bucket { left: 2%; top: 70%; }
+    .compiler-cabin-cinematic-stage .parameter-bucket { bottom: 6px; }
+    .compiler-cabin-cinematic-stage .terminator-bucket { right: 2%; top: 70%; }
+
+    .compiler-cabin-cinematic-stage .machine-flow,
+    .compiler-cabin-cinematic-stage .inspect-flow {
+      justify-self: stretch;
+      width: 100%;
+      grid-template-rows: minmax(0, 1fr) auto;
+    }
+
+    .compiler-cabin-cinematic-stage .machine-flow .compiler-conveyor {
+      width: 100%;
+      height: 270px;
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      grid-template-rows: 128px minmax(0, 1fr);
+      column-gap: 24px;
+      row-gap: 14px;
+      align-items: end;
+      justify-self: stretch;
+      align-self: center;
+      overflow: hidden;
+      border: 1px solid rgba(56, 189, 248, 0.22);
+      border-radius: 14px;
+      background: rgba(2, 6, 23, 0.42);
+    }
+
+    .compiler-cabin-cinematic-stage .machine-flow .moving-code-package {
+      top: calc(52% - 58px);
+    }
+
+    .compiler-cabin-cinematic-stage .novice-compiler-machine {
+      position: relative;
+      left: auto;
+      top: auto;
+      grid-column: 1 / -1;
+      grid-row: 1;
+      justify-self: center;
+      align-self: start;
+      width: 180px;
+      min-height: 110px;
+      transform: none;
+    }
+
+    .compiler-cabin-cinematic-stage .compiler-gate {
+      position: relative;
+      left: auto;
+      right: auto;
+      top: auto;
+      grid-row: 2;
+      justify-self: center;
+      align-self: start;
+      width: 112px;
+      max-width: 112px;
+      min-height: 74px;
+    }
+
+    .compiler-cabin-cinematic-stage .gate-lex { grid-column: 1; }
+    .compiler-cabin-cinematic-stage .gate-syntax { grid-column: 2; }
+    .compiler-cabin-cinematic-stage .gate-emit { grid-column: 3; }
+
+    .compiler-cabin-cinematic-stage .beginner-check-lamps {
+      display: none;
+    }
+
+    .compiler-cabin-cinematic-stage .inspect-flow .live-scan-board {
+      width: 100%;
+      grid-template-columns: minmax(360px, 1fr) minmax(210px, 0.45fr);
+      gap: 18px;
+      align-self: center;
+    }
+
+    .compiler-cabin-cinematic-stage .inspection-code {
+      min-width: 0;
+      padding: 22px 20px;
+      overflow: hidden;
+      white-space: nowrap;
+    }
+
+    .compiler-cabin-cinematic-stage .practice-flow {
+      grid-template-columns: minmax(300px, 1fr) 108px minmax(230px, 0.78fr);
+      grid-template-rows: auto minmax(0, 1fr) auto;
+      column-gap: 18px;
+      min-height: 0;
+    }
+
+    .practice-demo-subtitles {
+      grid-column: 1 / -1;
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 10px;
+      align-self: start;
+    }
+
+    .practice-demo-subtitles span {
+      display: grid;
+      grid-template-columns: 24px minmax(0, 1fr);
+      gap: 8px;
+      align-items: center;
+      padding: 8px 10px;
+      border: 1px solid rgba(56, 189, 248, 0.3);
+      border-radius: 10px;
+      color: #dffcff;
+      background: rgba(2, 6, 23, 0.74);
+      font: 900 12px/1.35 var(--font-ui);
+    }
+
+    .practice-demo-subtitles b {
+      display: grid;
+      place-items: center;
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      color: #020617;
+      background: #fde68a;
+      font: 900 11px/1 var(--font-code);
+    }
+
+    .compiler-cabin-cinematic-stage .practice-editor {
+      width: 100%;
+      min-height: 160px;
+      justify-self: stretch;
+    }
+
+    .compiler-cabin-cinematic-stage .practice-output {
+      width: 100%;
+      min-height: 132px;
+      justify-self: stretch;
+    }
+
+    .compiler-cabin-cinematic-stage .practice-pointer {
+      left: calc(50% - 6px);
+      top: calc(50% + 4px);
+    }
+
+    .compiler-cabin-cinematic-stage .result-flow {
+      grid-template-rows: minmax(0, 1fr) auto;
+      gap: 10px;
+    }
+
+    .compiler-cabin-cinematic-stage .result-flow .compile-assembly-line {
+      width: 100%;
+      align-self: center;
+      overflow: hidden;
+      gap: 9px;
+      padding-top: 0;
+    }
+
+    .compiler-cabin-cinematic-stage .terminal-demo .compile-chain {
+      margin-bottom: 0;
+    }
+
+    .compiler-cabin-cinematic-stage .terminal-screen {
+      min-width: 0;
+      width: min(620px, 100%);
+      min-height: 94px;
+      padding: 12px 18px;
+    }
+
+    .compiler-cabin-cinematic-stage .result-flow .terminal-next-step {
+      padding: 8px 10px;
+      font-size: 11px;
+      line-height: 1.35;
+    }
+
+    .compiler-hands-on-subtitle {
+      position: absolute;
+      left: 50%;
+      bottom: 22px;
+      z-index: 165;
+      width: min(820px, calc(100% - 36px));
+      display: none;
+      gap: 10px;
+      padding: 12px 14px;
+      border: 1px solid rgba(250, 204, 21, 0.44);
+      border-radius: 12px;
+      color: #dffcff;
+      background: rgba(2, 6, 23, 0.9);
+      box-shadow: 0 0 34px rgba(250, 204, 21, 0.16), inset 0 0 30px rgba(56, 189, 248, 0.06);
+      transform: translateX(-50%);
+      pointer-events: none;
+    }
+
+    .compiler-hands-on-subtitle.active,
+    body.compiler-hands-on-demo-active .compiler-hands-on-subtitle {
+      display: grid;
+    }
+
+    .compiler-hands-on-steps {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 8px;
+    }
+
+    .compiler-hands-on-steps span {
+      display: grid;
+      grid-template-columns: 24px minmax(0, 1fr);
+      gap: 7px;
+      align-items: center;
+      min-height: 34px;
+      padding: 6px 8px;
+      border: 1px solid rgba(56, 189, 248, 0.22);
+      border-radius: 9px;
+      color: rgba(219, 234, 254, 0.7);
+      background: rgba(15, 23, 42, 0.7);
+      font: 900 11px/1.25 var(--font-ui);
+    }
+
+    .compiler-hands-on-steps b {
+      display: grid;
+      place-items: center;
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      color: #94a3b8;
+      background: rgba(2, 6, 23, 0.95);
+      font: 900 11px/1 var(--font-code);
+    }
+
+    .compiler-hands-on-subtitle[data-focus="editor"] [data-hands-on-step="editor"],
+    .compiler-hands-on-subtitle[data-focus="explain"] [data-hands-on-step="explain"],
+    .compiler-hands-on-subtitle[data-focus="run"] [data-hands-on-step="run"],
+    .compiler-hands-on-subtitle[data-focus="output"] [data-hands-on-step="output"] {
+      border-color: rgba(250, 204, 21, 0.78);
+      color: #f8fafc;
+      background: rgba(113, 63, 18, 0.42);
+      box-shadow: 0 0 20px rgba(250, 204, 21, 0.2);
+    }
+
+    .compiler-hands-on-subtitle[data-focus="editor"] [data-hands-on-step="editor"] b,
+    .compiler-hands-on-subtitle[data-focus="explain"] [data-hands-on-step="explain"] b,
+    .compiler-hands-on-subtitle[data-focus="run"] [data-hands-on-step="run"] b,
+    .compiler-hands-on-subtitle[data-focus="output"] [data-hands-on-step="output"] b {
+      color: #020617;
+      background: #fde68a;
+      box-shadow: 0 0 14px rgba(250, 204, 21, 0.46);
+    }
+
+    .compiler-hands-on-copy {
+      display: grid;
+      grid-template-columns: 96px minmax(0, 1fr);
+      gap: 10px;
+      align-items: center;
+      min-height: 34px;
+    }
+
+    .compiler-hands-on-copy strong {
+      color: #fde68a;
+      font: 900 12px/1.25 var(--font-code);
+    }
+
+    .compiler-hands-on-copy span {
+      color: #dffcff;
+      font: 900 13px/1.45 var(--font-ui);
+    }
+
+    .compiler-hands-on-arrow {
+      position: absolute;
+      width: 0;
+      height: 0;
+      border-left: 11px solid transparent;
+      border-right: 11px solid transparent;
+      border-bottom: 18px solid #fde68a;
+      filter: drop-shadow(0 0 12px rgba(250, 204, 21, 0.62));
+      animation: compilerHandsOnSubtitleArrow 760ms ease-in-out infinite alternate;
+    }
+
+    .compiler-hands-on-subtitle[data-focus="editor"] .compiler-hands-on-arrow {
+      left: 24%;
+      top: -20px;
+    }
+
+    .compiler-hands-on-subtitle[data-focus="explain"] .compiler-hands-on-arrow {
+      left: 50%;
+      top: -20px;
+    }
+
+    .compiler-hands-on-subtitle[data-focus="run"] .compiler-hands-on-arrow {
+      left: 18%;
+      top: -20px;
+    }
+
+    .compiler-hands-on-subtitle[data-focus="output"] .compiler-hands-on-arrow {
+      left: 66%;
+      top: -20px;
+    }
+
+    body.compiler-hands-on-demo-active .code-layer {
+      box-shadow: inset 0 0 0 2px rgba(250, 204, 21, 0.24);
+    }
+
+    @keyframes compilerHandsOnSubtitleArrow {
+      from { transform: translateY(0); opacity: 0.68; }
+      to { transform: translateY(-6px); opacity: 1; }
+    }
+
+    @media (max-width: 900px), (pointer: coarse) {
+      .compiler-cabin-cinematic-stage .compiler-cabin-scene {
+        inset: 168px 18px 110px;
+      }
+
+      .compiler-cabin-cinematic-stage .beginner-story-panel {
+        padding: 42px 10px 10px;
+      }
+
+      .compiler-cabin-cinematic-stage .write-flow,
+      .compiler-cabin-cinematic-stage .practice-flow,
+      .compiler-cabin-cinematic-stage .inspect-flow .live-scan-board {
+        grid-template-columns: 1fr;
+      }
+
+      .compiler-cabin-cinematic-stage .learner-workbench,
+      .compiler-cabin-cinematic-stage .beginner-code-breakdown,
+      .compiler-cabin-cinematic-stage .practice-editor,
+      .compiler-cabin-cinematic-stage .practice-output {
+        max-width: none;
+        width: 100%;
+        height: auto;
+        min-height: 118px;
+      }
+
+      .compiler-cabin-cinematic-stage .practice-run-button {
+        justify-self: center;
+        min-height: 42px;
+      }
+
+      .practice-demo-subtitles,
+      .compiler-hands-on-steps {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .compiler-hands-on-copy {
+        grid-template-columns: 1fr;
+        gap: 4px;
+      }
     }
 
     @keyframes compilerReadableCodeFocus {
@@ -14667,11 +15106,11 @@ int main(void) {
       <button id="announcementCloseButton" class="announcement-close" type="button" aria-label="关闭公告">×</button>
       <h2 id="startupAnnouncementTitle" class="startup-announcement-title">> 消息 / 本次更新</h2>
       <div id="announcementPageBody" class="startup-announcement-body">
-        <p>// v1.2.0-hotfix.4：第一学习舱电影教学加入 1-6 顺序轨，当前幕唯一高亮，旧幕残影彻底隐藏。</p>
-        <p>// 教程画面改成单焦点动线：写命令、编译器检查、逐字符高亮、实战演示按顺序推进。</p>
-        <p>// 解说统一为 ChatTTS 导师女声风格缓存，27 个导师片段固定同一个 speaker embedding。</p>
-        <p>// 英文代码词会先转成可读发音，printf / Hello World / include / int main 不再断读。</p>
-        <p>// TTS 缓存脚本支持增量、--force-keys 和懒加载，无缺失时约 0.45 秒跳过。</p>
+        <p>// v1.2.0-hotfix.5：第一学习舱电影分镜重新排版，顺序轨、画面主体和底部重点字幕彻底分开。</p>
+        <p>// 第3幕编译器检查机改成三列检查卡，隐藏重复检查灯，避免元素互相压住。</p>
+        <p>// 第5幕实战演示新增三步字幕：先看编辑器、再看运行按钮、最后看输出区。</p>
+        <p>// 真实编辑器实战新增持续字幕条，include、main、printf、字符串、分号和运行按钮都有同步提示。</p>
+        <p>// 电影舞台高度放宽到 82vh，并用 Playwright 逐幕测量，6 个分镜主要元素均无重叠、无越界。</p>
         <p>// 第一世界仍为 Main Corridor 单一走廊，学习舱按顺序点亮；本次上传未修改 Pixi 版文件。</p>
         <p>// 作者：杀戮，QQ：3424636983，官方Q群：414374792。</p>
         <p class="announcement-dismiss-hint">- 点击任意处关闭</p>
@@ -14873,6 +15312,19 @@ int main(void) {
           </div>
         </div>
       </div>
+      <section id="compilerHandsOnSubtitle" class="compiler-hands-on-subtitle" aria-live="polite" aria-hidden="true" data-focus="editor">
+        <div class="compiler-hands-on-steps" aria-hidden="true">
+          <span data-hands-on-step="editor"><b>1</b>写入代码</span>
+          <span data-hands-on-step="explain"><b>2</b>看懂结构</span>
+          <span data-hands-on-step="run"><b>3</b>点击运行</span>
+          <span data-hands-on-step="output"><b>4</b>看输出</span>
+        </div>
+        <div class="compiler-hands-on-copy">
+          <strong data-role="compiler-hands-on-title">实战演示</strong>
+          <span data-role="compiler-hands-on-text">导师会把代码逐字写进 main.c。</span>
+        </div>
+        <div class="compiler-hands-on-arrow" aria-hidden="true"></div>
+      </section>
       <section id="editorGuideLayer" class="editor-guide-layer" aria-hidden="true">
         <div class="editor-guide-card">
           <header>
@@ -15212,17 +15664,29 @@ int main() {
       {
         title: "> 消息 / 本次更新",
         lines: [
-          "// v1.2.0-hotfix.4：第一学习舱电影教学加入 1-6 顺序轨，当前幕唯一高亮，旧幕残影彻底隐藏。",
-          "// 教程画面改成单焦点动线：写命令、编译器检查、逐字符高亮、实战演示按顺序推进。",
-          "// 解说统一为 ChatTTS 导师女声风格缓存，27 个导师片段固定同一个 speaker embedding。",
-          "// 英文代码词会先转成可读发音，printf / Hello World / include / int main 不再断读。",
-          "// TTS 缓存脚本支持增量、--force-keys 和懒加载，无缺失时约 0.45 秒跳过。",
+          "// v1.2.0-hotfix.5：第一学习舱电影分镜重新排版，顺序轨、画面主体和底部重点字幕彻底分开。",
+          "// 第3幕编译器检查机改成三列检查卡，隐藏重复检查灯，避免元素互相压住。",
+          "// 第5幕实战演示新增三步字幕：先看编辑器、再看运行按钮、最后看输出区。",
+          "// 真实编辑器实战新增持续字幕条，include、main、printf、字符串、分号和运行按钮都有同步提示。",
+          "// 电影舞台高度放宽到 82vh，并用 Playwright 逐幕测量，6 个分镜主要元素均无重叠、无越界。",
           "// 第一世界仍为 Main Corridor 单一走廊，学习舱按顺序点亮；本次上传未修改 Pixi 版文件。",
           "// 作者：杀戮，QQ：3424636983，官方Q群：414374792。"
         ]
       }
     ]);
     const UPDATE_HISTORY = Object.freeze([
+      {
+        version: "v1.2.0-hotfix.5",
+        date: "2026-06-19",
+        title: "电影分镜排版与实战字幕热修",
+        details: [
+          "第一学习舱电影分镜重新排版，顺序轨、画面主体和底部重点字幕分层显示，减少零基础玩家观看时的视觉混乱。",
+          "第3幕编译器检查机改成三列检查卡，隐藏重复检查灯，避免检查机、关卡和字幕互相压住。",
+          "第5幕实战演示新增“先看编辑器、再看运行按钮、最后看输出区”三步字幕，观看顺序更明确。",
+          "真实编辑器实战新增持续字幕条，include、main、printf、字符串、分号和运行按钮都会同步切换可见提示。",
+          "构建前已用 Playwright 逐幕测量 6 个分镜主要元素，确认无重叠、无越界。本次上传未修改 Pixi 版文件。官方Q群：414374792。"
+        ]
+      },
       {
         version: "v1.2.0-hotfix.4",
         date: "2026-06-19",
@@ -16728,7 +17192,7 @@ return 0;`;
       directSaveAs: "reduced-by-inline-resources"
     });
     const SECURITY_CONFIG = Object.freeze({
-      expectedScriptHash: "QYsxyZXUNnG1b8OFc8NKd7DvyHzwQH0HPkJA9/hEVMU=",
+      expectedScriptHash: "cUJYVqek6W3Zhf99ItcOlo532YfO/SsDdUakgib1pu4=",
       selfCheckIntervalMs: 45000,
       tamperRefreshMs: 5000,
       devToolsRefreshMs: 2000,
@@ -24103,6 +24567,7 @@ int main(void) {
       editorNotesPanel: document.getElementById("editorNotesPanel"),
       editorRichConsole: document.getElementById("editorRichConsole"),
       editorInlineFontSize: document.getElementById("editorInlineFontSize"),
+      compilerHandsOnSubtitle: document.getElementById("compilerHandsOnSubtitle"),
       editorGuideLayer: document.getElementById("editorGuideLayer"),
       editorGuideGrid: document.getElementById("editorGuideGrid"),
       editorGuideCloseButton: document.getElementById("editorGuideCloseButton"),
@@ -35933,6 +36398,74 @@ ${item.code}
 
     let compilerHandsOnDemoSession = null;
 
+    const COMPILER_HANDS_ON_SUBTITLE_COPY = Object.freeze({
+      start: {
+        focus: "editor",
+        step: "实战 1/4",
+        text: "先看真实编辑器，导师会把代码逐字写进 main.c。"
+      },
+      include: {
+        focus: "explain",
+        step: "实战 2/4",
+        text: "#include 是准备工具箱：后面要用屏幕输出功能。"
+      },
+      main: {
+        focus: "explain",
+        step: "实战 2/4",
+        text: "int main 是程序入口：电脑从这扇门开始执行。"
+      },
+      printf: {
+        focus: "explain",
+        step: "实战 2/4",
+        text: "printf 是核心动作：把一句话打印到屏幕上。"
+      },
+      string: {
+        focus: "explain",
+        step: "实战 2/4",
+        text: "双引号里的 Hello World 是要原样显示的文字。"
+      },
+      semicolon: {
+        focus: "explain",
+        step: "实战 2/4",
+        text: "分号表示这一句结束，少了它编译器会停下提醒。"
+      },
+      finish: {
+        focus: "run",
+        step: "实战 3/4",
+        text: "代码已经写完。现在只看运行按钮，跟着光圈点击。"
+      },
+      output: {
+        focus: "output",
+        step: "实战 4/4",
+        text: "运行后看输出区：如果检查通过，就会显示 Hello World。"
+      }
+    });
+
+    function setCompilerHandsOnSubtitle(stage = "start") {
+      const panel = dom.compilerHandsOnSubtitle;
+      if (!panel) return false;
+      const copy = COMPILER_HANDS_ON_SUBTITLE_COPY[stage] || COMPILER_HANDS_ON_SUBTITLE_COPY.start;
+      panel.dataset.focus = copy.focus;
+      panel.dataset.stage = stage;
+      panel.classList.add("active");
+      panel.setAttribute("aria-hidden", "false");
+      const titleNode = panel.querySelector('[data-role="compiler-hands-on-title"]');
+      const textNode = panel.querySelector('[data-role="compiler-hands-on-text"]');
+      if (titleNode) titleNode.textContent = copy.step;
+      if (textNode) textNode.textContent = copy.text;
+      if (dom.editorStatusText) dom.editorStatusText.textContent = `导师提示：${copy.text}`;
+      return true;
+    }
+
+    function hideCompilerHandsOnSubtitle() {
+      const panel = dom.compilerHandsOnSubtitle;
+      if (!panel) return false;
+      panel.classList.remove("active");
+      panel.setAttribute("aria-hidden", "true");
+      delete panel.dataset.stage;
+      return true;
+    }
+
     function cancelCompilerCabinHandsOnEditorDemo(reason = "cancelled") {
       const session = compilerHandsOnDemoSession;
       if (!session) return false;
@@ -35943,6 +36476,7 @@ ${item.code}
       document.body.classList.remove("compiler-hands-on-demo-active");
       dom.runButton?.classList?.remove("compiler-hands-on-demo-ready");
       if (dom.runButton) dom.runButton.disabled = false;
+      hideCompilerHandsOnSubtitle();
       audioManager?.releaseMusicSuppression?.("compiler-hands-on-demo");
       session.resolve?.(false);
       return true;
@@ -36002,6 +36536,7 @@ ${item.code}
       files["main.c"] = "";
       resetEditorHistory("");
       scheduleEditorVisuals();
+      setCompilerHandsOnSubtitle("start");
       setOutput("实战演示：导师正在把刚才的命令写进真实编辑器。看完后点击运行。", "info");
       queueEditorFlowMessage("实战演示：这不是图片，代码会逐字写入 main.c。", true);
       playCompilerCabinHandsOnNarration("start", chapter);
@@ -36026,22 +36561,27 @@ ${item.code}
           editorHistory.lastValue = dom.codeInput.value;
           if (!includeNarrated && /#include\s*</.test(dom.codeInput.value)) {
             includeNarrated = true;
+            setCompilerHandsOnSubtitle("include");
             playCompilerCabinHandsOnNarration("include", chapter);
           }
           if (!mainNarrated && /int\s+main\s*\(/.test(dom.codeInput.value)) {
             mainNarrated = true;
+            setCompilerHandsOnSubtitle("main");
             playCompilerCabinHandsOnNarration("main", chapter);
           }
           if (!printfNarrated && /printf\s*\(/.test(dom.codeInput.value)) {
             printfNarrated = true;
+            setCompilerHandsOnSubtitle("printf");
             playCompilerCabinHandsOnNarration("printf", chapter);
           }
           if (!stringNarrated && /"Hello World!"/.test(dom.codeInput.value)) {
             stringNarrated = true;
+            setCompilerHandsOnSubtitle("string");
             playCompilerCabinHandsOnNarration("string", chapter);
           }
           if (!semicolonNarrated && /printf\s*\("Hello World!"\)\s*;/.test(dom.codeInput.value)) {
             semicolonNarrated = true;
+            setCompilerHandsOnSubtitle("semicolon");
             playCompilerCabinHandsOnNarration("semicolon", chapter);
           }
           if (index % 3 === 0 || index >= target.length) scheduleEditorVisuals();
@@ -36058,6 +36598,7 @@ ${item.code}
           dom.runButton.classList.add("compiler-hands-on-demo-ready");
           setOutput("实战演示完成。现在点击运行按钮，让编译器检查并输出结果。", "info");
           queueEditorFlowMessage("代码已经写入 main.c。下一步只看一个动作：点击运行。", true);
+          setCompilerHandsOnSubtitle("finish");
           playCompilerCabinHandsOnNarration("finish", chapter);
           focusButtonWithVisualPulse(dom.runButton);
           trackedSetTimeout(() => {
@@ -36119,6 +36660,7 @@ ${item.code}
                   <i></i>
                   <span>屏幕显示</span>
                 </div>
+                <div class="motion-caption">先看最终结果：这节课只证明一件事，代码通过检查后，屏幕会显示 Hello World。</div>
               </div>
             </div>
           </div>
@@ -36222,9 +36764,14 @@ ${item.code}
             </div>
           </div>
           <div class="compiler-cabin-scene practice-demo" data-phase="practice">
-            <div class="compiler-cabin-scene-inner real-animation-scene">
+              <div class="compiler-cabin-scene-inner real-animation-scene">
               <div class="beginner-story-panel practice-flow">
                 <div class="story-step-badge">5 实战演示</div>
+                <div class="practice-demo-subtitles" aria-hidden="true">
+                  <span><b>1</b>先看编辑器逐字写入</span>
+                  <span><b>2</b>再看光标移动到运行</span>
+                  <span><b>3</b>最后看输出区出现结果</span>
+                </div>
                 <div class="practice-editor" data-motion-actor="practice-editor">
                   <div class="practice-editor-title">实操编辑器</div>
                   <pre><span class="practice-typed-code">printf("Hello World!");</span><i></i></pre>
@@ -36235,6 +36782,7 @@ ${item.code}
                   <span>输出区</span>
                   <b>Hello World!</b>
                 </div>
+                <div class="motion-caption">观看顺序固定：编辑器写入代码 → 点击运行 → 输出区显示 Hello World。</div>
               </div>
             </div>
           </div>
@@ -39173,6 +39721,7 @@ ${item.code}
     function closeEditor(resume = true) {
       if (!gameState.editorOpen) return;
       cancelCompilerCabinHandsOnEditorDemo("editor-close");
+      hideCompilerHandsOnSubtitle();
       cancelPrintfCharacterDeconstruction("editor-close");
       dismissExecutionVisualization("editor-close");
       gameState.editorOpen = false;
@@ -47781,6 +48330,7 @@ ${item.code}
     });
 
     dom.runButton.addEventListener("click", () => {
+      if (dom.compilerHandsOnSubtitle?.classList?.contains("active")) setCompilerHandsOnSubtitle("output");
       if (gameState.noviceGuideActive) return handleNoviceGuideCompile();
       return runChallenge();
     });
