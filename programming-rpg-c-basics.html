@@ -14,7 +14,7 @@
   <meta http-equiv="Cache-Control" content="no-store, max-age=0, must-revalidate">
   <meta http-equiv="Pragma" content="no-cache">
   <meta http-equiv="Expires" content="0">
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self' file:; base-uri 'self'; object-src 'none'; script-src 'self' 'nonce-code-awakener-inline' file: 'sha256-obmvezlJ8Bw5DfWeNWrBKOUWvRtzYEnZYIsEWWrAiQY='; style-src 'self' 'nonce-code-awakener-inline' file: 'sha256-116gKFd6DBlObwi+TMBEDKQSstOZYsQXULFnTjDmfmc='; style-src-attr 'unsafe-inline'; font-src 'self' file: data:; img-src 'self' file: data: blob: https://cdn.pixabay.com; media-src 'self' file: data: blob: https: http: https://cdn.pixabay.com; worker-src 'self' file: blob:; child-src 'self' file: blob:; connect-src 'self' file: http://localhost:8000 http://127.0.0.1:8000 http://localhost:9966 http://127.0.0.1:9966 http://localhost:9977 http://127.0.0.1:9977 https://cdn.pixabay.com https://pixabay.com;">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self' file:; base-uri 'self'; object-src 'none'; script-src 'self' 'nonce-code-awakener-inline' file: 'sha256-DYTO75OF86nWUq6JIU0ehVi+IuXwpHtuQ9QRQs/Gg28='; style-src 'self' 'nonce-code-awakener-inline' file: 'sha256-YwiWXtlv326ZtX37Pga+k/AEjLxVpLFW3iZzB4zQYf8='; style-src-attr 'unsafe-inline'; font-src 'self' file: data:; img-src 'self' file: data: blob: https://cdn.pixabay.com; media-src 'self' file: data: blob: https: http: https://cdn.pixabay.com; worker-src 'self' file: blob:; child-src 'self' file: blob:; connect-src 'self' file: http://localhost:8000 http://127.0.0.1:8000 http://localhost:9966 http://127.0.0.1:9966 http://localhost:9977 http://127.0.0.1:9977 https://cdn.pixabay.com https://pixabay.com;">
   <title>代码觉醒者：Main Corridor</title>
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%23020617'/%3E%3Cpath d='M22 20 10 32l12 12M42 20l12 12-12 12' fill='none' stroke='%2300ff88' stroke-width='6' stroke-linecap='round' stroke-linejoin='round'/%3E%3Cpath d='m36 16-8 32' stroke='%2300ccff' stroke-width='5' stroke-linecap='round'/%3E%3C/svg%3E">
   <script src="./vendor/phaser.min.js"></script>
@@ -12644,7 +12644,7 @@
       position: absolute;
       left: 50%;
       bottom: clamp(270px, 31vh, 318px);
-      z-index: 220;
+      z-index: 1400;
       width: min(920px, calc(100% - 72px));
       max-height: min(190px, 32vh);
       overflow: visible;
@@ -12663,6 +12663,7 @@
     .compiler-hands-on-subtitle.active,
     body.compiler-hands-on-demo-active .compiler-hands-on-subtitle {
       display: grid;
+      pointer-events: auto;
     }
 
     .compiler-hands-on-subtitle[data-focus="run"] {
@@ -12736,6 +12737,43 @@
     .compiler-hands-on-copy span {
       color: #dffcff;
       font: 900 13px/1.45 var(--font-ui);
+    }
+
+    .compiler-hands-on-control {
+      display: grid;
+      grid-template-columns: 92px minmax(0, 1fr) auto;
+      gap: 10px;
+      align-items: center;
+      min-height: 32px;
+    }
+
+    .compiler-hands-on-control label {
+      color: #bae6fd;
+      font: 900 11px/1.2 var(--font-ui);
+    }
+
+    #compilerHandsOnProgress {
+      width: 100%;
+      accent-color: #facc15;
+      cursor: pointer;
+    }
+
+    .compiler-hands-on-jump {
+      min-height: 30px;
+      padding: 0 12px;
+      border: 1px solid rgba(250, 204, 21, 0.56);
+      border-radius: 8px;
+      color: #fff7ed;
+      background: rgba(113, 63, 18, 0.62);
+      font: 900 11px/1 var(--font-ui);
+      cursor: pointer;
+    }
+
+    .compiler-hands-on-jump:hover,
+    .compiler-hands-on-jump:focus-visible {
+      background: rgba(161, 98, 7, 0.86);
+      box-shadow: 0 0 16px rgba(250, 204, 21, 0.24);
+      outline: none;
     }
 
     .compiler-hands-on-arrow {
@@ -12816,6 +12854,10 @@
       .compiler-hands-on-copy {
         grid-template-columns: 1fr;
         gap: 4px;
+      }
+
+      .compiler-hands-on-control {
+        grid-template-columns: 1fr;
       }
     }
 
@@ -15113,11 +15155,11 @@ int main(void) {
       <button id="announcementCloseButton" class="announcement-close" type="button" aria-label="关闭公告">×</button>
       <h2 id="startupAnnouncementTitle" class="startup-announcement-title">> 消息 / 本次更新</h2>
       <div id="announcementPageBody" class="startup-announcement-body">
-        <p>// v1.2.0-hotfix.8：第一学习舱第 3 步再次修复，出现“点击运行”时真实运行按钮会立即解锁。</p>
-        <p>// 最后一句 TTS 旁白会继续播放，但不再阻挡玩家点击，避免绿色按钮看起来能点却仍是 disabled。</p>
-        <p>// 绿色“运行我的代码”和中间大号“点击运行”引导条都已复测：点击后输出 C language。</p>
-        <p>// 上一版 TTS 防截断、file:// 缓存探测降噪和 printf 字符级解构流程继续保留。</p>
-        <p>// 本地 file:// 方式已复测：第 3 步出现即 runDisabled=false，点击后继续进入输出讲解。</p>
+        <p>// v1.2.0-hotfix.9：第一学习舱实战逻辑重置，教程期间运行按钮不再被 disabled 锁死。</p>
+        <p>// 玩家提前点“运行我的代码”会自动跳到可运行进度、补全本关代码并立即执行。</p>
+        <p>// 新增可拖动“实战进度”滑条和“跳到运行”按钮，进度可以由玩家手动调整。</p>
+        <p>// 修复运行完成早于等待器安装的竞态，结果会缓存，不再丢失教程后续步骤。</p>
+        <p>// 提升实战控制层级，避免导师解析侧栏覆盖按钮；三条路径均复测输出 C language。</p>
         <p>// Main Corridor 单一走廊主线保持不变，变量立绘剧场历史内容仍可在主菜单历史更新查看。</p>
         <p>// 本次上传只修改 Phaser 3.80.1 版文件；Pixi 版文件未混放、未改动。</p>
         <p>// 作者：杀戮，QQ：3424636983，官方Q群：414374792。</p>
@@ -15330,6 +15372,11 @@ int main(void) {
         <div class="compiler-hands-on-copy">
           <strong data-role="compiler-hands-on-title">实战演示</strong>
           <span data-role="compiler-hands-on-text">导师会把代码逐字写进 main.c。</span>
+        </div>
+        <div class="compiler-hands-on-control" aria-label="实战教程进度控制">
+          <label for="compilerHandsOnProgress">实战进度</label>
+          <input id="compilerHandsOnProgress" type="range" min="0" max="100" value="0" step="1" aria-label="拖动调整实战教程进度">
+          <button id="compilerHandsOnJumpRunButton" class="compiler-hands-on-jump" type="button">跳到运行</button>
         </div>
         <div class="compiler-hands-on-arrow" aria-hidden="true"></div>
       </section>
@@ -16117,11 +16164,11 @@ int main() {
       {
         title: "> 消息 / 本次更新",
         lines: [
-          "// v1.2.0-hotfix.8：第一学习舱第 3 步再次修复，出现“点击运行”时真实运行按钮会立即解锁。",
-          "// 最后一句 TTS 旁白会继续播放，但不再阻挡玩家点击，避免绿色按钮看起来能点却仍是 disabled。",
-          "// 绿色“运行我的代码”和中间大号“点击运行”引导条都已复测：点击后输出 C language。",
-          "// 上一版 TTS 防截断、file:// 缓存探测降噪和 printf 字符级解构流程继续保留。",
-          "// 本地 file:// 方式已复测：第 3 步出现即 runDisabled=false，点击后继续进入输出讲解。",
+          "// v1.2.0-hotfix.9：第一学习舱实战逻辑重置，教程期间运行按钮不再被 disabled 锁死。",
+          "// 玩家提前点“运行我的代码”会自动跳到可运行进度、补全本关代码并立即执行。",
+          "// 新增可拖动“实战进度”滑条和“跳到运行”按钮，进度可以由玩家手动调整。",
+          "// 修复运行完成早于等待器安装的竞态，结果会缓存，不再丢失教程后续步骤。",
+          "// 提升实战控制层级，避免导师解析侧栏覆盖按钮；三条路径均复测输出 C language。",
           "// Main Corridor 单一走廊主线保持不变，变量立绘剧场历史内容仍可在主菜单历史更新查看。",
           "// 本次上传只修改 Phaser 3.80.1 版文件；Pixi 版文件未混放、未改动。",
           "// 作者：杀戮，QQ：3424636983，官方Q群：414374792。"
@@ -16129,6 +16176,18 @@ int main() {
       }
     ]);
     const UPDATE_HISTORY = Object.freeze([
+      {
+        version: "v1.2.0-hotfix.9",
+        date: "2026-06-19",
+        title: "实战进度可拖动与运行逻辑重置",
+        details: [
+          "第一学习舱实战运行逻辑重置：教程期间真实运行按钮不再使用原生 disabled 锁死，玩家提前点击也会进入同一条安全运行路径。",
+          "新增可拖动“实战进度”滑条和“跳到运行”按钮，玩家可以手动把实战演示调整到任意进度，拖到 100% 会直接进入可运行状态。",
+          "运行按钮、中央引导条、进度滑条、跳到运行按钮和 Ctrl+Enter 统一走同一套状态机，提前点击会补全本关代码并立即执行。",
+          "修复运行完成早于等待器安装的竞态：结果会先缓存，等待器建立后继续输出讲解和 printf 字符级解构，不再卡住或丢步骤。",
+          "提升实战控制层 z-index 并全程启用指针事件，避免导师解析侧栏覆盖按钮。已用 Playwright 复测提前点运行、滑条 100%、跳到运行三条路径均输出 C language。只修改 Phaser 3.80.1 版文件，未改动 Pixi 版文件。官方Q群：414374792。"
+        ]
+      },
       {
         version: "v1.2.0-hotfix.8",
         date: "2026-06-19",
@@ -17681,7 +17740,7 @@ return 0;`;
       directSaveAs: "reduced-by-inline-resources"
     });
     const SECURITY_CONFIG = Object.freeze({
-      expectedScriptHash: "hvt00WiTts82b2TGoYE5RovrJRY24XL2busfpDN4NYQ=",
+      expectedScriptHash: "1p9E3LGsq6LIX9jFqhbLdhsSWTGfx56ncUQBnvyMOlQ=",
       selfCheckIntervalMs: 45000,
       tamperRefreshMs: 5000,
       devToolsRefreshMs: 2000,
@@ -25062,6 +25121,8 @@ int main(void) {
       editorRichConsole: document.getElementById("editorRichConsole"),
       editorInlineFontSize: document.getElementById("editorInlineFontSize"),
       compilerHandsOnSubtitle: document.getElementById("compilerHandsOnSubtitle"),
+      compilerHandsOnProgress: document.getElementById("compilerHandsOnProgress"),
+      compilerHandsOnJumpRunButton: document.getElementById("compilerHandsOnJumpRunButton"),
       editorGuideLayer: document.getElementById("editorGuideLayer"),
       editorGuideGrid: document.getElementById("editorGuideGrid"),
       editorGuideCloseButton: document.getElementById("editorGuideCloseButton"),
@@ -36936,6 +36997,7 @@ ${item.code}
     let compilerHandsOnDemoSession = null;
     let compilerHandsOnNarrationChain = Promise.resolve(false);
     let compilerHandsOnRunWaiter = null;
+    let compilerHandsOnPendingRunCompleteChapterId = "";
     const COMPILER_HANDS_ON_NARRATION_MIN_MS = Object.freeze({
       start: 1800,
       include: 2200,
@@ -37039,6 +37101,14 @@ ${item.code}
       return true;
     }
 
+    function syncCompilerHandsOnProgress(percent = 0) {
+      if (!dom.compilerHandsOnProgress) return false;
+      const value = String(Math.max(0, Math.min(100, Math.round(Number(percent) || 0))));
+      dom.compilerHandsOnProgress.value = value;
+      dom.compilerHandsOnProgress.setAttribute("aria-valuenow", value);
+      return true;
+    }
+
     function cancelCompilerCabinHandsOnEditorDemo(reason = "cancelled") {
       const session = compilerHandsOnDemoSession;
       if (!session) return false;
@@ -37062,10 +37132,27 @@ ${item.code}
       return String(dom.codeInput.value || "").trimEnd() === expected;
     }
 
+    function applyCompilerCabinHandsOnCodeProgress(session, nextIndex = 0, stage = "") {
+      if (!session || !dom.codeInput) return false;
+      const target = String(session.target || "");
+      const index = Math.max(0, Math.min(target.length, Math.round(Number(nextIndex) || 0)));
+      session.index = index;
+      dom.codeInput.value = target.slice(0, index);
+      dom.codeInput.selectionStart = index;
+      dom.codeInput.selectionEnd = index;
+      files["main.c"] = dom.codeInput.value;
+      editorHistory.lastValue = dom.codeInput.value;
+      scheduleEditorVisuals();
+      syncCompilerHandsOnProgress(target.length ? (index / target.length) * 100 : 0);
+      if (stage) setCompilerHandsOnSubtitle(stage);
+      return index >= target.length;
+    }
+
     function releaseCompilerCabinHandsOnRunControl(session, reason = "run-ready") {
       if (!session || session.cancelled || compilerHandsOnDemoSession !== session) return false;
       session.timers.forEach((timerId) => timerTracker.clear(timerId));
       session.timers.clear();
+      applyCompilerCabinHandsOnCodeProgress(session, String(session.target || "").length, "finish");
       compilerHandsOnDemoSession = null;
       document.body.classList.remove("compiler-hands-on-demo-active");
       if (dom.runButton) {
@@ -37075,6 +37162,14 @@ ${item.code}
       }
       session.resolve?.(true);
       return true;
+    }
+
+    function forceCompilerCabinHandsOnRunReady(reason = "manual") {
+      const session = compilerHandsOnDemoSession;
+      if (!session || session.cancelled || gameState.activeChallengeId !== session.chapterId) return false;
+      setOutput("实战演示已跳到运行步骤。现在点击运行，让编译器检查并输出结果。", "info");
+      queueEditorFlowMessage("已跳到运行步骤：代码已经放进 main.c，可以直接运行。", true);
+      return releaseCompilerCabinHandsOnRunControl(session, reason);
     }
 
     function scheduleCompilerHandsOnTimer(session, callback, delay, label) {
@@ -37137,9 +37232,18 @@ ${item.code}
 
     function waitForCompilerCabinHandsOnRun(chapter, timeoutMs = 90000) {
       cancelCompilerCabinHandsOnRunWaiter("replace-waiter");
+      const chapterId = chapter?.id || FIRST_MAINLINE_CHAPTER_ID;
+      if (compilerHandsOnPendingRunCompleteChapterId === chapterId) {
+        compilerHandsOnPendingRunCompleteChapterId = "";
+        dom.runButton?.classList?.remove("compiler-hands-on-demo-ready");
+        clearButtonVisualPulse();
+        audioManager?.releaseMusicSuppression?.("compiler-hands-on-demo");
+        setCompilerHandsOnSubtitle("output");
+        return Promise.resolve(true);
+      }
       return new Promise((resolve) => {
         const waiter = {
-          chapterId: chapter?.id || FIRST_MAINLINE_CHAPTER_ID,
+          chapterId,
           resolve,
           timeoutId: 0
         };
@@ -37156,7 +37260,12 @@ ${item.code}
 
     function notifyCompilerCabinHandsOnRunComplete(chapterId = gameState.activeChallengeId) {
       const waiter = compilerHandsOnRunWaiter;
-      if (!waiter || waiter.chapterId !== chapterId) return false;
+      if (!waiter || waiter.chapterId !== chapterId) {
+        if (gameState.compilerCabinLessonActive && chapterId === FIRST_MAINLINE_CHAPTER_ID) {
+          compilerHandsOnPendingRunCompleteChapterId = chapterId;
+        }
+        return false;
+      }
       compilerHandsOnRunWaiter = null;
       if (waiter.timeoutId) timerTracker.clear(waiter.timeoutId);
       dom.runButton?.classList?.remove("compiler-hands-on-demo-ready");
@@ -37168,7 +37277,10 @@ ${item.code}
     }
 
     function shouldDeferCompilerCabinAutoComplete(chapterId = gameState.activeChallengeId) {
-      return Boolean(compilerHandsOnRunWaiter && compilerHandsOnRunWaiter.chapterId === chapterId);
+      return Boolean(
+        (compilerHandsOnRunWaiter && compilerHandsOnRunWaiter.chapterId === chapterId) ||
+        (gameState.compilerCabinLessonActive && chapterId === FIRST_MAINLINE_CHAPTER_ID && dom.compilerHandsOnSubtitle?.classList?.contains("active"))
+      );
     }
 
     function playCompilerCabinHandsOnNarration(stage = "start", chapter = chapterById[FIRST_MAINLINE_CHAPTER_ID]) {
@@ -37200,14 +37312,19 @@ ${item.code}
       cancelCompilerCabinHandsOnEditorDemo("restart");
       const session = {
         chapterId: chapter?.id || FIRST_MAINLINE_CHAPTER_ID,
+        chapter,
+        target,
+        index: 0,
         cancelled: false,
         timers: new Set(),
         resolve: null
       };
       compilerHandsOnDemoSession = session;
       document.body.classList.add("compiler-hands-on-demo-active");
-      dom.runButton.disabled = true;
+      dom.runButton.disabled = false;
       dom.runButton.classList.remove("compiler-hands-on-demo-ready");
+      dom.runButton.classList.add("compiler-hands-on-demo-ready");
+      syncCompilerHandsOnProgress(0);
       if (audioManager?.suppressMusic) audioManager.suppressMusic("compiler-hands-on-demo");
       audioManager?.stopBgm?.(0);
       silenceProceduralMusic?.();
@@ -37223,7 +37340,6 @@ ${item.code}
       queueEditorFlowMessage("实战演示：这不是图片，代码会逐字写入 main.c。", true);
       return new Promise((resolve) => {
         session.resolve = resolve;
-        let index = 0;
         let includeNarrated = false;
         let mainNarrated = false;
         let printfNarrated = false;
@@ -37244,12 +37360,7 @@ ${item.code}
             cancelCompilerCabinHandsOnEditorDemo("editor-left");
             return;
           }
-          index = Math.min(target.length, index + 1);
-          dom.codeInput.value = target.slice(0, index);
-          dom.codeInput.selectionStart = index;
-          dom.codeInput.selectionEnd = index;
-          files["main.c"] = dom.codeInput.value;
-          editorHistory.lastValue = dom.codeInput.value;
+          applyCompilerCabinHandsOnCodeProgress(session, session.index + 1);
           let narrationWait = null;
           if (!includeNarrated && /#include\s*</.test(dom.codeInput.value)) {
             includeNarrated = true;
@@ -37281,8 +37392,8 @@ ${item.code}
             setCompilerHandsOnSubtitle("return");
             narrationWait = waitForCompilerCabinHandsOnNarrationStage(session, "return", chapter);
           }
-          if (index % 3 === 0 || index >= target.length) scheduleEditorVisuals();
-          if (index < target.length) {
+          if (session.index % 3 === 0 || session.index >= target.length) scheduleEditorVisuals();
+          if (session.index < target.length) {
             if (narrationWait) {
               continueAfterNarration(narrationWait);
               return;
@@ -37312,6 +37423,7 @@ ${item.code}
             resolve(true);
           });
         };
+        session.step = step;
         waitForCompilerCabinHandsOnNarrationStage(session, "start", chapter).then((ok) => {
           if (!ok || session.cancelled || compilerHandsOnDemoSession !== session) return;
           scheduleCompilerHandsOnTimer(session, step, gameState.settings.animationQuality === ANIMATION_QUALITY.off ? 20 : 360, "compiler-hands-on-editor-start");
@@ -40858,7 +40970,7 @@ ${item.code}
     function handleEditorRunKey(event) {
       if (shortcutManager.matches(event, "runCode")) {
         event.preventDefault();
-        if (!dom.runButton.disabled) runChallenge();
+        if (!dom.runButton.disabled) dom.runButton.click();
         return true;
       }
       return false;
@@ -45985,8 +46097,12 @@ ${item.code}
 
     function activateCompilerHandsOnRunFromGuide(event) {
       if (dom.compilerHandsOnSubtitle?.dataset?.focus !== "run") return false;
+      if (event?.target?.closest?.(".compiler-hands-on-control")) return false;
       if (dom.runButton?.disabled && compilerHandsOnDemoSession && isCompilerCabinHandsOnTargetReady(compilerHandsOnDemoSession.chapterId)) {
         releaseCompilerCabinHandsOnRunControl(compilerHandsOnDemoSession, "guide-click-release");
+      }
+      if (compilerHandsOnDemoSession && gameState.activeChallengeId === compilerHandsOnDemoSession.chapterId) {
+        forceCompilerCabinHandsOnRunReady("guide-click-release");
       }
       if (!dom.runButton || dom.runButton.disabled) return false;
       event?.preventDefault?.();
@@ -45994,6 +46110,54 @@ ${item.code}
       focusButtonWithVisualPulse(dom.runButton);
       dom.runButton.click();
       return true;
+    }
+
+    function inferCompilerCabinHandsOnStageFromCode(source = "", target = "") {
+      const value = String(source || "");
+      if (target && value.trimEnd() === String(target).trimEnd()) return "finish";
+      if (/return\s+0\s*;/.test(value)) return "return";
+      if (/printf\s*\(\s*"[^"]*"\s*\)\s*;/.test(value)) return "semicolon";
+      if (/printf\s*\(\s*"[^"]+"/.test(value)) return "string";
+      if (/printf\s*\(/.test(value)) return "printf";
+      if (/int\s+main\s*\(/.test(value)) return "main";
+      if (/#include\s*</.test(value)) return "include";
+      return "start";
+    }
+
+    function seekCompilerCabinHandsOnProgress(percent = 0, reason = "manual-progress") {
+      const session = compilerHandsOnDemoSession;
+      if (!session || session.cancelled || gameState.activeChallengeId !== session.chapterId) return false;
+      session.timers.forEach((timerId) => timerTracker.clear(timerId));
+      session.timers.clear();
+      const target = String(session.target || "");
+      const nextIndex = Math.round(target.length * Math.max(0, Math.min(100, Number(percent) || 0)) / 100);
+      const nextSource = target.slice(0, nextIndex);
+      const stage = inferCompilerCabinHandsOnStageFromCode(nextSource, target);
+      const complete = applyCompilerCabinHandsOnCodeProgress(session, nextIndex, stage);
+      if (complete) {
+        setOutput("实战演示已跳到运行步骤。现在点击运行，让编译器检查并输出结果。", "info");
+        queueEditorFlowMessage("已跳到运行步骤：代码已经放进 main.c，可以直接运行。", true);
+        releaseCompilerCabinHandsOnRunControl(session, reason);
+        return true;
+      }
+      scheduleCompilerHandsOnTimer(session, () => {
+        if (!session.cancelled && compilerHandsOnDemoSession === session) {
+          const resume = session.step;
+          if (typeof resume === "function") resume();
+        }
+      }, 360, "compiler-hands-on-progress-resume");
+      return true;
+    }
+
+    function handleCompilerHandsOnProgressInput(event) {
+      event?.stopPropagation?.();
+      return seekCompilerCabinHandsOnProgress(event?.target?.value, "progress-slider");
+    }
+
+    function handleCompilerHandsOnJumpRun(event) {
+      event?.preventDefault?.();
+      event?.stopPropagation?.();
+      return forceCompilerCabinHandsOnRunReady("jump-run-button");
     }
 
     function cancelInteractionUiShielding() {
@@ -49113,11 +49277,22 @@ ${item.code}
     });
 
     dom.compilerHandsOnSubtitle?.addEventListener("click", activateCompilerHandsOnRunFromGuide);
+    dom.compilerHandsOnProgress?.addEventListener("pointerdown", (event) => event.stopPropagation());
+    dom.compilerHandsOnProgress?.addEventListener("click", (event) => event.stopPropagation());
+    dom.compilerHandsOnProgress?.addEventListener("input", handleCompilerHandsOnProgressInput);
+    dom.compilerHandsOnProgress?.addEventListener("change", handleCompilerHandsOnProgressInput);
+    dom.compilerHandsOnJumpRunButton?.addEventListener("pointerdown", (event) => event.stopPropagation());
+    dom.compilerHandsOnJumpRunButton?.addEventListener("click", handleCompilerHandsOnJumpRun);
     dom.runButton.addEventListener("click", () => {
-      if (dom.compilerHandsOnSubtitle?.classList?.contains("active")) setCompilerHandsOnSubtitle("output");
       const activeChapterId = gameState.activeChallengeId;
+      if (compilerHandsOnDemoSession && compilerHandsOnDemoSession.chapterId === activeChapterId) {
+        forceCompilerCabinHandsOnRunReady("run-button-click");
+      }
+      if (dom.compilerHandsOnSubtitle?.classList?.contains("active")) setCompilerHandsOnSubtitle("output");
       const runResult = gameState.noviceGuideActive ? handleNoviceGuideCompile() : runChallenge();
       if (compilerHandsOnRunWaiter && compilerHandsOnRunWaiter.chapterId === activeChapterId) {
+        Promise.resolve(runResult).finally(() => notifyCompilerCabinHandsOnRunComplete(activeChapterId));
+      } else if (gameState.compilerCabinLessonActive && activeChapterId === FIRST_MAINLINE_CHAPTER_ID) {
         Promise.resolve(runResult).finally(() => notifyCompilerCabinHandsOnRunComplete(activeChapterId));
       }
       return runResult;
