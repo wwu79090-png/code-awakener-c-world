@@ -14,7 +14,7 @@
   <meta http-equiv="Cache-Control" content="no-store, max-age=0, must-revalidate">
   <meta http-equiv="Pragma" content="no-cache">
   <meta http-equiv="Expires" content="0">
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self' file:; base-uri 'self'; object-src 'none'; script-src 'self' 'nonce-code-awakener-inline' file: 'sha256-8wUn1zN/ApWGiC8Em6+Gr/CQ10vhI0gBuWSwvI+34Dc='; style-src 'self' 'nonce-code-awakener-inline' file: 'sha256-X1eJYBukp4ElDk3dA71v9P+hNdkDpbPc6GQPkyQf0FA='; style-src-attr 'unsafe-inline'; font-src 'self' file: data:; img-src 'self' file: data: blob: https://cdn.pixabay.com; media-src 'self' file: data: blob: https: http: https://cdn.pixabay.com; worker-src 'self' file: blob:; child-src 'self' file: blob:; connect-src 'self' file: http://localhost:8000 http://127.0.0.1:8000 http://localhost:9966 http://127.0.0.1:9966 http://localhost:9977 http://127.0.0.1:9977 https://cdn.pixabay.com https://pixabay.com;">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self' file:; base-uri 'self'; object-src 'none'; script-src 'self' 'nonce-code-awakener-inline' file: 'sha256-iUKzmJRdhyKh1fw39AUf//37FHjSuPlm8dSSvO5aphE='; style-src 'self' 'nonce-code-awakener-inline' file: 'sha256-Gk5Q8c9mx7BRYBt7Pc/jwTfUP0+QXWCsr0wqAgc41Lc='; style-src-attr 'unsafe-inline'; font-src 'self' file: data:; img-src 'self' file: data: blob: https://cdn.pixabay.com; media-src 'self' file: data: blob: https: http: https://cdn.pixabay.com; worker-src 'self' file: blob:; child-src 'self' file: blob:; connect-src 'self' file: http://localhost:8000 http://127.0.0.1:8000 http://localhost:9966 http://127.0.0.1:9966 http://localhost:9977 http://127.0.0.1:9977 https://cdn.pixabay.com https://pixabay.com;">
   <title>代码觉醒者：Main Corridor</title>
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%23020617'/%3E%3Cpath d='M22 20 10 32l12 12M42 20l12 12-12 12' fill='none' stroke='%2300ff88' stroke-width='6' stroke-linecap='round' stroke-linejoin='round'/%3E%3Cpath d='m36 16-8 32' stroke='%2300ccff' stroke-width='5' stroke-linecap='round'/%3E%3C/svg%3E">
   <script src="./vendor/phaser.min.js"></script>
@@ -86,18 +86,18 @@
       cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24'%3E%3Crect x='10' y='4' width='3' height='16' fill='%2338bdf8'/%3E%3Crect x='14' y='18' width='6' height='2' fill='%23a855f7'/%3E%3C/svg%3E") 10 4, text;
     }
 
-    :where(.menu-list, .pause-panel, .settings-panel, .world-select-panel, .update-history-list, .info-side-menu, .dialog-box, .custom-music-panel, .music-dynamic-island, .task-panel, .code-explain-panel, .code-explain-body, .editor-notes-panel, .editor-rich-console, #consoleOutput, #devConsoleOutput) {
+    :where(.menu-list, .pause-panel, .settings-panel, .world-select-panel, .update-history-list, .info-side-menu, .dialog-box, .custom-music-panel, .music-dynamic-island, .task-panel, .code-explain-panel, .code-explain-body, .editor-notes-panel, .editor-rich-console, .learning-cabin-editor-scroll, .learning-cabin-editor-pane, .learning-cabin-editor-output, #consoleOutput, #devConsoleOutput) {
       scrollbar-width: thin;
       scrollbar-color: var(--hud-scroll-thumb) var(--hud-scroll-track);
       scrollbar-gutter: stable;
     }
 
-    :where(.menu-list, .pause-panel, .settings-panel, .world-select-panel, .update-history-list, .info-side-menu, .dialog-box, .custom-music-panel, .music-dynamic-island, .task-panel, .code-explain-panel, .code-explain-body, .editor-notes-panel, .editor-rich-console, #consoleOutput, #devConsoleOutput)::-webkit-scrollbar {
+    :where(.menu-list, .pause-panel, .settings-panel, .world-select-panel, .update-history-list, .info-side-menu, .dialog-box, .custom-music-panel, .music-dynamic-island, .task-panel, .code-explain-panel, .code-explain-body, .editor-notes-panel, .editor-rich-console, .learning-cabin-editor-scroll, .learning-cabin-editor-pane, .learning-cabin-editor-output, #consoleOutput, #devConsoleOutput)::-webkit-scrollbar {
       width: 10px;
       height: 10px;
     }
 
-    :where(.menu-list, .pause-panel, .settings-panel, .world-select-panel, .update-history-list, .info-side-menu, .dialog-box, .custom-music-panel, .music-dynamic-island, .task-panel, .code-explain-panel, .code-explain-body, .editor-notes-panel, .editor-rich-console, #consoleOutput, #devConsoleOutput)::-webkit-scrollbar-track {
+    :where(.menu-list, .pause-panel, .settings-panel, .world-select-panel, .update-history-list, .info-side-menu, .dialog-box, .custom-music-panel, .music-dynamic-island, .task-panel, .code-explain-panel, .code-explain-body, .editor-notes-panel, .editor-rich-console, .learning-cabin-editor-scroll, .learning-cabin-editor-pane, .learning-cabin-editor-output, #consoleOutput, #devConsoleOutput)::-webkit-scrollbar-track {
       border: 1px solid rgba(56, 189, 248, 0.12);
       border-radius: 999px;
       background:
@@ -106,7 +106,7 @@
       box-shadow: inset 0 0 14px rgba(2, 6, 23, 0.58);
     }
 
-    :where(.menu-list, .pause-panel, .settings-panel, .world-select-panel, .update-history-list, .info-side-menu, .dialog-box, .custom-music-panel, .music-dynamic-island, .task-panel, .code-explain-panel, .code-explain-body, .editor-notes-panel, .editor-rich-console, #consoleOutput, #devConsoleOutput)::-webkit-scrollbar-thumb {
+    :where(.menu-list, .pause-panel, .settings-panel, .world-select-panel, .update-history-list, .info-side-menu, .dialog-box, .custom-music-panel, .music-dynamic-island, .task-panel, .code-explain-panel, .code-explain-body, .editor-notes-panel, .editor-rich-console, .learning-cabin-editor-scroll, .learning-cabin-editor-pane, .learning-cabin-editor-output, #consoleOutput, #devConsoleOutput)::-webkit-scrollbar-thumb {
       border: 2px solid rgba(2, 6, 23, 0.74);
       border-radius: 999px;
       background:
@@ -115,7 +115,7 @@
       box-shadow: 0 0 14px rgba(56, 189, 248, 0.3);
     }
 
-    :where(.menu-list, .pause-panel, .settings-panel, .world-select-panel, .update-history-list, .info-side-menu, .dialog-box, .custom-music-panel, .music-dynamic-island, .task-panel, .code-explain-panel, .code-explain-body, .editor-notes-panel, .editor-rich-console, #consoleOutput, #devConsoleOutput)::-webkit-scrollbar-thumb:hover {
+    :where(.menu-list, .pause-panel, .settings-panel, .world-select-panel, .update-history-list, .info-side-menu, .dialog-box, .custom-music-panel, .music-dynamic-island, .task-panel, .code-explain-panel, .code-explain-body, .editor-notes-panel, .editor-rich-console, .learning-cabin-editor-scroll, .learning-cabin-editor-pane, .learning-cabin-editor-output, #consoleOutput, #devConsoleOutput)::-webkit-scrollbar-thumb:hover {
       background:
         linear-gradient(180deg, #fef08a, var(--hud-scroll-thumb-hot) 48%, #38bdf8),
         rgba(34, 197, 94, 0.9);
@@ -5521,6 +5521,20 @@
         padding-top: 2px;
       }
     }
+    .learning-cabin-editor-overlay {
+      position: absolute;
+      inset: 0;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 22px;
+      overflow: hidden;
+    }
+
+    .learning-cabin-editor-overlay.active {
+      display: flex;
+    }
+
     #editorOverlay {
       position: absolute;
       inset: 0;
@@ -5537,6 +5551,58 @@
 
     #editorOverlay.active {
       display: flex;
+    }
+
+    /* Reusable responsive editor shell for first-world learning cabins. */
+    .learning-cabin-editor-shell {
+      width: var(--learning-cabin-shell-width, min(1120px, 96vw));
+      height: var(--learning-cabin-shell-height, min(700px, calc(100dvh - 32px)));
+      display: grid;
+      grid-template-rows: var(--learning-cabin-shell-rows, 34px minmax(0, 1fr) minmax(156px, 24%));
+      max-width: calc(100vw - var(--editor-safe-left) - var(--editor-safe-right));
+      max-height: calc(100dvh - var(--editor-safe-top) - var(--editor-safe-bottom));
+      min-width: 0;
+      min-height: 0;
+      overflow: hidden;
+      isolation: isolate;
+    }
+
+    .learning-cabin-editor-scroll,
+    .learning-cabin-editor-input-viewport {
+      min-width: 0;
+      min-height: 0;
+      overflow: hidden;
+      overscroll-behavior: contain;
+    }
+
+    .learning-cabin-editor-pane {
+      min-width: 0;
+      min-height: 0;
+      overflow: auto;
+      scrollbar-gutter: stable both-edges;
+      overscroll-behavior: contain;
+      overflow-wrap: anywhere;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    .learning-cabin-editor-bottom {
+      display: grid;
+      grid-template-rows: minmax(var(--learning-cabin-action-min-height, 40px), auto) minmax(var(--learning-cabin-hint-min-height, 34px), auto) minmax(0, 1fr);
+      min-height: 0;
+      overflow: hidden;
+    }
+
+    .learning-cabin-editor-actions {
+      position: sticky;
+      top: 0;
+      z-index: 5;
+      flex-shrink: 0;
+    }
+
+    .learning-cabin-editor-output {
+      min-width: 0;
+      min-height: 0;
+      overflow: hidden;
     }
 
     .vscode-window {
@@ -5763,7 +5829,7 @@
 
     .editor-center {
       display: grid;
-      grid-template-rows: 34px 1fr;
+      grid-template-rows: 34px minmax(0, 1fr) minmax(0, 90px);
       min-width: 0;
       min-height: 0;
       background: #1e1e1e;
@@ -9417,10 +9483,14 @@
       grid-template-columns: 1fr 104px;
       gap: 8px;
       margin-top: 8px;
+      max-height: 90px;
+      min-height: 0;
+      overflow: hidden;
     }
 
     .editor-minimap {
       min-height: 74px;
+      max-height: 74px;
       border: 1px solid rgba(56, 189, 248, 0.2);
       border-radius: 8px;
       background:
@@ -10294,6 +10364,15 @@
     }
 
     @media (max-width: 1100px), (pointer: coarse) {
+      body.mobile-input .learning-cabin-editor-shell {
+        width: calc(100vw - 18px);
+        height: calc(100dvh - 18px);
+        grid-template-rows: minmax(52px, auto) minmax(0, 1fr) minmax(142px, 28dvh);
+        min-height: 0;
+        border-radius: 14px;
+        overflow: hidden;
+      }
+
       body.mobile-input .file-tree,
       body.mobile-input .editor-pro-layer {
         display: none;
@@ -10348,6 +10427,11 @@
       body.mobile-input .editor-main {
         grid-template-columns: minmax(0, 1fr);
         grid-template-rows: minmax(0, 1fr) minmax(86px, 18dvh) minmax(78px, 15dvh);
+        overflow: hidden;
+      }
+
+      body.mobile-input .learning-cabin-editor-scroll {
+        min-height: 0;
         overflow: hidden;
       }
 
@@ -10499,6 +10583,11 @@
       }
 
       body.mobile-input .console {
+        grid-template-rows: auto auto minmax(0, 1fr);
+        overflow: hidden;
+      }
+
+      body.mobile-input .learning-cabin-editor-bottom {
         grid-template-rows: auto auto minmax(0, 1fr);
         overflow: hidden;
       }
@@ -14513,6 +14602,13 @@
         overflow: hidden;
       }
 
+      body.mobile-input.is-editor-open .learning-cabin-editor-shell {
+        width: 100%;
+        height: 100%;
+        max-width: 100%;
+        max-height: 100%;
+      }
+
       body.mobile-input.is-editor-open .vscode-window {
         width: 100%;
         height: 100%;
@@ -14520,8 +14616,16 @@
         max-height: 100%;
       }
 
+      body.mobile-input.mobile-keyboard-open .learning-cabin-editor-shell {
+        grid-template-rows: minmax(52px, auto) minmax(0, 1fr) minmax(104px, 20dvh);
+      }
+
       body.mobile-input.mobile-keyboard-open .vscode-window {
         grid-template-rows: minmax(52px, auto) minmax(0, 1fr) minmax(104px, 20dvh);
+      }
+
+      body.mobile-input.mobile-keyboard-open .learning-cabin-editor-scroll {
+        grid-template-rows: minmax(0, 1fr) minmax(64px, 14dvh) minmax(58px, 12dvh);
       }
 
       body.mobile-input.mobile-keyboard-open .editor-main {
@@ -15519,11 +15623,11 @@ int main(void) {
       <button id="announcementCloseButton" class="announcement-close" type="button" aria-label="关闭公告">×</button>
       <h2 id="startupAnnouncementTitle" class="startup-announcement-title">> 消息 / 本次更新</h2>
       <div id="announcementPageBody" class="startup-announcement-body">
-        <p>// v1.2.0-hotfix.10：第一世界教程系统质量拉满，新增每关课前动画收藏、可调速/可拖动播放器。</p>
-        <p>// 所有章节课前动画按“目标、位置、符号、实操”四段式讲解，并从每关精确答案生成代码画面。</p>
-        <p>// 修复低图形环境 WebGL 启动失败导致“系统保护已接管”的问题，启动前预检并自动回退 Canvas。</p>
-        <p>// 进入教程或编辑器时自动收起开屏公告，避免遮挡实战演示；性能降级日志改为 info。</p>
-        <p>// 复测教程收藏 16/16、章节教程 1x/2x/4x、进度拖动、运行按钮输出 C language，控制台 error/warn 为 0。</p>
+        <p>// v1.2.0-hotfix.11：第一世界学习舱编辑器面板接入可复用响应式外壳。</p>
+        <p>// 统一处理手机 safe area、输入区滚动、底部操作按钮常驻可见和内容完整露出。</p>
+        <p>// 滚动条沿用 HUD 主题，并沉淀 learning-cabin-editor-* 契约，后续学习舱可直接复用。</p>
+        <p>// 修复长代码场景下 minimap/pro layer 压塌输入区的问题，140 行代码仍可稳定滚动。</p>
+        <p>// 已复测 npm test、npm run build、npm run mobile:smoke；Chromium WebGL ReadPixels 仅为环境性能提示。</p>
         <p>// 本次上传只修改 Phaser 3.80.1 版文件；Pixi 版文件未混放、未改动。</p>
         <p>// 作者：杀戮，QQ：3424636983，官方Q群：414374792。</p>
         <p class="announcement-dismiss-hint">- 点击任意处关闭</p>
@@ -15625,8 +15729,8 @@ int main(void) {
       <div id="absoluteGuideEdgeFx" class="absolute-guide-edge-fx" aria-hidden="true"></div>
     </section>
 
-    <div id="editorOverlay">
-      <div class="vscode-window pixel-panel" role="dialog" aria-label="内置代码编辑器">
+    <div id="editorOverlay" class="learning-cabin-editor-overlay">
+      <div class="vscode-window pixel-panel learning-cabin-editor-shell" role="dialog" aria-label="内置代码编辑器" data-learning-cabin-shell="first-world-code-gate">
         <div class="titlebar">
           <span class="pixel-screw"></span>
           <div class="window-dots"><span class="dot"></span><span class="dot"></span><span class="dot"></span></div>
@@ -15639,7 +15743,7 @@ int main(void) {
           <label class="editor-font-inline">字号 <input id="editorInlineFontSize" type="range" min="12" max="20" step="1" aria-label="编辑器字号"></label>
           <span class="pixel-screw"></span>
         </div>
-        <div class="editor-main">
+        <div class="editor-main learning-cabin-editor-scroll">
           <nav class="file-tree">
             <h2>Explorer</h2>
             <button class="file-item active" data-file="main.c"><span class="file-icon">C</span>main.c</button>
@@ -15658,7 +15762,7 @@ int main(void) {
                 <button id="codeBlockApplyButton" class="pixel-button secondary" type="button">填入积木程序</button>
               </div>
             </section>
-            <div class="code-wrap">
+            <div class="code-wrap learning-cabin-editor-input-viewport">
               <div id="lineNumbers">1</div>
               <div class="code-layer">
                 <pre id="highlightLayer" aria-hidden="true"></pre>
@@ -15673,7 +15777,7 @@ int main(void) {
               <button id="editorFoldButton" class="editor-fold-button" type="button">折叠函数</button>
             </div>
           </section>
-          <aside class="task-panel">
+          <aside class="task-panel learning-cabin-editor-pane">
             <h2>任务描述</h2>
             <section>
               <p id="taskGoal">请写出第一个 C 程序，让终端输出 <code>Hello, C World!</code>。</p>
@@ -15692,7 +15796,7 @@ int main(void) {
               <div>// 写代码时先让程序跑起来，再让它变优雅。</div>
             </section>
           </aside>
-          <aside id="codeExplainPanel" class="code-explain-panel" aria-label="导师实时解析">
+          <aside id="codeExplainPanel" class="code-explain-panel learning-cabin-editor-pane" aria-label="导师实时解析">
             <div class="code-explain-head">
               <h2><span>导师解析</span></h2>
               <button id="codeExplainToggleButton" class="code-explain-toggle" type="button" aria-label="折叠导师解析">_</button>
@@ -15706,8 +15810,8 @@ int main(void) {
             </div>
           </aside>
         </div>
-        <div class="console" aria-label="编辑器运行与提示区">
-          <div class="console-actions">
+        <div class="console learning-cabin-editor-bottom" aria-label="编辑器运行与提示区">
+          <div class="console-actions learning-cabin-editor-actions">
             <button id="runButton" class="run-button">运行代码</button>
             <button id="resetCodeButton" class="reset-button" type="button">重置代码</button>
             <span id="runSpinner" class="spinner" aria-hidden="true"></span>
@@ -16557,17 +16661,28 @@ int main() {
       {
         title: "> 消息 / 本次更新",
         lines: [
-          "// v1.2.0-hotfix.10：第一世界教程系统质量拉满，新增每关课前动画收藏、可调速/可拖动播放器。",
-          "// 所有章节课前动画按“目标、位置、符号、实操”四段式讲解，并从每关精确答案生成代码画面。",
-          "// 修复低图形环境 WebGL 启动失败导致“系统保护已接管”的问题，启动前预检并自动回退 Canvas。",
-          "// 进入教程或编辑器时自动收起开屏公告，避免遮挡实战演示；性能降级日志改为 info。",
-          "// 复测教程收藏 16/16、章节教程 1x/2x/4x、进度拖动、运行按钮输出 C language，控制台 error/warn 为 0。",
+          "// v1.2.0-hotfix.11：第一世界学习舱编辑器面板接入可复用响应式外壳。",
+          "// 统一处理手机 safe area、输入区滚动、底部操作按钮常驻可见和内容完整露出。",
+          "// 滚动条沿用 HUD 主题，并沉淀 learning-cabin-editor-* 契约，后续学习舱可直接复用。",
+          "// 修复长代码场景下 minimap/pro layer 压塌输入区的问题，140 行代码仍可稳定滚动。",
+          "// 已复测 npm test、npm run build、npm run mobile:smoke；Chromium WebGL ReadPixels 仅为环境性能提示。",
           "// 本次上传只修改 Phaser 3.80.1 版文件；Pixi 版文件未混放、未改动。",
           "// 作者：杀戮，QQ：3424636983，官方Q群：414374792。"
         ]
       }
     ]);
     const UPDATE_HISTORY = Object.freeze([
+      {
+        version: "v1.2.0-hotfix.11",
+        date: "2026-06-20",
+        title: "学习舱编辑器响应式外壳",
+        details: [
+          "第一世界学习舱编辑器面板接入可复用响应式外壳，统一处理手机 safe area、输入区滚动、底部操作按钮常驻可见和内容完整露出。",
+          "滚动条沿用 HUD 主题，并沉淀 learning-cabin-editor-* 类名契约，后续第一世界各个学习舱可以直接复用同一套外壳。",
+          "修复长代码场景下 minimap/pro layer 压塌输入区的问题，140 行代码仍可稳定滚动，运行、重置和关闭按钮保持在视口内。",
+          "已通过 npm test、npm run build、npm run mobile:smoke，并用浏览器实测桌面编辑器长输入布局。Chromium WebGL ReadPixels 为环境性能提示，WebKit 干净，无应用错误弹窗。官方Q群：414374792。"
+        ]
+      },
       {
         version: "v1.2.0-hotfix.10",
         date: "2026-06-20",
@@ -18144,7 +18259,7 @@ return 0;`;
       directSaveAs: "reduced-by-inline-resources"
     });
     const SECURITY_CONFIG = Object.freeze({
-      expectedScriptHash: "1LNKr58zxLFLikx0RnmJtCkce67Y/G20mpe+mXOMyek=",
+      expectedScriptHash: "JwocsP8Aa2RmosU8Oni5QoucWS/uxook23Ahzloq7fo=",
       selfCheckIntervalMs: 45000,
       tamperRefreshMs: 5000,
       devToolsRefreshMs: 2000,
@@ -26915,13 +27030,16 @@ int main(void) {
       if (!player || !npcs.length) return false;
       if ((scene.frameTick || 0) % 8 !== 0) return false;
       npcs.forEach((npc) => {
-        const target = npc.container || npc;
-        const distance = Phaser.Math.Distance.Between(player.x, player.y, target.x, target.y);
+        const point = getNpcWorldPoint(npc);
+        const target = npc?.container || npc;
+        if (!point || !target) return;
+        if (typeof target.rotation !== "number") target.rotation = 0;
+        const distance = getWorldDistance(player.x, player.y, point.x, point.y);
         if (distance > 15 * 48) {
           target.rotation += (0 - target.rotation) * 0.012;
           return;
         }
-        const desired = distance < 96 ? Phaser.Math.Clamp((player.x - target.x) / 96, -1, 1) * 0.18 : 0;
+        const desired = distance < 96 ? Phaser.Math.Clamp((player.x - point.x) / 96, -1, 1) * 0.18 : 0;
         target.rotation += (desired - target.rotation) * 0.025;
       });
       return true;
@@ -37564,6 +37682,23 @@ ${item.code}
       return index >= target.length;
     }
 
+    function seedCompilerCabinHandsOnEditorDemo(session) {
+      if (!session || !dom.codeInput) return false;
+      const target = String(session.target || "");
+      const existing = String(dom.codeInput.value || files["main.c"] || "").trimEnd();
+      if (existing && target.startsWith(existing)) {
+        const stage = inferCompilerCabinHandsOnStageFromCode(existing, target);
+        const complete = applyCompilerCabinHandsOnCodeProgress(session, existing.length, stage);
+        resetEditorHistory(dom.codeInput.value);
+        return complete;
+      }
+      dom.codeInput.value = "";
+      files["main.c"] = "";
+      resetEditorHistory("");
+      scheduleEditorVisuals();
+      return false;
+    }
+
     function releaseCompilerCabinHandsOnRunControl(session, reason = "run-ready") {
       if (!session || session.cancelled || compilerHandsOnDemoSession !== session) return false;
       session.timers.forEach((timerId) => timerTracker.clear(timerId));
@@ -37747,13 +37882,16 @@ ${item.code}
       currentFile = "main.c";
       dom.codeInput.readOnly = false;
       dom.codeInput.focus();
-      dom.codeInput.value = "";
-      files["main.c"] = "";
-      resetEditorHistory("");
-      scheduleEditorVisuals();
+      const alreadyComplete = seedCompilerCabinHandsOnEditorDemo(session);
       setCompilerHandsOnSubtitle("start");
       setOutput("实战演示：导师正在把刚才的命令写进真实编辑器。看完后点击运行。", "info");
       queueEditorFlowMessage("实战演示：这不是图片，代码会逐字写入 main.c。", true);
+      if (alreadyComplete) {
+        setOutput("实战演示检测到 main.c 已经是正确代码。现在点击运行，让编译器检查并输出结果。", "info");
+        setCompilerHandsOnSubtitle("finish");
+        releaseCompilerCabinHandsOnRunControl(session, "handoff-existing-code");
+        return Promise.resolve(true);
+      }
       return new Promise((resolve) => {
         session.resolve = resolve;
         let includeNarrated = false;
@@ -38146,6 +38284,49 @@ ${item.code}
       dom.updateHistoryOverlay?.classList.remove("active");
       dom.worldSelectOverlay?.classList.remove("active");
       if (gameState.scene) gameState.scene.scene.resume();
+    }
+
+    function clearCompilerCabinHandoffBlockers(reason = "compiler-cabin-handoff") {
+      if (gameState.dialogOpen || dom.dialog?.classList?.contains?.("active")) {
+        closeDialog?.();
+      }
+      gameState.dialogOpen = false;
+      document.body.classList.remove("is-dialog-open");
+      dom.dialog?.classList?.remove("active");
+      dom.dialogOptions?.classList?.remove("visible");
+      closeNpcActionChooser?.();
+      closeNpcCodeWindow?.();
+      closeEditorGuide?.(false);
+      cancelCompilerCabinHandsOnRunWaiter(reason);
+      cancelPrintfCharacterDeconstruction(reason);
+      hideCompilerHandsOnSubtitle();
+      return true;
+    }
+
+    function openCompilerCabinHandsOnEditor(chapter, options = {}) {
+      const chapterId = chapter?.id || FIRST_MAINLINE_CHAPTER_ID;
+      cancelCompilerCabinHandsOnEditorDemo("compiler-cabin-handoff");
+      clearCompilerCabinHandoffBlockers("compiler-cabin-handoff");
+      ensureCompilerCabinLessonGameplayLayer();
+      const preserveExistingCode = Boolean(
+        options.preserveExistingCode &&
+        gameState.activeChallengeId === chapterId &&
+        typeof files["main.c"] === "string"
+      );
+      openEditor(chapterId, {
+        skipOpenTutorialAnimation: true,
+        skipEditorGuide: true,
+        skipStoryBanner: true,
+        preserveExistingCode
+      });
+      refreshEditorDeviceSymbolAssist(document.body.classList.contains("mobile-input"));
+      if (gameState.editorOpen && gameState.activeChallengeId === chapterId) return true;
+      reportSoftError?.(
+        new Error("Compiler cabin editor handoff did not open the editor."),
+        ERROR_LEVELS.recoverable,
+        { source: "compiler-cabin-editor-handoff", chapterId }
+      );
+      return false;
     }
 
     function playCompilerCabinCinematic(chapter = chapterById[FIRST_MAINLINE_CHAPTER_ID], options = {}) {
@@ -48136,7 +48317,11 @@ ${item.code}
       const bubble = scene.add.text(0, -108, "", { fontFamily: "JetBrains Mono, monospace", fontSize: "12px", color: "#e0f2fe", backgroundColor: "rgba(2,6,23,0.76)", padding: { x: 8, y: 5 } }).setOrigin(0.5).setAlpha(0);
       container.add([shadow, legs, body, scarf, head, eye, nameLabel, icon, bubble]);
       container.setSize(64, 92).setInteractive(new Phaser.Geom.Rectangle(-32, -66, 64, 104), Phaser.Geom.Rectangle.Contains);
-      container.on("pointerdown", () => handleNpcInteraction(scene, { data, container, icon, bubble, nameLabel }));
+      container.on("pointerdown", () => SafeExecute.run(
+        () => handleNpcInteraction(scene, { data, container, icon, bubble, nameLabel }),
+        "NPC交互出现小故障，系统已保护现场。",
+        { source: "npc-pointerdown", showDialog: false, fallback: false }
+      ));
       return { data, container, icon, bubble, nameLabel, body, head };
     }
 
@@ -48168,6 +48353,7 @@ ${item.code}
 
     function getNpcWorldPoint(npc) {
       if (!npc?.container) return null;
+      if (npc.container.destroyed === true || npc.container.active === false || npc.container.scene === null) return null;
       const x = Number(npc.container.x);
       const y = Number(npc.container.y);
       if (!Number.isFinite(x) || !Number.isFinite(y)) return null;
@@ -48212,6 +48398,8 @@ ${item.code}
 
     function updateNpcQuestIndicators(scene) {
       scene?.coreNpcs?.forEach((npc) => {
+        if (!npc?.data) return;
+        if (!getNpcWorldPoint(npc)) return;
         const action = getNpcQuestAction(npc.data);
         applyNpcQuestIndicator(npc, action);
       });
@@ -49326,10 +49514,17 @@ ${item.code}
       }
 
       performCurrentInteraction(source = "keyboard", interaction = this.getInteraction()) {
-        audioManager.ding();
         if (interaction?.type === "npc") {
-          triggerNpcInteractionRipple(this, interaction.npc);
-        } else if (interaction?.type === "roomEntrance") {
+          return SafeExecute.run(() => {
+            audioManager.ding();
+            triggerNpcInteractionRipple(this, interaction.npc);
+            const scanId = interaction.npc?.data?.id || "npc";
+            showTerminalBurst(`scan("${scanId}") -> npc`);
+            return handleNpcInteraction(this, interaction.npc);
+          }, "NPC交互出现小故障，系统已保护现场。", { source: "npc-current-interaction", showDialog: false, fallback: false });
+        }
+        audioManager.ding();
+        if (interaction?.type === "roomEntrance") {
           triggerInteractionRipple(this, this.playerRoomEntrance.door.x, this.playerRoomEntrance.door.y);
         } else if (interaction?.type === "oldComputer") {
           triggerInteractionRipple(this, this.oldComputerTerminal.terminal.x, this.oldComputerTerminal.terminal.y);
@@ -49351,7 +49546,6 @@ ${item.code}
         }
         const scanId = interaction?.chapter?.id || interaction?.npc?.data?.id || interaction?.type || "no target";
         showTerminalBurst(interaction ? `scan("${scanId}") -> ${interaction.type}` : 'printf("no target");');
-        if (interaction?.type === "npc") handleNpcInteraction(this, interaction.npc);
         if (interaction?.type === "roomEntrance") enterPlayerRoom();
         if (interaction?.type === "oldComputer") openMetaOsWindow();
         if (interaction?.type === "developerRoom") enterDeveloperRoom();
@@ -49557,6 +49751,8 @@ ${item.code}
             return unlocked ? { type: "challenge", chapter } : { type: "locked", chapter };
           }
         }
+        const nearestNpc = getNearestNpcInteraction(this);
+        if (nearestNpc) return { type: "npc", npc: nearestNpc };
         return null;
       }
 
@@ -49597,11 +49793,7 @@ ${item.code}
         const objects = this.chapterObjects[chapterId];
         const pod = objects?.pod || objects?.stone;
         if (isLearned(chapter.id)) {
-          cancelCompilerCabinHandsOnEditorDemo("learned-reenter");
-          cancelCompilerCabinHandsOnRunWaiter("learned-reenter");
-          cancelPrintfCharacterDeconstruction("learned-reenter");
-          ensureCompilerCabinLessonGameplayLayer();
-          openEditor(chapter.id, { skipOpenTutorialAnimation: true, skipEditorGuide: true, skipStoryBanner: true, preserveExistingCode: true });
+          openCompilerCabinHandsOnEditor(chapter, { preserveExistingCode: true });
           this.playerFrozen = false;
           return;
         }
@@ -49611,11 +49803,15 @@ ${item.code}
         showPrompt("");
         spawnCodeParticles(this, pod.x, pod.y - 24, ["写代码", "检查", "运行", "显示"]);
         playCompilerCabinCinematic(chapter).then(() => {
+          const handoffReady = openCompilerCabinHandsOnEditor(chapter, { preserveExistingCode: true });
+          if (!handoffReady) {
+            gameState.compilerCabinLessonActive = false;
+            this.playerFrozen = false;
+            return;
+          }
           markLearned(chapter.id);
           this.markStoneLearned(chapter.id, true);
           this.revealGate(chapter.id, true);
-          ensureCompilerCabinLessonGameplayLayer();
-          openEditor(chapter.id, { skipOpenTutorialAnimation: true, skipEditorGuide: true, skipStoryBanner: true });
           playCompilerCabinHandsOnEditorDemo(chapter).then((completed) => {
             if (completed && gameState.editorOpen && gameState.activeChallengeId === chapter.id) {
               waitForCompilerCabinHandsOnRun(chapter).then((ran) => {

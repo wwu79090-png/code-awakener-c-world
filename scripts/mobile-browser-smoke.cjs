@@ -113,7 +113,12 @@ async function exerciseCodeGenesis(page) {
 async function confirmPostGenesisSetupForSmoke(page) {
   const active = await page.locator("#postGenesisSetupOverlay.active").count().catch(() => 0);
   if (!active) return "post-genesis setup already skipped";
-  await page.locator("#postGenesisSetupConfirmButton").click({ timeout: 10000 });
+  const button = page.locator("#postGenesisSetupConfirmButton");
+  await button.waitFor({ state: "visible", timeout: 10000 });
+  await button.evaluate((element) => {
+    element.scrollIntoView?.({ block: "center", inline: "center" });
+    element.click();
+  });
   await page.waitForFunction(() => !document.querySelector("#postGenesisSetupOverlay.active"), null, { timeout: 10000 });
   return "post-genesis setup confirmed";
 }
