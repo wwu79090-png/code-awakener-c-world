@@ -14,7 +14,7 @@
   <meta http-equiv="Cache-Control" content="no-store, max-age=0, must-revalidate">
   <meta http-equiv="Pragma" content="no-cache">
   <meta http-equiv="Expires" content="0">
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self' file:; base-uri 'self'; object-src 'none'; script-src 'self' 'nonce-code-awakener-inline' file: 'sha256-4WYkeo2hsSbrbJr0jZWo4C+krc0BGPUSBXL1JF1h4BU='; style-src 'self' 'nonce-code-awakener-inline' file: 'sha256-1FbRjyqa6gf6TA9DHYIIXnkEygAJ/YHWiCKpYQ8t+h0='; style-src-attr 'unsafe-inline'; font-src 'self' file: data:; img-src 'self' file: data: blob: https://cdn.pixabay.com; media-src 'self' file: data: blob: https: http: https://cdn.pixabay.com; worker-src 'self' file: blob:; child-src 'self' file: blob:; connect-src 'self' file: http://localhost:8000 http://127.0.0.1:8000 http://localhost:9966 http://127.0.0.1:9966 http://localhost:9977 http://127.0.0.1:9977 https://cdn.pixabay.com https://pixabay.com;">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self' file:; base-uri 'self'; object-src 'none'; script-src 'self' 'nonce-code-awakener-inline' file: 'sha256-US8yV+I82y1Rs9bZzdWfDfpf7kqF/gpoA5x/Tx2pWsw='; style-src 'self' 'nonce-code-awakener-inline' file: 'sha256-116gKFd6DBlObwi+TMBEDKQSstOZYsQXULFnTjDmfmc='; style-src-attr 'unsafe-inline'; font-src 'self' file: data:; img-src 'self' file: data: blob: https://cdn.pixabay.com; media-src 'self' file: data: blob: https: http: https://cdn.pixabay.com; worker-src 'self' file: blob:; child-src 'self' file: blob:; connect-src 'self' file: http://localhost:8000 http://127.0.0.1:8000 http://localhost:9966 http://127.0.0.1:9966 http://localhost:9977 http://127.0.0.1:9977 https://cdn.pixabay.com https://pixabay.com;">
   <title>代码觉醒者：Main Corridor</title>
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%23020617'/%3E%3Cpath d='M22 20 10 32l12 12M42 20l12 12-12 12' fill='none' stroke='%2300ff88' stroke-width='6' stroke-linecap='round' stroke-linejoin='round'/%3E%3Cpath d='m36 16-8 32' stroke='%2300ccff' stroke-width='5' stroke-linecap='round'/%3E%3C/svg%3E">
   <script src="./vendor/phaser.min.js"></script>
@@ -12665,6 +12665,11 @@
       display: grid;
     }
 
+    .compiler-hands-on-subtitle[data-focus="run"] {
+      pointer-events: auto;
+      cursor: pointer;
+    }
+
     .compiler-hands-on-steps {
       display: grid;
       grid-template-columns: repeat(4, minmax(0, 1fr));
@@ -15108,11 +15113,11 @@ int main(void) {
       <button id="announcementCloseButton" class="announcement-close" type="button" aria-label="关闭公告">×</button>
       <h2 id="startupAnnouncementTitle" class="startup-announcement-title">> 消息 / 本次更新</h2>
       <div id="announcementPageBody" class="startup-announcement-body">
-        <p>// v1.2.0-hotfix.6：第一学习舱实战运行链路重修，运行后先停在编辑器内看输出，不再直接跳回主界面。</p>
-        <p>// 语音、逐字输入和运行按钮进度重新同步，代码写完后必须等玩家真正点击运行再进入下一步。</p>
-        <p>// 输出区会保留 C language 中间的空格，判题宽容和屏幕显示分离，避免误导零基础玩家。</p>
-        <p>// 字幕条上移到控制台黑条上方，点击运行后光圈自动收起，并把视觉引导切到“看输出”。</p>
-        <p>// 运行成功后新增输出讲解，再播放 printf 字符级解构，最后才完成关卡结算。</p>
+        <p>// v1.2.0-hotfix.7：第一学习舱第 3 步修复，大号“点击运行”引导条现在也能直接触发真实运行按钮。</p>
+        <p>// 运行按钮会等最后一句“点击运行”旁白讲完后才解锁，避免画面已经可点但语音还在上一句。</p>
+        <p>// TTS 播放开始后会清掉加载超时，长句不会再被 4.2 秒保护计时提前切断。</p>
+        <p>// 本地 file:// 打开时不再用 fetch HEAD 探测 TTS 缓存，避免控制台出现 file scheme 报错。</p>
+        <p>// 已用 file:// 方式复测：点击中间“点击运行”后输出 C language，并继续进入 printf 字符级解构。</p>
         <p>// Main Corridor 单一走廊主线保持不变，变量立绘剧场历史内容仍可在主菜单历史更新查看。</p>
         <p>// 本次上传只修改 Phaser 3.80.1 版文件；Pixi 版文件未混放、未改动。</p>
         <p>// 作者：杀戮，QQ：3424636983，官方Q群：414374792。</p>
@@ -16112,11 +16117,11 @@ int main() {
       {
         title: "> 消息 / 本次更新",
         lines: [
-          "// v1.2.0-hotfix.6：第一学习舱实战运行链路重修，运行后先停在编辑器内看输出，不再直接跳回主界面。",
-          "// 语音、逐字输入和运行按钮进度重新同步，代码写完后必须等玩家真正点击运行再进入下一步。",
-          "// 输出区会保留 C language 中间的空格，判题宽容和屏幕显示分离，避免误导零基础玩家。",
-          "// 字幕条上移到控制台黑条上方，点击运行后光圈自动收起，并把视觉引导切到“看输出”。",
-          "// 运行成功后新增输出讲解，再播放 printf 字符级解构，最后才完成关卡结算。",
+          "// v1.2.0-hotfix.7：第一学习舱第 3 步修复，大号“点击运行”引导条现在也能直接触发真实运行按钮。",
+          "// 运行按钮会等最后一句“点击运行”旁白讲完后才解锁，避免画面已经可点但语音还在上一句。",
+          "// TTS 播放开始后会清掉加载超时，长句不会再被 4.2 秒保护计时提前切断。",
+          "// 本地 file:// 打开时不再用 fetch HEAD 探测 TTS 缓存，避免控制台出现 file scheme 报错。",
+          "// 已用 file:// 方式复测：点击中间“点击运行”后输出 C language，并继续进入 printf 字符级解构。",
           "// Main Corridor 单一走廊主线保持不变，变量立绘剧场历史内容仍可在主菜单历史更新查看。",
           "// 本次上传只修改 Phaser 3.80.1 版文件；Pixi 版文件未混放、未改动。",
           "// 作者：杀戮，QQ：3424636983，官方Q群：414374792。"
@@ -16124,6 +16129,18 @@ int main() {
       }
     ]);
     const UPDATE_HISTORY = Object.freeze([
+      {
+        version: "v1.2.0-hotfix.7",
+        date: "2026-06-19",
+        title: "点击运行代理与 TTS 同步热修",
+        details: [
+          "第一学习舱第 3 步修复：大号“点击运行”引导条现在可以直接代理触发真实运行按钮，避免玩家点提示条却没有反应。",
+          "运行按钮会等最后一句“点击运行”旁白讲完后才解锁，减少画面与语音进度不一致的问题。",
+          "TTS 播放开始后会清掉加载超时，并改用播放时长守护，长句不会再被 4.2 秒加载保护提前切断。",
+          "本地 file:// 打开时不再对 TTS 缓存执行 fetch HEAD 探测，避免浏览器控制台出现 file scheme unsupported 报错。",
+          "已用 file:// 流程复测：点击中间“点击运行”后输出区显示 C language，并继续进入 printf 字符级解构。本次上传只修改 Phaser 3.80.1 版文件，未改动 Pixi 版文件。官方Q群：414374792。"
+        ]
+      },
       {
         version: "v1.2.0-hotfix.6",
         date: "2026-06-19",
@@ -17653,7 +17670,7 @@ return 0;`;
       directSaveAs: "reduced-by-inline-resources"
     });
     const SECURITY_CONFIG = Object.freeze({
-      expectedScriptHash: "l34Fvy8zekGa5SrpqJzmUHcK8C9eSBMc5GlFlJ668D8=",
+      expectedScriptHash: "pFHAhNw0QlcemlhdU9C5bEDgNBZ4XsiwJ/50bcRckAQ=",
       selfCheckIntervalMs: 45000,
       tamperRefreshMs: 5000,
       devToolsRefreshMs: 2000,
@@ -36541,6 +36558,7 @@ ${item.code}
 
     async function isOpenSourceTtsCacheAssetAvailable(url = "") {
       if (!url || /^data:|^blob:/i.test(url)) return Boolean(url);
+      if (/^file:/i.test(url) || window.location?.protocol === "file:") return true;
       try {
         const response = await fetch(url, { method: "HEAD", cache: "no-store" });
         return response.ok;
@@ -36579,9 +36597,12 @@ ${item.code}
           return;
         }
         let settled = false;
+        let started = false;
         let loadTimeout = 0;
+        let playbackTimeout = 0;
         const cleanup = () => {
           if (loadTimeout) timerTracker.clear(loadTimeout);
+          if (playbackTimeout) timerTracker.clear(playbackTimeout);
           audio.oncanplaythrough = null;
           audio.oncanplay = null;
           audio.onloadeddata = null;
@@ -36595,6 +36616,12 @@ ${item.code}
           resolve(value);
         };
         audio.oncanplaythrough = async () => {
+          if (started || settled) return;
+          started = true;
+          if (loadTimeout) {
+            timerTracker.clear(loadTimeout);
+            loadTimeout = 0;
+          }
           try {
             if (openSourceTtsAudioElement && openSourceTtsAudioElement !== audio) {
               openSourceTtsAudioElement.pause();
@@ -36608,6 +36635,8 @@ ${item.code}
               settle(true);
             };
             await audio.play();
+            const durationMs = Number.isFinite(audio.duration) && audio.duration > 0 ? audio.duration * 1000 + 1400 : 16000;
+            playbackTimeout = trackedSetTimeout(() => settle(false), Math.max(8000, Math.min(30000, durationMs)), "open-source-tts-playback-timeout");
             updateOpenSourceTtsStatus("ready", "内置离线旁白播放中");
           } catch (error) {
             settle(false);
@@ -36909,16 +36938,16 @@ ${item.code}
       output: 2200
     });
     const COMPILER_HANDS_ON_NARRATION_MAX_MS = Object.freeze({
-      start: 3600,
-      include: 3800,
-      main: 3800,
-      printf: 3800,
-      string: 3800,
-      semicolon: 3600,
-      return: 3600,
-      review: 4200,
-      finish: 3200,
-      output: 3800
+      start: 11000,
+      include: 12000,
+      main: 12000,
+      printf: 12000,
+      string: 12000,
+      semicolon: 11000,
+      return: 11000,
+      review: 13000,
+      finish: 11000,
+      output: 12000
     });
 
     const COMPILER_HANDS_ON_SUBTITLE_COPY = Object.freeze({
@@ -37032,7 +37061,6 @@ ${item.code}
         const maxWaitMs = COMPILER_HANDS_ON_NARRATION_MAX_MS[stage] || 3600;
         const timeout = new Promise((resolve) => {
           timeoutId = trackedSetTimeout(() => {
-            stopCurrentOpenSourceTtsPlayback("hands-on-narration-timeout");
             resolve(false);
           }, maxWaitMs, `compiler-hands-on-${stage}-narration-timeout`);
         });
@@ -37238,16 +37266,22 @@ ${item.code}
           const reviewWait = waitForCompilerCabinHandsOnNarrationStage(session, "review", chapter);
           Promise.resolve(reviewWait).then((ok) => {
             if (!ok || session.cancelled || compilerHandsOnDemoSession !== session || !gameState.editorOpen || gameState.activeChallengeId !== session.chapterId) return;
-            compilerHandsOnDemoSession = null;
-            document.body.classList.remove("compiler-hands-on-demo-active");
-            dom.runButton.disabled = false;
-            dom.runButton.classList.add("compiler-hands-on-demo-ready");
             setOutput("实战演示完成。现在点击运行按钮，让编译器检查并输出结果。", "info");
             queueEditorFlowMessage("代码已经写入 main.c。下一步只看一个动作：点击运行。", true);
             setCompilerHandsOnSubtitle("finish");
-            queueCompilerCabinHandsOnNarration("finish", chapter);
-            focusButtonWithVisualPulse(dom.runButton);
-            resolve(true);
+            const finishWait = waitForCompilerCabinHandsOnNarrationStage(session, "finish", chapter);
+            Promise.resolve(finishWait).then((ready) => {
+              if (!ready || session.cancelled || compilerHandsOnDemoSession !== session || !gameState.editorOpen || gameState.activeChallengeId !== session.chapterId) {
+                resolve(false);
+                return;
+              }
+              compilerHandsOnDemoSession = null;
+              document.body.classList.remove("compiler-hands-on-demo-active");
+              dom.runButton.disabled = false;
+              dom.runButton.classList.add("compiler-hands-on-demo-ready");
+              focusButtonWithVisualPulse(dom.runButton);
+              resolve(true);
+            });
           });
         };
         waitForCompilerCabinHandsOnNarrationStage(session, "start", chapter).then((ok) => {
@@ -45921,6 +45955,16 @@ ${item.code}
       return Boolean(pulse);
     }
 
+    function activateCompilerHandsOnRunFromGuide(event) {
+      if (dom.compilerHandsOnSubtitle?.dataset?.focus !== "run") return false;
+      if (!dom.runButton || dom.runButton.disabled) return false;
+      event?.preventDefault?.();
+      event?.stopPropagation?.();
+      focusButtonWithVisualPulse(dom.runButton);
+      dom.runButton.click();
+      return true;
+    }
+
     function cancelInteractionUiShielding() {
       [dom.prompt, dom.bottomHintBar, dom.keymapGlassBar].forEach((element) => {
         element?.style?.setProperty?.("pointer-events", "none", "important");
@@ -49037,6 +49081,7 @@ ${item.code}
       item.addEventListener("click", () => selectFile(item.dataset.file));
     });
 
+    dom.compilerHandsOnSubtitle?.addEventListener("click", activateCompilerHandsOnRunFromGuide);
     dom.runButton.addEventListener("click", () => {
       if (dom.compilerHandsOnSubtitle?.classList?.contains("active")) setCompilerHandsOnSubtitle("output");
       const activeChapterId = gameState.activeChallengeId;
