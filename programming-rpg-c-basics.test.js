@@ -207,7 +207,7 @@ const cspContent = html.match(/Content-Security-Policy" content="([^"]+)"/)?.[1]
 {
   assert(api.CURRENT_RELEASE, "current release should be the single source for startup announcement and update history");
   assert(api.CURRENT_RELEASE.gameVersion === "v1.2.0", "current release should carry the public game version");
-  assert(api.CURRENT_RELEASE.version === "v1.2.0-hotfix.12", "current release should carry the hotfix version");
+  assert(api.CURRENT_RELEASE.version === "v1.2.0-hotfix.13", "current release should carry the hotfix version");
   assert(Array.isArray(api.CURRENT_RELEASE.releaseNotes) && api.CURRENT_RELEASE.releaseNotes.length >= 5, "current release should keep one reusable note list for generated release copy");
   assert(!("announcementLines" in api.CURRENT_RELEASE) && !("historyDetails" in api.CURRENT_RELEASE), "current release should not keep separate announcement and history copy");
   assert(api.CURRENT_RELEASE.community?.qqGroup === "414374792", "current release should retain the official QQ group");
@@ -388,7 +388,7 @@ assert(!api.hasMemoryCoreCinematicResolved({ memoryCoreChoice: "", memoryCoreCin
 assert(/memoryCoreChoice:\s*""/m.test(html) && /memoryCoreChoice:\s*typeof savedProgress\.memoryCoreChoice === "string" \? savedProgress\.memoryCoreChoice : ""/m.test(html), "memory core choice should survive default and normalized progress state");
 assert(/playMemoryCoreCinematicBridge\(character[\s\S]*hasMemoryCoreCinematicResolved\(progress\)[\s\S]*return \{ skipped: true, reason: "already-resolved" \}/m.test(html), "memory core bridge should not reopen after the player has already chosen a branch");
 assert(/shouldPlayMemoryCoreCinematicBeforeWorldEntry\(\)[\s\S]*!hasMemoryCoreCinematicResolved\(progress\)/m.test(html), "start-game gate should suppress repeat memory core playback after a recorded choice");
-assert(api.CURRENT_RELEASE.gameVersion === "v1.2.0" && api.CURRENT_RELEASE.version === "v1.2.0-hotfix.12" && api.CURRENT_RELEASE.title === "发布数据单源生成与上传保护", "startup announcement should be updated from current release data for the release-data generation hotfix");
+assert(api.CURRENT_RELEASE.gameVersion === "v1.2.0" && api.CURRENT_RELEASE.version === "v1.2.0-hotfix.13" && api.CURRENT_RELEASE.title === "基础启蒙与章节教程 TTS 热修", "startup announcement should be updated from current release data for the foundation and chapter tutorial TTS hotfix");
 
 assert(api.compressSavePayload, "save compressor should be exported for tests");
 assert(api.decompressSavePayload, "save decompressor should be exported for tests");
@@ -1780,14 +1780,15 @@ assert(/isStrictSecurityMode\(\)[\s\S]*removeItem\?\.\("codeAwakenerStrictSecuri
 {
   const generatedAnnouncementText = api.UPDATE_ANNOUNCEMENT_PAGES.flatMap((page) => page.lines).join("\n");
   const generatedHistoryText = [api.UPDATE_HISTORY[0].title, ...api.UPDATE_HISTORY[0].details].join("\n");
-  assert(/v1\.2\.0-hotfix\.12[\s\S]*发布数据单源生成与上传保护[\s\S]*CURRENT_RELEASE[\s\S]*公告页、历史首项[\s\S]*diagnose:ui[\s\S]*414374792/m.test(generatedAnnouncementText), "generated startup announcement should show the current release-data hotfix before upload");
-  assert(/发布数据单源生成与上传保护[\s\S]*CURRENT_RELEASE[\s\S]*公告页、历史首项[\s\S]*移动端烟测[\s\S]*官方Q群：414374792/m.test(generatedHistoryText), "generated update history entry should record the current release-data hotfix");
+  assert(/v1\.2\.0-hotfix\.13[\s\S]*基础启蒙与章节教程 TTS 热修[\s\S]*基础启蒙导师旁白[\s\S]*章节课前教程阶段旁白[\s\S]*CURRENT_RELEASE[\s\S]*414374792/m.test(generatedAnnouncementText), "generated startup announcement should show the current foundation and chapter tutorial TTS hotfix before upload");
+  assert(/基础启蒙与章节教程 TTS 热修[\s\S]*基础启蒙导师旁白[\s\S]*章节课前教程阶段旁白[\s\S]*first-learning-cabin-file-smoke[\s\S]*官方Q群：414374792/m.test(generatedHistoryText), "generated update history entry should record the current foundation and chapter tutorial TTS hotfix");
 }
 {
   const staticAnnouncementBody = initialBodyMarkup.match(/<div id="announcementPageBody"[\s\S]*?<\/div>/)?.[0] || "";
   assert(staticAnnouncementBody.includes("正在从 CURRENT_RELEASE 生成本次更新公告"), "static startup announcement placeholder should defer hotfix copy to CURRENT_RELEASE");
 }
 assert(!/公告只保留关闭、课程锁定、自由模式通关后显示/m.test(initialBodyMarkup), "static startup announcement placeholder should not show stale update copy");
+assert(/UPDATE_HISTORY\s*=\s*Object\.freeze\(\[[\s\S]*v1\.2\.0-hotfix\.12[\s\S]*发布数据单源生成与上传保护[\s\S]*CURRENT_RELEASE[\s\S]*公告页、历史首项[\s\S]*diagnose:ui[\s\S]*官方Q群：414374792/m.test(html), "update history should keep the previous release-data generation hotfix after the TTS upload");
 assert(/UPDATE_HISTORY\s*=\s*Object\.freeze\(\[[\s\S]*v1\.2\.0-hotfix\.11[\s\S]*学习舱编辑器响应式外壳[\s\S]*手机 safe area[\s\S]*learning-cabin-editor-\*[\s\S]*minimap\/pro layer[\s\S]*140 行代码[\s\S]*官方Q群：414374792/m.test(html), "update history should keep the previous reusable learning cabin editor shell release");
 assert(/UPDATE_HISTORY\s*=\s*Object\.freeze\(\[[\s\S]*v1\.2\.0-hotfix\.10[\s\S]*章节课前动画收藏与质量回归[\s\S]*反复观看 16 个章节教程[\s\S]*1x\/2x\/4x[\s\S]*精确答案[\s\S]*WebGL context[\s\S]*控制台 error\/warn 为 0[\s\S]*官方Q群：414374792/m.test(html), "update history should keep the previous chapter tutorial collection and renderer fallback hotfix");
 assert(/UPDATE_HISTORY\s*=\s*Object\.freeze\(\[[\s\S]*v1\.2\.0-hotfix\.9[\s\S]*实战进度可拖动与运行逻辑重置[\s\S]*原生 disabled 锁死[\s\S]*拖到 100%[\s\S]*Ctrl\+Enter[\s\S]*结果会先缓存[\s\S]*导师解析侧栏覆盖按钮[\s\S]*未改动 Pixi 版文件[\s\S]*官方Q群：414374792/m.test(html), "update history should keep the previous draggable progress and run-logic reset hotfix");
@@ -2821,6 +2822,7 @@ assert(/startLesson\(chapterId[\s\S]*playChapterTutorialCinematic\(chapter\)[\s\
 assert(/function playChapterTutorialCinematic[\s\S]*closeStartupAnnouncement\?\.\(\)/m.test(html) && /function openEditor\(chapterId[\s\S]*closeStartupAnnouncement\?\.\(\)/m.test(html), "startup announcement should close before tutorial movies or editor practice so it cannot cover teaching UI");
 assert(/playChapterTutorial\(chapterId = chapters\[1\]\?\.id[\s\S]*tutorialCollectionSnapshot/m.test(html), "test hooks should expose chapter tutorial playback and collection snapshots for browser QA");
 assert(/playChapterTutorialCinematic[\s\S]*enterCompilerCabinCinematicAudioFocus\?\.\(\)/m.test(html) && /stopCurrentOpenSourceTtsPlayback\("chapter-tutorial-stage"\)[\s\S]*speakGameText\(stage\.narration/m.test(html), "chapter tutorial narration should own audio focus, stop stale speech, and keep one mentor voice per stage");
+assert(/speakGameText\(stage\.narration,\s*\{[\s\S]*probeGeneratedCache:\s*true[\s\S]*allowRemoteGeneration:\s*false[\s\S]*source:\s*"chapter-tutorial"/m.test(html), "chapter tutorial stage narration should probe local generated clips without putting later stages into TTS endpoint cooldown");
 assert(/function updateChapterTutorialRateControls[\s\S]*playbackRate[\s\S]*seekInputHandler[\s\S]*seekCommitHandler[\s\S]*rateHandler/m.test(html), "chapter tutorial player should support rate changes and player-controlled seeking through the same playhead");
 assert(/function shouldUseBrowserSpeechFallback[\s\S]*return false/m.test(html), "browser speech synthesis fallback should remain disabled for the open-source/offline TTS pipeline");
 assert(/function canCreateWebGlContext[\s\S]*getContext\("webgl2"/m.test(html) && /function getPreferredRendererType[\s\S]*canCreateWebGlContext\(\)\s*\?\s*Phaser\.WEBGL\s*:\s*Phaser\.CANVAS/m.test(html) && /function buildPrimaryGameConfig[\s\S]*getPreferredRendererType\(\)/m.test(html), "boot should preflight WebGL and choose Canvas before Phaser can throw a WebGL context error");
@@ -2864,6 +2866,11 @@ assert(/FRIENDLY_TERM_GLOSSARY\s*=\s*Object\.freeze[\s\S]*变量[\s\S]*带名字
 assert(/id="littleCCompanion"/m.test(html) && /function showLittleCSpeech/m.test(html) && /function triggerLittleCDance/m.test(html), "Little C companion should exist, talk, and animate");
 assert(/ZERO_BASIS_FOUNDATION_LESSONS\s*=\s*Object\.freeze\(\[[\s\S]*什么是“指令”[\s\S]*拿碗[\s\S]*什么是“变量”[\s\S]*年龄[\s\S]*什么是“输入”和“输出”[\s\S]*发送[\s\S]*什么是“条件判断”[\s\S]*下雨[\s\S]*什么是“循环”[\s\S]*走一圈/m.test(html), "zero-basis foundation should include five no-code concept exercises");
 assert(/id="foundationOverlay"/m.test(html) && /function startZeroBasisFoundation/m.test(html) && /function completeFoundationLesson/m.test(html), "zero-basis foundation overlay should be playable and completable");
+assert(/function buildFoundationLessonNarration\(lesson[\s\S]*lesson\.title[\s\S]*lesson\.metaphor[\s\S]*lesson\.prompt[\s\S]*function speakFoundationLesson\(lesson[\s\S]*speakGameText\(buildFoundationLessonNarration\(lesson\),\s*\{[\s\S]*source:\s*"zero-basis-foundation"/m.test(html), "zero-basis foundation lessons should speak unique mentor narration for every lesson");
+assert(/function renderFoundationLesson\(options = \{\}\)[\s\S]*if \(options\.narrate !== false\) speakFoundationLesson\(lesson\)/m.test(html), "zero-basis foundation renderer should speak the active lesson when narration is enabled");
+assert(/function startZeroBasisFoundation\(options = \{\}\)[\s\S]*renderFoundationLesson\(\{ narrate: true \}\)/m.test(html), "zero-basis foundation should narrate the first lesson on open");
+assert(/function advanceFoundationLesson\(\)[\s\S]*renderFoundationLesson\(\{ narrate: true \}\)/m.test(html), "zero-basis foundation should narrate every subsequent lesson");
+assert(!/showLittleCSpeech\("我们先不急着写代码/.test(html), "zero-basis foundation should not keep replaying the old generic mentor line");
 assert(/CODE_BLOCK_MODE_SNIPPETS\s*=\s*Object\.freeze/m.test(html) && /id="codeBlockModePanel"/m.test(html) && /function renderCodeBlockMode/m.test(html) && /function verifyCodeBlockProgram/m.test(html), "first ten snippets should support colorful code block mode");
 assert(/CODE_BLOCK_MODE_SNIPPETS\.find\(\(item\) => item\.lesson === activeChapterId\)/m.test(html) && /if \(!config\) return null/m.test(html), "code block mode should only show blocks for the active configured chapter");
 assert(/selectedIds\s*=\s*new Set\(codeBlockSelection\)/m.test(html) && /remainingBlocks\s*=\s*config\.blocks\.filter\(\(block\)\s*=>\s*!selectedIds\.has\(block\.id\)\)/m.test(html), "picked code blocks should disappear from the source bank");
