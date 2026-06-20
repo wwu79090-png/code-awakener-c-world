@@ -58,11 +58,24 @@ function isRelevantConsoleError(entry) {
   return /(ReferenceError|TypeError|SyntaxError|运行异常|fatal|uncaught|白屏)/i.test(entry.text);
 }
 
+function classifyKnownWarning(text = "") {
+  const value = String(text || "");
+  if (/GPU stall due to ReadPixels|\.WebGL.*ReadPixels|readPixels/i.test(value)) return "chromium-webgl-readpixels";
+  if (/CONTEXT_LOST_WEBGL|loseContext: context lost/i.test(value)) return "chromium-webgl-context-lost-cleanup";
+  if (/AudioContext was not allowed to start|user gesture/i.test(value)) return "headless-audio-autoplay-policy";
+  return "";
+}
+
 async function exerciseCodeGenesis(page) {
   const active = await page.locator("#codeGenesisOverlay.active").count().catch(() => 0);
   if (!active) return "code genesis not visible yet";
   const input = page.locator("#codeGenesisInput");
-  await input.click();
+  await input.waitFor({ state: "attached", timeout: 10000 });
+  await input.evaluate((element) => {
+    element.scrollIntoView?.({ block: "center", inline: "center" });
+    element.focus?.({ preventScroll: true });
+    element.click?.();
+  });
   async function softKeyboardLine(line) {
     await input.evaluate((element, text) => {
       for (const char of text) {
@@ -183,12 +196,19 @@ async function runCase(testCase) {
   await browser.close();
 
   const relevantErrors = errors.filter(isRelevantConsoleError);
+  const knownWarnings = warnings
+    .map((text) => ({ text, classification: classifyKnownWarning(text) }))
+    .filter((entry) => entry.classification);
+  const unexpectedWarnings = warnings.filter((text) => !classifyKnownWarning(text));
   if (!state.shell) throw new Error(`${testCase.label}: #game-shell 未渲染`);
   if (!state.canvas && !state.menu && !state.genesis && !state.boot) throw new Error(`${testCase.label}: 首屏疑似空白`);
   if (state.postGenesis) throw new Error(`${testCase.label}: 创角后设置仍然停留，未真正进入世界`);
   if (state.errorDialogVisible || state.errorToastVisible) throw new Error(`${testCase.label}: 错误保护层可见`);
   if (relevantErrors.length) {
     throw new Error(`${testCase.label}: 控制台存在运行错误：${JSON.stringify(relevantErrors.slice(0, 4))}`);
+  }
+  if (unexpectedWarnings.length) {
+    throw new Error(`${testCase.label}: 控制台存在未解释 warning：${JSON.stringify(unexpectedWarnings.slice(0, 6))}`);
   }
 
   return {
@@ -199,7 +219,7 @@ async function runCase(testCase) {
       genesis: genesisInteraction,
       postGenesis: postGenesisInteraction
     },
-    warnings: warnings.slice(0, 6),
+    warnings: knownWarnings.slice(0, 6),
     screenshotPath
   };
 }

@@ -92,6 +92,7 @@ function buildPlan() {
   ];
 
   if (hasFlag("ui") || hasFlag("all")) {
+    plan.push({ name: "first-learning-cabin-file-smoke", command: ["node", "scripts/first-learning-cabin-file-smoke.cjs"] });
     plan.push({ name: "mobile-smoke", command: ["node", "scripts/mobile-browser-smoke.cjs"] });
   }
 
@@ -114,6 +115,8 @@ function failureAdvice(stage) {
       return "先修构建链路，不要直接切到浏览器测试。";
     case "visual-smoke":
       return "先看页面结构和截图差异，确认是否是渲染问题。";
+    case "first-learning-cabin-file-smoke":
+      return "先看第一学习舱 file:// 烟测日志，重点检查点击运行代理、TTS 阶段、输出区和 printf 解构链路。";
     case "mobile-smoke":
       return "先看移动端烟测日志和截图，再判断兼容性。";
     default:

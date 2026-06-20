@@ -14,7 +14,7 @@
   <meta http-equiv="Cache-Control" content="no-store, max-age=0, must-revalidate">
   <meta http-equiv="Pragma" content="no-cache">
   <meta http-equiv="Expires" content="0">
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self' file:; base-uri 'self'; object-src 'none'; script-src 'self' 'nonce-code-awakener-inline' file: 'sha256-iUKzmJRdhyKh1fw39AUf//37FHjSuPlm8dSSvO5aphE='; style-src 'self' 'nonce-code-awakener-inline' file: 'sha256-Gk5Q8c9mx7BRYBt7Pc/jwTfUP0+QXWCsr0wqAgc41Lc='; style-src-attr 'unsafe-inline'; font-src 'self' file: data:; img-src 'self' file: data: blob: https://cdn.pixabay.com; media-src 'self' file: data: blob: https: http: https://cdn.pixabay.com; worker-src 'self' file: blob:; child-src 'self' file: blob:; connect-src 'self' file: http://localhost:8000 http://127.0.0.1:8000 http://localhost:9966 http://127.0.0.1:9966 http://localhost:9977 http://127.0.0.1:9977 https://cdn.pixabay.com https://pixabay.com;">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self' file:; base-uri 'self'; object-src 'none'; script-src 'self' 'nonce-code-awakener-inline' file: 'sha256-cEsp/IwLmcHPn5eEiT2exAruNg9LnbcPHRQQKS0zCrI='; style-src 'self' 'nonce-code-awakener-inline' file: 'sha256-Gk5Q8c9mx7BRYBt7Pc/jwTfUP0+QXWCsr0wqAgc41Lc='; style-src-attr 'unsafe-inline'; font-src 'self' file: data:; img-src 'self' file: data: blob: https://cdn.pixabay.com; media-src 'self' file: data: blob: https: http: https://cdn.pixabay.com; worker-src 'self' file: blob:; child-src 'self' file: blob:; connect-src 'self' file: http://localhost:8000 http://127.0.0.1:8000 http://localhost:9966 http://127.0.0.1:9966 http://localhost:9977 http://127.0.0.1:9977 https://cdn.pixabay.com https://pixabay.com;">
   <title>代码觉醒者：Main Corridor</title>
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%23020617'/%3E%3Cpath d='M22 20 10 32l12 12M42 20l12 12-12 12' fill='none' stroke='%2300ff88' stroke-width='6' stroke-linecap='round' stroke-linejoin='round'/%3E%3Cpath d='m36 16-8 32' stroke='%2300ccff' stroke-width='5' stroke-linecap='round'/%3E%3C/svg%3E">
   <script src="./vendor/phaser.min.js"></script>
@@ -15623,13 +15623,7 @@ int main(void) {
       <button id="announcementCloseButton" class="announcement-close" type="button" aria-label="关闭公告">×</button>
       <h2 id="startupAnnouncementTitle" class="startup-announcement-title">> 消息 / 本次更新</h2>
       <div id="announcementPageBody" class="startup-announcement-body">
-        <p>// v1.2.0-hotfix.11：第一世界学习舱编辑器面板接入可复用响应式外壳。</p>
-        <p>// 统一处理手机 safe area、输入区滚动、底部操作按钮常驻可见和内容完整露出。</p>
-        <p>// 滚动条沿用 HUD 主题，并沉淀 learning-cabin-editor-* 契约，后续学习舱可直接复用。</p>
-        <p>// 修复长代码场景下 minimap/pro layer 压塌输入区的问题，140 行代码仍可稳定滚动。</p>
-        <p>// 已复测 npm test、npm run build、npm run mobile:smoke；Chromium WebGL ReadPixels 仅为环境性能提示。</p>
-        <p>// 本次上传只修改 Phaser 3.80.1 版文件；Pixi 版文件未混放、未改动。</p>
-        <p>// 作者：杀戮，QQ：3424636983，官方Q群：414374792。</p>
+        <p>// 正在从 CURRENT_RELEASE 生成本次更新公告...</p>
         <p class="announcement-dismiss-hint">- 点击任意处关闭</p>
       </div>
       <div class="startup-announcement-pager" aria-label="公告分页">
@@ -16655,23 +16649,77 @@ int main() {
     const SAVE_CLEAR_CONFIRM_MS = 3000;
     const STARTUP_ANNOUNCEMENT_AUTO_HIDE_MS = 14000;
     const SYSTEM_BOOT_FORCE_RELEASE_MS = 3200;
-    const GAME_VERSION = "v1.2.0";
     const OFFICIAL_SITE_HREF = "./official-site.html";
-    const UPDATE_ANNOUNCEMENT_PAGES = Object.freeze([
-      {
-        title: "> 消息 / 本次更新",
-        lines: [
-          "// v1.2.0-hotfix.11：第一世界学习舱编辑器面板接入可复用响应式外壳。",
-          "// 统一处理手机 safe area、输入区滚动、底部操作按钮常驻可见和内容完整露出。",
-          "// 滚动条沿用 HUD 主题，并沉淀 learning-cabin-editor-* 契约，后续学习舱可直接复用。",
-          "// 修复长代码场景下 minimap/pro layer 压塌输入区的问题，140 行代码仍可稳定滚动。",
-          "// 已复测 npm test、npm run build、npm run mobile:smoke；Chromium WebGL ReadPixels 仅为环境性能提示。",
-          "// 本次上传只修改 Phaser 3.80.1 版文件；Pixi 版文件未混放、未改动。",
-          "// 作者：杀戮，QQ：3424636983，官方Q群：414374792。"
-        ]
+    const CURRENT_RELEASE = Object.freeze({
+      gameVersion: "v1.2.0",
+      version: "v1.2.0-hotfix.12",
+      date: "2026-06-20",
+      title: "发布数据单源生成与上传保护",
+      announcementTitle: "> 消息 / 本次更新",
+      announcementPageSize: 5,
+      community: Object.freeze({
+        author: "杀戮",
+        qq: "3424636983",
+        qqGroup: "414374792"
+      }),
+      releaseNotes: Object.freeze([
+        "启动公告、UPDATE_HISTORY 和当前发布断言统一改为由 CURRENT_RELEASE 生成，后续热修只维护一份发布数据。",
+        "保留启动公告分页、关闭按钮、自动隐藏和主菜单历史更新展示效果，官方Q群继续显示 414374792。",
+        "新增发布数据单源断言，防止公告页、历史首项和当前版本文案再次退回多处硬编码。",
+        "补入第一学习舱 file:// 烟测并接入 diagnose:ui，覆盖点击运行代理、输出区、TTS 阶段和 printf 字符级解构。",
+        "移动端烟测改为直接聚焦创世输入框，并对 Chromium WebGL ReadPixels 环境性能提示做分类，未知 warning 仍会失败。"
+      ]),
+      validationNotes: Object.freeze([
+        "已通过 npm test 和 node scripts/diagnose-project.cjs --ui，覆盖测试、审计、构建、视觉 smoke、第一学习舱 file-smoke 与移动端 smoke。"
+      ]),
+      scopeNote: "本次上传只修改 Phaser 3.80.1 版文件；Pixi 版文件未混放、未改动。"
+    });
+    const GAME_VERSION = CURRENT_RELEASE.gameVersion;
+
+    function buildCurrentReleaseAnnouncementLines(release = CURRENT_RELEASE) {
+      return Object.freeze([
+        `// ${release.version}：${release.title}。`,
+        ...(release.releaseNotes || []).map((note) => `// ${note}`),
+        ...(release.validationNotes || []).map((note) => `// ${note}`),
+        `// ${release.scopeNote}`,
+        `// 作者：${release.community.author}，QQ：${release.community.qq}，官方Q群：${release.community.qqGroup}。`
+      ]);
+    }
+
+    function buildCurrentReleaseHistoryDetails(release = CURRENT_RELEASE) {
+      return Object.freeze([
+        ...(release.releaseNotes || []),
+        ...(release.validationNotes || []),
+        `${release.scopeNote}官方Q群：${release.community.qqGroup}。`
+      ]);
+    }
+
+    function buildUpdateAnnouncementPages(release = CURRENT_RELEASE) {
+      const lines = buildCurrentReleaseAnnouncementLines(release);
+      const pageSize = Math.max(1, Number(release.announcementPageSize) || lines.length || 1);
+      const pages = [];
+      for (let index = 0; index < lines.length; index += pageSize) {
+        const pageNumber = pages.length + 1;
+        pages.push(Object.freeze({
+          title: pageNumber === 1 ? release.announcementTitle : `${release.announcementTitle} ${pageNumber}`,
+          lines: Object.freeze(lines.slice(index, index + pageSize))
+        }));
       }
-    ]);
+      return Object.freeze(pages);
+    }
+
+    function buildUpdateHistoryEntry(release = CURRENT_RELEASE) {
+      return {
+        version: release.version,
+        date: release.date,
+        title: release.title,
+        details: buildCurrentReleaseHistoryDetails(release)
+      };
+    }
+
+    const UPDATE_ANNOUNCEMENT_PAGES = Object.freeze(buildUpdateAnnouncementPages(CURRENT_RELEASE));
     const UPDATE_HISTORY = Object.freeze([
+      buildUpdateHistoryEntry(CURRENT_RELEASE),
       {
         version: "v1.2.0-hotfix.11",
         date: "2026-06-20",
@@ -18259,7 +18307,7 @@ return 0;`;
       directSaveAs: "reduced-by-inline-resources"
     });
     const SECURITY_CONFIG = Object.freeze({
-      expectedScriptHash: "JwocsP8Aa2RmosU8Oni5QoucWS/uxook23Ahzloq7fo=",
+      expectedScriptHash: "DchKQi3b6qXuQwndU/AhFoj4oPOuk+vOVuECkGn41lE=",
       selfCheckIntervalMs: 45000,
       tamperRefreshMs: 5000,
       devToolsRefreshMs: 2000,

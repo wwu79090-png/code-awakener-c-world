@@ -173,7 +173,12 @@ globalThis.__gameApi = {
   destroyKnowledgeFragment: typeof destroyKnowledgeFragment === "function" ? destroyKnowledgeFragment : undefined,
   compressSavePayload: typeof compressSavePayload === "function" ? compressSavePayload : undefined,
   decompressSavePayload: typeof decompressSavePayload === "function" ? decompressSavePayload : undefined,
-  escapeHtml: typeof escapeHtml === "function" ? escapeHtml : undefined
+  escapeHtml: typeof escapeHtml === "function" ? escapeHtml : undefined,
+  CURRENT_RELEASE: typeof CURRENT_RELEASE !== "undefined" ? CURRENT_RELEASE : undefined,
+  UPDATE_ANNOUNCEMENT_PAGES: typeof UPDATE_ANNOUNCEMENT_PAGES !== "undefined" ? UPDATE_ANNOUNCEMENT_PAGES : undefined,
+  UPDATE_HISTORY: typeof UPDATE_HISTORY !== "undefined" ? UPDATE_HISTORY : undefined,
+  buildUpdateAnnouncementPages: typeof buildUpdateAnnouncementPages === "function" ? buildUpdateAnnouncementPages : undefined,
+  buildUpdateHistoryEntry: typeof buildUpdateHistoryEntry === "function" ? buildUpdateHistoryEntry : undefined
 };
 if (typeof window !== "undefined") window.__gameApi = globalThis.__gameApi;
 if (typeof self !== "undefined") self.__gameApi = globalThis.__gameApi;`, context);
@@ -195,8 +200,27 @@ const api = loadGameScript();
 const html = fs.readFileSync("programming-rpg-c-basics.html", "utf8");
 const officialSiteHtml = fs.existsSync("official-site.html") ? fs.readFileSync("official-site.html", "utf8") : "";
 const buildScript = fs.existsSync("build-single-html.cjs") ? fs.readFileSync("build-single-html.cjs", "utf8") : "";
+const diagnoseScript = fs.existsSync("scripts/diagnose-project.cjs") ? fs.readFileSync("scripts/diagnose-project.cjs", "utf8") : "";
 const initialBodyMarkup = html.match(/<body[\s\S]*?<script\b/)?.[0] || "";
 const cspContent = html.match(/Content-Security-Policy" content="([^"]+)"/)?.[1] || "";
+
+{
+  assert(api.CURRENT_RELEASE, "current release should be the single source for startup announcement and update history");
+  assert(api.CURRENT_RELEASE.gameVersion === "v1.2.0", "current release should carry the public game version");
+  assert(api.CURRENT_RELEASE.version === "v1.2.0-hotfix.12", "current release should carry the hotfix version");
+  assert(Array.isArray(api.CURRENT_RELEASE.releaseNotes) && api.CURRENT_RELEASE.releaseNotes.length >= 5, "current release should keep one reusable note list for generated release copy");
+  assert(!("announcementLines" in api.CURRENT_RELEASE) && !("historyDetails" in api.CURRENT_RELEASE), "current release should not keep separate announcement and history copy");
+  assert(api.CURRENT_RELEASE.community?.qqGroup === "414374792", "current release should retain the official QQ group");
+  assert(typeof api.buildUpdateAnnouncementPages === "function", "announcement pages should be generated from release data");
+  assert(typeof api.buildUpdateHistoryEntry === "function", "update history entries should be generated from release data");
+  assert(/const UPDATE_ANNOUNCEMENT_PAGES\s*=\s*Object\.freeze\(buildUpdateAnnouncementPages\(CURRENT_RELEASE\)\)/m.test(html), "startup announcement pages should call the current release generator");
+  assert(/const UPDATE_HISTORY\s*=\s*Object\.freeze\(\[\s*buildUpdateHistoryEntry\(CURRENT_RELEASE\)/m.test(html), "update history should insert the generated current release entry first");
+  assert(JSON.stringify(api.UPDATE_ANNOUNCEMENT_PAGES) === JSON.stringify(api.buildUpdateAnnouncementPages(api.CURRENT_RELEASE)), "startup announcement pages should be derived from CURRENT_RELEASE");
+  assert(JSON.stringify(api.UPDATE_HISTORY[0]) === JSON.stringify(api.buildUpdateHistoryEntry(api.CURRENT_RELEASE)), "first update history entry should be derived from CURRENT_RELEASE");
+  assert(api.UPDATE_ANNOUNCEMENT_PAGES.length >= 2, "generated startup announcement should preserve paged update copy for longer hotfix notes");
+  assert(api.UPDATE_ANNOUNCEMENT_PAGES.flatMap((page) => page.lines).join("\n").includes("官方Q群：414374792"), "generated startup announcement should include the official QQ group");
+  assert(api.UPDATE_HISTORY[0].details.join("\n").includes("官方Q群：414374792"), "generated update history entry should include the official QQ group");
+}
 
 assert(/class GameDatabase/m.test(html) && /function createOmniCoreGameDatabase/m.test(html), "OmniCore should expose a central game database for worlds, enemies, tile palettes, and UI layers");
 assert(/class OmniLiveEditSession/m.test(html) && /function applyOmniLiveEditPatch/m.test(html), "OmniCore should expose runtime live-edit pause and patch operations");
@@ -364,7 +388,7 @@ assert(!api.hasMemoryCoreCinematicResolved({ memoryCoreChoice: "", memoryCoreCin
 assert(/memoryCoreChoice:\s*""/m.test(html) && /memoryCoreChoice:\s*typeof savedProgress\.memoryCoreChoice === "string" \? savedProgress\.memoryCoreChoice : ""/m.test(html), "memory core choice should survive default and normalized progress state");
 assert(/playMemoryCoreCinematicBridge\(character[\s\S]*hasMemoryCoreCinematicResolved\(progress\)[\s\S]*return \{ skipped: true, reason: "already-resolved" \}/m.test(html), "memory core bridge should not reopen after the player has already chosen a branch");
 assert(/shouldPlayMemoryCoreCinematicBeforeWorldEntry\(\)[\s\S]*!hasMemoryCoreCinematicResolved\(progress\)/m.test(html), "start-game gate should suppress repeat memory core playback after a recorded choice");
-assert(/GAME_VERSION\s*=\s*"v1\.2\.0"/m.test(html) && /v1\.2\.0-hotfix\.11/m.test(html) && /学习舱编辑器响应式外壳/m.test(html), "startup announcement should be updated for the current learning cabin editor shell release");
+assert(api.CURRENT_RELEASE.gameVersion === "v1.2.0" && api.CURRENT_RELEASE.version === "v1.2.0-hotfix.12" && api.CURRENT_RELEASE.title === "发布数据单源生成与上传保护", "startup announcement should be updated from current release data for the release-data generation hotfix");
 
 assert(api.compressSavePayload, "save compressor should be exported for tests");
 assert(api.decompressSavePayload, "save decompressor should be exported for tests");
@@ -1744,29 +1768,37 @@ assert(/启动公告只提示当前版本|历史版本改到主菜单查看/.tes
 assert(/STARTUP_ANNOUNCEMENT_AUTO_HIDE_MS\s*=\s*14000/m.test(html), "announcement should remain visible long enough to read the current update");
 assert(/function showStartupAnnouncement/m.test(html), "announcement should be controlled by a startup function");
 assert(/id="announcementCloseButton"/m.test(html), "announcement should include a minimal close control");
-assert(/World Build v1\.2\.0/m.test(html) || /GAME_VERSION\s*=\s*"v1\.2\.0"/m.test(html), "game version should increment when shipping a new update");
+assert(api.CURRENT_RELEASE.gameVersion === "v1.2.0", "game version should increment when shipping a new update");
 assert(/UPDATE_HISTORY\s*=\s*Object\.freeze\(\[[\s\S]*v1\.0\.1[\s\S]*零基础新手指引[\s\S]*v1\.0\.0[\s\S]*手机端适配/m.test(html), "update history should keep detailed previous release notes");
 assert(/data-menu-action="history"[\s\S]*历史更新内容/.test(html) && /id="updateHistoryOverlay"/m.test(html) && /function renderUpdateHistoryList/m.test(html), "main menu should expose update history with detailed notes");
-assert(/GAME_VERSION\s*=\s*"v1\.2\.0"/m.test(html), "game version should increment for the Main Corridor release");
+assert(api.CURRENT_RELEASE.gameVersion === "v1.2.0", "game version should increment for the Main Corridor release");
 assert(html.includes('const OFFICIAL_SITE_HREF = "./official-site.html";') && /data-menu-action="official"[\s\S]*访问官方网站/.test(html) && /action === "official"[\s\S]*openOfficialWebsite\(\)/m.test(html), "main menu should expose and handle an official website entry");
 assert(/SYSTEM_BOOT_FORCE_RELEASE_MS\s*=\s*3200/m.test(html) && /system-boot-force-release/m.test(html) && /SYSTEM_BOOT_FORCE_RELEASE_MS \+ 1400/m.test(html), "startup boot overlay should have tracked and native failsafe release timers");
 assert(/function markAppRendered\(reason = "script-started"\)[\s\S]*classList\?\.add\("app-rendered"\)[\s\S]*staticRescue/m.test(html), "normal script startup should hide the static rescue layer");
 assert(/html\.app-rendered \.static-rescue/m.test(html) && /safeMode=true&noAudio=true&v=1\.2\.0/m.test(html), "static rescue should only appear if the app script does not render");
 assert(/isStrictSecurityMode\(\)[\s\S]*removeItem\?\.\("codeAwakenerStrictSecurity"\)[\s\S]*params\.get\("strictSecurity"\) === "1"/m.test(html), "stale localStorage strict-security flags should not white-screen normal browsers");
-assert(/UPDATE_ANNOUNCEMENT_PAGES\s*=\s*Object\.freeze\(\[\s*\{\s*title:\s*"> 消息 \/ 本次更新"[\s\S]*v1\.2\.0-hotfix\.11[\s\S]*学习舱编辑器面板[\s\S]*safe area[\s\S]*底部操作按钮常驻可见[\s\S]*learning-cabin-editor-\*[\s\S]*140 行代码[\s\S]*414374792/m.test(html), "startup announcement should show the current reusable learning cabin editor shell release before upload");
-assert(/id="announcementPageBody"[\s\S]*v1\.2\.0-hotfix\.11[\s\S]*学习舱编辑器面板[\s\S]*safe area[\s\S]*底部操作按钮常驻可见[\s\S]*learning-cabin-editor-\*[\s\S]*140 行代码[\s\S]*官方Q群：414374792/m.test(initialBodyMarkup), "static startup announcement placeholder should match the current reusable learning cabin editor shell release before script hydration");
+{
+  const generatedAnnouncementText = api.UPDATE_ANNOUNCEMENT_PAGES.flatMap((page) => page.lines).join("\n");
+  const generatedHistoryText = [api.UPDATE_HISTORY[0].title, ...api.UPDATE_HISTORY[0].details].join("\n");
+  assert(/v1\.2\.0-hotfix\.12[\s\S]*发布数据单源生成与上传保护[\s\S]*CURRENT_RELEASE[\s\S]*公告页、历史首项[\s\S]*diagnose:ui[\s\S]*414374792/m.test(generatedAnnouncementText), "generated startup announcement should show the current release-data hotfix before upload");
+  assert(/发布数据单源生成与上传保护[\s\S]*CURRENT_RELEASE[\s\S]*公告页、历史首项[\s\S]*移动端烟测[\s\S]*官方Q群：414374792/m.test(generatedHistoryText), "generated update history entry should record the current release-data hotfix");
+}
+{
+  const staticAnnouncementBody = initialBodyMarkup.match(/<div id="announcementPageBody"[\s\S]*?<\/div>/)?.[0] || "";
+  assert(staticAnnouncementBody.includes("正在从 CURRENT_RELEASE 生成本次更新公告"), "static startup announcement placeholder should defer hotfix copy to CURRENT_RELEASE");
+}
 assert(!/公告只保留关闭、课程锁定、自由模式通关后显示/m.test(initialBodyMarkup), "static startup announcement placeholder should not show stale update copy");
-assert(/UPDATE_HISTORY\s*=\s*Object\.freeze\(\[\s*\{[\s\S]*v1\.2\.0-hotfix\.11[\s\S]*学习舱编辑器响应式外壳[\s\S]*手机 safe area[\s\S]*learning-cabin-editor-\*[\s\S]*minimap\/pro layer[\s\S]*140 行代码[\s\S]*官方Q群：414374792/m.test(html), "update history should record the current reusable learning cabin editor shell release");
+assert(/UPDATE_HISTORY\s*=\s*Object\.freeze\(\[[\s\S]*v1\.2\.0-hotfix\.11[\s\S]*学习舱编辑器响应式外壳[\s\S]*手机 safe area[\s\S]*learning-cabin-editor-\*[\s\S]*minimap\/pro layer[\s\S]*140 行代码[\s\S]*官方Q群：414374792/m.test(html), "update history should keep the previous reusable learning cabin editor shell release");
 assert(/UPDATE_HISTORY\s*=\s*Object\.freeze\(\[[\s\S]*v1\.2\.0-hotfix\.10[\s\S]*章节课前动画收藏与质量回归[\s\S]*反复观看 16 个章节教程[\s\S]*1x\/2x\/4x[\s\S]*精确答案[\s\S]*WebGL context[\s\S]*控制台 error\/warn 为 0[\s\S]*官方Q群：414374792/m.test(html), "update history should keep the previous chapter tutorial collection and renderer fallback hotfix");
 assert(/UPDATE_HISTORY\s*=\s*Object\.freeze\(\[[\s\S]*v1\.2\.0-hotfix\.9[\s\S]*实战进度可拖动与运行逻辑重置[\s\S]*原生 disabled 锁死[\s\S]*拖到 100%[\s\S]*Ctrl\+Enter[\s\S]*结果会先缓存[\s\S]*导师解析侧栏覆盖按钮[\s\S]*未改动 Pixi 版文件[\s\S]*官方Q群：414374792/m.test(html), "update history should keep the previous draggable progress and run-logic reset hotfix");
 assert(/UPDATE_HISTORY\s*=\s*Object\.freeze\(\[[\s\S]*v1\.2\.0-hotfix\.8[\s\S]*点击运行即时解锁热修[\s\S]*立刻解锁[\s\S]*不再等待最后一句 TTS[\s\S]*保持在 disabled 状态[\s\S]*先释放按钮再触发真实运行[\s\S]*未改动 Pixi 版文件[\s\S]*官方Q群：414374792/m.test(html), "update history should keep the previous immediate run unlock hotfix");
 assert(/UPDATE_HISTORY\s*=\s*Object\.freeze\(\[[\s\S]*v1\.2\.0-hotfix\.7[\s\S]*点击运行代理与 TTS 同步热修[\s\S]*大号“点击运行”引导条[\s\S]*最后一句“点击运行”旁白[\s\S]*4\.2 秒[\s\S]*file scheme unsupported[\s\S]*未改动 Pixi 版文件[\s\S]*官方Q群：414374792/m.test(html), "update history should keep the previous guided run proxy and TTS synchronization hotfix");
-assert(/UPDATE_HISTORY\s*=\s*Object\.freeze\(\[\s*\{[\s\S]*v1\.2\.0-hotfix\.6[\s\S]*实战运行同步与输出讲解热修[\s\S]*停在编辑器内显示输出区结果[\s\S]*真正点击运行[\s\S]*保留 C language 中间的空格[\s\S]*未改动 Pixi 版文件[\s\S]*官方Q群：414374792/m.test(html), "update history should keep the previous hands-on run synchronization hotfix");
-assert(/UPDATE_HISTORY\s*=\s*Object\.freeze\(\[\s*\{[\s\S]*v1\.2\.0-hotfix\.5[\s\S]*电影分镜排版与实战字幕热修[\s\S]*顺序轨、画面主体和底部重点字幕[\s\S]*三列检查卡[\s\S]*真实编辑器实战新增持续字幕条[\s\S]*官方Q群：414374792/m.test(html), "update history should keep the previous cinematic layout and hands-on subtitle hotfix");
-assert(/UPDATE_HISTORY\s*=\s*Object\.freeze\(\[\s*\{[\s\S]*v1\.2\.0-hotfix\.4[\s\S]*电影顺序轨与单导师女声热修[\s\S]*visibility hidden[\s\S]*编号焦点动线[\s\S]*ChatTTS[\s\S]*printf、Hello World、include、int main[\s\S]*--force-keys[\s\S]*官方Q群：414374792/m.test(html), "update history should keep the previous cinematic rail and ChatTTS hotfix");
-assert(/UPDATE_HISTORY\s*=\s*Object\.freeze\(\[\s*\{[\s\S]*v1\.2\.0-hotfix\.3[\s\S]*电影实战演示与 Supertonic 离线热修[\s\S]*不再只停在第一个 #[\s\S]*printf\("C language"\);[\s\S]*官方Q群：414374792/m.test(html), "update history should keep the previous hands-on editor and Supertonic hotfix");
-assert(/UPDATE_HISTORY\s*=\s*Object\.freeze\(\[\s*\{[\s\S]*v1\.2\.0-hotfix\.2[\s\S]*第一学习舱电影与新号入场热修[\s\S]*老程序员只说一句[\s\S]*T05\/T09[\s\S]*官方Q群：414374792/m.test(html), "update history should record the compiler-cabin and new-player-flow hotfix");
-assert(/UPDATE_HISTORY\s*=\s*Object\.freeze\(\[\s*\{[\s\S]*v1\.2\.0-hotfix\.1[\s\S]*五幕剧情桥与 BGM 叠加热修[\s\S]*memoryCoreChoice[\s\S]*Pixabay\/自定义 BGM[\s\S]*官方Q群：414374792/m.test(html), "update history should record the memory-core and BGM overlap hotfix");
+assert(/UPDATE_HISTORY\s*=\s*Object\.freeze\(\[[\s\S]*v1\.2\.0-hotfix\.6[\s\S]*实战运行同步与输出讲解热修[\s\S]*停在编辑器内显示输出区结果[\s\S]*真正点击运行[\s\S]*保留 C language 中间的空格[\s\S]*未改动 Pixi 版文件[\s\S]*官方Q群：414374792/m.test(html), "update history should keep the previous hands-on run synchronization hotfix");
+assert(/UPDATE_HISTORY\s*=\s*Object\.freeze\(\[[\s\S]*v1\.2\.0-hotfix\.5[\s\S]*电影分镜排版与实战字幕热修[\s\S]*顺序轨、画面主体和底部重点字幕[\s\S]*三列检查卡[\s\S]*真实编辑器实战新增持续字幕条[\s\S]*官方Q群：414374792/m.test(html), "update history should keep the previous cinematic layout and hands-on subtitle hotfix");
+assert(/UPDATE_HISTORY\s*=\s*Object\.freeze\(\[[\s\S]*v1\.2\.0-hotfix\.4[\s\S]*电影顺序轨与单导师女声热修[\s\S]*visibility hidden[\s\S]*编号焦点动线[\s\S]*ChatTTS[\s\S]*printf、Hello World、include、int main[\s\S]*--force-keys[\s\S]*官方Q群：414374792/m.test(html), "update history should keep the previous cinematic rail and ChatTTS hotfix");
+assert(/UPDATE_HISTORY\s*=\s*Object\.freeze\(\[[\s\S]*v1\.2\.0-hotfix\.3[\s\S]*电影实战演示与 Supertonic 离线热修[\s\S]*不再只停在第一个 #[\s\S]*printf\("C language"\);[\s\S]*官方Q群：414374792/m.test(html), "update history should keep the previous hands-on editor and Supertonic hotfix");
+assert(/UPDATE_HISTORY\s*=\s*Object\.freeze\(\[[\s\S]*v1\.2\.0-hotfix\.2[\s\S]*第一学习舱电影与新号入场热修[\s\S]*老程序员只说一句[\s\S]*T05\/T09[\s\S]*官方Q群：414374792/m.test(html), "update history should record the compiler-cabin and new-player-flow hotfix");
+assert(/UPDATE_HISTORY\s*=\s*Object\.freeze\(\[[\s\S]*v1\.2\.0-hotfix\.1[\s\S]*五幕剧情桥与 BGM 叠加热修[\s\S]*memoryCoreChoice[\s\S]*Pixabay\/自定义 BGM[\s\S]*官方Q群：414374792/m.test(html), "update history should record the memory-core and BGM overlap hotfix");
 assert(/UPDATE_HISTORY\s*=\s*Object\.freeze\(\[[\s\S]*v1\.0\.31[\s\S]*QQ音乐外部模式与自定义场景音乐[\s\S]*播放\/暂停切换[\s\S]*IndexedDB[\s\S]*414374792/m.test(html), "update history should record the v1.0.31 custom music connector release");
 assert(/UPDATE_HISTORY\s*=\s*Object\.freeze\(\[[\s\S]*v1\.0\.30[\s\S]*Pixabay 真实音乐与音效接入[\s\S]*Gamer Menu[\s\S]*音乐切换器[\s\S]*外部音频失败回退[\s\S]*414374792/m.test(html), "update history should record the v1.0.30 Pixabay music and sound-effect release");
 assert(/UPDATE_HISTORY\s*=\s*Object\.freeze\(\[[\s\S]*v1\.0\.29[\s\S]*声音重新标定[\s\S]*旧存档[\s\S]*进入游戏时的 BGM[\s\S]*反咚咚/m.test(html), "update history should record the v1.0.29 audio calibration and clean startup music release");
@@ -2097,6 +2129,8 @@ assert(fs.existsSync(".github/pull_request_template.md"), "pull request template
 assert(fs.existsSync("scripts/static-quality-audit.cjs"), "static quality audit script should exist");
 assert(fs.existsSync("scripts/fuzz-save-data.cjs"), "save-data fuzzing script should exist");
 assert(fs.existsSync("scripts/visual-regression-smoke.cjs"), "visual regression smoke script should exist");
+assert(fs.existsSync("scripts/first-learning-cabin-file-smoke.cjs"), "first learning cabin file smoke script should exist");
+assert(/first-learning-cabin-file-smoke[\s\S]*scripts\/first-learning-cabin-file-smoke\.cjs/.test(diagnoseScript), "diagnose:ui should run the first learning cabin file smoke before broad mobile smoke");
 assert(fs.existsSync("docs/adr/0001-c-world-browser-runtime.md"), "architecture decision record for browser runtime should exist");
 assert(fs.existsSync("docs/adr/0002-save-format.md"), "architecture decision record for save format should exist");
 assert(fs.existsSync("CHANGELOG.md"), "project should have a changelog");
